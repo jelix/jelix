@@ -4,15 +4,9 @@
  * @package     jelix
  * @subpackage  events
  *
- * @author      Gérald Croes, Patrice Ferlet
- * @contributor Laurent Jouanneau, Dominique Papin, Steven Jehannet
+ * @author      Gérald Croes, Patrice Ferlet, Laurent Jouanneau
  *
- * @copyright 2001-2005 CopixTeam, 2005-2022 Laurent Jouanneau, 2009 Dominique Papin
- * This classes were get originally from the Copix project
- * (CopixEvent*, CopixListener* from Copix 2.3dev20050901, http://www.copix.org)
- * Some lines of code are copyrighted 2001-2005 CopixTeam (LGPL licence).
- * Initial authors of this Copix classes are Gerald Croes and  Patrice Ferlet,
- * and this classes were adapted/improved for Jelix by Laurent Jouanneau
+ * @copyright 2001-2005 CopixTeam, 2005-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -25,7 +19,7 @@ require_once JELIX_LIB_PATH . 'events/jEventListener.class.php';
  * @package     jelix
  * @subpackage  events
  */
-class jEvent
+class jEvent implements \Jelix\Events\EventInterface
 {
     /**
      * The name of the event.
@@ -49,6 +43,7 @@ class jEvent
      *
      * @param string $name   the event name
      * @param array  $params an associative array which contains parameters for the listeners
+     * @author Copix Team
      */
     public function __construct($name, $params = array())
     {
@@ -84,6 +79,7 @@ class jEvent
     /**
      * gets the name of the event
      *    will be used internally for optimisations.
+     * @author Copix Team
      */
     public function getName()
     {
@@ -98,6 +94,7 @@ class jEvent
      * @return null|string the value or null if the parameter does not exist
      *
      * @deprecated since Jelix 1.6
+     * @author Copix Team
      */
     public function getParam($name)
     {
@@ -129,6 +126,7 @@ class jEvent
      * getBoolResponseByKey(), or inResponse()
      *
      * @param mixed $response a single response
+     * @author Copix Team
      */
     public function add($response)
     {
@@ -148,6 +146,7 @@ class jEvent
      *                             the given value
      *
      * @return bool whether or not we have founded the response value
+     * @author Copix Team
      */
     public function inResponse($responseKey, $value, &$response)
     {
@@ -273,6 +272,7 @@ class jEvent
      * gets all the responses.
      *
      * @return mixed[][] associative array
+     * @author Copix Team
      */
     public function getResponse()
     {
@@ -288,108 +288,31 @@ class jEvent
      * its own methods and properties. It allows to listeners to give returned data
      * in a better way than using the `add` method.
      *
+     * Prefer to use `\jApp::services()->eventDispatcher()->dispatch($event)` for event objects.
+     *
      * @param string|jEvent $eventName     the event name or an event object
      * @param mixed  $params
      *
-     * @return jEvent
+     * @return object|jEvent
      */
     public static function notify($eventName, $params = array())
     {
         if (is_object($eventName)) {
             $event = $eventName;
-            $eventName = $event->getName();
         } else {
             $event = new jEvent($eventName, $params);
         }
 
-        if (!isset(self::$hashListened[$eventName])) {
-            self::loadListenersFor($eventName);
-        }
-
-        $list = &self::$hashListened[$eventName];
-        foreach (array_keys($list) as $key) {
-            $list[$key]->performEvent($event);
-        }
-
-        return $event;
-    }
-
-    protected static $compilerData = array(
-        'jEventCompiler',
-        'events/jEventCompiler.class.php',
-        'events.xml',
-        'events.php',
-    );
-
-    /**
-     * because a listener can listen several events, we should
-     * create only one instancy of a listener for performance, and
-     * $hashListened will contains only reference to this listener.
-     *
-     * @var jEventListener[][]
-     */
-    protected static $listenersSingleton = array();
-
-    /**
-     * hash table for event listened.
-     * $hashListened['eventName'] = array of events (by reference).
-     *
-     * @var jEventListener[][]
-     */
-    protected static $hashListened = array();
-
-    /**
-     * List of listeners for each event
-     *  key = event name, value = array('moduleName', 'listenerName')
-     * @var array|null
-     */
-    protected static $listenersList = null;
-
-
-    /**
-     * construct the list of all listeners corresponding to an event.
-     *
-     * @param string $eventName the event name we wants the listeners for
-     */
-    protected static function loadListenersFor($eventName)
-    {
-        if (self::$listenersList === null) {
-            $compilerData = self::$compilerData;
-            $compilerData[3] = jApp::config()->urlengine['urlScriptId'] . '.' . $compilerData[3];
-            self::$listenersList = jIncluder::incAll($compilerData, true);
-            if (self::$listenersList === null) {
-                trigger_error('Compilation of event listeners list failed?', E_USER_WARNING);
-                return;
-            }
-        }
-
-        self::$hashListened[$eventName] = array();
-        if (isset(self::$listenersList[$eventName])) {
-            $modules = &jApp::config()->_modulesPathList;
-            foreach (self::$listenersList[$eventName] as $listener) {
-                list($module, $listenerName) = $listener;
-                if (!isset($modules[$module])) {  // some modules could be unused
-                    continue;
-                }
-                if (!isset(self::$listenersSingleton[$module][$listenerName])) {
-                    require_once $modules[$module] . 'classes/' . $listenerName . '.listener.php';
-                    $className = $listenerName . 'Listener';
-                    self::$listenersSingleton[$module][$listenerName] = new $className();
-                }
-                self::$hashListened[$eventName][] = self::$listenersSingleton[$module][$listenerName];
-            }
-        }
+        return \jApp::services()->eventDispatcher()->dispatch($event);
     }
 
     /**
-     * for tests.
+     * do nothing. Use \jApp::reloadServices() instead
      *
-     * @since 1.5
+     * @deprecated
      */
     public static function clearCache()
     {
-        self::$hashListened = array();
-        self::$listenersSingleton = array();
-        self::$listenersList = null;
     }
+
 }

@@ -16,13 +16,15 @@
         "jelix/file-utilities": "^1.8.5",
         "jelix/version": "^2.0.1",
         "defuse/php-encryption": "^2.3.1",
-        "google/recaptcha": "~1.2.4"
+        "google/recaptcha": "~1.2.4",
+        "psr/event-dispatcher": "~1.0.0"
     },
     "autoload": {
         "psr-0": { "jelix\\": "."
         },
         "psr-4": {
             "Jelix\\DevHelper\\": "jelix-scripts/DevHelper/",
+            "Jelix\\Events\\" : "jelix/events/",
             "Jelix\\Routing\\UrlMapping\\": "jelix/core/UrlMapping/",
             "Jelix\\Installer\\": "jelix/installer/Installer/",
             "Jelix\\Scripts\\": "jelix/Scripts/",

@@ -47,7 +47,7 @@ class ldap_pluginAuthTest extends \Jelix\UnitTests\UnitTestCase {
         // verifying if there is still an admin
         $this->listenersBackup = jApp::config()->disabledListeners;
         jApp::config()->disabledListeners['AuthCanRemoveUser'] = 'jacl2db~jacl2db';
-        jEvent::clearCache();
+        \jApp::reloadServices();
         $cacheFile = jApp::tempPath('compiled/'.jApp::config()->urlengine['urlScriptId'].'.events.php');
         if (file_exists($cacheFile)) {
             unlink($cacheFile);
@@ -61,7 +61,7 @@ class ldap_pluginAuthTest extends \Jelix\UnitTests\UnitTestCase {
         $this->config = null;
         jAcl2DbUserGroup::removeUser('testldap');
         jApp::config()->disabledListeners = $this->listenersBackup;
-        jEvent::clearCache();
+        \jApp::reloadServices();
         $cacheFile = jApp::tempPath('compiled/'.jApp::config()->urlengine['urlScriptId'].'.events.php');
         if (file_exists($cacheFile)) {
             unlink($cacheFile);

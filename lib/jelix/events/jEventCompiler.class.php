@@ -4,7 +4,7 @@
  * @subpackage  events
  *
  * @author      Laurent Jouanneau
- * @copyright 2005-2006 Laurent Jouanneau
+ * @copyright 2005-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -16,6 +16,12 @@
  */
 class jEventCompiler implements jIMultiFileCompiler
 {
+    /**
+     * list of listeners for each event.
+     * key = event name, value = array('moduleName', 'listenerName')
+     *
+     * @var array
+     */
     private $eventList;
 
     public function __construct()
@@ -56,7 +62,7 @@ class jEventCompiler implements jIMultiFileCompiler
 
     public function endCompile($cachefile)
     {
-        $content = '<?php $GLOBALS["JELIX_EVENTS"] = '.var_export($this->eventList, true).";\n?>";
+        $content = '<?php return '.var_export($this->eventList, true).";\n?>";
         jFile::write($cachefile, $content);
     }
 }

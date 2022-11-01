@@ -13,7 +13,9 @@
  */
 
 namespace Jelix\Core;
-
+use Jelix\Events\EventDispatcher;
+use Jelix\Events\ListenerProvider;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * It allows to access to some useful components.
@@ -25,6 +27,21 @@ namespace Jelix\Core;
  */
 class Services
 {
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $_eventDispatcher;
 
-
+    /**
+     * Get the event dispatcher component
+     * @return EventDispatcherInterface
+     */
+    function eventDispatcher()
+    {
+        if (!$this->_eventDispatcher) {
+            $listenerProvider = new ListenerProvider(\jApp::config());
+            $this->_eventDispatcher = new EventDispatcher($listenerProvider);
+        }
+        return $this->_eventDispatcher;
+    }
 }
