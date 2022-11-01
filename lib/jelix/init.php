@@ -88,6 +88,8 @@ require JELIX_LIB_CORE_PATH.'jIncluder.class.php';
 
 require JELIX_LIB_CORE_PATH.'jSession.class.php';
 
+require JELIX_LIB_CORE_PATH.'Services.php';
+
 require JELIX_LIB_UTILS_PATH.'Utilities.php';
 
 /**

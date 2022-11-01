@@ -28,6 +28,7 @@
  * @method static void pushCurrentModule($module)
  * @method static string popCurrentModule()
  * @method static string getCurrentModule()
+ * @method static \Jelix\Core\Services services()
  */
 class jApp
 {

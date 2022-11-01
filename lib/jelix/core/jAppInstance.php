@@ -56,6 +56,11 @@ class jAppInstance
     public $applicationInitFile = '';
 
     /**
+     * @var \Jelix\Core\Services
+     */
+    protected $_services;
+
+    /**
      * initialize the application paths.
      *
      * Warning: given paths should be ended by a directory separator.
@@ -138,6 +143,7 @@ class jAppInstance
         $this->unregisterAutoload();
         $this->config = $config;
         $this->registerAutoload();
+        $this->reloadServices();
     }
 
     public function onRestoringAsContext()
@@ -503,5 +509,22 @@ class jAppInstance
     public function getCurrentModule()
     {
         return end($this->_modulesContext);
+    }
+
+    /**
+     * @return \Jelix\Core\Services
+     * @experimental
+     */
+    public function services()
+    {
+        return $this->_services;
+    }
+
+    /**
+     * @experimental
+     */
+    public function reloadServices()
+    {
+        $this->_services = new \Jelix\Core\Services();
     }
 }
