@@ -4,7 +4,7 @@
  * @subpackage core
  *
  * @author     Laurent Jouanneau
- * @copyright  2005-2014 Laurent Jouanneau
+ * @copyright  2005-2022 Laurent Jouanneau
  *   Idea of this class was picked from the Copix project (CopixInclude, Copix 2.3dev20050901, http://www.copix.org)
  *
  * @see       http://www.jelix.org
@@ -157,17 +157,22 @@ class jIncluder
      *                     'foo.xml', // file name to compile (in each modules)
      *                     'foo.php',  //cache filename
      *                     );
-     * @param mixed $force
+     * @param mixed $force  force to launch the compilation even if the cache file is ok
+     *
+     * @return mixed the value returned by the cache file (returned value of the 'require')
+     *               or null the compilation has not been done or the cache file already included
      */
-    public static function incAll($aType, $force = false)
+    public static function incAll($aType, $force = false, $config = null)
     {
         $cachefile = jApp::tempPath('compiled/'.$aType[3]);
         if (isset(jIncluder::$_includedFiles[$cachefile]) && !$force) {
-            return;
+            return null;
         }
 
-        $config = jApp::config();
-        $mustCompile = $config->compilation['force'] || !file_exists($cachefile);
+        if (!$config) {
+            $config = jApp::config();
+        }
+        $mustCompile = $force || $config->compilation['force'] || !file_exists($cachefile);
 
         if (!$mustCompile && $config->compilation['checkCacheFiletime']) {
             $compiledate = filemtime($cachefile);
@@ -182,7 +187,7 @@ class jIncluder
                 }
             }
         }
-
+        $returnValue = null;
         if ($mustCompile) {
             require_once JELIX_LIB_PATH.$aType[1];
             $compiler = new $aType[0]();
@@ -205,13 +210,14 @@ class jIncluder
                     apc_delete_file($cachefile);
                 }
 
-                require $cachefile;
+                $returnValue = require $cachefile;
                 jIncluder::$_includedFiles[$cachefile] = true;
             }
         } else {
-            require $cachefile;
+            $returnValue = require $cachefile;
             jIncluder::$_includedFiles[$cachefile] = true;
         }
+        return $returnValue;
     }
 
     public static function clear()

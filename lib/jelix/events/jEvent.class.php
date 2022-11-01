@@ -339,23 +339,34 @@ class jEvent
     protected static $hashListened = array();
 
     /**
+     * List of listeners for each event
+     *  key = event name, value = array('moduleName', 'listenerName')
+     * @var array|null
+     */
+    protected static $listenersList = null;
+
+
+    /**
      * construct the list of all listeners corresponding to an event.
      *
      * @param string $eventName the event name we wants the listeners for
      */
     protected static function loadListenersFor($eventName)
     {
-        if (!isset($GLOBALS['JELIX_EVENTS'])) {
+        if (self::$listenersList === null) {
             $compilerData = self::$compilerData;
             $compilerData[3] = jApp::config()->urlengine['urlScriptId'] . '.' . $compilerData[3];
-            jIncluder::incAll($compilerData, true);
+            self::$listenersList = jIncluder::incAll($compilerData, true);
+            if (self::$listenersList === null) {
+                trigger_error('Compilation of event listeners list failed?', E_USER_WARNING);
+                return;
+            }
         }
 
-        $inf = &$GLOBALS['JELIX_EVENTS'];
         self::$hashListened[$eventName] = array();
-        if (isset($inf[$eventName])) {
+        if (isset(self::$listenersList[$eventName])) {
             $modules = &jApp::config()->_modulesPathList;
-            foreach ($inf[$eventName] as $listener) {
+            foreach (self::$listenersList[$eventName] as $listener) {
                 list($module, $listenerName) = $listener;
                 if (!isset($modules[$module])) {  // some modules could be unused
                     continue;
@@ -379,6 +390,6 @@ class jEvent
     {
         self::$hashListened = array();
         self::$listenersSingleton = array();
-        unset($GLOBALS['JELIX_EVENTS']);
+        self::$listenersList = null;
     }
 }
