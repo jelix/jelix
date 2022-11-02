@@ -13,8 +13,8 @@
  */
 
 namespace Jelix\Core;
-use Jelix\Events\EventDispatcher;
-use Jelix\Events\ListenerProvider;
+use Jelix\Event\EventDispatcher;
+use Jelix\Event\ListenerProvider;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**

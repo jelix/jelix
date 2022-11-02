@@ -51,7 +51,7 @@ Removes
 -------
 
 * the template plugins `swfjs`, `swfbiscuit` and the script `jquery.flash.js`. Flash is dead, so no reason to keep these files.
-
+* `$GLOBALS['JELIX_EVENTS']` does not exists anymore
 
 Internal changes
 ----------------

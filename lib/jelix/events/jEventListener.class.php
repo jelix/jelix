@@ -15,11 +15,11 @@
 /**
  * base class for event listeners.
  *
- * Prefer to use \Jelix\Events\EventListener
+ * Prefer to use \Jelix\Event\EventListener
  * @package     jelix
  * @subpackage  events
  */
-class jEventListener extends \Jelix\Events\EventListener
+class jEventListener extends \Jelix\Event\EventListener
 {
 
 }

@@ -19,7 +19,7 @@ require_once JELIX_LIB_PATH . 'events/jEventListener.class.php';
  * @package     jelix
  * @subpackage  events
  */
-class jEvent implements \Jelix\Events\EventInterface
+class jEvent implements \Jelix\Event\EventInterface
 {
     /**
      * The name of the event.
