@@ -239,4 +239,14 @@ class jApp
     {
         return \Jelix\Core\App::getCurrentModule();
     }
+
+    public static function services()
+    {
+        return \Jelix\Core\App::services();
+    }
+
+    public static function reloadServices()
+    {
+        return \Jelix\Core\App::reloadServices();
+    }
 }

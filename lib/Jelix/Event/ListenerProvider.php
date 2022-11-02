@@ -1,0 +1,108 @@
+<?php
+/**
+ * @author   Gérald Croes, Patrice Ferlet, Laurent Jouanneau, Dominique Papin, Steven Jehannet
+ *
+ * @copyright 2001-2005 CopixTeam, 2005-2022 Laurent Jouanneau, 2009 Dominique Papin
+ *
+ * @see      http://www.jelix.org
+ * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ */
+namespace Jelix\Event;
+
+
+use Jelix\Core\Includer;
+
+class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
+{
+    /**
+     * because a listener can listen several events, we should
+     * create only one instance of a listener for performance, and
+     * $hashListened will contain only reference to this listener.
+     *
+     * @var EventListener[][]
+     */
+    protected $listenersSingleton = array();
+
+    /**
+     * hash table for event listened.
+     * $hashListened['eventName'] = array of events (by reference).
+     *
+     * @var EventListener[][]
+     */
+    protected $hashListened = array();
+
+    protected $config;
+
+    public function __construct(object $jelixConfig)
+    {
+        $this->config = $jelixConfig;
+    }
+
+
+    public function getListenersForEvent(object $event) : iterable
+    {
+        if ($event instanceof EventInterface) {
+            $eventName = $event->getName();
+        } else {
+            $eventName = get_class($event);
+        }
+
+        if (!isset($hashListened[$eventName])) {
+            $this->loadListenersFor($eventName);
+        }
+
+        return $this->hashListened[$eventName];
+    }
+
+    protected $compilerData = array(
+        '\\Jelix\\Event\\Compiler',
+        null,
+        'events.xml',
+        'events.php',
+    );
+
+    /**
+     * List of listeners for each event
+     *  key = event name, value = array('moduleName', 'listenerName')
+     * @var array|null
+     */
+    protected $listenersList = null;
+
+    /**
+     * construct the list of all listeners corresponding to an event.
+     *
+     * @param string $eventName the event name we want the listeners for
+     */
+    protected function loadListenersFor($eventName)
+    {
+        if ($this->listenersList === null) {
+            $compilerData = $this->compilerData;
+            $compilerData[3] = $this->config->urlengine['urlScriptId'] . '.' . $compilerData[3];
+            $this->listenersList = Includer::incAll($compilerData, true, $this->config);
+            if ($this->listenersList === null) {
+                trigger_error('Compilation of event listeners list failed?', E_USER_WARNING);
+                return;
+            }
+        }
+
+        $this->hashListened[$eventName] = array();
+        if (isset($this->listenersList[$eventName])) {
+            $modules = & $this->config->_modulesPathList;
+            $me = $this;
+            foreach ($this->listenersList[$eventName] as $listener) {
+                list($module, $listenerName) = $listener;
+                if (!isset($modules[$module])) {  // some modules could be unused
+                    continue;
+                }
+                if (!isset($this->listenersSingleton[$module][$listenerName])) {
+                    require_once $modules[$module] . 'classes/' . $listenerName . '.listener.php';
+                    $className = $listenerName . 'Listener';
+                    $this->listenersSingleton[$module][$listenerName] = new $className();
+                }
+                $this->hashListened[$eventName][] = function($event) use($me, $module, $listenerName) {
+                    $me->listenersSingleton[$module][$listenerName]->performEvent($event);
+                };
+            }
+        }
+    }
+}

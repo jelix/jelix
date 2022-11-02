@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2005-2014 Laurent Jouanneau
+ * @copyright  2005-2022 Laurent Jouanneau
  *   Idea of this class was picked from the Copix project (CopixInclude, Copix 2.3dev20050901, http://www.copix.org)
  *
  * @see       http://www.jelix.org
@@ -102,19 +102,22 @@ class Includer
      *                     'foo.xml', // file name to compile (in each modules)
      *                     'foo.php',  //cache filename
      *                     );
-     * @param mixed $force
+     * @param mixed $force  force to launch the compilation even if the cache file is ok
      *
-     *  @return mixed arbitrary value from the cached
+     * @return mixed the value returned by the cache file (returned value of the 'require')
+     *               or null the compilation has not been done or the cache file already included
      */
-    public static function incAll($aType, $force = false)
+    public static function incAll($aType, $force = false, $config = null)
     {
         $cachefile = App::tempPath('compiled/'.$aType[3]);
         if (isset(self::$_includedFiles[$cachefile]) && !$force) {
-            return;
+            return null;
         }
 
-        $config = App::config();
-        $mustCompile = $config->compilation['force'] || !file_exists($cachefile);
+        if (!$config) {
+            $config = App::config();
+        }
+        $mustCompile = $force || $config->compilation['force'] || !file_exists($cachefile);
 
         if (!$mustCompile && $config->compilation['checkCacheFiletime']) {
             $compiledate = filemtime($cachefile);
@@ -129,7 +132,7 @@ class Includer
                 }
             }
         }
-
+        $returnedValue = null;
         if ($mustCompile) {
             // @deprecated
             if ($aType[1]) {

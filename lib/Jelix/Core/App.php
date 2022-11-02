@@ -29,6 +29,8 @@ namespace Jelix\Core;
  * @method static void pushCurrentModule($module)
  * @method static string popCurrentModule()
  * @method static string getCurrentModule()
+ * @method static \Jelix\Core\Services services()
+ * @method static reloadServices()
  */
 class App
 {

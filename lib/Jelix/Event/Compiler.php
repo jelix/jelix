@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright 2005-2014 Laurent Jouanneau
+ * @copyright 2005-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -13,6 +13,12 @@ use Jelix\Core\App;
 
 class Compiler implements \Jelix\Core\Includer\MultiFileCompilerInterface
 {
+    /**
+     * list of listeners for each event.
+     * key = event name, value = array('moduleName', 'listenerName')
+     *
+     * @var array
+     */
     private $eventList;
 
     public function __construct()

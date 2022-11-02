@@ -5,7 +5,7 @@
  * @author   Laurent Jouanneau
  * @contributor
  *
- * @copyright 2014 Laurent Jouanneau
+ * @copyright 2014-2022 Laurent Jouanneau
  *
  * @see     http://www.jelix.org
  * @licence  MIT
@@ -14,9 +14,9 @@
 /**
  * dummy class for compatibility.
  *
- * @see \Jelix\Event\Listener
+ * @see \Jelix\Event\EventListener
  * @deprecated
  */
-class jEventListener extends \Jelix\Event\Listener
+class jEventListener extends \Jelix\Event\EventListener
 {
 }

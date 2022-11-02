@@ -79,7 +79,6 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 
 ## internal
 
-- `$GLOBALS['JELIX_EVENTS']` does not exists anymore
 
 ## removed classes and methods
 

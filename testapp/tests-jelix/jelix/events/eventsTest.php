@@ -24,7 +24,6 @@ class eventsTest extends \Jelix\UnitTests\UnitTestCase
 
     function setUp(): void
     {
-        jEvent::clearCache();
         self::initJelixConfig();
         jFile::removeDir(jApp::tempPath(), false);
         parent::setUp();

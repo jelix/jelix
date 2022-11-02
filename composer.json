@@ -31,7 +31,8 @@
         "jelix/version": "^2.0.1",
         "jelix/fakeserverconf": "^1.0.0",
         "defuse/php-encryption": "^2.3.1",
-        "google/recaptcha": "~1.2.4"
+        "google/recaptcha": "~1.2.4",
+        "psr/event-dispatcher": "~1.0.0"
     },
     "archive": {
         "exclude": ["/build", "/temp", "/testapp", "Makefile"]
