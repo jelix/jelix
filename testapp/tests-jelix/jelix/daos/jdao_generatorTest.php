@@ -136,6 +136,8 @@ class jdao_generatorTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals('\' <= \'.intval($foo)',$result);
         $result = $this->_getProp('string','$foo', true,'<=');
         $this->assertEquals('\' <= \'.$this->_conn->quote($foo)',$result);
+        $result = $this->_getProp('datetime','$foo', true,'<=');
+        $this->assertEquals('\' <= \'.$this->_conn->quote($foo)',$result);
         $result = $this->_getProp('double','$foo', true,'<=');
         $this->assertEquals('\' <= \'.jDb::floatToStr($foo)',$result);
         $result = $this->_getProp('float','$foo', true,'<=');
@@ -517,6 +519,13 @@ class jdao_generatorTest extends \Jelix\UnitTests\UnitTestCase {
               <like property="grouptype" expr="$login" />
            </conditions>
         </method>
+        
+        <method type="count" name="countdate">
+            <parameter name="current_datetime" />
+            <conditions>
+                <lt property="datecreate" expr="$current_datetime" />
+            </conditions>
+        </method>
     </factory>
 </dao>';
         $tools = new jDbPgsqlTools(null);
@@ -534,6 +543,10 @@ class jdao_generatorTest extends \Jelix\UnitTests\UnitTestCase {
         $where = $generator->BuildSQLCondition ($methods['method15']->getConditions()->condition, $parser->getProperties(),
             $methods['method15']->getParameters(), false);
         $this->assertEquals(' "grouptype" = 2 AND TOUPPER("name") = TOUPPER(\'.$this->_conn->quote($login).\') AND extract(day FROM TIMESTAMP "datecreate") = extract(day FROM TIMESTAMP \'.($adate === null ? \'NULL\' : $this->_conn->quote2($adate,false)).\') AND "grouptype" \'.\' LIKE \'.$this->_conn->quote($login).\'',$where);
+
+        $where = $generator->BuildSQLCondition ($methods['countdate']->getConditions()->condition, $parser->getProperties(),
+            $methods['countdate']->getParameters(), false);
+        $this->assertEquals(' "datecreate" \'.\' < \'.$this->_conn->quote($current_datetime).\'', $where);
 
     }
 
