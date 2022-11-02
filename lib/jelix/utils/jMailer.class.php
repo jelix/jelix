@@ -10,12 +10,8 @@
  *
  * @author      Laurent Jouanneau
  * @contributor Kévin Lepeltier, GeekBay, Julien Issler
-<<<<<<< HEAD
  *
- * @copyright   2006-2020 Laurent Jouanneau
-=======
  * @copyright   2006-2022 Laurent Jouanneau
->>>>>>> github/jelix-1.6.x
  * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
  * @copyright   2010-2015 Julien Issler
  *
