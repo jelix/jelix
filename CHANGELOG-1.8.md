@@ -60,6 +60,7 @@ Internal changes
 * Upgrade PHPUnit to 8.5 for our tests
 * Upgrade PHPMailer to 6.2.0
 * Upgrade Jquery to 3.6.1
+* Upgrade Jquery UI to 1.13.2
 * Tests with CasperJs have been removed
 * Some Javascript scripts like `jforms_jquery.js` are now generated with WebPack. See the `assets` directory.
 
