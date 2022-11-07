@@ -59,6 +59,7 @@ Internal changes
 * Upgrade Symfony Console to 5.2.1
 * Upgrade PHPUnit to 8.5 for our tests
 * Upgrade PHPMailer to 6.2.0
+* Upgrade Jquery to 3.6.1
 * Tests with CasperJs have been removed
 * Some Javascript scripts like `jforms_jquery.js` are now generated with WebPack. See the `assets` directory.
 
