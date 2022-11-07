@@ -51,14 +51,6 @@ class DatabaseHelpers
         }
 
         $this->dbProfile = $dbProfile;
-
-        // we check if it is an alias
-        $profilesIni = $this->globalSetup->getProfilesIni();
-        $alias = $profilesIni->getValue($dbProfile, 'jdb');
-        if ($alias) {
-            $this->dbProfile = $alias;
-        }
-
         $this->_dbConn = null; // we force to retrieve a db connection
     }
 
