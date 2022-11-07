@@ -62,6 +62,7 @@ Internal changes
 * Upgrade Jquery to 3.6.1
 * Upgrade Jquery UI to 1.13.2
 * Upgrade CKEditor to 35.3.0
+* Upgrade Datatables to 1.12.1
 * Tests with CasperJs have been removed
 * Some Javascript scripts like `jforms_jquery.js` are now generated with WebPack. See the `assets` directory.
 
