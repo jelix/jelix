@@ -323,7 +323,8 @@ class GlobalSetup
                 $moduleInfos = new ModuleStatus(
                     $moduleName,
                     $dirContent->getPathname(),
-                    $modulesInfos
+                    $modulesInfos,
+                    true
                 );
 
                 $this->ghostModules[$moduleName] = new ModuleInstallerLauncher($moduleInfos, $this);
@@ -364,7 +365,8 @@ class GlobalSetup
     protected function createComponentModule($name, $path)
     {
         $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
-        $moduleInfos = new ModuleStatus($name, $path, $moduleSetupList);
+        $enabledGlobally = $this->mainConfigIni->getValue($name.'.enabled', 'modules');
+        $moduleInfos = new ModuleStatus($name, $path, $moduleSetupList, $enabledGlobally);
 
         return new ModuleInstallerLauncher($moduleInfos, $this);
     }
@@ -816,13 +818,25 @@ class GlobalSetup
         return $this->currentProcessedModule->getPath();
     }
 
+    /**
+     * @var bool indicates if we should work on the local configuration or
+     *           into the application configuration (dev mode)
+     */
     private $forLocalConfiguration = false;
 
+    /**
+     * @param boolean $forLocalConfiguration
+     * @return void
+     */
     public function setCurrentConfiguratorStatus($forLocalConfiguration)
     {
         $this->forLocalConfiguration = $forLocalConfiguration;
     }
 
+    /**
+     * @return bool indicates if we should work on the local configuration or
+     *           into the application configuration
+     */
     public function forLocalConfiguration()
     {
         return $this->forLocalConfiguration;

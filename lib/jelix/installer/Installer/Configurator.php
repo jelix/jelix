@@ -201,7 +201,7 @@ class Configurator
             $this->notice('install.installers.disabled');
         }
 
-        $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
+        $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig ?: false);
         $this->globalSetup->setReadWriteConfigMode(false);
 
         $componentsToConfigure = $this->runPreConfigure($modulesToConfigure, $entryPoint, $forLocalConfig);
@@ -403,7 +403,10 @@ class Configurator
      * Launch the preConfigure method of each modules configurator.
      *
      * @param \Jelix\Dependencies\Item[] $moduleschain
-     * @param mixed                      $forLocalConfig
+     * @param bool|null                  $forLocalConfig If not null, uninstalled modules will
+     *                                   be configured into the local or app scope, according
+     *                                   to this given value, else installed module will be configured
+     *                                   in the scope already indicated into their current status
      *
      * @return array|bool
      */

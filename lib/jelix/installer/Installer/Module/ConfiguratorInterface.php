@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2022 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -59,7 +59,7 @@ interface ConfiguratorInterface
      *
      * You can set some configuration parameters in the application configuration
      * files, you can also copy some files into the application, setup the
-     * urls mapping etc..
+     * urls mapping etc.
      *
      * @throws \Exception if the module cannot be configured
      */
@@ -70,7 +70,11 @@ interface ConfiguratorInterface
      *
      * You can set some configuration parameters in the local configuration
      * files, you can also copy some files into the application, setup the
-     * urls mapping etc..
+     * urls mapping etc.
+     *
+     * It is useful when the module is installed natively into the application,
+     * but you want to do additional configuration setup in an instance of
+     * the application, that depends on the local context of the application
      *
      * @throws \Exception if the module cannot be configured
      */

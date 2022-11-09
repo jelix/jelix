@@ -4,7 +4,7 @@
  * @subpackage  installer
  *
  * @author      Laurent Jouanneau
- * @copyright   2009-2021 Laurent Jouanneau
+ * @copyright   2009-2022 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -155,10 +155,13 @@ class jInstallerEntryPoint
      */
     public function getModule($moduleName)
     {
+        $enabledGlobally = $this->configIni->getMaster()->getValue($moduleName.'.enabled', 'modules');
+
         return new \Jelix\Installer\ModuleStatus(
             $moduleName,
             $this->config->_allModulesPathList[$moduleName],
-            $this->config->modules
+            $this->config->modules,
+            $enabledGlobally
         );
     }
 

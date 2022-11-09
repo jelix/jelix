@@ -84,7 +84,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
         ));
 
         $moduleInfos = new \Jelix\Installer\ModuleStatus('test',
-            jApp::appPath().'modules/test/', $conf->modules);
+            jApp::appPath().'modules/test/', $conf->modules, true);
 
         $comp = new testInstallerComponentForDependencies($moduleInfos, $this->globalSetup);
 
@@ -190,14 +190,14 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             ));
 
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall1',
-                jApp::appPath().'modules/testinstall1/', $conf->modules);
+                jApp::appPath().'modules/testinstall1/', $conf->modules, true);
             // testinstall1 has no install.php file
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
             $installer = $component->getInstaller();
             $this->assertNull($installer);
-            $configurator = $component->getConfigurator(true);
+            $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE);
             $this->assertNotNull($configurator);
         }
         catch(\Jelix\Installer\Exception $e) {
@@ -217,7 +217,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             ));
 
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
-                jApp::appPath().'modules/testinstall2/', $conf->modules);
+                jApp::appPath().'modules/testinstall2/', $conf->modules, true);
 
             // testinstall2 has an install.php and configure.php file
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
@@ -226,8 +226,8 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             $installer = $component->getInstaller();
             $this->assertTrue (is_object($installer));
 
-            $installer = $component->getConfigurator(true);
-            $this->assertTrue (is_object($installer));
+            $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE);
+            $this->assertTrue (is_object($configurator));
         }
         catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -244,7 +244,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                'testinstall1.version'=>jFramework::version(),
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall1',
-                jApp::appPath().'modules/testinstall1/', $conf->modules);
+                jApp::appPath().'modules/testinstall1/', $conf->modules, true);
 
             // testinstall1 has no upgrade scripts
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
@@ -272,7 +272,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
 
             //------------ testinstall2 has some upgraders file
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
-                jApp::appPath().'modules/testinstall2/', $conf->modules);
+                jApp::appPath().'modules/testinstall2/', $conf->modules, true);
 
             // testinstall2 has an install.php file
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
@@ -296,7 +296,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                'testinstall2.version'=>"1.2.3",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
-                jApp::appPath().'modules/testinstall2/', $conf->modules);
+                jApp::appPath().'modules/testinstall2/', $conf->modules, true);
 
             // the current version is the previous one : one updater
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
@@ -324,7 +324,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                'testinstall2.version'=>"1.1.2",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
-                jApp::appPath().'modules/testinstall2/', $conf->modules);
+                jApp::appPath().'modules/testinstall2/', $conf->modules, true);
 
             // the current version is the previous one : one updater
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
@@ -355,7 +355,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                'testinstall2.version'=>"1.1.1",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
-                jApp::appPath().'modules/testinstall2/', $conf->modules);
+                jApp::appPath().'modules/testinstall2/', $conf->modules, true);
 
 
             // the current version is the previous one : one updater
@@ -397,7 +397,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                'testinstall2.version'=>"1.1",
             ));
 
-            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules, true);
             $component = new testInstallerComponentModule2($moduleInfos, $this->globalSetup);
             $component->setSourceVersionDate('1.1.5','2011-01-15');
             $this->globalSetup->addModuleComponent($component);
@@ -421,7 +421,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                'testinstall2.installed'=>false,
                'testinstall2.version'=>"1.1.5",
             ));
-            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules);
+            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules, true);
             $component = new testInstallerComponentModule2($moduleInfos, $this->globalSetup);
             $component->setSourceVersionDate('1.2.5','2011-01-25');
             $this->globalSetup->addModuleComponent($component);
@@ -446,7 +446,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                'testinstall2.version'=>"0.9",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2',
-                jApp::appPath().'modules/testinstall2/', $conf->modules);
+                jApp::appPath().'modules/testinstall2/', $conf->modules, true);
 
             // the current version is a very old one : all updaters
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
@@ -476,7 +476,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                 'testinstall3.version'=>"1.5.0",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall3',
-                jApp::appPath().'modules/testinstall3/', $conf->modules);
+                jApp::appPath().'modules/testinstall3/', $conf->modules, true);
 
             // the current version is the previous one : one updater
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
@@ -506,7 +506,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                 'testinstall3.version'=>$infos->version,
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall3',
-                $path, $conf->modules);
+                $path, $conf->modules, true);
 
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
@@ -530,7 +530,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                 'testinstall3.version'=>"1.6.3",
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall3',
-                jApp::appPath().'modules/testinstall3/', $conf->modules);
+                jApp::appPath().'modules/testinstall3/', $conf->modules, true);
 
             // the current version is the previous one : one updater
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
