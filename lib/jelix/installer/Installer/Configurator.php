@@ -532,10 +532,18 @@ class Configurator
 
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';
         foreach ($configurator->getFilesToCopy() as $source => $target) {
+
+            if (is_array($target)) {
+                list($target, $overwrite) = $target;
+            }
+            else {
+                $overwrite = true;
+            }
+
             if (is_dir($prefix.$source)) {
-                $configHelpers->copyDirectoryContent($source, $target, true);
+                $configHelpers->copyDirectoryContent($source, $target, $overwrite);
             } elseif (is_file($prefix.$source)) {
-                $configHelpers->copyFile($source, $target, true);
+                $configHelpers->copyFile($source, $target, $overwrite);
             }
         }
     }
@@ -557,6 +565,9 @@ class Configurator
         $configurator->unconfigure($configHelpers);
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';
         foreach ($configurator->getFilesToCopy() as $source => $target) {
+            if (is_array($target)) {
+                $target = $target[0];
+            }
             if (is_dir($prefix.$source)) {
                 $configHelpers->removeDirectoryContent($target);
             } elseif (is_file($prefix.$source)) {

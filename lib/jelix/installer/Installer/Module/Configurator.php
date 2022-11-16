@@ -65,6 +65,9 @@ class Configurator implements ConfiguratorInterface
      * @return string[]
      *                  - keys are relative path to the install/ directory of the module
      *                  - values are target path. Shortcut allowed ('www:', 'config:', 'var:', 'temp:', 'log:')
+     *                    Target can be an array containing the path and a boolean
+     *                    indicating if, when the target already exists, it should be
+     *                    overwritten (true) or not (false). By default it is overwritten.
      */
     public function getFilesToCopy()
     {
