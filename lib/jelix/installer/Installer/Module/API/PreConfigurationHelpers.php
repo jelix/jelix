@@ -145,7 +145,8 @@ class PreConfigurationHelpers
     {
         $ep = $this->globalSetup->getEntryPointById($epId);
         if ($ep) {
-            $ep = new \Jelix\Installer\EntryPointPreConfigurator($ep, $this->globalSetup, $this->forLocalConfiguration);
+            $flc = $this->globalSetup->forLocalConfiguration();
+            $ep = new \Jelix\Installer\EntryPointPreConfigurator($ep, $this->globalSetup, $flc);
         }
 
         return $ep;
