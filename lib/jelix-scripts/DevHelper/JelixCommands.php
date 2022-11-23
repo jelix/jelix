@@ -48,6 +48,7 @@ class JelixCommands
         $application->add(new Command\CreateLangPackage($jelixScriptConfig));
         $application->add(new Command\CreateZone($jelixScriptConfig));
         $application->add(new Command\IniChange($jelixScriptConfig));
+        $application->add(new Command\IniMerge($jelixScriptConfig));
 
         return $application;
     }

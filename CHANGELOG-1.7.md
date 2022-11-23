@@ -13,6 +13,7 @@ Jelix 1.7.12 (not release yet)
 * Upgrade Symfony/Console to 5.4 to be compatible with PHP 8.1.
 * Fix `jFile::write()`: directory were not created with the chmod of configuration
 * assets: add missing ui.fr.js for the datepicker
+* new `php dev.php app:ini-merge` command to merge two ini files.
 
 From Jelix 1.6:
 

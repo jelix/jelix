@@ -256,9 +256,9 @@ class jConfigCompiler
     {
         if ($conf != '1' && strlen($conf) > 1) {
             // the configuration value is a filename
-            $confFile = jApp::appSystemPath($conf);
+            $confFile = jApp::varConfigPath($conf);
             if (!file_exists($confFile)) {
-                $confFile = jApp::varConfigPath($conf);
+                $confFile = jApp::appSystemPath($conf);
                 if (!file_exists($confFile)) {
                     throw new Exception("Error in the configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin {$name} doesn't exist: '{$confFile}'", 8);
                 }

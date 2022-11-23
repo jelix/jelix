@@ -786,9 +786,9 @@ class GlobalSetup
             return null;
         }
         // the configuration value is a filename
-        $confpath = \jApp::appSystemPath($conf);
+        $confpath = \jApp::varConfigPath($conf);
         if (!file_exists($confpath)) {
-            $confpath = \jApp::varConfigPath($conf);
+            $confpath = \jApp::appSystemPath($conf);
             if (!file_exists($confpath)) {
                 return null;
             }
