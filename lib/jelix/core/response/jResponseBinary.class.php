@@ -43,7 +43,7 @@ final class jResponseBinary extends jResponse
     /**
      * the content you want to send. Keep empty if you indicate a filename.
      *
-     * @var string
+     * @var string|null
      */
     public $content;
 
@@ -73,7 +73,7 @@ final class jResponseBinary extends jResponse
      *
      * @throws jException
      *
-     * @return bool true it it's ok
+     * @return bool true if it's ok
      */
     public function output()
     {
@@ -96,7 +96,7 @@ final class jResponseBinary extends jResponse
             $this->addHttpHeader('Content-Disposition', 'inline; filename="'.str_replace('"', '\"', $this->outputFileName).'"', false);
         }
 
-        if ($this->content === null) {
+        if ($this->content === null || $this->content === '') {
             if (is_readable($this->fileName) && is_file($this->fileName)) {
                 $this->_httpHeaders['Content-Length'] = filesize($this->fileName);
                 $this->sendHttpHeaders();
