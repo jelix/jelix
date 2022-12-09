@@ -1,14 +1,15 @@
 Changes into Jelix 1.7
 ======================
 
-Jelix 1.7.12 (not release yet)
+Jelix 1.7.12
 ------------
 
 * jDb:
   * reintroduce the support of placeholders `$1`, `$2` etc into prepared queries, like in Jelix 1.6
 * jAuth: fix support of driver configuration stored into a `auth_<driver>` section 
 * jCache: fix the garbage API of the file plugin. It tried to remove non-empty directories
-* fix installer: configuration of entrypoints were not saved
+* Fix installer: configuration of entrypoints were not saved
+* Fix the load of plugins configuration for the router (jCoordinator)
 * Configurator of the jelix module: add `nosetup` in the choice of `jelix-www` installation
 * Upgrade Symfony/Console to 5.4 to be compatible with PHP 8.1.
 * Fix `jFile::write()`: directory were not created with the chmod of configuration
@@ -20,6 +21,9 @@ From Jelix 1.6:
 * `closed.html` can now be stored into `var/themes/`
 * Replace the use of deprecated `utf8_*` functions
 * jDb: New option `session_role` in profiles for pgsql to set session role
+* Fix installer: useDbProfile must not change the profile name
+* jMailer: new value "unencrypted" for secure_protocol
+* Fix error "two few arguments" during call of some error handlers
 
 Jelix 1.7.11
 ------------
