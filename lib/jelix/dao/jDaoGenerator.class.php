@@ -824,6 +824,8 @@ class jDaoGenerator
      * @internal
      *
      * @param mixed $captureMethod
+     *
+     * @return jDaoProperty[]
      */
     protected function _getPropertiesBy($captureMethod)
     {
@@ -946,15 +948,20 @@ class jDaoGenerator
         return $r;
     }
 
+    /**
+     * @param jDaoProperty[] $fieldList
+     * @param string $pattern
+     * @param string $prefixfield
+     * @return array[]
+     */
     protected function _prepareValues($fieldList, $pattern = '', $prefixfield = '')
     {
         $values = $fields = array();
 
-        foreach ((array) $fieldList as $fieldName => $field) {
+        foreach ($fieldList as $fieldName => $field) {
             if ($pattern != '' && $field->{$pattern} == '') {
                 continue;
             }
-
             $value = $this->_preparePHPExpr('$'.$prefixfield.$fieldName, $field, true);
 
             if ($pattern != '') {
@@ -1131,6 +1138,13 @@ class jDaoGenerator
         return $r;
     }
 
+    /**
+     * @param string $expr
+     * @param jDaoProperty $field
+     * @param bool $checknull
+     * @param string $forCondition
+     * @return string the PHP expression to insert into the generated class
+     */
     protected function _preparePHPExpr($expr, $field, $checknull = true, $forCondition = '')
     {
         $opnull = $opval = '';

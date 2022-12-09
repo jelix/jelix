@@ -233,8 +233,7 @@ abstract class jDbTools
                     return $value;
                 }
 
-                    return floatval($value);
-
+                return floatval($value);
             default:
                 return $value;
         }
