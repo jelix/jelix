@@ -33,8 +33,8 @@ $BUILD_OPTIONS = array(
     '',
     ),
 'PHP_VERSION_TARGET'=> array(
-    "PHP5 version for which jelix will be generated (by default, the target is php 5.6)",
-    '5.6'
+    "PHP5 version for which jelix will be generated (by default, the target is php 7.4)",
+    '7.4'
     ),
 'ENABLE_DEVELOPER'=>array(
     "include all developers tools in the distribution",
@@ -122,7 +122,7 @@ else
     $LIB_VERSION_MAX = $LIB_VERSION;
 
 if ($PHP_VERSION_TARGET) {
-    if (version_compare($PHP_VERSION_TARGET, '5.6') == -1) {
+    if (version_compare($PHP_VERSION_TARGET, '7.4') == -1) {
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
 }
