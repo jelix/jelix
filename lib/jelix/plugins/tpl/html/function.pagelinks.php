@@ -56,33 +56,33 @@ function jtpl_function_html_pagelinks(
         $pageSize = 1;
     }
 
+    $defaultDisplayProperties = array(
+        'start-label' => '|&lt;',
+        'start-class' => 'pagelinks-start',
+        'prev-label' => '&lt;',
+        'prev-class' => 'pagelinks-prev',
+        'next-label' => '&gt;',
+        'next-class' => 'pagelinks-next',
+        'end-label' => '&gt;|',
+        'end-class' => 'pagelinks-end',
+        'area-size' => 0,
+        'list-class' => 'pagelinks',
+        'current-page-class' => 'pagelinks-current',
+        'page-class' => '',
+        'disabled-class' => 'pagelinks-disabled',
+    );
+
+    if (is_array($displayProperties) && count($displayProperties) > 0) {
+        $displayProperties = array_merge($defaultDisplayProperties, $displayProperties);
+    } else {
+        $displayProperties = $defaultDisplayProperties;
+    }
+
     // If there are at least two pages of results
     if ($itemsTotal > $pageSize) {
         $jUrlEngine = jApp::coord()->getUrlActionMapper();
 
         $urlaction = jUrl::get($action, $actionParams, jUrl::JURLACTION);
-
-        $defaultDisplayProperties = array(
-            'start-label' => '|&lt;',
-            'start-class' => 'pagelinks-start',
-            'prev-label' => '&lt;',
-            'prev-class' => 'pagelinks-prev',
-            'next-label' => '&gt;',
-            'next-class' => 'pagelinks-next',
-            'end-label' => '&gt;|',
-            'end-class' => 'pagelinks-end',
-            'area-size' => 0,
-            'list-class' => 'pagelinks',
-            'current-page-class' => 'pagelinks-current',
-            'page-class' => '',
-            'disabled-class' => 'pagelinks-disabled',
-        );
-
-        if (is_array($displayProperties) && count($displayProperties) > 0) {
-            $displayProperties = array_merge($defaultDisplayProperties, $displayProperties);
-        } else {
-            $displayProperties = $defaultDisplayProperties;
-        }
 
         $pages = array();
 
