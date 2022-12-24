@@ -32,9 +32,14 @@ class jAcl2Authentication
     public static function getAdapter()
     {
         if (!self::$adapter) {
-            $class = jApp::config()->acl2['authAdapterClass'];
-            if (!class_exists($class)) {
-                throw new Exception('jAcl2: class indicated into authAdapterClass does not exist');
+            if (isset (jApp::config()->acl2['authAdapterClass'])) {
+                $class = jApp::config()->acl2['authAdapterClass'];
+                if (!class_exists($class)) {
+                    throw new Exception('jAcl2: class indicated into configuration parameter authAdapterClass does not exist');
+                }
+            }
+            else {
+                $class = 'jAcl2JAuthAdapter';
             }
             self::$adapter = new $class();
         }
