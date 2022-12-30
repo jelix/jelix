@@ -6,7 +6,7 @@
     "require": {
         "php": ">=7.4.0",
         "jelix/fakeserverconf": "^1.0.0",
-        "jelix/composer-module-setup": "^1.0.5",
+        "jelix/composer-module-setup": "^1.1.0",
         "phpmailer/phpmailer": "^6.6.5",
         "jelix/castor": "^1.1.1",
         "jelix/inifile": "^3.3.1",

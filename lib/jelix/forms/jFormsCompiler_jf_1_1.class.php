@@ -7,7 +7,7 @@
  * @contributor Loic Mathaud, Dominique Papin, Julien Issler
  * @contributor Uriel Corfa (Emotic SARL), Thomas, Olivier Demah, Adrien Lagroy de Croutte
  *
- * @copyright   2006-2017 Laurent Jouanneau
+ * @copyright   2006-2022 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud, 2007-2008 Dominique Papin
  * @copyright   2007 Emotic SARL
  * @copyright   2008-2015 Julien Issler, 2009 Thomas, 2009 Olivier Demah
@@ -42,10 +42,18 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
     {
         if (isset($attributes['pattern'])) {
             if (isset($attributes['type']) && $attributes['type'] != 'string') {
-                throw new jException('jelix~formserr.attribute.not.allowed', array('pattern', 'input', $this->sourceFile));
+                throw new jException('jelix~formserr.attribute.not.allowed', array('pattern',  'input type '.$attributes['type'], $this->sourceFile));
             }
             $source[] = '$ctrl->datatype->addFacet(\'pattern\',\''.str_replace("'", "\\'", $attributes['pattern']).'\');';
             unset($attributes['pattern']);
+        }
+
+        if (isset($attributes['filterhtml']) && $attributes['filterhtml'] == 'true') {
+            if (isset($attributes['type']) && $attributes['type'] != 'string') {
+                throw new jException('jelix~formserr.attribute.not.allowed', array('filterhtml', 'input type '.$attributes['type'], $this->sourceFile));
+            }
+            $source[] = '$ctrl->datatype->addFacet(\'filterHtml\', true);';
+            unset($attributes['filterhtml']);
         }
 
         return parent::generateInput($source, $control, $attributes);
@@ -471,7 +479,7 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
                 continue;
             }
             if (!in_array($ctrltype, array('input', 'textarea', 'output', 'checkbox', 'checkboxes', 'radiobuttons', 'button',
-                'menulist', 'listbox', 'secret', 'upload', 'upload2', 'hidden', 'htmleditor', 'date', 'datetime', 'wikieditor', 'choice', ))) {
+                'menulist', 'listbox', 'secret', 'upload', 'upload2', 'image', 'hidden', 'htmleditor', 'date', 'datetime', 'wikieditor', 'choice', ))) {
                 throw new jException('jelix~formserr.control.not.allowed', array($ctrltype, $controltype, $this->sourceFile));
             }
             ++$ctrlcount;
