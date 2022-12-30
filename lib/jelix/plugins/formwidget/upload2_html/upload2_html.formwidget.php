@@ -57,12 +57,22 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
     protected $imgMaxHeight = 0;
 
     /**
+     * @var string indicate how to show new image
+     * - 'filename' to show only its filename
+     * - 'dataURI' to load the new image with a data URI created from the temporary file. Warning: the data URI can be huge for big images.
+     *    Use this mode only for little images.
+     * - 'URL' to load the new image like the original image. It means that the application has save the image
+     *    as a way that it is accessible from the web, directly in a directory (baseURI), or from a action (see uriAction*).
+     */
+    protected $showModeForNewImage = 'filename';
+
+    /**
      * @param array $attr
      */
     protected function filterUploadAttributes(&$attr)
     {
         foreach (array('uriAction', 'uriActionParameters', 'uriActionFileParameter',
-            'baseURI', 'imgMaxWidth', 'imgMaxHeight', ) as $parameter) {
+            'baseURI', 'imgMaxWidth', 'imgMaxHeight', 'showModeForNewImage') as $parameter) {
             if (isset($attr[$parameter])) {
                 $this->{$parameter} = $attr[$parameter];
                 unset($attr[$parameter]);
@@ -300,6 +310,29 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
         $this->_outputControlValue($value);
     }
 
+    protected function getImageURI($fileName)
+    {
+        if ($this->baseURI) {
+            $url = htmlspecialchars($this->baseURI.$fileName);
+        } else if ($this->uriAction) {
+            $params = $this->uriActionParameters;
+            if ($this->uriActionFileParameter) {
+                // replace %s by the value into the uri action parameter
+                $pname = $this->uriActionFileParameter;
+                if (isset($params[$pname]) && strpos($params[$pname], '%s') !== false) {
+                    $params[$pname] = str_replace('%s', $fileName, $params[$pname]);
+                } else {
+                    $params[$pname] = $fileName;
+                }
+            }
+            $url = jUrl::get($this->uriAction, $params, jUrl::XMLSTRING);
+        }
+        else {
+            $url = '';
+        }
+        return $url;
+    }
+
     protected function _outputControlValue($fileName, $suffixId = '')
     {
         $value = $this->ctrl->getDisplayValue($fileName);
@@ -309,24 +342,25 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
         }
 
         $mimeType = jFile::getMimeTypeFromFilename($value);
-        if ($suffixId != 'new' && strpos($mimeType, 'image/') === 0
-            && ($this->uriAction || $this->baseURI)
-        ) {
-            if ($this->baseURI) {
-                $url = htmlspecialchars($this->baseURI.$value);
-            } else {
-                $params = $this->uriActionParameters;
-                if ($this->uriActionFileParameter) {
-                    // replace %s by the value into the uri action parameter
-                    $pname = $this->uriActionFileParameter;
-                    if (isset($params[$pname]) && strpos($params[$pname], '%s') !== false) {
-                        $params[$pname] = str_replace('%s', $value, $params[$pname]);
-                    } else {
-                        $params[$pname] = $value;
+        $url = '';
+        if (strpos($mimeType, 'image/') === 0) {
+            if ($suffixId != 'new') {
+                $url = $this->getImageURI($value);
+            }
+            else if ($this->showModeForNewImage != 'filename') {
+                if ($this->showModeForNewImage == 'dataURI') {
+                    $file = $this->ctrl->getTempFile($value);
+                    if (file_exists($file)) {
+                        $url = 'data:'.$mimeType.';base64,'.base64_encode(file_get_contents($file));
                     }
                 }
-                $url = jUrl::get($this->uriAction, $params, jUrl::XMLSTRING);
+                else {
+                    $url = $this->getImageURI($value);
+                }
             }
+        }
+
+        if ($url) {
             $style = '';
             if ($this->imgMaxHeight) {
                 $style .= 'max-height:'.$this->imgMaxHeight.'px;';

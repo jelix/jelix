@@ -74,7 +74,7 @@ class jFormsControlUpload2 extends jFormsControl
         return '';
     }
 
-    protected function getTempFile($file)
+    public function getTempFile($file)
     {
         jFile::createDir(jApp::tempPath('uploads/'));
 
