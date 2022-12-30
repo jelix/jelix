@@ -5,7 +5,7 @@
     "license": "LGPL-2.1-or-later",
     "require": {
         "jelix/fakeserverconf": "^1.0.0",
-        "jelix/composer-module-setup": "^1.0.5",
+        "jelix/composer-module-setup": "^1.1.0",
         "phpmailer/phpmailer": "^5.2.28",
         "jelix/castor": "^1.1.1",
         "jelix/inifile": "^3.3.1",
