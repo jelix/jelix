@@ -42,10 +42,18 @@ class jFormsCompiler_jf_1_1 extends jFormsCompiler_jf_1_0
     {
         if (isset($attributes['pattern'])) {
             if (isset($attributes['type']) && $attributes['type'] != 'string') {
-                throw new jException('jelix~formserr.attribute.not.allowed', array('pattern', 'input', $this->sourceFile));
+                throw new jException('jelix~formserr.attribute.not.allowed', array('pattern',  'input type '.$attributes['type'], $this->sourceFile));
             }
             $source[] = '$ctrl->datatype->addFacet(\'pattern\',\''.str_replace("'", "\\'", $attributes['pattern']).'\');';
             unset($attributes['pattern']);
+        }
+
+        if (isset($attributes['filterhtml']) && $attributes['filterhtml'] == 'true') {
+            if (isset($attributes['type']) && $attributes['type'] != 'string') {
+                throw new jException('jelix~formserr.attribute.not.allowed', array('filterhtml', 'input type '.$attributes['type'], $this->sourceFile));
+            }
+            $source[] = '$ctrl->datatype->addFacet(\'filterHtml\', true);';
+            unset($attributes['filterhtml']);
         }
 
         return parent::generateInput($source, $control, $attributes);
