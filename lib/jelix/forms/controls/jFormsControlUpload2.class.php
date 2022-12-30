@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler
  *
- * @copyright   2006-2018 Laurent Jouanneau
+ * @copyright   2006-2022 Laurent Jouanneau
  * @copyright   2009 Julien Issler
  *
  * @see        http://www.jelix.org
@@ -46,6 +46,11 @@ class jFormsControlUpload2 extends jFormsControl
         }
     }
 
+    /**
+     * the filename sets into the form during its initialization
+     *
+     * @return string
+     */
     public function getOriginalFile()
     {
         if (isset($this->container->privateData[$this->ref]['originalfile'])) {
@@ -55,6 +60,11 @@ class jFormsControlUpload2 extends jFormsControl
         return '';
     }
 
+    /**
+     * The filename of the file uploaded during the form submission
+     *
+     * @return string
+     */
     public function getNewFile()
     {
         if (isset($this->container->privateData[$this->ref]['newfile'])) {
@@ -225,6 +235,12 @@ class jFormsControlUpload2 extends jFormsControl
         return null;
     }
 
+    /**
+     * Change the name of the new file name. If there is already an uploaded file, it is deleted
+     *
+     * @param string $fileName
+     * @return void
+     */
     public function setNewFile($fileName)
     {
         if ($fileName) {
@@ -259,6 +275,17 @@ class jFormsControlUpload2 extends jFormsControl
         return parent::isModified();
     }
 
+    /**
+     * Return a filename under which the file can be saved without overwriting an existing file.
+     *
+     * The base name of the file is the name of the uploaded file, or the name given into the $alternateName
+     * parameter.
+     * The returning filename can be ended by a number if there is already a file with the original name.
+     *
+     * @param string $directoryPath  the directory where the file is supposed to be stored
+     * @param string $alternateName
+     * @return string the filename
+     */
     public function getUniqueFileName($directoryPath, $alternateName = '')
     {
         if ($alternateName == '') {
@@ -283,7 +310,18 @@ class jFormsControlUpload2 extends jFormsControl
         return substr($dir.'/'.$filename, strlen($directoryPath));
     }
 
-    public function saveFile($directoryPath, $alternateName = '')
+    /**
+     * Save the uploaded file into the given directory, under the original filename, or under the name given
+     * into $alternateName
+     *
+     * If there is already a file with that name, it will be overwritten. If you don't want this behavior, you
+     * can call getUniqueFileName to have a unique name.
+     *
+     * @param string $directoryPath  the directory where the file is supposed to be stored
+     * @param string $alternateName
+     * @return bool
+     */
+    public function saveFile($directoryPath, $alternateName = '', $deletePreviousFile = true)
     {
         if (isset($this->container->errors[$this->ref])
             && $this->container->errors[$this->ref] != ''
@@ -294,7 +332,7 @@ class jFormsControlUpload2 extends jFormsControl
         if ($this->container->privateData[$this->ref]['newfile']) {
             if ($this->container->privateData[$this->ref]['originalfile']) {
                 $originalFile = $directoryPath.$this->container->privateData[$this->ref]['originalfile'];
-                if (file_exists($originalFile)) {
+                if ($deletePreviousFile && file_exists($originalFile)) {
                     unlink($originalFile);
                 }
             }
@@ -312,7 +350,7 @@ class jFormsControlUpload2 extends jFormsControl
             && $this->container->privateData[$this->ref]['originalfile']
         ) {
             $originalFile = $directoryPath.$this->container->privateData[$this->ref]['originalfile'];
-            if (file_exists($originalFile)) {
+            if ($deletePreviousFile && file_exists($originalFile)) {
                 unlink($originalFile);
             }
             $this->container->privateData[$this->ref]['originalfile'] = '';
@@ -321,6 +359,10 @@ class jFormsControlUpload2 extends jFormsControl
         return true;
     }
 
+    /**
+     * delete the current file indicated into the control
+     * @param string $directoryPath  the directory where the file is supposed to be stored
+     */
     public function deleteFile($directoryPath)
     {
         if ($this->container->data[$this->ref] != '') {

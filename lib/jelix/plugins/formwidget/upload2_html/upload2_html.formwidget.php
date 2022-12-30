@@ -39,7 +39,7 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
      * parameter name containing the control value, for the jUrl object used
      * to get the URL of the image.
      *
-     * The parameter can already exists into $uriActionParameters and could contain
+     * The parameter can already exist into $uriActionParameters and could contain
      * a `%s` pattern that will be replaced by the value. Else the existing parameter
      * value will be replaced by the new value.
      *

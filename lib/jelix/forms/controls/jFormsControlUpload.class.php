@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler
  *
- * @copyright   2006-2018 Laurent Jouanneau
+ * @copyright   2006-2022 Laurent Jouanneau
  * @copyright   2009 Julien Issler
  *
  * @see        http://www.jelix.org
@@ -115,7 +115,7 @@ class jFormsControlUpload extends jFormsControl
         return parent::isModified();
     }
 
-    public function saveFile($directoryPath, $alternateName = '')
+    public function saveFile($directoryPath, $alternateName = '', $deletePreviousFile = true)
     {
         if (!isset($_FILES[$this->ref]) || $_FILES[$this->ref]['error'] != UPLOAD_ERR_OK) {
             return false;
