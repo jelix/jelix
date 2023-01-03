@@ -224,6 +224,43 @@ class jControllerDaoCrud extends jController
     }
 
     /**
+     * @return string[] list of properties on which the list should be ordered
+     */
+    protected function fillColumnOrderList()
+    {
+        $keyActionDao = $this->_getAction($this->dao);
+        if ($this->showPropertiesOrderLinks && count($this->propertiesForRecordsOrder)) {
+            if (!isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])) {
+                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = array();
+            }
+            if (($lo = $this->param('listorder'))
+                && (array_key_exists($lo, $this->propertiesForRecordsOrder))
+            ) {
+                $listOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
+                if (isset($listOrder[$lo])) {
+                    $currentOrder = $listOrder[$lo];
+                }
+                else {
+                    $currentOrder = '';
+                }
+
+                if ($currentOrder == 'asc') {
+                    $currentOrder = 'desc';
+                } elseif ($currentOrder == 'desc') {
+                    $currentOrder = '';
+                } else {
+                    $currentOrder = 'asc';
+                }
+                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = array($lo => $currentOrder);
+            }
+            return $_SESSION['CRUD_LISTORDER'][$keyActionDao];
+        }
+
+        return $this->propertiesForRecordsOrder;
+    }
+
+
+    /**
      * list all records.
      */
     public function index()
@@ -234,25 +271,7 @@ class jControllerDaoCrud extends jController
 
         $dao = jDao::get($this->dao, $this->dbProfile);
 
-        $keyActionDao = $this->_getAction($this->dao);
-        if ($this->showPropertiesOrderLinks && count($this->propertiesForRecordsOrder)) {
-            if (!isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])) {
-                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $this->propertiesForRecordsOrder;
-            }
-            if (($lo = $this->param('listorder'))
-                && (array_key_exists($lo, $this->propertiesForRecordsOrder))
-            ) {
-                $listOrder = $_SESSION['CRUD_LISTORDER'][$keyActionDao];
-                if (isset($listOrder[$lo]) && $listOrder[$lo] == 'asc') {
-                    $listOrder[$lo] = 'desc';
-                } elseif (isset($listOrder[$lo]) && $listOrder[$lo] == 'desc') {
-                    unset($listOrder[$lo]);
-                } else {
-                    $listOrder[$lo] = 'asc';
-                }
-                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $listOrder;
-            }
-        }
+        $propertiesForOrder = $this->fillColumnOrderList();
 
         $cond = jDao::createConditions();
         $this->_indexSetConditions($cond);
@@ -260,8 +279,8 @@ class jControllerDaoCrud extends jController
         $results = $dao->findBy($cond, $offset, $this->listPageSize);
         $pk = $dao->getPrimaryKeyNames();
 
-        // we're using a form to have the portunity to have
-        // labels for each columns.
+        // we're using a form to have the opportunity to have
+        // labels for each column.
         $form = $this->_createForm($this->pseudoFormId);
         $tpl = new jTpl();
         $tpl->assign('list', $results);
@@ -275,9 +294,7 @@ class jControllerDaoCrud extends jController
 
         $tpl->assign('propertiesForListOrder', $this->propertiesForRecordsOrder);
         $tpl->assign('showPropertiesOrderLinks', $this->showPropertiesOrderLinks && count($this->propertiesForRecordsOrder));
-        $tpl->assign('sessionForListOrder', isset($_SESSION['CRUD_LISTORDER'][$keyActionDao]) ?
-            $_SESSION['CRUD_LISTORDER'][$keyActionDao] :
-            $this->propertiesForRecordsOrder);
+        $tpl->assign('sessionForListOrder', $propertiesForOrder);
         $tpl->assign('properties', $prop);
         $tpl->assign('controls', $form->getControls());
         $tpl->assign('editAction', $this->_getAction('preupdate'));
@@ -300,7 +317,7 @@ class jControllerDaoCrud extends jController
     }
 
     /**
-     * redefine this method if you wan to do additionnal things on the response and on the list template
+     * redefine this method if you want to do additional things on the response and on the list template
      * during the index action.
      *
      * @param jResponseHtml $resp the response
@@ -311,7 +328,7 @@ class jControllerDaoCrud extends jController
     }
 
     /**
-     * redefine this method if you wan to do additionnal conditions to the index's select
+     * redefine this method if you want to do additional conditions to the index's select
      * during the index action.
      *
      * @param jDaoConditions $cond the conditions
