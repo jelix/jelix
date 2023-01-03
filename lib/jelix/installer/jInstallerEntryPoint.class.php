@@ -155,13 +155,25 @@ class jInstallerEntryPoint
      */
     public function getModule($moduleName)
     {
-        $enabledGlobally = $this->configIni->getMaster()->getValue($moduleName.'.enabled', 'modules');
+        $enabledLocally = $this->localConfigIni->getMaster()->getOverrider()->getValue($moduleName.'.enabled', 'modules');
+        $enabledGlobally = $this->localConfigIni->getMaster()->getMaster()->getValue($moduleName.'.enabled', 'modules');
+
+        if ($enabledLocally === null && $enabledGlobally === null) {
+            // module not installed yet
+            $isNativeModule = false;
+        }
+        else if ($enabledLocally) {
+            $isNativeModule = false;
+        }
+        else {
+            $isNativeModule = ($enabledGlobally === true);
+        }
 
         return new \Jelix\Installer\ModuleStatus(
             $moduleName,
             $this->config->_allModulesPathList[$moduleName],
             $this->config->modules,
-            $enabledGlobally
+            $isNativeModule
         );
     }
 

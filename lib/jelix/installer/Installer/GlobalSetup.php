@@ -365,8 +365,21 @@ class GlobalSetup
     protected function createComponentModule($name, $path)
     {
         $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
+        $enabledLocally = $this->localConfigIni->getValue($name.'.enabled', 'modules');
         $enabledGlobally = $this->mainConfigIni->getValue($name.'.enabled', 'modules');
-        $moduleInfos = new ModuleStatus($name, $path, $moduleSetupList, $enabledGlobally);
+
+        if ($enabledLocally === null && $enabledGlobally === null) {
+            // module not installed yet
+            $isNativeModule = !$this->forLocalConfiguration;
+        }
+        else if ($enabledLocally) {
+            $isNativeModule = false;
+        }
+        else {
+            $isNativeModule = ($enabledGlobally === true);
+        }
+
+        $moduleInfos = new ModuleStatus($name, $path, $moduleSetupList, $isNativeModule);
 
         return new ModuleInstallerLauncher($moduleInfos, $this);
     }
