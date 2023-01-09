@@ -580,7 +580,7 @@ class Router
                 // configuration. coordplugin_ section has priority to allow
                 // to setup some configuration parameter in localconfig.ini
                 // or liveconfig.ini.
-                $pluginConf = array_merge($pluginConf, $pluginConf2);
+                $pluginConf = array_merge($pluginConf2, $pluginConf);
             } else {
                 $pluginConf = $pluginConf2;
             }

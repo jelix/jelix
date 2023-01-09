@@ -306,9 +306,9 @@ class Compiler
     {
         if ($conf != '1' && strlen($conf) > 1) {
             // the configuration value is a filename
-            $confFile = App::appSystemPath($conf);
+            $confFile = App::varConfigPath($conf);
             if (!file_exists($confFile)) {
-                $confFile = App::varConfigPath($conf);
+                $confFile = App::appSystemPath($conf);
                 if (!file_exists($confFile)) {
                     throw new Exception("Error in the configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin {$name} doesn't exist: '{$confFile}'", 8);
                 }

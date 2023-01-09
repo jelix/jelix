@@ -8,7 +8,7 @@
 What is Jelix?
 ==============
 
-Jelix 2 is an open-source framework for PHP. Jelix 2 is compatible from PHP 7.3 to PHP 8.0.
+Jelix 2 is an open-source framework for PHP. Jelix 2 is compatible from PHP 7.4 to PHP 8.1.
 
 It has a modular and extensible architecture. Applications based on Jelix are made
 with modules, which allow to reuse features in several projects.
@@ -44,7 +44,7 @@ Create a directory and a composer.json file :
 {
     "name": "...",
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "jelix/jelix": "dev-master"
     }
 }

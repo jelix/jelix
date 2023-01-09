@@ -205,7 +205,7 @@ class Configurator
             $this->notice('install.installers.disabled');
         }
 
-        $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
+        $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig ?: false);
         $this->globalSetup->setReadWriteConfigMode(false);
 
         $componentsToConfigure = $this->runPreConfigure($modulesToConfigure, $entryPoint, $forLocalConfig);
@@ -407,7 +407,10 @@ class Configurator
      * Launch the preConfigure method of each modules configurator.
      *
      * @param \Jelix\Dependencies\Item[] $moduleschain
-     * @param mixed                      $forLocalConfig
+     * @param bool|null                  $forLocalConfig If not null, uninstalled modules will
+     *                                   be configured into the local or app scope, according
+     *                                   to this given value, else installed module will be configured
+     *                                   in the scope already indicated into their current status
      *
      * @return array|bool
      */
@@ -533,10 +536,18 @@ class Configurator
 
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';
         foreach ($configurator->getFilesToCopy() as $source => $target) {
+
+            if (is_array($target)) {
+                list($target, $overwrite) = $target;
+            }
+            else {
+                $overwrite = true;
+            }
+
             if (is_dir($prefix.$source)) {
-                $configHelpers->copyDirectoryContent($source, $target, true);
+                $configHelpers->copyDirectoryContent($source, $target, $overwrite);
             } elseif (is_file($prefix.$source)) {
-                $configHelpers->copyFile($source, $target, true);
+                $configHelpers->copyFile($source, $target, $overwrite);
             }
         }
     }
@@ -558,6 +569,9 @@ class Configurator
         $configurator->unconfigure($configHelpers);
         $prefix = $this->globalSetup->getCurrentModulePath().'install/';
         foreach ($configurator->getFilesToCopy() as $source => $target) {
+            if (is_array($target)) {
+                $target = $target[0];
+            }
             if (is_dir($prefix.$source)) {
                 $configHelpers->removeDirectoryContent($target);
             } elseif (is_file($prefix.$source)) {

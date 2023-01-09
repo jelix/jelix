@@ -8,7 +8,7 @@
  * @contributor Bastien Jaillot, Steven Jehannet
  * @contributor Christophe Thiriot, Julien Issler, Olivier Demah
  *
- * @copyright   2006-2020 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
+ * @copyright   2006-2022 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
  * @copyright   2008-2015 Julien Issler, 2009 Olivier Demah, 2010 Steven Jehannet
  *
  * @see         http://www.jelix.org
@@ -864,7 +864,7 @@ abstract class jFormsBase
      *
      * @return bool true if the file has been saved correctly
      */
-    public function saveFile($controlName, $path = '', $alternateName = '')
+    public function saveFile($controlName, $path = '', $alternateName = '', $deletePreviousFile = true)
     {
         if ($path == '') {
             $path = jApp::varPath('uploads/'.$this->sel.'/');
@@ -878,7 +878,7 @@ abstract class jFormsBase
 
         jFile::createDir($path);
 
-        return $this->controls[$controlName]->saveFile($path, $alternateName);
+        return $this->controls[$controlName]->saveFile($path, $alternateName, $deletePreviousFile);
     }
 
     /**

@@ -52,11 +52,17 @@ class File implements \Jelix\Logger\OutputInterface
         $f = str_replace('%ip%', $ip, $f);
 
         try {
+
             if (!preg_match('/^([\\w\\.\\/]+)$/', $f, $m)) {
-                throw new Exception("Invalid file name for file logger name ${f}");
+                throw new \Exception("Invalid file name for file logger name ${f}");
             }
             $file = \Jelix\Core\App::logPath($f);
-            @error_log(date('Y-m-d H:i:s')."\t".$ip."\t{$type}\t".$message->getFormatedMessage()."\n", 3, $file);
+            if ($message instanceof \Jelix\Logger\Message\Error) {
+                @error_log($message->getFormatedMessage()."\n", 3, $file);
+            }
+            else {
+                @error_log(date('Y-m-d H:i:s')."\t".$ip."\t{$type}\t".$message->getFormatedMessage()."\n", 3, $file);
+            }
             @chmod($file, \Jelix\Core\App::config()->chmodFile);
         } catch (\Exception $e) {
             $file = \Jelix\Core\App::logPath('errors.log');

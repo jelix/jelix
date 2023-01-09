@@ -34,7 +34,7 @@
 function jtpl_block_html_formsubmits($compiler, $begin, $param = array())
 {
     if (!$begin) {
-        return '}} $t->_privateVars[\'__submitref\']=\'\';'; // if, foreach
+        return '}'."\n".' $t->_privateVars[\'__submitref\']=\'\';'; // foreach
     }
 
     if (count($param) > 2) {
@@ -56,7 +56,7 @@ function jtpl_block_html_formsubmits($compiler, $begin, $param = array())
             $content .= ' $submits_to_display = '.$param[1].'; ';
         }
     } else {
-        $content = '$submits_to_display=null;';
+        $content = '$form =null; $submits_to_display=null;';
     }
 
     $content .= '

@@ -17,7 +17,13 @@ class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget
     {
         $conf = jApp::config()->urlengine;
         $collection = jApp::config()->webassets['useCollection'];
-        $jquery = jApp::config()->{'webassets_'.$collection}['jquery.js'];
+        if (isset(jApp::config()->{'webassets_'.$collection}['jquery.js'])) {
+            $jquery = jApp::config()->{'webassets_'.$collection}['jquery.js'];
+        }
+        else {
+            $jquery = jApp::config()->webassets_common['jquery.js'];
+        }
+
         if (is_array($jquery)) {
             // we assume that the first js file is jquery itself
             $jquery = $jquery[0];

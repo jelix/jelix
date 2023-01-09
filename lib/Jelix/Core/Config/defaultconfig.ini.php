@@ -115,7 +115,7 @@ defaultPosition=right
 errors_openon=error
 
 [error_handling]
-messageLogFormat="%date%\t%ip%\t[%code%]\t%msg%\n\tat: %file%\t%line%\n\turl: %url%\n\t%http_method%: %params%\n\treferer: %referer%\n%trace%\n\n"
+messageLogFormat="%date%\t%ip%\t%typeerror%\t[%code%]\t%msg%\n\tat: %file%\t%line%\n\turl: %url%\n\t%http_method%: %params%\n\treferer: %referer%\n%trace%\n\n"
 errorMessage="A technical error has occured (code: %code%). Sorry for this inconvenience."
 ; HTTP parameters that should not appears in logs. See also jController::$sensitiveParameters
 sensitiveParameters = "password,passwd,pwd"

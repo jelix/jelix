@@ -1,7 +1,7 @@
 <h1>{@jelix~crud.title.list@}</h1>
-{if isset($filterForm) && filterForm}
+{if isset($filterForm) && $filterForm}
 <h2>{@jelix~crud.title.filter@}</h2>
-{form $filterForm, $filterAction}
+{form $filterForm, $filterAction, [], 'html', [ 'method' => 'GET']}
 <table class="jforms-table">
 {formcontrols $filterFields}
     <tr>
@@ -19,11 +19,14 @@
 <thead>
 <tr>
     {foreach $properties as $propname}
-    {if isset($controls[$propname])}
-    <th>{$controls[$propname]->label|eschtml}</th>
-    {else}
-    <th>{$propname|eschtml}</th>
-    {/if}
+    <th>
+        {if $showPropertiesOrderLinks && array_key_exists($propname, $propertiesForListOrder)}
+        <a href="{jurl '#~#', array($offsetParameterName=>$page, 'listorder'=>$propname)}"
+           class="view-order{if isset($sessionForListOrder[$propname])} {if $sessionForListOrder[$propname] == 'asc'} order-asc{elseif $sessionForListOrder[$propname] == 'desc'} order-desc{/if}{/if}">
+            {/if}
+            {if isset($controls[$propname]) && $controls[$propname]->label}{$controls[$propname]->label|eschtml}{else}{$propname|eschtml}{/if}
+            {if $showPropertiesOrderLinks && array_key_exists($propname, $propertiesForListOrder)}</a>{/if}
+    </th>
     {/foreach}
     <th>&nbsp;</th>
 </tr>

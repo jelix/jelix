@@ -17,6 +17,13 @@
 /**
  * Response use to send a binary file to the browser.
  *
+ * It sends the content of a file (its path into $filename) or a custom content
+ * (set into $content).
+ * The downloaded content can be displayed directly into the browser (if it
+ * can display it), or you can force the browser to save it into a file, on the
+ * disk of the user. See $doDownload. You can indicate the name of the saved file
+ * into $outputFileName.
+ *
  * @package  jelix
  * @subpackage core_response
  */
@@ -28,22 +35,24 @@ final class jResponseBinary extends jResponse
     protected $_type = 'binary';
 
     /**
-     * The path of the file you want to send. Keep empty if you provide the content.
+     * The path of the file you want to send. Keep empty if you provide the content
+     * into $content.
      *
      * @var string
      */
     public $fileName = '';
+
     /**
-     * name of the file under which the content will be send to the user.
+     * name of the file under which the content will be sent to the user.
      *
      * @var string
      */
     public $outputFileName = '';
 
     /**
-     * the content you want to send. Keep empty if you indicate a filename.
+     * the content you want to send. Keep it to null if you indicate a filename into $fileName.
      *
-     * @var string
+     * @var string|null
      */
     public $content;
 
@@ -73,7 +82,7 @@ final class jResponseBinary extends jResponse
      *
      * @throws jException
      *
-     * @return bool true it it's ok
+     * @return bool true if it's ok
      */
     public function output()
     {
@@ -97,7 +106,7 @@ final class jResponseBinary extends jResponse
         }
 
         if ($this->content === null) {
-            if (is_readable($this->fileName) && is_file($this->fileName)) {
+            if ($this->fileName && is_readable($this->fileName) && is_file($this->fileName)) {
                 $this->_httpHeaders['Content-Length'] = filesize($this->fileName);
                 $this->sendHttpHeaders();
                 if ($this->deleteFileAfterSending) {

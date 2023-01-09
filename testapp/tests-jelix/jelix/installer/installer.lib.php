@@ -132,7 +132,8 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
 
     protected function createComponentModule($name, $path) {
         $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
-        $moduleInfos = new \Jelix\Installer\ModuleStatus($name, $path, $moduleSetupList);
+        $enabledGlobally = $this->mainConfigIni->getValue($name.'.enabled', 'modules');
+        $moduleInfos = new \Jelix\Installer\ModuleStatus($name, $path, $moduleSetupList, $enabledGlobally);
 
         if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap'))) {
             return new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this);

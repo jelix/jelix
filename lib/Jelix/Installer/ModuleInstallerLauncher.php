@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2019 Laurent Jouanneau
+ * @copyright   2008-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -283,9 +283,11 @@ class ModuleInstallerLauncher
      * instancies the object which is responsible to configure the module.
      *
      * @param int  $actionMode            one of CONFIGURATOR_TO_* constants
-     * @param bool $forLocalConfiguration true if the configuration should be done
-     *                                    with the local configuration, else it will be done with the
-     *                                    main configuration
+     * @param bool|null $forLocalConfiguration true if the configuration should be set
+     *                                              into the local configuration,
+     *                                         false if the configuration should be set
+     *                                              into the app configuration
+     *                                         null  use the scope indicated into the module status
      * @param array install parameters
      * @param null|mixed $installParameters
      *

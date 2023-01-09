@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=7.4.0",
-        "jelix/composer-module-setup": "^1.0.5",
+        "jelix/composer-module-setup": "^1.1.0",
         "phpmailer/phpmailer": "^6.6.5",
         "jelix/castor": "^1.1.1",
         "jelix/profiles": "~1.1.0",
