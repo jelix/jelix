@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2019 Laurent Jouanneau
+ * @copyright   2008-2023 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -523,13 +523,13 @@ class ModuleInstallerLauncher
 
         if ($this->moduleMainUpgrader === null) {
             // script name for Jelix 1.6 in modules compatibles with both Jelix 1.7 and 1.6
-            if (file_exists($this->moduleStatus->getPath().'install/upgrade_1_6.php')) {
+            if (file_exists($this->moduleStatus->getPath().'install/upgrade.php')) {
+                $file = $this->moduleStatus->getPath().'install/upgrade.php';
+                // script name for modules compatible with Jelix <=1.6
+            } else if (file_exists($this->moduleStatus->getPath().'install/upgrade_1_6.php')) {
                 $file = $this->moduleStatus->getPath().'install/upgrade_1_6.php';
             }
-            // script name for modules compatible with Jelix <=1.6
-            elseif (file_exists($this->moduleStatus->getPath().'install/upgrade.php')) {
-                $file = $this->moduleStatus->getPath().'install/upgrade.php';
-            } else {
+            else {
                 $file = '';
             }
 
@@ -571,7 +571,7 @@ class ModuleInstallerLauncher
                     if (!is_dir($p.$f)) {
                         if (preg_match('/^upgrade_to_([^_]+)_([^\.]+)\.php$/', $f, $m)) {
                             $fileList[] = array($f, $m[1], $m[2]);
-                        } elseif (preg_match('/^upgrade_([^\.]+)\.php$/', $f, $m)) {
+                        } elseif (preg_match('/^upgrade_([^\.]+)\.php$/', $f, $m) && $f != 'upgrade_1_6.php') {
                             $fileList[] = array($f, '', $m[1]);
                         }
                     }
