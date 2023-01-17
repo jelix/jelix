@@ -702,10 +702,10 @@ class jControllerDaoCrud extends jController
     }
 
     /**
-     * redefine this method if you want to do additionnal things before the deletion of a record.
+     * redefine this method if you want to do additional things before the deletion of a record.
      *
      * @param mixed         $id   the id of the record to delete
-     * @param jResponseHtml $resp the response
+     * @param jResponseRedirect $resp the response
      *
      * @return bool true if the record can be deleted
      */
