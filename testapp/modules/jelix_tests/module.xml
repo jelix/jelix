@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jelix_tests@testapp.jelix.org" name="jelix_tests">
-        <version date="2022-12-09 14:22">1.8.0-rc.2</version>
+        <version date="2023-01-18 17:31">1.8.0-rc.2</version>
         <label>Jelix tests</label>
         <description>unit tests for jelix</description>
         <license URL=""/>
