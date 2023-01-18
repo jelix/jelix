@@ -119,14 +119,14 @@ class jformsCtrl extends jController
     public function js()
     {
         $rep = $this->getResponse('text', true);
-
-        try {
-            $form = jForms::get($this->param('__form'), $this->param('__fid'));
-            if (!$form) {
-                throw new Exception('Unknown form');
-            }
-        } catch (Exception $e) {
-            throw new Exception('invalid form selector');
+        $frmSel = $this->param('__form');
+        $frmId = $this->param('__fid');
+        if ($frmSel == '') {
+            throw new \Exception('missing form selector parameters');
+        }
+        $form = jForms::get($frmSel, $frmId);
+        if (!$form) {
+            throw new jHttp404NotFoundException();
         }
 
         $rep->content = $form->getContainer()->privateData['__jforms_js'];
