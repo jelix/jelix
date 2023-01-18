@@ -7,9 +7,9 @@
  * @author     Laurent Jouanneau
  * @contributor Antoine Detante
  *
- * @copyright  2005-2006 Laurent Jouanneau, 2007 Antoine Detante
+ * @copyright  2005-2023 Laurent Jouanneau, 2007 Antoine Detante
  *
- * @see       http://www.jelix.org
+ * @see       https://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 class LoginFormZone extends jZone
@@ -18,7 +18,7 @@ class LoginFormZone extends jZone
 
     protected function _prepareTpl()
     {
-        $this->_tpl->assign('login', $this->param('login'));
+        $this->_tpl->assign('login', $this->param('login', ''));
         $this->_tpl->assign('failed', $this->param('failed'));
         $this->_tpl->assign('auth_url_return', $this->param('auth_url_return', ''));
 
