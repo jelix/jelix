@@ -48,6 +48,16 @@ class jProfilesCompilerPlugin
     }
 
     /**
+     * Add a list of profiles
+     * @param array $profiles
+     * @return void
+     */
+    public function addProfiles(array $profiles)
+    {
+        $this->profiles = array_merge($this->profiles, $profiles);
+    }
+
+    /**
      * @param array list of options of a profile
      * @param mixed $name
      * @param mixed $profile
@@ -70,7 +80,9 @@ class jProfilesCompilerPlugin
             if (count($this->common)) {
                 $profile = array_merge($this->common, $profile);
             }
-            $profile['_name'] = $name;
+            if (!isset($profile['_name']) || $profile['_name'] == '__common__') {
+                $profile['_name'] = $name;
+            }
             $profiles[$this->category][$name] = $this->consolidate($profile);
         }
         foreach ($this->aliases as $alias => $profileName) {

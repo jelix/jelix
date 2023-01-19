@@ -71,7 +71,7 @@ class jDbParameters
             array_keys($this->parameters),
             array('driver', 'dsn', 'service', 'host', 'password', 'user', 'port', 'force_encoding',
                 'usepdo', 'persistent', 'pdodriver', 'pdoext', 'dbtype', 'phpext',
-                'extensions', 'table_prefix', 'database', 'table_prefix', '_name', )
+                'extensions', 'table_prefix', 'database', 'table_prefix', '_name', 'pdooptions')
         );
         $this->parameters['pdooptions'] = implode(',', $pdooptions);
     }

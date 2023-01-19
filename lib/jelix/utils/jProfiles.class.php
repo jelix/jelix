@@ -178,6 +178,7 @@ class jProfiles
                 throw new jException('jelix~errors.profile.unknown', array($params, $category));
             }
         } else {
+            /** @var jProfilesCompilerPlugin $plugin */
             $plugin = jApp::loadPlugin($category, 'profiles', '.profiles.php', $category.'ProfilesCompiler', $category);
             if (!$plugin) {
                 $plugin = new jProfilesCompilerPlugin($category);
@@ -186,7 +187,9 @@ class jProfiles
             if (isset(self::$_profiles[$category]['__common__'])) {
                 $plugin->setCommon(self::$_profiles[$category]['__common__']);
             }
-
+            if (isset(self::$_profiles[$category])) {
+                $plugin->addProfiles(self::$_profiles[$category]);
+            }
             $plugin->addProfile($name, $params);
             $plugin->getProfiles(self::$_profiles);
         }
