@@ -28,7 +28,7 @@
  *  - dbtype: type of the database (so it determines the SQL language)
  *  - phpext: name of the php extension to use
  *  - persistent: if true, the connection should be persistent
- *  - extensions: some informations about extensions to load (For sqlite for example. optional)
+ *  - extensions: some information about extensions to load (For sqlite for example. optional)
  *  - single_transaction: indicate to execute all queries into a single transaction (pgsql, optional)
  *  - busytimeout: timeout for the connection (sqlite, optional)
  *  - timeout: timeout for the connection (pgsql, optional)

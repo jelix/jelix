@@ -80,8 +80,10 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
         $this->assertEquals($readedDefaultProfile, $profile);
 
         $this->assertEquals( array(
-            'foo:server1'=> $readedDefaultProfile,
-            'foo:default'=> $readedDefaultProfile
+            'foo' => array(
+                'server1'=> $readedDefaultProfile,
+                'default'=> $readedDefaultProfile
+            )
             ), testJProfiles::testGetProfiles());
 
         try {
@@ -122,9 +124,11 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
         $this->assertEquals($readedProfile, $profile);
 
         $this->assertEquals( array(
-            'foo:server1'=>  $readedProfile,
-            'foo:default'=>  $readedProfile,
-            'foo:myserver'=>  $readedProfile,
+            'foo' => array(
+                'server1'=>  $readedProfile,
+                'default'=>  $readedProfile,
+                'myserver'=>  $readedProfile,
+            )
             ), testJProfiles::testGetProfiles());
 
         try {
@@ -143,19 +147,23 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
 
         testJProfiles::createVirtualProfile('foo', 'myalias', 'server1');
         $this->assertEquals( array(
-            'foo:server1'=>  $readedProfile,
-            'foo:default'=>  $readedProfile,
-            'foo:myserver'=>  $readedProfile,
-            'foo:myalias'=>  $readedProfile,
+            'foo' => array(
+                'server1'=>  $readedProfile,
+                'default'=>  $readedProfile,
+                'myserver'=>  $readedProfile,
+                'myalias'=>  $readedProfile,
+            )
             ), testJProfiles::testGetProfiles());
 
         testJProfiles::createVirtualProfile('foo', 'new', array('bla'=>'ok'));
         $this->assertEquals( array(
-            'foo:server1'=>  $readedProfile,
-            'foo:default'=>  $readedProfile,
-            'foo:myserver'=>  $readedProfile,
-            'foo:myalias'=>  $readedProfile,
-            'foo:new'=>array('bla'=>'ok', '_name'=>'new')
+            'foo' => array(
+                'server1'=>  $readedProfile,
+                'default'=>  $readedProfile,
+                'myserver'=>  $readedProfile,
+                'myalias'=>  $readedProfile,
+                'new'=>array('bla'=>'ok', '_name'=>'new')
+            )
             ), testJProfiles::testGetProfiles());
     }
 

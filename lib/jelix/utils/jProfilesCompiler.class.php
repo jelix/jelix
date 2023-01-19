@@ -2,9 +2,9 @@
 
 /**
  * @author      Laurent Jouanneau
- * @copyright   2015 Laurent Jouanneau
+ * @copyright   2015-2023 Laurent Jouanneau
  *
- * @see        http://jelix.org
+ * @see         https://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -27,6 +27,9 @@ class jProfilesCompiler
         $this->sources = parse_ini_file($sourceFile, true, INI_SCANNER_TYPED);
     }
 
+    /**
+     * @var jProfilesCompilerPlugin[]
+     */
     protected $plugins = array();
 
     /**

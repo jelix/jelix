@@ -6,9 +6,9 @@
  * @author      Laurent Jouanneau
  * @contributor Yannick Le Guédart, Julien Issler
  *
- * @copyright   2011-2012 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
+ * @copyright   2011-2023 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
  *
- * @see        http://jelix.org
+ * @see         https://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -37,13 +37,13 @@ class jProfiles
     protected static function loadProfiles()
     {
         $file = jApp::varConfigPath('profiles.ini.php');
-        $tempFile = jApp::tempPath('profiles.cache.php');
+        $tempFile = jApp::tempPath('profiles.cache.json');
         if (!file_exists($tempFile) || filemtime($file) > filemtime($tempFile)) {
             $compiler = new jProfilesCompiler($file);
             self::$_profiles = $compiler->compile();
-            \Jelix\IniFile\Util::write(self::$_profiles, $tempFile);
+            file_put_contents($tempFile, json_encode(self::$_profiles));
         } else {
-            self::$_profiles = parse_ini_file($tempFile, true, INI_SCANNER_TYPED);
+            self::$_profiles = json_decode(file_get_contents($tempFile), JSON_OBJECT_AS_ARRAY);
         }
     }
 
@@ -74,18 +74,17 @@ class jProfiles
         if ($name == '') {
             $name = 'default';
         }
-        $section = $category.':'.$name;
 
         // the name attribute created in this method will be the name of the connection
         // in the connections pool. So profiles of aliases and real profiles should have
         // the same name attribute.
 
-        if (isset(self::$_profiles[$section])) {
-            return self::$_profiles[$section];
+        if (isset(self::$_profiles[$category][$name])) {
+            return self::$_profiles[$category][$name];
         }
         // if the profile doesn't exist, we take the default one
-        if (!$noDefault && isset(self::$_profiles[$category.':default'])) {
-            return self::$_profiles[$category.':default'];
+        if (!$noDefault && isset(self::$_profiles[$category]['default'])) {
+            return self::$_profiles[$category]['default'];
         }
 
         if ($name == 'default') {
@@ -173,8 +172,8 @@ class jProfiles
         }
 
         if (is_string($params)) {
-            if (isset(self::$_profiles[$category.':'.$params])) {
-                self::$_profiles[$category.':'.$name] = self::$_profiles[$category.':'.$params];
+            if (isset(self::$_profiles[$category][$params])) {
+                self::$_profiles[$category][$name] = self::$_profiles[$category][$params];
             } else {
                 throw new jException('jelix~errors.profile.unknown', array($params, $category));
             }
@@ -184,9 +183,10 @@ class jProfiles
                 $plugin = new jProfilesCompilerPlugin($category);
             }
 
-            if (isset(self::$_profiles[$category.':__common__'])) {
-                $plugin->setCommon(self::$_profiles[$category.':__common__']);
+            if (isset(self::$_profiles[$category]['__common__'])) {
+                $plugin->setCommon(self::$_profiles[$category]['__common__']);
             }
+
             $plugin->addProfile($name, $params);
             $plugin->getProfiles(self::$_profiles);
         }
