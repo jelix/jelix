@@ -86,15 +86,6 @@ class jdbProfilesCompiler extends jProfilesCompilerPlugin
                     $timeout++;
                 }
                 $this->timeouts[] = $newProfile['timeout'] = $profileToTest['timeout'] = $timeout;
-                if (strpos($newProfile['pdooptions'], 'timeout') === false) {
-                    if ($newProfile['pdooptions'] == '') {
-                        $newProfile['pdooptions'] = 'timeout';
-                    }
-                    else {
-                        $newProfile['pdooptions'] .= ',timeout';
-                    }
-                    $profileToTest['pdooptions'] = $newProfile['pdooptions'];
-                }
 
                 $newConnectionKey = '';
                 foreach($connectionParameters as $p) {

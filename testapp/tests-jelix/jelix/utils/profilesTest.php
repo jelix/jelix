@@ -367,7 +367,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'identical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout' => 5
                     ),
                     'maria' => array(
@@ -413,7 +413,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'identical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout' => 180, 'search_path' => 'bar,public'
                     ),
                     'maria' => array(
@@ -457,28 +457,28 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'maria' => array(
@@ -491,7 +491,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                 )
@@ -534,35 +534,35 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'futchball' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'maria' => array(
@@ -575,7 +575,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                 )
@@ -589,35 +589,35 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'jdb:default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:futchball' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:maria' => array(
@@ -630,7 +630,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                 ),
@@ -639,35 +639,35 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'futchball' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'maria' => array(
@@ -680,7 +680,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                 )
@@ -696,28 +696,28 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'jdb:default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:maria' => array(
@@ -730,7 +730,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                     'jdb:myvirtual' => array(
@@ -743,35 +743,35 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'myvirtual' => array(
                         '_name' => 'myvirtual',
                         'driver' => 'pgsql', 'host' => 'otherhost', 'port' => 5432, 'user' => 'patrick', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                     'maria' => array(
@@ -784,7 +784,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                 )
@@ -801,28 +801,28 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'jdb:default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:maria' => array(
@@ -835,7 +835,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                     'jdb:myvirtual' => array(
@@ -848,28 +848,28 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'maria' => array(
@@ -882,14 +882,14 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                     'myvirtual' => array(
                         '_name' => 'myvirtual',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>181, 'search_path' => 'bar,public'
                     ),
                 )
@@ -906,28 +906,28 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'jdb:default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path,timeout',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'jdb:maria' => array(
@@ -940,7 +940,7 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                     'jdb:myvirtual' => array(
@@ -953,28 +953,28 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'almostidentical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'genius,public'
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                     'maria' => array(
@@ -987,14 +987,14 @@ class profilesTest extends \Jelix\UnitTests\UnitTestCase
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'search_path' => 'bar,public'
                     ),
                     'myvirtual' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
-                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => 'timeout,search_path',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
                         'timeout'=>180, 'search_path' => 'bar,public'
                     ),
                 )
