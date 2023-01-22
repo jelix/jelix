@@ -26,7 +26,7 @@
         "jelix/jelix-essential" : "@dev",
         "jelix/soap-server-module": "^1.7.9",
         "jelix/minify-module": "^1.7.4",
-        "jelix/php-redis-plugin": "^1.7.7",
+        "jelix/php-redis-plugin": "^1.7.8",
         "jelix/sitemap-module": "^1.7.7",
         "guzzlehttp/guzzle": "^7.4.5",
         "jelix/feeds-module": "^1.7.6",
