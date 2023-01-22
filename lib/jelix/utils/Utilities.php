@@ -42,5 +42,9 @@ function is_resource($value)
         return true;
     }
 
+    if (get_class($value) == 'GdImage') {
+        return true;
+    }
+
     return false;
 }
