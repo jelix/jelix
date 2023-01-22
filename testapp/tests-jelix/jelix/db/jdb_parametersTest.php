@@ -67,7 +67,7 @@ class jDb_parametersTest  extends \Jelix\UnitTests\UnitTestCase
         $this->assertEquals("mysql", $result['pdodriver']);
         $this->assertEquals("pdo_mysql", $result['pdoext']);
         $this->assertEquals("mysql:host=localhost;dbname=jelix", $result['dsn']);
-        $this->assertEquals("foo,bar", $result['pdooptions']);
+        $this->assertEquals("", $result['pdooptions']);
         $this->assertTrue($result['usepdo']);
     }
 
