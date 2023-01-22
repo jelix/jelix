@@ -5,7 +5,7 @@
  * @subpackage  db
  *
  * @author      Laurent Jouanneau
- * @copyright   2015 Laurent Jouanneau
+ * @copyright   2015-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -70,13 +70,10 @@ class jDbParameters
                 || $this->parameters['dsn'] == '')) {
             $this->parameters['dsn'] = $this->getPDODsn($this->parameters);
         }
-        $pdooptions = array_diff(
-            array_keys($this->parameters),
-            array('driver', 'dsn', 'service', 'host', 'password', 'user', 'port', 'force_encoding',
-                'usepdo', 'persistent', 'pdodriver', 'pdoext', 'dbtype', 'phpext',
-                'extensions', 'table_prefix', 'database', 'table_prefix', '_name', 'pdooptions')
-        );
-        $this->parameters['pdooptions'] = implode(',', $pdooptions);
+
+        if (!isset($this->parameters['pdooptions'])) {
+            $this->parameters['pdooptions'] = '';
+        }
     }
 
     public function getParameters()
