@@ -27,6 +27,7 @@
     "jILogger": "\\Jelix\\Logger\\OutputInterface",
     "jIMultiFileCompiler": "\\Jelix\\Core\\Includer\\MultiFileCompilerInterface",
     "jISelector": "\\Jelix\\Core\\Selector\\SelectorInterface",
+    "jIActionSelector": "\\Jelix\\Core\\Selector\\ActionSelectorInterface",
     "jISimpleCompiler": "\\Jelix\\Core\\Includer\\SimpleCompilerInterface",
     "jIncluder": "\\Jelix\\Core\\Includer",
     "jIniFile": "\\Jelix\\IniFile\\Util",

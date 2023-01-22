@@ -8,7 +8,7 @@
  * @author      Laurent Jouanneau
  * @contributor Thibault Piront (nuKs)
  *
- * @copyright   2005-2012 Laurent Jouanneau
+ * @copyright   2005-2023 Laurent Jouanneau
  * @copyright   2007 Thibault Piront
  *
  * @see        http://www.jelix.org
@@ -24,7 +24,7 @@
  * @package    jelix
  * @subpackage core_selector
  */
-class jSelectorActFast extends jSelectorModule
+class jSelectorActFast extends jSelectorModule implements jIActionSelector
 {
     protected $type = 'act';
     /**
@@ -90,7 +90,7 @@ class jSelectorActFast extends jSelectorModule
         return $this->controller.'Ctrl';
     }
 
-    public function isEqualTo(jSelectorActFast $otherAction)
+    public function isEqualTo(jIActionSelector $otherAction)
     {
         return $this->module == $otherAction->module
                 && $this->controller == $otherAction->controller

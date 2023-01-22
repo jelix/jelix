@@ -51,7 +51,7 @@ class testUploadCtrl extends jFormsControlUpload2 {
         return $this->container->privateData[$this->ref];
     }
 
-    protected function getTempFile($file) {
+    public function getTempFile($file) {
         $dir = __DIR__.'/uploads/tmp';
         jFile::createDir($dir, 0775);
         $tmpFile = $dir.'/'.$file;

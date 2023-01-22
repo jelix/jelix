@@ -3,7 +3,7 @@
  * @package     jelix-scripts
  *
  * @author Laurent Jouanneau
- * @copyright   2018-2022 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -109,25 +109,25 @@ class ConfigureCommand extends Command
                 }
             }
             $configurator->setModuleParameters($module, $parsedParameters);
-            $configurator->configureModules(
+            $isSuccess = $configurator->configureModules(
                 array($module),
                 $selectedEntryPointId,
                 true,
                 $input->getOption('force')
             );
         } else if ($module && $input->getOption('remove')) {
-            $configurator->unconfigureModule(
+            $isSuccess = $configurator->unconfigureModule(
                 array($module),
                 $selectedEntryPointId,
                 true
             );
         } else {
-            $configurator->localConfigureEnabledModules();
+            $isSuccess = $configurator->localConfigureEnabledModules();
         }
 
         \Jelix\Core\AppManager::open();
 
-        return 0;
+        return ($isSuccess?0:1);
     }
 
     protected function getSelectedEntryPoint($ep, $allowList = false)

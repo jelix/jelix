@@ -1,4 +1,8 @@
 <?php
+
+use Jelix\Core\App;
+use Jelix\Profiles\ReaderPlugin;
+
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
@@ -8,6 +12,15 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
+class ProfilesReaderForTest extends \Jelix\Profiles\ProfilesReader {
+
+    public function readFromTestArray($iniContent)
+    {
+        return $this->compile($iniContent);
+    }
+}
+
 
 class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
 {
@@ -135,4 +148,849 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
         $this->assertEquals($expected, $p);
     }
 
+
+    function getDuplicateProfileData()
+    {
+        return array(
+            // test 1 : alias to a pgsql profile
+            array(
+                array(
+                    'jdb' => array(
+                        'foo' => 'default'
+                    ),
+                    'jdb:default' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass'
+                    ),
+                    'jdb:maria' => array(
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass'
+                    )
+                ),
+                array('jdb'=> array(
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    )
+                )
+                )
+            ),
+            // test 2 : alias to a pgsql profile, and a second identical profile, which should become an alias
+            array(
+                array(
+                    'jdb' => array(
+                        'foo' => 'default'
+                    ),
+                    'jdb:default' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass'
+                    ),
+                    'jdb:identical' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass'
+                    ),
+                    'jdb:maria' => array(
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass'
+                    )
+                ),
+                array(
+                    'jdb'=> array(
+                        'default' => array(
+                            '_name' => 'default',
+                            'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                            'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                            'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                            'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        ),
+                        'foo' => array(
+                            '_name' => 'default',
+                            'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                            'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                            'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                            'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        ),
+                        'identical' => array(
+                            '_name' => 'default',
+                            'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                            'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                            'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                            'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        ),
+                        'maria' => array(
+                            '_name' => 'maria',
+                            'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                            'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                            'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                            'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        )
+                    )
+                )
+            ),
+            // test 3 : alias to a pgsql profile, and a second identical profile with a timeout=0, which should become an alias
+            array(
+                array(
+                    'jdb' => array(
+                        'foo' => 'default'
+                    ),
+                    'jdb:default' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass'
+                    ),
+                    'jdb:identical' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'timeout'=>0
+                    ),
+                    'jdb:maria' => array(
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass'
+                    )
+                ),
+                array('jdb'=> array(
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    )
+                )
+                )
+            ),
+            // test 4 : alias to a pgsql profile, and a second identical profile with a timeout=5, which stay a different profile
+            array(
+                array(
+                    'jdb' => array(
+                        'foo' => 'default'
+                    ),
+                    'jdb:default' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass'
+                    ),
+                    'jdb:identical' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'timeout'=>5
+                    ),
+                    'jdb:maria' => array(
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass'
+                    )
+                ),
+                array('jdb'=> array(
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'identical' => array(
+                        '_name' => 'identical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout' => 5, 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    )
+                )
+                )
+            ),
+            // test 5 : alias to a pgsql profile, and a second almost identical profile with a different search_path, so it stays a different profile
+            array(
+                array(
+                    'jdb' => array(
+                        'foo' => 'default'
+                    ),
+                    'jdb:default' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass'
+                    ),
+                    'jdb:identical' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'bar,public'
+                    ),
+                    'jdb:maria' => array(
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass'
+                    )
+                ),
+                array('jdb'=> array(
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'identical' => array(
+                        '_name' => 'identical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout' => 180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    )
+                )
+                )
+            ),
+            // test 6 : alias to a pgsql profile, and two identical profile except for search path, one will be an
+            // alias, an other stays a different profile
+            array(
+                array(
+                    'jdb' => array(
+                        'foo' => 'default'
+                    ),
+                    'jdb:almostidentical' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'genius,public'
+                    ),
+                    'jdb:default' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'bar,public'
+                    ),
+                    'jdb:identical' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'bar,public'
+                    ),
+                    'jdb:maria' => array(
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass'
+                    ),
+                    'jdb:other' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'search_path'=>'bar,public'
+                    )
+                ),
+                array('jdb'=> array(
+                    'almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public','charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                )
+                )
+            ),
+            // test 7 : alias to a pgsql profile, and two identical profile except for search path, one will be an
+            // alias, an other stays a different profile. An other profile is identical but has a timeout with the
+            // same values as an other one with changed timeout
+            array(
+                array(
+                    'jdb' => array(
+                        'foo' => 'default'
+                    ),
+                    'jdb:almostidentical' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'genius,public'
+                    ),
+                    'jdb:default' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'bar,public'
+                    ),
+                    'jdb:futchball' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'bar,public', 'timeout'=>180
+                    ),
+                    'jdb:identical' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'bar,public'
+                    ),
+                    'jdb:maria' => array(
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass'
+                    ),
+                    'jdb:other' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'search_path'=>'bar,public'
+                    )
+                ),
+                array('jdb'=> array(
+                    'almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'futchball' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                )
+                )
+            ),
+            // test 8 : we reinject the result of test 7 into the compiler, to be sure
+            // we have the same result. e.g., we simulate createVirtualProfile does.
+            array(
+                array(
+                    'jdb:almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:futchball' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                ),
+                array('jdb'=> array(
+                    'almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'futchball' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                )
+                )
+            ),
+            // test 9 : alias to a pgsql profile, and two identical profile except for search path, one will be an
+            // alias, an other stays a different profile. And add a virtual profile that will be not an alias
+            // we simulate what it is done in createVirtualProfile
+            array(
+                array(
+
+                    'jdb:almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public'
+                    ),
+                    'jdb:default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public'
+                    ),
+                    'jdb:foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public'
+                    ),
+                    'jdb:identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public'
+                    ),
+                    'jdb:maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                    ),
+                    'jdb:other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public'
+                    ),
+                    'jdb:myvirtual' => array(
+                        'driver' => 'pgsql', 'host' => 'otherhost', 'port' => 5432, 'user' => 'patrick', 'password' => 'pass',
+                        'search_path'=>'bar,public'
+                    )
+                ),
+                array('jdb'=> array(
+                    'almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'myvirtual' => array(
+                        '_name' => 'myvirtual',
+                        'driver' => 'pgsql', 'host' => 'otherhost', 'port' => 5432, 'user' => 'patrick', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                )
+                )
+            ),
+            // test 10 : alias to a pgsql profile, and two identical profile except for search path, one will be an
+            // alias, an other stays a different profile.
+            // And add a virtual profile that will be not an alias because it has no the same timeout
+            // we simulate what it is done in createVirtualProfile
+            array(
+                array(
+
+                    'jdb:almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public'
+                    ),
+                    'jdb:default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public'
+                    ),
+                    'jdb:foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public'
+                    ),
+                    'jdb:identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public'
+                    ),
+                    'jdb:maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                    ),
+                    'jdb:other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public'
+                    ),
+                    'jdb:myvirtual' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'bar,public'
+                    )
+                ),
+                array('jdb'=> array(
+                    'almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'myvirtual' => array(
+                        '_name' => 'myvirtual',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>181, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                )
+                )
+            ),
+            // test 11 : alias to a pgsql profile, and two identical profile except for search path, one will be an
+            // alias, an other stays a different profile.
+            // And add a virtual profile that will be an alias because it has the same changed timeout
+            // we simulate what it is done in createVirtualProfile
+            array(
+                array(
+
+                    'jdb:almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'jdb:myvirtual' => array(
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'search_path'=>'bar,public', 'timeout' => 180
+                    )
+                ),
+                array('jdb'=> array(
+                    'almostidentical' => array(
+                        '_name' => 'almostidentical',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'default' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'foo' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'identical' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'maria' => array(
+                        '_name' => 'maria',
+                        'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
+                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'other' => array(
+                        '_name' => 'other',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                    'myvirtual' => array(
+                        '_name' => 'default',
+                        'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
+                        'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
+                        'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                    ),
+                )
+                )
+            ),
+        );
+    }
+
+    /**
+     * @dataProvider getDuplicateProfileData
+     * @param $sourceProfiles
+     * @param $expectedProfiles
+     * @return void
+     */
+    function testDuplicateProfile($sourceProfiles, $expectedProfiles)
+    {
+        $compiler = new ProfilesReaderForTest(function($name) {
+            $plugin = App::loadPlugin($name, 'profiles', '.profiles.php', $name.'ProfilesCompiler', $name);
+            if (!$plugin) {
+                $plugin = new ReaderPlugin($name);
+            }
+            return $plugin;
+        });
+
+        $profiles = $compiler->readFromTestArray($sourceProfiles);
+
+        ksort($profiles);
+        $this->assertEquals($expectedProfiles, $profiles);
+    }
 }

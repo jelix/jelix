@@ -27,6 +27,7 @@
     "jILogger": "core/log/jILogger.php",
     "jIMultiFileCompiler": "core/jIMultiFileCompiler.php",
     "jISelector": "core/jISelector.php",
+    "jIActionSelector": "core/jIActionSelector.php",
     "jISimpleCompiler": "core/jISimpleCompiler.php",
     "jIncluder": "core/jIncluder.php",
     "jIniFile": "utils/jIniFile.php",

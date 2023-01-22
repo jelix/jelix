@@ -10,7 +10,7 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-        <jelix version="&gt;=1.8.0-rc.2,&lt;=2.0.0"/>
+        <jelix version="&gt;=1.8.0-rc.3,&lt;=2.0.0"/>
     </dependencies>
     <autoload>
         <psr4 namespace="\Jelix\JelixModule" dir="./"/>
