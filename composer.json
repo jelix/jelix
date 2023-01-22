@@ -20,7 +20,7 @@
         "jelix/composer-module-setup": "^1.1.0",
         "phpmailer/phpmailer": "^6.6.5",
         "jelix/castor": "^1.1.1",
-        "jelix/profiles": "~1.1.0",
+        "jelix/profiles": "~1.2.0",
         "jelix/inifile": "^3.3.1",
         "jelix/properties-file": "^1.2.3",
         "jelix/database": "dev-master",
