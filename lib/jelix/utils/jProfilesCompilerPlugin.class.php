@@ -80,7 +80,7 @@ class jProfilesCompilerPlugin
             if (count($this->common)) {
                 $profile = array_merge($this->common, $profile);
             }
-            if (!isset($profile['_name']) || $profile['_name'] == '__common__') {
+            if (!isset($profile['_name']) || $profile['_name'] == '' || $profile['_name'] == '__common__') {
                 $profile['_name'] = $name;
             }
             $profiles[$this->category][$name] = $this->consolidate($profile);
