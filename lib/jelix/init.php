@@ -52,6 +52,8 @@ require JELIX_LIB_CORE_PATH.'jICoordPlugin.iface.php';
 
 require JELIX_LIB_CORE_PATH.'jISelector.iface.php';
 
+require JELIX_LIB_CORE_PATH.'jIActionSelector.iface.php';
+
 require JELIX_LIB_CORE_PATH.'jBasicErrorHandler.class.php';
 
 require JELIX_LIB_CORE_PATH.'jException.class.php';
