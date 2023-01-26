@@ -70,7 +70,7 @@ class MailerTest extends \Jelix\Scripts\ModuleCommandAbstract
 
         $tpl = new \jTpl();
         $tpl->assign('domain_name', $domain);
-        $body = $tpl->fetch('jelix~email_test');
+        $body = $tpl->fetch('jelix~email_test','html');
         $mail->msgHTML($body, '', array($mail, 'html2textKeepLinkSafe'));
         if (!$mail->Send()) {
             $output->writeln('It seems something goes wrong during the message sending.');
