@@ -821,4 +821,359 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->expectExceptionMessage('For item testD, some items are missing: testB');
         $chain = $resolver->getDependenciesChainForInstallation();
     }
+
+
+    public function testTwoDependItemsInstallOneItem()
+    {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_INSTALL);
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForSpecificItems('testB', true);
+
+        $this->assertEquals(2, count($chain));
+        $this->assertEquals('testA', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+        $this->assertEquals('testB', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
+    }
+
+    public function testFourDependItemsInstallTwoItems()
+    {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_INSTALL);
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $packD = new Item('testD', "1.0", false);
+        $packD->setAction(Resolver::ACTION_INSTALL);
+        $packB->addDependency('testF', '1.0.*');
+
+        $packE = new Item('testE', "1.0", false);
+        $packE->setAction(Resolver::ACTION_INSTALL);
+
+        $packF = new Item('testF', "1.0", false);
+        $packF->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $resolver->addItem($packD);
+        $resolver->addItem($packE);
+        $resolver->addItem($packF);
+        $chain = $resolver->getDependenciesChainForSpecificItems(['testB', 'testD'], true);
+
+        $this->assertEquals(4, count($chain));
+        $this->assertEquals('testA', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+        $this->assertEquals('testF', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
+        $this->assertEquals('testB', $chain[2]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[2]->getAction());
+        $this->assertEquals('testD', $chain[3]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[3]->getAction());
+    }
+
+    public function testOptionalFourDependItemsInstallTwoItems()
+    {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $packD = new Item('testD', "1.0", false);
+        $packD->setAction(Resolver::ACTION_INSTALL);
+        $packB->addDependency('testF', '1.0.*');
+
+        $packE = new Item('testE', "1.0", false);
+        $packE->setAction(Resolver::ACTION_INSTALL);
+
+        $packF = new Item('testF', "1.0", false);
+        $packF->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $resolver->addItem($packD);
+        $resolver->addItem($packE);
+        $resolver->addItem($packF);
+        $chain = $resolver->getDependenciesChainForSpecificItems(['testB', 'testD'], false);
+
+        $this->assertEquals(1, count($chain));
+        $this->assertEquals('testD', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+    }
+
+    public function testTwoDependItemsInstallOneItemOnlyIfNeeded()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_NONE);
+
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForSpecificItems('testB');
+
+        $this->assertEquals(0, count($chain));
+    }
+
+    public function testTwoDependItemsInstallOneItemOnlyIfNeeded2()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_NONE);
+
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForSpecificItems('testB');
+
+        $this->assertEquals(0, count($chain));
+    }
+
+    public function testInstallOneItemThatIsADependency()
+    {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_INSTALL);
+
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_INSTALL);
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForSpecificItems('testA', true);
+
+        $this->assertEquals(1, count($chain));
+        $this->assertEquals('testA', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+    }
+
+    public function testTwoDependItemsUpgradeOneItemWithAlreadyInstalledDependency()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_NONE);
+
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_UPGRADE, "1.1");
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForSpecificItems('testB', true);
+
+        $this->assertEquals(1, count($chain));
+        $this->assertEquals('testB', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[0]->getAction());
+    }
+
+    public function testTwoDependItemsUpgradeOneItemWithAlreadyInstalledDependencyAndNoForce()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_NONE);
+
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_UPGRADE, "1.1");
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForSpecificItems('testB', false);
+
+        $this->assertEquals(1, count($chain));
+        $this->assertEquals('testB', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[0]->getAction());
+    }
+
+    public function testTwoDependItemsUpgradeOneItemWithUninstalledDependency()
+    {
+        $packA = new Item('testA', "1.0", false);
+        $packA->setAction(Resolver::ACTION_NONE);
+
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_UPGRADE, "1.1");
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForSpecificItems('testB', true);
+
+        $this->assertEquals(2, count($chain));
+        $this->assertEquals('testA', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+        $this->assertEquals('testB', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[1]->getAction());
+    }
+
+    public function testTwoDependItemsUpgradeOneItemWithDependencyToUpgrade()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_UPGRADE, "1.2");
+
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_UPGRADE, "1.1");
+        $packB->addDependency('testA', '1.2.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForSpecificItems('testB', true);
+
+        $this->assertEquals(2, count($chain));
+        $this->assertEquals('testA', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[0]->getAction());
+        $this->assertEquals('testB', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[1]->getAction());
+    }
+
+    public function testTwoDependItemsUpgradeOneItemWithDependencyToUpgradeAndNoForce()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_UPGRADE, "1.2");
+
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_UPGRADE, "1.1");
+        $packB->addDependency('testA', '1.2.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $chain = $resolver->getDependenciesChainForSpecificItems('testB', false);
+
+        $this->assertEquals(2, count($chain));
+        $this->assertEquals('testA', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[0]->getAction());
+        $this->assertEquals('testB', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[1]->getAction());
+    }
+
+    public function testTwoDependItemsUpgradeOneItemWithNoUpgradedDependency()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_NONE);
+
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_UPGRADE, "1.1");
+        $packB->addDependency('testA', '1.1.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(2);
+        $this->expectExceptionMessage('Version of item \'testA\' (1.0) does not match required version by item testB (1.1.*)');
+        $chain = $resolver->getDependenciesChainForInstallation();
+    }
+
+    public function testFourDependItemsFullUpgradeOfSomeModules()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_UPGRADE, "1.1.0");
+
+        $packB = new Item('testB', "1.2", true);
+        $packB->setAction(Resolver::ACTION_UPGRADE, "1.3.0");
+        $packB->addDependency('testA', '1.1.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $packD = new Item('testD', "1.4", true);
+        $packD->setAction(Resolver::ACTION_UPGRADE, "1.5.0");
+        $packB->addDependency('testF', '1.7.*');
+
+        $packE = new Item('testE', "1.5.0", true);
+        $packE->setAction(Resolver::ACTION_UPGRADE, "1.5.1");
+
+        $packF = new Item('testF', "1.6.0", true);
+        $packF->setAction(Resolver::ACTION_UPGRADE, "1.7.0");
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+        $resolver->addItem($packD);
+        $resolver->addItem($packE);
+        $resolver->addItem($packF);
+        $chain = $resolver->getDependenciesChainForSpecificItems(['testB', 'testD'], true);
+
+        $this->assertEquals(4, count($chain));
+        $this->assertEquals('testA', $chain[0]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[0]->getAction());
+        $this->assertEquals('testF', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[1]->getAction());
+        $this->assertEquals('testB', $chain[2]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[2]->getAction());
+        $this->assertEquals('testD', $chain[3]->getName());
+        $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[3]->getAction());
+    }
 }

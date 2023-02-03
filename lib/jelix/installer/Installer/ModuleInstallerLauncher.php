@@ -731,17 +731,13 @@ class ModuleInstallerLauncher
     }
 
     /**
-     * @param mixed $forConfiguration
+     * @param boolean $forceToInstall true if the installer or configurator of the module should be executed regardless of its status
      *
      * @return Item
      */
-    public function getResolverItem($forConfiguration = false)
+    public function getResolverItem($forceToInstall = false)
     {
-        if ($forConfiguration) {
-            $action = $this->getConfigureAction();
-        } else {
-            $action = $this->getInstallAction();
-        }
+        $action = $this->getInstallAction($forceToInstall);
         if ($action == Resolver::ACTION_UPGRADE) {
             $item = new Item($this->name, $this->moduleStatus->version, true);
             $item->setAction(Resolver::ACTION_UPGRADE, $this->moduleInfos->version);
@@ -770,18 +766,24 @@ class ModuleInstallerLauncher
         return $item;
     }
 
-    protected function getInstallAction()
+    /**
+     * @param boolean $forceInstallation
+     * @return int
+     * @throws Exception
+     */
+    protected function getInstallAction($forceInstallation)
     {
         if ($this->isInstalled()) {
             if (!$this->isEnabled()) {
                 return Resolver::ACTION_REMOVE;
             }
             if ($this->isUpgraded()) {
-                return Resolver::ACTION_NONE;
+                return $forceInstallation ? Resolver::ACTION_INSTALL : Resolver::ACTION_NONE;
             }
 
             return Resolver::ACTION_UPGRADE;
         }
+
         if ($this->isEnabled()) {
             return Resolver::ACTION_INSTALL;
         }
