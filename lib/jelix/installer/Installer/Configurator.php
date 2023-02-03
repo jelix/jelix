@@ -171,24 +171,25 @@ class Configurator
         // get all modules and their dependencies
         $resolver = new Resolver();
         foreach ($this->globalSetup->getModuleComponentsList() as $name => $component) {
-            $resolverItem = $component->getResolverItem(true);
             if (in_array($name, $modulesList)) {
-                if (!$component->isEnabled() || $forceReconfigure) {
-                    $resolverItem->setAction(Resolver::ACTION_INSTALL);
-                }
+                $resolverItem = $component->getResolverItem($forceReconfigure);
             }
+            else {
+                $resolverItem = $component->getResolverItem();
+            }
+
             $resolver->addItem($resolverItem);
         }
 
         // configure modules
-        $modulesChain = $this->resolveDependencies($resolver);
+        $modulesChain = $this->resolveDependencies($resolver, $modulesList);
         if ($modulesChain === false) {
             return false;
         }
         $modulesToConfigure = array();
 
         foreach ($modulesChain as $resolverItem) {
-            if ($resolverItem->getAction() == Resolver::ACTION_INSTALL) {
+            if ($resolverItem->getAction() == Resolver::ACTION_INSTALL || $resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
                 $modulesToConfigure[] = $resolverItem;
             }
         }
@@ -248,9 +249,6 @@ class Configurator
         $resolver = new Resolver();
         foreach ($this->globalSetup->getModuleComponentsList() as $name => $module) {
             $resolverItem = $module->getResolverItem(true);
-            if ($module->isEnabled()) {
-                $resolverItem->setAction(Resolver::ACTION_INSTALL);
-            }
             $resolver->addItem($resolverItem);
         }
 
@@ -305,10 +303,15 @@ class Configurator
         return $result;
     }
 
-    protected function resolveDependencies(Resolver $resolver)
+    protected function resolveDependencies(Resolver $resolver, $moduleLists = [])
     {
         try {
-            $moduleschain = $resolver->getDependenciesChainForInstallation(true);
+            if (count($moduleLists)) {
+                $moduleschain = $resolver->getDependenciesChainForSpecificItems($moduleLists, true);
+            }
+            else {
+                $moduleschain = $resolver->getDependenciesChainForInstallation(true);
+            }
         } catch (ItemException $e) {
             $item = $e->getItem();
             $component = $item->getProperty('component');
@@ -647,7 +650,7 @@ class Configurator
         // get all modules
         $resolver = new Resolver();
         foreach ($this->globalSetup->getModuleComponentsList() as $name => $component) {
-            $resolverItem = $component->getResolverItem(true);
+            $resolverItem = $component->getResolverItem();
             if (in_array($name, $modulesList)) {
                 if ($component->isEnabled()) {
                     $resolverItem->setAction(Resolver::ACTION_REMOVE);
@@ -657,7 +660,7 @@ class Configurator
         }
 
         // configure modules
-        $modulesChain = $this->resolveDependencies($resolver);
+        $modulesChain = $this->resolveDependencies($resolver, $modulesList);
         if ($modulesChain === false) {
             return false;
         }

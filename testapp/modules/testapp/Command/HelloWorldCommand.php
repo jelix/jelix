@@ -36,5 +36,10 @@ class HelloWorldCommand  extends \Jelix\Scripts\ModuleCommandAbstract {
             $name = 'World';
         }
         $output->writeln("Hello $name.");
+
+        $url = \jUrl::getFull('jelix_tests~jstests:jforms');
+        $output->writeln("Url: $url.");
+
+        return 0;
     }
 }
