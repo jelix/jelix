@@ -43,6 +43,7 @@ class RightsList extends \Jelix\Scripts\ModuleCommandAbstract
 
         foreach ($rs as $rec) {
             $table->addRow(array(
+                '',
                 'Anonymous',
                 $rec->id_aclsbj.($rec->canceled == '1' ? ' (forbidden)' : ''),
                 $rec->id_aclres,
