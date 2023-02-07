@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -643,8 +643,13 @@ class Installer
         foreach ($installer->getNewEntrypoints() as $epId => $epInfo) {
             $this->globalSetup->declareNewEntryPoint($epId, $epInfo['type'], $epInfo['config']);
         }
-        $this->globalSetup->getUrlModifier()->save();
-        $this->globalSetup->getLocalUrlModifier()->save();
+        if ($this->globalSetup->forLocalConfiguration()) {
+            $this->globalSetup->getLocalUrlModifier()->save();
+        }
+        else {
+            $this->globalSetup->getUrlModifier()->save();
+        }
+
     }
 
     protected function startMessage()

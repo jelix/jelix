@@ -46,6 +46,11 @@ trait InstallConfigTrait
         return $this->name;
     }
 
+    final public function getModuleName()
+    {
+        return $this->componentName;
+    }
+
     final public function getPath()
     {
         return $this->path;

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2017-2018 Laurent Jouanneau
+ * @copyright   2017-2022 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -323,7 +323,8 @@ class GlobalSetup
                 $moduleInfos = new ModuleStatus(
                     $moduleName,
                     $dirContent->getPathname(),
-                    $modulesInfos
+                    $modulesInfos,
+                    true
                 );
 
                 $this->ghostModules[$moduleName] = new ModuleInstallerLauncher($moduleInfos, $this);
@@ -364,7 +365,21 @@ class GlobalSetup
     protected function createComponentModule($name, $path)
     {
         $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
-        $moduleInfos = new ModuleStatus($name, $path, $moduleSetupList);
+        $enabledLocally = $this->localConfigIni->getValue($name.'.enabled', 'modules');
+        $enabledGlobally = $this->mainConfigIni->getValue($name.'.enabled', 'modules');
+
+        if ($enabledLocally === null && $enabledGlobally === null) {
+            // module not installed yet
+            $isNativeModule = !$this->forLocalConfiguration;
+        }
+        else if ($enabledLocally) {
+            $isNativeModule = false;
+        }
+        else {
+            $isNativeModule = ($enabledGlobally === true);
+        }
+
+        $moduleInfos = new ModuleStatus($name, $path, $moduleSetupList, $isNativeModule);
 
         return new ModuleInstallerLauncher($moduleInfos, $this);
     }
@@ -794,13 +809,25 @@ class GlobalSetup
         return $this->currentProcessedModule->getPath();
     }
 
+    /**
+     * @var bool indicates if we should work on the local configuration or
+     *           into the application configuration (dev mode)
+     */
     private $forLocalConfiguration = false;
 
+    /**
+     * @param boolean $forLocalConfiguration
+     * @return void
+     */
     public function setCurrentConfiguratorStatus($forLocalConfiguration)
     {
         $this->forLocalConfiguration = $forLocalConfiguration;
     }
 
+    /**
+     * @return bool indicates if we should work on the local configuration or
+     *           into the application configuration
+     */
     public function forLocalConfiguration()
     {
         return $this->forLocalConfiguration;

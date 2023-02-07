@@ -163,7 +163,7 @@ class EntryPoint
     }
 
     /**
-     * @return array[string] the list of all available modules (installed or not)
+     * @return string[] the list of all available modules (installed or not)
      *                       and their path, as stored in the compiled configuration file
      */
     public function getModulesList()
@@ -172,8 +172,24 @@ class EntryPoint
     }
 
     /**
+     * Return a reader/modifier of the list of file ini, depending of the
+     * context.
+     *
+     * In the context of dev, the list is:
+     * - 'default': defaultconfig.ini
+     * - 'main': mainconfig.ini
+     * - 'entrypoint' : app/system/<ep>/config.ini
+     *
+     * In the context of local configuration, the list is
+     *
+     * - 'default': defaultconfig.ini
+     * - 'main': mainconfig.ini
+     * - 'entrypoint': app/system/<ep>/config.ini
+     * - 'local': localconfig.ini
+     * - 'localentrypoint': var/config/<ep>/config.ini
+     *
      * @return \Jelix\IniFile\IniModifierArray list of ini content of the
-     *                                         configuration, and local configuration in the context of local installation
+     *                                         configuration
      */
     public function getConfigIni()
     {
@@ -197,6 +213,7 @@ class EntryPoint
 
             return $ini;
         }
+
         $ini = $this->globalSetup->getSystemConfigIni();
         $ini['entrypoint'] = $appCf;
 
