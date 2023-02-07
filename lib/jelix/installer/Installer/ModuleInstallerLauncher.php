@@ -10,7 +10,6 @@
 namespace Jelix\Installer;
 
 use Jelix\Dependencies\Item;
-use Jelix\Dependencies\Resolver;
 use Jelix\Version\VersionComparator;
 
 /**
@@ -115,6 +114,16 @@ class ModuleInstallerLauncher
                 break;
             }
         }
+    }
+
+    public function getModuleInfos()
+    {
+        return $this->moduleInfos;
+    }
+
+    public function getModuleStatus()
+    {
+        return $this->moduleStatus;
     }
 
     public function getName()
@@ -238,17 +247,17 @@ class ModuleInstallerLauncher
      * Backup the uninstall.php outside the module.
      *
      * It allows to run the uninstall.php script of the module, even if the
-     * module does not exist any more. This could be the case when the module is
+     * module does not exist anymore. This could be the case when the module is
      * bundled into a composer package, and we removed the composer package from
      * composer.json before deploying the application.
      * The script is copied into the app:install/uninstall/ directory.
      *
      * For some components that don't have an uninstaller script, we should
      * reference them into uninstaller.ini.php anyway, because we need their
-     * informations because they are reverse dependencies of an other module
+     * information because they are reverse dependencies of another module
      * we should uninstall.
      *
-     * @return bool true if there is a uninstall.php script
+     * @return bool true if there is an uninstall.php script
      */
     public function backupUninstallScript()
     {
@@ -735,65 +744,12 @@ class ModuleInstallerLauncher
      *
      * @return Item
      */
-    public function getResolverItem($forceToInstall = false)
+    public function getResolverItem($forceToInstall = false, $forConfiguration = false)
     {
-        $action = $this->getInstallAction($forceToInstall);
-        if ($action == Resolver::ACTION_UPGRADE) {
-            $item = new Item($this->name, $this->moduleStatus->version, true);
-            $item->setAction(Resolver::ACTION_UPGRADE, $this->moduleInfos->version);
-        } else {
-            $item = new Item($this->name, $this->moduleStatus->version, $this->isInstalled());
-            $item->setAction($action);
-        }
-
-        foreach ($this->moduleInfos->dependencies as $dep) {
-            if ($dep['type'] == 'choice') {
-                $list = array();
-                foreach ($dep['choice'] as $choice) {
-                    $list[$choice['name']] = $choice['version'];
-                }
-                $item->addAlternativeDependencies($list);
-            } else {
-                $item->addDependency($dep['name'], $dep['version']);
-            }
-        }
-
-        foreach ($this->moduleInfos->incompatibilities as $dep) {
-            $item->addIncompatibility($dep['name'], $dep['version']);
-        }
+        $item = $this->moduleStatus->getResolverItem($this->moduleInfos, $forceToInstall, $forConfiguration);
         $item->setProperty('component', $this);
 
         return $item;
-    }
-
-    /**
-     * @param boolean $forceInstallation
-     * @return int
-     * @throws Exception
-     */
-    protected function getInstallAction($forceInstallation)
-    {
-        if ($this->isInstalled()) {
-            if (!$this->isEnabled()) {
-                return Resolver::ACTION_REMOVE;
-            }
-            if ($this->isUpgraded()) {
-                return $forceInstallation ? Resolver::ACTION_INSTALL : Resolver::ACTION_NONE;
-            }
-
-            return Resolver::ACTION_UPGRADE;
-        }
-
-        if ($this->isEnabled()) {
-            return Resolver::ACTION_INSTALL;
-        }
-
-        return Resolver::ACTION_NONE;
-    }
-
-    protected function getConfigureAction()
-    {
-        return Resolver::ACTION_NONE;
     }
 
     public function checkJelixVersion($jelixVersion)

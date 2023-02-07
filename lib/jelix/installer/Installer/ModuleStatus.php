@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2009-2022 Laurent Jouanneau
+ * @copyright   2009-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -9,7 +9,11 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\Infos\ModuleInfos;
+use Jelix\Dependencies\Item;
+use Jelix\Dependencies\Resolver;
 use Jelix\IniFile\IniModifierInterface;
+use Jelix\Version\VersionComparator;
 
 /**
  * container for module properties, according to a specific entry point configuration.
@@ -309,4 +313,77 @@ class ModuleStatus
 
         return $p;
     }
+
+
+    /**
+     * @param boolean $forceToInstall true if the installer or configurator of the module should be executed regardless of its status
+     *
+     * @return Item
+     */
+    public function getResolverItem(ModuleInfos $infos, $forceToInstall = false, $forConfiguration = false)
+    {
+        $action = $this->getInstallAction($infos->version, $forceToInstall, $forConfiguration);
+        if ($action == Resolver::ACTION_UPGRADE) {
+            $item = new Item($this->name, $this->version, true);
+            $item->setAction(Resolver::ACTION_UPGRADE, $infos->version);
+        } else {
+            $item = new Item($this->name, $this->version, $this->isInstalled);
+            $item->setAction($action);
+        }
+
+        foreach ($infos->dependencies as $dep) {
+            if ($dep['type'] == 'choice') {
+                $list = array();
+                foreach ($dep['choice'] as $choice) {
+                    $list[$choice['name']] = $choice['version'];
+                }
+                $item->addAlternativeDependencies($list);
+            } else {
+                $item->addDependency($dep['name'], $dep['version']);
+            }
+        }
+
+        foreach ($infos->incompatibilities as $dep) {
+            $item->addIncompatibility($dep['name'], $dep['version']);
+        }
+
+        return $item;
+    }
+
+    /**
+     * @param boolean $forceInstallation
+     * @return int
+     * @throws Exception
+     */
+    protected function getInstallAction($newVersion, $forceInstallation, $forConfiguration = false)
+    {
+        if ($this->isInstalled) {
+            if (!$this->isEnabled) {
+                return Resolver::ACTION_REMOVE;
+            }
+            if ($this->version == '') {
+                throw new Exception('installer.ini.missing.version', array($this->name));
+            }
+
+            if (VersionComparator::compareVersion($newVersion, $this->version) == 0) {
+                return $forceInstallation ? Resolver::ACTION_INSTALL : Resolver::ACTION_NONE;
+            }
+
+            return Resolver::ACTION_UPGRADE;
+        }
+
+        if ($forConfiguration) {
+            if ($forceInstallation) {
+                return Resolver::ACTION_INSTALL;
+            }
+        }
+        else {
+            if ($this->isEnabled) {
+                return Resolver::ACTION_INSTALL;
+            }
+        }
+
+        return Resolver::ACTION_NONE;
+    }
+
 }

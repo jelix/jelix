@@ -63,7 +63,7 @@ return array(
     'module.choice.ambiguous' => 'The module %s needs one of these modules, %s. But you must explicitely to install one of them.',
     'module.choice.unknown' => 'The module %s needs one of these modules, %s. But there are unknown or do not met version criterias',
     'module.bad.jelix.version' => 'The module %s needs another jelix version (%s - %s)',
-    'module.bad.dependency.version' => 'The module %s needs another version of the module %s (%s - %s)',
+    'module.bad.dependency.version' => 'The module %s needs another version of the module %s (expected version %s)',
     'module.configurator.class.not.found' => 'The configuration class %s for the module %s doesn\'t exist',
     'module.installer.class.not.found' => 'The installation class %s for the module %s doesn\'t exist',
     'module.uninstaller.class.not.found' => 'The uninstallation class %s for the module %s doesn\'t exist',

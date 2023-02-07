@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2017-2022 Laurent Jouanneau
+ * @copyright   2017-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -320,19 +320,19 @@ class GlobalSetup
                 $modulesInfos[$moduleName.'.version'] = (string) $this->installerIni->getValue($moduleName.'.version', 'modules');
                 $modulesInfos[$moduleName.'.enabled'] = false;
 
-                $moduleInfos = new ModuleStatus(
+                $moduleStatus = new ModuleStatus(
                     $moduleName,
                     $dirContent->getPathname(),
                     $modulesInfos,
                     true
                 );
 
-                $this->ghostModules[$moduleName] = new ModuleInstallerLauncher($moduleInfos, $this);
+                $this->ghostModules[$moduleName] = new ModuleInstallerLauncher($moduleStatus, $this);
                 $this->ghostModules[$moduleName]->init();
             }
         }
 
-        // remove informations about modules that don't exist anymore
+        // remove information about modules that don't exist anymore
         $modules = $this->installerIni->getValues('modules');
         foreach ($modules as $key => $value) {
             $l = explode('.', $key);
@@ -407,6 +407,19 @@ class GlobalSetup
     }
 
     /**
+     * @return \Generator
+     */
+    public function getModuleInfosAndStatuses ()
+    {
+        foreach ($this->modules as $name => $component) {
+            yield array(
+                $component->getModuleInfos(),
+                $component->getModuleStatus()
+            );
+        }
+    }
+
+    /**
      * List of modules that should be uninstall and we
      * have only their uninstaller into install/uninstall/.
      *
@@ -415,6 +428,19 @@ class GlobalSetup
     public function getGhostModuleComponents()
     {
         return $this->ghostModules;
+    }
+
+    /**
+     * @return \Generator
+     */
+    public function getGhostModuleInfosAndStatuses()
+    {
+        foreach ($this->ghostModules as $name => $component) {
+            yield array(
+                $component->getModuleInfos(),
+                $component->getModuleStatus()
+            );
+        }
     }
 
     /**

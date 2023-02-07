@@ -22,7 +22,7 @@ abstract class InfosAbstract
     /** @var string the name of the module, used as identifier in jelix selectors or other part of the code */
     public $name = '';
 
-    /** @var string the birth date of the module/app. optional */
+    /** @var string the birthdate of the module/app. optional */
     public $createDate = '';
 
     /** @var string version of the module/app. required for modules */

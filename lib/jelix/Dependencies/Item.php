@@ -107,6 +107,14 @@ class Item
         return $this->dependencies;
     }
 
+    public function getDependencyVersion($name)
+    {
+        if (isset($this->dependencies[$name])) {
+            return $this->dependencies[$name][0];
+        }
+        return '';
+    }
+
     /**
      * @param array $choice list of dependencies where one of them should be installed, not all
      *                      ex:
