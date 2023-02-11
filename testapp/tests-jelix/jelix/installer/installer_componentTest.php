@@ -190,7 +190,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             ));
 
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall1',
-                jApp::appPath().'modules/testinstall1/', $conf->modules, true);
+                jApp::appPath() . 'modules/testinstall1/', $conf->modules, true);
             // testinstall1 has no install.php file
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
