@@ -53,7 +53,14 @@ abstract class jResponse
      */
     protected $_outputOnlyHeaders = false;
 
+    /**
+     * @var string the HTTP version to use for the response
+     */
     public $httpVersion = '1.1';
+
+    /**
+     * @var bool indicate to use the version from $httpVersion
+     */
     public $forcedHttpVersion = false;
 
     /**

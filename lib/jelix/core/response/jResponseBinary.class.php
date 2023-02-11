@@ -5,10 +5,12 @@
  *
  * @author      Laurent Jouanneau
  * @contributor Nicolas Lassalle <nicolas@beroot.org> (ticket #188), Julien Issler
+ * @contributor René-Luc Dhont
  *
- * @copyright   2005-2010 Laurent Jouanneau
+ * @copyright   2005-2023 Laurent Jouanneau
  * @copyright   2007 Nicolas Lassalle
  * @copyright   2009-2016 Julien Issler
+ * @copyright   2023 René-Luc Dhont
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -27,7 +29,7 @@
  * @package  jelix
  * @subpackage core_response
  */
-final class jResponseBinary extends jResponse
+class jResponseBinary extends jResponse
 {
     /**
      * @var string
@@ -52,7 +54,7 @@ final class jResponseBinary extends jResponse
     /**
      * the content you want to send. Keep it to null if you indicate a filename into $fileName.
      *
-     * @var string|null
+     * @var string|callable|null
      */
     public $content;
 
@@ -126,7 +128,12 @@ final class jResponseBinary extends jResponse
             $this->_httpHeaders['Content-Length'] = strlen($this->content);
             $this->sendHttpHeaders();
             session_write_close();
-            echo $this->content;
+            if (is_callable($this->content)) {
+                ($this->content)();
+            }
+            else {
+                echo $this->content;
+            }
             flush();
         }
 
@@ -145,5 +152,33 @@ final class jResponseBinary extends jResponse
         $this->addHttpHeader('Cache-Control', 'maxage=3600', false);
         //$this->addHttpHeader('Cache-Control','no-store, no-cache, must-revalidate, post-check=0, pre-check=0', false);
         //$this->addHttpHeader('Expires','0', false);
+    }
+
+
+    /**
+     * Sets the PHP callback associated with this Response.
+     *
+     * @param callable $callback The callback use to send the content
+     *
+     */
+    public function setContentCallback(callable $callback)
+    {
+        $this->content = $callback;
+    }
+
+    /**
+     * Sets the PHP callback associated with this Response with an
+     * iterable.
+     *
+     * @param iterable $iterator The result of a generator use to build the callback to send the content
+     *
+     */
+    public function setContentGenerator(iterable $iterator)
+    {
+        $this->content = function () use ($iterator) {
+            foreach ($iterator as $line) {
+                echo $line;
+            }
+        };
     }
 }
