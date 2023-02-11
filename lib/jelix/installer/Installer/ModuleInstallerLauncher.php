@@ -739,18 +739,6 @@ class ModuleInstallerLauncher
         return $date;
     }
 
-    /**
-     * @param boolean $forceToInstall true if the installer or configurator of the module should be executed regardless of its status
-     *
-     * @return Item
-     */
-    public function getResolverItem($forceToInstall = false, $forConfiguration = false)
-    {
-        $item = $this->moduleStatus->getResolverItem($this->moduleInfos, $forceToInstall, $forConfiguration);
-        $item->setProperty('component', $this);
-
-        return $item;
-    }
 
     public function checkJelixVersion($jelixVersion)
     {

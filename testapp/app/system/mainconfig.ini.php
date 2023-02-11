@@ -20,7 +20,6 @@ jacl.enabled=on
 jacldb.enabled=on
 jacl2.enabled=on
 jacl2db.enabled=on
-jacl2db.installparam=defaultuser
 jauthdb.enabled=on
 jauth.enabled=on
 jpref.enabled=on
@@ -33,6 +32,9 @@ articles.enabled=on
 jelix.enabled=on
 
 jelix.installparam[wwwfiles]=vhost
+
+jacl2db.installparam[defaultgroups]=on
+jacl2db.installparam[defaultuser]=on
 
 [coordplugins]
 auth=auth.coord.ini.php

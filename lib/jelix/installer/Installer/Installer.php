@@ -290,7 +290,7 @@ class Installer
 
         foreach ($moduleschain as $resolverItem) {
             /** @var \Jelix\Installer\ModuleInstallerLauncher $component */
-            $component = $resolverItem->getProperty('component');
+            $component = $this->globalSetup->getModuleComponent($resolverItem->getName());
 
             try {
                 $this->globalSetup->setCurrentProcessedModule($component->getName());

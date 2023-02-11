@@ -382,7 +382,7 @@ class Configurator
 
         foreach ($moduleschain as $resolverItem) {
             /** @var ModuleInstallerLauncher $component */
-            $component = $resolverItem->getProperty('component');
+            $component = $this->globalSetup->getModuleComponent($resolverItem->getName());
 
             try {
                 if ($installersDisabled) {
@@ -634,7 +634,7 @@ class Configurator
 
         foreach ($moduleschain as $resolverItem) {
             /** @var ModuleInstallerLauncher $component */
-            $component = $resolverItem->getProperty('component');
+            $component = $this->globalSetup->getModuleComponent($resolverItem->getName());
 
             try {
                 if ($installersDisabled) {

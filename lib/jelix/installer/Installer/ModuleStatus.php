@@ -316,18 +316,19 @@ class ModuleStatus
 
 
     /**
-     * @param boolean $forceToInstall true if the installer or configurator of the module should be executed regardless of its status
+     * @param ModuleInfos $infos properties of the module
+     * @param int|int[] $filter the status that the module should have to be selected
      *
      * @return Item
      */
-    public function getResolverItem(ModuleInfos $infos, $forceToInstall = false, $forConfiguration = false)
+    public function getResolverItem(ModuleInfos $infos, $filter, $forConfiguration = false)
     {
-        $action = $this->getInstallAction($infos->version, $forceToInstall, $forConfiguration);
+        $action = $this->getInstallAction($infos->version, $filter);
         if ($action == Resolver::ACTION_UPGRADE) {
             $item = new Item($this->name, $this->version, true);
             $item->setAction(Resolver::ACTION_UPGRADE, $infos->version);
         } else {
-            $item = new Item($this->name, $this->version, $this->isInstalled);
+            $item = new Item($this->name, $this->version, $forConfiguration ? $this->isEnabled : $this->isInstalled);
             $item->setAction($action);
         }
 
@@ -350,37 +351,63 @@ class ModuleStatus
         return $item;
     }
 
+    const FILTER_DISABLED_UNINSTALLED = 37;
+    const FILTER_DISABLED_INSTALLED = 41;
+    const FILTER_ENABLED_UNINSTALLED = 38;
+    const FILTER_ENABLED_INSTALLED_UPGRADED = 26;
+    const FILTER_ENABLED_INSTALLED_NOT_UPGRADED = 42;
+
+    const FILTER_VAL_DISABLED = 1;
+    const FILTER_VAL_ENABLED = 2;
+    const FILTER_VAL_UNINSTALLED = 4;
+    const FILTER_VAL_INSTALLED = 8;
+    const FILTER_VAL_UPGRADED = 16;
+    const FILTER_VAL_NOTUPGRADED = 32;
+
     /**
-     * @param boolean $forceInstallation
+     * @param string $newVersion the new version in case of the item can be upgraded
+     * @param int|int[] $filter  one of FILTER_* const
+     *
      * @return int
      * @throws Exception
      */
-    protected function getInstallAction($newVersion, $forceInstallation, $forConfiguration = false)
+    protected function getInstallAction($newVersion, $filter)
     {
-        if ($this->isInstalled) {
-            if (!$this->isEnabled) {
-                return Resolver::ACTION_REMOVE;
+        if ($filter === false) {
+            if ($this->isInstalled && $this->isEnabled ) {
+                if (VersionComparator::compareVersion($newVersion, $this->version) != 0) {
+                    return Resolver::ACTION_UPGRADE;
+                }
             }
-            if ($this->version == '') {
-                throw new Exception('installer.ini.missing.version', array($this->name));
-            }
-
-            if (VersionComparator::compareVersion($newVersion, $this->version) == 0) {
-                return $forceInstallation ? Resolver::ACTION_INSTALL : Resolver::ACTION_NONE;
-            }
-
-            return Resolver::ACTION_UPGRADE;
+            return Resolver::ACTION_NONE;
         }
-
-        if ($forConfiguration) {
-            if ($forceInstallation) {
-                return Resolver::ACTION_INSTALL;
+        $selected = Resolver::ACTION_INSTALL;
+        $status = ($this->isEnabled ? self::FILTER_VAL_ENABLED : self::FILTER_VAL_DISABLED);
+        if ($this->isInstalled) {
+            $status |= self::FILTER_VAL_INSTALLED;
+            if ($this->version != '') {
+                if (VersionComparator::compareVersion($newVersion, $this->version) == 0) {
+                    $status |= self::FILTER_VAL_UPGRADED;
+                }
+                else {
+                    $status |= self::FILTER_VAL_NOTUPGRADED;
+                    $selected = Resolver::ACTION_UPGRADE;
+                }
+            }
+            else {
+                $status |= self::FILTER_VAL_UPGRADED;
             }
         }
         else {
-            if ($this->isEnabled) {
-                return Resolver::ACTION_INSTALL;
-            }
+            $status |= self::FILTER_VAL_UNINSTALLED | self::FILTER_VAL_NOTUPGRADED;
+        }
+
+        if (!is_array($filter)) {
+            $filter = [ $filter ];
+        }
+
+        if (in_array($status, $filter)) {
+            return $selected;
         }
 
         return Resolver::ACTION_NONE;
