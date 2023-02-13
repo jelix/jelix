@@ -114,7 +114,9 @@ final class jResponseBinary extends jResponse
                 throw new jException('jelix~errors.repbin.unknown.file', $this->fileName);
             }
         } else {
-            $this->_httpHeaders['Content-Length'] = strlen($this->content);
+            if (is_string($this->content)) {
+                $this->_httpHeaders['Content-Length'] = strlen($this->content);
+            }
             $this->sendHttpHeaders();
             session_write_close();
             echo $this->content;
