@@ -372,7 +372,7 @@ class GlobalSetup
             // module not installed yet
             $isNativeModule = !$this->forLocalConfiguration;
         }
-        else if ($enabledLocally) {
+        else if ($enabledLocally && !$enabledGlobally) {
             $isNativeModule = false;
         }
         else {

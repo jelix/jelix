@@ -3,7 +3,7 @@
  * @package     jelix
  *
  * @author      Laurent Jouanneau
- * @copyright   2019 Laurent Jouanneau
+ * @copyright   2019-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -131,7 +131,7 @@ class Jelix17
                 }
             }
 
-            $this->migrateAccessValue($localConfigIni);
+            $this->migrateAccessValue($localConfigIni, $mainConfigIni);
             $this->migrateJelixInstallParameters($localConfigIni);
             $this->migrateInstallerIni();
 
@@ -327,6 +327,12 @@ class Jelix17
         $config->save();
     }
 
+    /**
+     * @param IniModifier $masterConfigIni
+     * @param IniModifier $epConfigIni
+     * @return void
+     * @throws \Jelix\IniFile\IniException
+     */
     protected function migrateModulesSection(IniModifier $masterConfigIni, IniModifier $epConfigIni)
     {
         $modulesParameters = $epConfigIni->getValues('modules');
@@ -360,14 +366,27 @@ class Jelix17
         }
     }
 
-    protected function migrateAccessValue(IniModifier $masterConfigIni)
+    /**
+     * @param IniModifier $masterConfigIni
+     * @param IniModifier|null $mainConfigIni mainconfig if masterConfig is localconfig
+     * @return void
+     * @throws \Jelix\IniFile\IniException
+     */
+    protected function migrateAccessValue(IniModifier $masterConfigIni, $mainConfigIni = null)
     {
         $modulesParameters = $masterConfigIni->getValues('modules');
         if ($modulesParameters) {
             foreach ($modulesParameters as $name => $value) {
                 list($module, $param) = explode('.', $name, 2);
                 if ($param == 'access') {
-                    $masterConfigIni->setValue($module.'.enabled', ($value > 0), 'modules');
+                    $mainEnabled = null;
+                    if ($mainConfigIni) {
+                        $mainEnabled = $mainConfigIni->getValue($module . '.enabled', 'modules');
+                    }
+
+                    if ($mainEnabled === null || $mainEnabled != ($value > 0)) {
+                        $masterConfigIni->setValue($module.'.enabled', ($value > 0), 'modules');
+                    }
                     $masterConfigIni->removeValue($module.'.access', 'modules');
                 }
             }
@@ -419,7 +438,7 @@ class Jelix17
                 if ($section == '__modules_data' || $section == 'modules') {
                     continue;
                 }
-                $installerIni->removeValue('', $section);
+                $installerIni->removeSection($section);
             }
             $installerIni->save();
         }
