@@ -58,6 +58,6 @@ class JelixCommands
         if (!$app) {
             $app = self::setup();
         }
-        $app->run();
+        return $app->run();
     }
 }
