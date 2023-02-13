@@ -45,6 +45,6 @@ class ModulesCommands
                 require $path.'commands.php';
             }
         }
-        $application->run();
+        return $application->run();
     }
 }
