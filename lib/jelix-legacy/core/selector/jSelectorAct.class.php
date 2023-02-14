@@ -57,7 +57,13 @@ class jSelectorAct extends jSelectorActFast
             }
 
             if ($this->request == '' || !$enableRequestPart) {
-                $this->request = $coord->request->type;
+                if ($coord->request) {
+                    $this->request = $coord->request->type;
+                }
+                else {
+                    // In the context of a cli command, we don't have request object...
+                    $this->request = 'classic';
+                }
             }
 
             $this->_createPath();

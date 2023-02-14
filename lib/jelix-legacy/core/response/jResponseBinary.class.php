@@ -5,10 +5,12 @@
  *
  * @author      Laurent Jouanneau
  * @contributor Nicolas Lassalle <nicolas@beroot.org> (ticket #188), Julien Issler
+ * @contributor René-Luc Dhont
  *
- * @copyright   2005-2010 Laurent Jouanneau
+ * @copyright   2005-2023 Laurent Jouanneau
  * @copyright   2007 Nicolas Lassalle
  * @copyright   2009-2016 Julien Issler
+ * @copyright   2023 René-Luc Dhont
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -27,7 +29,7 @@
  * @package  jelix
  * @subpackage core_response
  */
-final class jResponseBinary extends jResponse
+class jResponseBinary extends jResponse
 {
     /**
      * @var string
@@ -36,7 +38,8 @@ final class jResponseBinary extends jResponse
 
     /**
      * The path of the file you want to send. Keep empty if you provide the content
-     * into $content.
+     * into $content. Or if $content is a callback, you can indicate the corresponding
+     * filename here, to be able to delete it after the output, with $deleteFileAfterSending
      *
      * @var string
      */
@@ -52,7 +55,7 @@ final class jResponseBinary extends jResponse
     /**
      * the content you want to send. Keep it to null if you indicate a filename into $fileName.
      *
-     * @var string|null
+     * @var string|callable|null
      */
     public $content;
 
@@ -74,11 +77,13 @@ final class jResponseBinary extends jResponse
 
     /**
      * Delete file after the upload.
+     *
+     * Filename is indicated into $fileName
      */
     public $deleteFileAfterSending = false;
 
     /**
-     * send the content or the file to the browser.
+     * Sends the content or the file to the browser.
      *
      * @throws jException
      *
@@ -105,29 +110,49 @@ final class jResponseBinary extends jResponse
             $this->addHttpHeader('Content-Disposition', 'inline; filename="'.str_replace('"', '\"', $this->outputFileName).'"', false);
         }
 
-        if ($this->content === null) {
-            if ($this->fileName && is_readable($this->fileName) && is_file($this->fileName)) {
+        $hasFileToDelete = false;
+        if ($this->fileName) {
+            if (is_readable($this->fileName) && is_file($this->fileName)) {
                 $this->_httpHeaders['Content-Length'] = filesize($this->fileName);
-                $this->sendHttpHeaders();
                 if ($this->deleteFileAfterSending) {
-                    // ignore, to be able to delete file
-                    ignore_user_abort(true);
+                    $hasFileToDelete = true;
                 }
-                session_write_close();
-                readfile($this->fileName);
-                flush();
-                if ($this->deleteFileAfterSending) {
-                    unlink($this->fileName);
-                }
-            } else {
+                $f = $this->fileName;
+                $this->content = function () use ($f) {
+                    readfile($f);
+                };
+            }
+            else {
                 throw new jException('jelix~errors.repbin.unknown.file', $this->fileName);
             }
-        } else {
+        }
+        elseif (is_string($this->content)) {
             $this->_httpHeaders['Content-Length'] = strlen($this->content);
-            $this->sendHttpHeaders();
-            session_write_close();
+        }
+
+        if ($this->content === null || is_bool($this->content)) {
+            throw new \Exception("Missing content to output");
+        }
+
+        $this->sendHttpHeaders();
+
+        if ($hasFileToDelete) {
+            // ignore user abort, to be able to delete the file
+            ignore_user_abort(true);
+        }
+
+        session_write_close();
+
+        if (is_callable($this->content)) {
+            ($this->content)();
+        }
+        else {
             echo $this->content;
-            flush();
+        }
+
+        flush();
+        if ($hasFileToDelete) {
+            unlink($this->fileName);
         }
 
         return true;
@@ -145,5 +170,33 @@ final class jResponseBinary extends jResponse
         $this->addHttpHeader('Cache-Control', 'maxage=3600', false);
         //$this->addHttpHeader('Cache-Control','no-store, no-cache, must-revalidate, post-check=0, pre-check=0', false);
         //$this->addHttpHeader('Expires','0', false);
+    }
+
+
+    /**
+     * Sets the PHP callback associated with this Response.
+     *
+     * @param callable $callback The callback use to send the content
+     *
+     */
+    public function setContentCallback(callable $callback)
+    {
+        $this->content = $callback;
+    }
+
+    /**
+     * Sets the PHP callback associated with this Response with an
+     * iterable.
+     *
+     * @param iterable $iterator The result of a generator use to build the callback to send the content
+     *
+     */
+    public function setContentGenerator(iterable $iterator)
+    {
+        $this->content = function () use ($iterator) {
+            foreach ($iterator as $line) {
+                echo $line;
+            }
+        };
     }
 }

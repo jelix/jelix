@@ -18,4 +18,4 @@ $application = JelixCommands::setup();
 // here you can add commands to $application
 
 
-JelixCommands::launch($application);
+exit(JelixCommands::launch($application));

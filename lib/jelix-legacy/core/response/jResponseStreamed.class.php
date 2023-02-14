@@ -26,6 +26,7 @@
  *
  * @see jResponse
  * @since 1.8a2
+ * @deprecated use jResponseBinary instead
  */
 final class jResponseStreamed extends jResponse
 {
@@ -83,14 +84,14 @@ final class jResponseStreamed extends jResponse
     public function setCallback(callable $callback)
     {
         if (!is_callable($callback)) {
-            throw new jException('The Response callback must be callable.');
+            throw new InvalidArgumentException('The Response callback must be a callable');
         }
         $this->callback = $callback;
     }
 
     /**
      * Sets the PHP callback associated with this Response with an
-     * iterable. For each value a PHP_EOL is added after.
+     * iterable.
      *
      * @param iterable $iterator The result of a generator use to build the callback to send the content
      *
@@ -98,11 +99,11 @@ final class jResponseStreamed extends jResponse
     public function setGenerator(iterable $iterator)
     {
         if (!is_iterable($iterator)) {
-            throw new jException('The iterator must be iterable.');
+            throw new InvalidArgumentException('The iterator must be iterable.');
         }
         $this->callback = function () use ($iterator) {
             foreach ($iterator as $line) {
-                echo $line.PHP_EOL;
+                echo $line;
             }
         };
     }

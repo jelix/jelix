@@ -47,22 +47,44 @@ class Resolver
      * Their action property may have changed and indicate what
      * to do with them.
      *
-     * @param bool  $allowToInstallDependencies      true if the resolver is authorized
-     *                                               to force the installation of dependencies that have not the
+     * @param bool  $allowToForceInstallDependencies true if the resolver is authorized
+     *                                               to force the installation of dependencies that have not
      *                                               the action flag ACTION_INSTALL
-     * @param mixed $allowToForceInstallDependencies
-     *
      * @throws ItemException when there is a circular dependency...
      *
      * @return Item[] list of item
      */
     public function getDependenciesChainForInstallation($allowToForceInstallDependencies = true)
     {
+       return $this->getDependenciesChainForSpecificItems(array_keys($this->items), $allowToForceInstallDependencies);
+    }
+
+    /**
+     * Return the list of item to process when you want to install only few item.
+     *
+     * The list is in the right order.
+     * Their action property may have changed and indicate what to do with them.
+     *
+     * @param string|string[] $itemNames list of names of items  to install
+     * @param bool  $allowToForceInstallDependencies true if the resolver is authorized
+     *                                               to force the installation of dependencies that have not
+     *                                               the action flag ACTION_INSTALL
+     * @throws ItemException when there is a circular dependency...
+     *
+     * @return Item[] list of item
+     */
+    public function getDependenciesChainForSpecificItems($itemNames, $allowToForceInstallDependencies = true)
+    {
+        if (is_string($itemNames)) {
+            $itemNames = [$itemNames];
+        }
+
         $this->allowToForceInstallDependencies = $allowToForceInstallDependencies;
         $this->checkedItems = array();
         $this->chain = array();
 
-        foreach ($this->items as $itemName => $item) {
+        foreach ($itemNames as $itemName) {
+            $item = $this->items[$itemName];
             $this->circularDependencyTracker = array();
             $this->circularReverseDependencyTracker = array();
             if (isset($this->checkedItems[$itemName])) {
@@ -91,6 +113,12 @@ class Resolver
             $this->chain[] = $item;
         }
 
+        $this->_checkIncompatibilities();
+        return $this->chain;
+    }
+
+    protected function _checkIncompatibilities()
+    {
         $incompatibilities = array();
 
         // get conflict constraint from installed components
@@ -131,8 +159,6 @@ class Resolver
                 }
             }
         }
-
-        return $this->chain;
     }
 
     /**

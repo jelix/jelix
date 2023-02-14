@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2009-2022 Laurent Jouanneau
+ * @copyright   2009-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -9,7 +9,11 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\Infos\ModuleInfos;
+use Jelix\Dependencies\Item;
+use Jelix\Dependencies\Resolver;
 use Jelix\IniFile\IniModifierInterface;
+use Jelix\Version\VersionComparator;
 
 /**
  * container for module properties, according to a specific entry point configuration.
@@ -309,4 +313,104 @@ class ModuleStatus
 
         return $p;
     }
+
+
+    /**
+     * @param ModuleInfos $infos properties of the module
+     * @param int|int[] $filter the status that the module should have to be selected
+     *
+     * @return Item
+     */
+    public function getResolverItem(ModuleInfos $infos, $filter, $forConfiguration = false)
+    {
+        $action = $this->getInstallAction($infos->version, $filter);
+        if ($action == Resolver::ACTION_UPGRADE) {
+            $item = new Item($this->name, $this->version, true);
+            $item->setAction(Resolver::ACTION_UPGRADE, $infos->version);
+        } else {
+            $item = new Item($this->name, $this->version, $forConfiguration ? $this->isEnabled : $this->isInstalled);
+            $item->setAction($action);
+        }
+
+        foreach ($infos->dependencies as $dep) {
+            if ($dep['type'] == 'choice') {
+                $list = array();
+                foreach ($dep['choice'] as $choice) {
+                    $list[$choice['name']] = $choice['version'];
+                }
+                $item->addAlternativeDependencies($list);
+            } else {
+                $item->addDependency($dep['name'], $dep['version']);
+            }
+        }
+
+        foreach ($infos->incompatibilities as $dep) {
+            $item->addIncompatibility($dep['name'], $dep['version']);
+        }
+
+        return $item;
+    }
+
+    const FILTER_DISABLED_UNINSTALLED = 37;
+    const FILTER_DISABLED_INSTALLED = 41;
+    const FILTER_ENABLED_UNINSTALLED = 38;
+    const FILTER_ENABLED_INSTALLED_UPGRADED = 26;
+    const FILTER_ENABLED_INSTALLED_NOT_UPGRADED = 42;
+
+    const FILTER_VAL_DISABLED = 1;
+    const FILTER_VAL_ENABLED = 2;
+    const FILTER_VAL_UNINSTALLED = 4;
+    const FILTER_VAL_INSTALLED = 8;
+    const FILTER_VAL_UPGRADED = 16;
+    const FILTER_VAL_NOTUPGRADED = 32;
+
+    /**
+     * @param string $newVersion the new version in case of the item can be upgraded
+     * @param int|int[] $filter  one of FILTER_* const
+     *
+     * @return int
+     * @throws Exception
+     */
+    protected function getInstallAction($newVersion, $filter)
+    {
+        if ($filter === false) {
+            if ($this->isInstalled && $this->isEnabled ) {
+                if (VersionComparator::compareVersion($newVersion, $this->version) != 0) {
+                    return Resolver::ACTION_UPGRADE;
+                }
+            }
+            return Resolver::ACTION_NONE;
+        }
+        $selected = Resolver::ACTION_INSTALL;
+        $status = ($this->isEnabled ? self::FILTER_VAL_ENABLED : self::FILTER_VAL_DISABLED);
+        if ($this->isInstalled) {
+            $status |= self::FILTER_VAL_INSTALLED;
+            if ($this->version != '') {
+                if (VersionComparator::compareVersion($newVersion, $this->version) == 0) {
+                    $status |= self::FILTER_VAL_UPGRADED;
+                }
+                else {
+                    $status |= self::FILTER_VAL_NOTUPGRADED;
+                    $selected = Resolver::ACTION_UPGRADE;
+                }
+            }
+            else {
+                $status |= self::FILTER_VAL_UPGRADED;
+            }
+        }
+        else {
+            $status |= self::FILTER_VAL_UNINSTALLED | self::FILTER_VAL_NOTUPGRADED;
+        }
+
+        if (!is_array($filter)) {
+            $filter = [ $filter ];
+        }
+
+        if (in_array($status, $filter)) {
+            return $selected;
+        }
+
+        return Resolver::ACTION_NONE;
+    }
+
 }

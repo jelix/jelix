@@ -63,7 +63,7 @@ return array(
     'module.choice.ambiguous' => "Le module %s nécessite l'un de ces modules, %s. Mais il est nécessaire de choisir d'installer d'abord l'un d'entre eux",
     'module.choice.unknown' => "Le module %s nécessite l'un de ces modules, %s. Mais ils sont inexistants ou n'ont pas la version requise",
     'module.bad.jelix.version' => 'Le module %s necessite une autre version de jelix (%s - %s)',
-    'module.bad.dependency.version' => 'Le module %s necessite une autre version du module %s (%s - %s)',
+    'module.bad.dependency.version' => 'Le module %s necessite une autre version du module %s (version attendue : %s)',
     'module.configurator.class.not.found' => 'La classe de configuration %s pour le module %s n\'existe pas',
     'module.installer.class.not.found' => 'La classe d\'installation %s pour le module %s n\'existe pas',
     'module.uninstaller.class.not.found' => 'La classe de désinstallation %s pour le module %s n\'existe pas',
