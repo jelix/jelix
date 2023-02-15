@@ -47,6 +47,13 @@ Features
     all content of the temp directory can be deleted.
 * Unit tests: jUnitTestCase and jUnitTestCaseDb are deprecated. Use  
   `\Jelix\UnitTests\UnitTestCase` and `\Jelix\UnitTests\UnitTestCase` instead.
+  Support of PHPUnit versions older than 6.0 is removed.
+* the script runtests.php and the unit test mechanism for modules 
+  (tests inside modules) are now deprecated.
+  It is better to write tests outside modules, in order to not include them into
+  Composer packages or other deployment system. It also allows you to use
+  the PHPunit version you want, or to use other unit tests framework.
+
 
 
 Removes

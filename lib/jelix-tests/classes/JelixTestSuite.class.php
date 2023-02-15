@@ -1,14 +1,18 @@
 <?php
 
+use PHPUnit\Framework\TestResult;
+
 /**
  * @package     jelix
  * @subpackage  jelix-tests
  * @author      Laurent Jouanneau
- * @copyright   2011-2012 Laurent Jouanneau
+ * @copyright   2011-2023 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
+ *
+ * @deprecated
  */
-class JelixTestSuite extends PHPUnit_Framework_TestSuite {
+class JelixTestSuite extends PHPUnit\Framework\TestSuite {
     protected $module = null;
 
     public function __construct($module) {
@@ -16,12 +20,11 @@ class JelixTestSuite extends PHPUnit_Framework_TestSuite {
         parent::__construct();
     }
 
-    protected function setUp() {
-        parent::setUp();
+    public function run(TestResult $result = null): TestResult
+    {
         jApp::pushCurrentModule($this->module);
-    }
-
-    protected function tearDown() {
+        $result = parent::run($result);
         jApp::popCurrentModule();
+        return $result;
     }
 }

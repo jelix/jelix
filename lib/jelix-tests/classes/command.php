@@ -14,69 +14,61 @@ require_once(__DIR__.'/JelixTestSuite.class.php');
 require_once(__DIR__.'/junittestcase.class.php');
 require_once(__DIR__.'/junittestcasedb.class.php');
 
+use PHPUnit\TextUI\TestRunner;
 
-class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
+/**
+ * Command for PHPUnit, that load tests classes from the
+ * `tests` directory of each modules.
+ *
+ * It is deprecated, prefer to put your unit tests classes into
+ * a single directory for PHPUnit, outside modules.
+ *
+ * @deprecated
+ */
+class jelix_TextUI_Command extends PHPUnit\TextUI\Command {
 
     protected $entryPoint = 'index';
 
     protected $testType = '';
 
-    protected $version36 = false;
 
     function __construct() {
         $this->longOptions['all-modules'] = null;
         $this->longOptions['module'] = null;
         $this->longOptions['entrypoint='] = null;
         $this->longOptions['testtype='] = null;
-        $this->version36 = (version_compare(PHPUnit_Runner_Version::id(), '3.6')>-1);
-        
-        if (!$this->version36) {
-            require_once('PHPUnit/Runner/TestCollector.php');
-            require_once('PHPUnit/Runner/IncludePathTestCollector.php');
-        }
     }
 
 
     /**
      * @param boolean $exit
      */
-    public static function main($exit = TRUE)
+    public static function main(bool $exit = true): int
     {
         $command = new jelix_TextUI_Command;
         return $command->run($_SERVER['argv'], $exit);
     }
-
 
     protected function showMessage($message)
     {
         echo $message;
     }
 
-    protected function createRunner()
+    protected function createRunner(): TestRunner
     {
-        if ($this->version36) {
-            $filter = new PHP_CodeCoverage_Filter();
-        }
-        else {
-            $filter = PHP_CodeCoverage_Filter::getInstance();
-        }
+        $filter = new \SebastianBergmann\CodeCoverage\Filter();
 
-        $filter->addFileToBlacklist(__FILE__, 'PHPUNIT');
+        /*$filter->addFileToBlacklist(__FILE__, 'PHPUNIT');
 
         $filter->addFileToBlacklist(__DIR__.'/JelixTestSuite.class.php', 'PHPUNIT');
         $filter->addFileToBlacklist(__DIR__.'/junittestcase.class.php', 'PHPUNIT');
         $filter->addFileToBlacklist(__DIR__.'/junittestcasedb.class.php', 'PHPUNIT');
         $filter->addFileToBlacklist(dirname(__DIR__).'/phpunit.inc.php', 'PHPUNIT');
-
-        if ($this->version36) {
-            return new PHPUnit_TextUI_TestRunner($this->arguments['loader'], $filter);
-        }
-        else {
-            return new PHPUnit_TextUI_TestRunner($this->arguments['loader']);
-        }
+*/
+        return new TestRunner($this->arguments['loader'], $filter);
     }
 
-    protected function handleCustomTestSuite() {
+    protected function handleCustomTestSuite(): void {
 
         $modulesTests = -1;
 
@@ -106,7 +98,7 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             }
         }
 
-        if (isset($this->options[1][1]) && $modulesTests != 0) { // a specifique test file
+        if (isset($this->options[1][1]) && $modulesTests != 0) { // a specific test file
             $this->arguments['testFile'] = $this->options[1][1];
         } else {
             $this->arguments['testFile'] = '';
@@ -129,26 +121,11 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             }
             else {
                 $this->showMessage("Error: no tests in modules\n");
-                exit(PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
-            }
-        }
-        else if ($modulesTests == 1 && !$this->version36) {
-            $suite = $this->getModuleTestSuite($globalSetup, $this->options[1][0]);
-            if (count($suite)) {
-                $this->arguments['test'] = $suite;
-                if (isset($this->options[1][1])) { // a specifique test file
-                    $this->arguments['testFile'] = $this->options[1][1];
-                } else {
-                    $this->arguments['testFile'] = '';
-                }
-            }
-            else {
-                $this->showMessage("Error: no tests in the module\n");
-                exit(PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
+                exit(TestRunner::FAILURE_EXIT);
             }
         }
         else if ($modulesTests == 1) {
-            if (isset($this->options[1][1])) { // a specifique test file
+            if (isset($this->options[1][1])) { // a specific test file
                 $suite = $this->getModuleTestSuite($globalSetup, $this->options[1][0], $this->options[1][1]);
             } else {
                 $suite = $this->getModuleTestSuite($globalSetup, $this->options[1][0]);
@@ -158,37 +135,58 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
             }
             else {
                 $this->showMessage("Error: no tests in the module\n");
-                exit(PHPUnit_TextUI_TestRunner::FAILURE_EXIT);
+                exit(TestRunner::FAILURE_EXIT);
             }
         }
     }
 
-    protected function getAllModulesTestSuites(\Jelix\Installer\GlobalSetup $globalSetup) {
+    protected function getAllModulesTestSuites(\Jelix\Installer\GlobalSetup $globalSetup)
+    {
+        $moduleList = $globalSetup->getModuleComponentsList();
 
-
-        $moduleList = $globalSetup->getModulesList();
-
-        $topsuite = new PHPUnit_Framework_TestSuite();
+        $topsuite = new PHPUnit\Framework\TestSuite();
 
         $type = ($this->testType?'.'.$this->testType: '').'.pu.php';
 
-        foreach ($moduleList as $module=>$path) {
+        foreach ($moduleList as $module=>$component) {
             $suite = new JelixTestSuite($module);
-            if ($this->version36) {
-                $fileIteratorFacade = new File_Iterator_Facade;
+
+            $fileIteratorFacade = new SebastianBergmann\FileIterator\Facade();
+            $files = $fileIteratorFacade->getFilesAsArray(
+                $component->getPath(),
+                $type
+            );
+            $suite->addTestFiles($files);
+
+            if (count($suite->tests()) > 0) {
+                $topsuite->addTestSuite($suite);
+            }
+        }
+        return $topsuite;
+    }
+
+
+    protected function getModuleTestSuite(\Jelix\Installer\GlobalSetup $globalSetup, $module, $testFile = '')
+    {
+
+        $component = $globalSetup->getModuleComponent($module);
+
+        $topsuite = new PHPUnit\Framework\TestSuite();
+
+        if ($component) {
+            $type = ($this->testType?'.'.$this->testType: '').'.pu.php';
+            $suite = new JelixTestSuite($module);
+            if ($testFile) {
+                $suite->addTestFile($component->getPath().'tests/'.$testFile);
+            }
+            else {
+                $fileIteratorFacade = new SebastianBergmann\FileIterator\Facade();
                 $files = $fileIteratorFacade->getFilesAsArray(
-                  $path,
+                    $component->getPath(),
                   $type
                 );
                 $suite->addTestFiles($files);
             }
-            else {
-                $testCollector = new PHPUnit_Runner_IncludePathTestCollector(
-                    array($path),
-                    $type
-                );
-                $suite->addTestFiles($testCollector->collectTests());
-            }
 
             if (count($suite->tests()) > 0)
                 $topsuite->addTestSuite($suite);
@@ -196,50 +194,15 @@ class jelix_TextUI_Command extends PHPUnit_TextUI_Command {
         return $topsuite;
     }
 
-
-    protected function getModuleTestSuite(\Jelix\Installer\GlobalSetup $globalSetup, $module, $testFile = '') {
-
-        $moduleList = $globalSetup->getModulesList();
-
-        $topsuite = new PHPUnit_Framework_TestSuite();
-
-        if (isset($moduleList[$module])) {
-            $type = ($this->testType?'.'.$this->testType: '').'.pu.php';
-            $suite = new JelixTestSuite($module);
-            if ($this->version36) {
-                if ($testFile) {
-                    $suite->addTestFile($moduleList[$module].'tests/'.$testFile);
-                }
-                else {
-                    $fileIteratorFacade = new File_Iterator_Facade;
-                    $files = $fileIteratorFacade->getFilesAsArray(
-                      $moduleList[$module],
-                      $type
-                    );
-                    $suite->addTestFiles($files);
-                }
-            }
-            else {
-                $testCollector = new PHPUnit_Runner_IncludePathTestCollector(
-                    array($moduleList[$module]),
-                    $type
-                );
-                $suite->addTestFiles($testCollector->collectTests());
-            }
-            if (count($suite->tests()) > 0)
-                $topsuite->addTestSuite($suite);
-        }
-        return $topsuite;
-    }
-
-    protected function showHelp() {
+    protected function showHelp(): void
+    {
         parent::showHelp();
         echo "
 
-Specific options for Jelix:
+Specific options for Jelix (deprecated, will be removed into futur versions):
 
        phpunit [switches] --all-modules
-       phpunit [switches] --module <modulename> [testfile.pu.php]
+       phpunit [switches] --module <modulename> [<testfile.pu.php>]
 
   --all-modules           Run tests of all installed modules.
   --module <module>       Run tests of a specific module. An optional filename can be indicated
