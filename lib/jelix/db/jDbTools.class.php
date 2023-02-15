@@ -41,7 +41,7 @@
       *
       * @var string
       */
-     public $unifiedtype;
+     public $unifiedType;
 
      /**
       * field name.

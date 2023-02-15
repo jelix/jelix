@@ -4,7 +4,7 @@
  * @subpackage utils
  *
  * @author      Laurent Jouanneau
- * @copyright   2021 Laurent Jouanneau
+ * @copyright   2021-2023 Laurent Jouanneau
  *
  * @see       https://jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -43,4 +43,35 @@ function is_resource($value)
     }
 
     return false;
+}
+
+function utf8_decode($str)
+{
+   if (function_exists('mb_convert_encoding')) {
+       $str  = mb_convert_encoding($str, 'ISO-8859-1', 'UTF-8' );
+   }
+   else if (function_exists('iconv')) {
+       $str = iconv('UTF-8', 'ISO-8859-1', $str);
+   }
+   else {
+       // WARNING, utf8_decode is deprecated
+       $str  = utf8_decode($str);
+   }
+   return $str;
+}
+
+
+function utf8_encode($str)
+{
+    if (function_exists('mb_convert_encoding')) {
+        $str = mb_convert_encoding($str, 'UTF-8','ISO-8859-1');
+    }
+    else if (function_exists('iconv')) {
+        $str = iconv('ISO-8859-1', 'UTF-8', $str);
+    }
+    else {
+        // WARNING, utf8_encode is deprecated
+        $str  = utf8_encode($str);
+    }
+    return $str;
 }

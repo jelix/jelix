@@ -4,9 +4,9 @@
  * @subpackage auth
  *
  * @author     Tahina Ramaroson
- * @contributor Sylvain de Vathaire
+ * @contributor Sylvain de Vathaire, Laurent Jouanneau
  *
- * @copyright  2009 Neov
+ * @copyright  2009 Neov, 2023 Laurent Jouanneau
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 require_once JELIX_LIB_PATH.'auth/jAuthUser.class.php';
@@ -17,6 +17,8 @@ require_once JELIX_LIB_PATH.'auth/jAuthUser.class.php';
  * @package    jelix
  * @subpackage auth
  */
+#[AllowDynamicProperties]
 class jAuthUserLDAP extends jAuthUser
 {
+    public $password;
 }

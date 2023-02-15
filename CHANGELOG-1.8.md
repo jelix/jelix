@@ -7,7 +7,7 @@ Not released yet.
 Features
 --------
 
-* Jelix 1.8 requires PHP 7.4 and above.
+* Jelix 1.8 is now compatible from PHP 7.4 to PHP 8.2.
 * Core: 
   * new class `Jelix\Core\Services` that will allow to access to some services without using static methods of these service.
     The instance of this object is accessible from `\jApp::services()`.

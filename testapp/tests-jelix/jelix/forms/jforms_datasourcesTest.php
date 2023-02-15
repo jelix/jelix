@@ -12,6 +12,8 @@
 
 class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
+    protected $savedParams;
+
     function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');

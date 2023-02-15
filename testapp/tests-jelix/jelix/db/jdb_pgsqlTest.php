@@ -12,6 +12,8 @@
 
 class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
+    protected $records;
+
     function setUp() : void  {
         self::initJelixConfig();
         $this->dbProfile = 'pgsql_profile';

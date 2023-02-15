@@ -4,7 +4,7 @@
        <primarytable name="ug" realname="jacl2_user_group" primarykey="login,id_aclgrp" />
        <foreigntable name="grp" realname="jacl2_group" primarykey="id_aclgrp" onforeignkey="id_aclgrp"/>
     </datasources>
-    <record>
+    <record extends="jacl2db~jacl2GroupsOfUser">
       <property name="login" fieldname="login" datatype="string" required="yes"/>
       <property name="id_aclgrp" fieldname="id_aclgrp" datatype="string" required="yes"/>
       <property name="name" fieldname="name" datatype="string" required="yes" table="grp"/>

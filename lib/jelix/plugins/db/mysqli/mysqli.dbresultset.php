@@ -185,7 +185,6 @@ class mysqliDbResultSet extends jDbResultSet
 
         $this->boundParameters = array();
         $this->boundParameterTypes = array();
-        $this->boundValues = array();
 
         if ($this->_stmt->result_metadata()) {
             //the query prodeces a result

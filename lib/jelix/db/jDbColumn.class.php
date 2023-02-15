@@ -248,6 +248,8 @@ class jDbColumn
 
     public $comment = '';
 
+    public $arrayDims;
+
     public function __construct(
         $name,
         $type,
