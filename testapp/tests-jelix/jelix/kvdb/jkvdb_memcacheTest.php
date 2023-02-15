@@ -3,7 +3,7 @@
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
-* @copyright   2010 Laurent Jouanneau
+* @copyright   2010-2023 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -24,13 +24,18 @@ class jkvdb_memcacheTest extends jKVDbTest {
 
         if (!$this->_kvdbSetUp())
             return;
-        if (!extension_loaded('memcache'))
+        if (!extension_loaded('memcache')) {
             $this->markTestSkipped('jkvdb_memcacheTest cannot be run because memcache is not installed');
-        else {
-            list($host, $port) = explode(':', $this->profileData['host']);
-            $this->mmc = memcache_connect($host, intval($port));
-            memcache_flush($this->mmc);
         }
+        // temporary check
+        if (version_compare(phpversion(), "8.2.0") >= 0 && version_compare(phpversion('memcache'), '4.0.6') < 0) {
+            $this->markTestSkipped('jkvdb_memcacheTest cannot be run because the version of memcache is buggy with PHP 8.2 (Creation of dynamic property Memcache::$connection is deprecated)');
+        }
+
+        list($host, $port) = explode(':', $this->profileData['host']);
+        $this->mmc = memcache_connect($host, intval($port));
+        memcache_flush($this->mmc);
+
         parent::setUp();
     }
 

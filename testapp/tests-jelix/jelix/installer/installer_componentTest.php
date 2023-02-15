@@ -18,9 +18,10 @@ require_once(__DIR__.'/installer.lib.php');
 
 class testInstallerComponentModule2 extends \Jelix\Installer\ModuleInstallerLauncher {
 
-    function setSourceVersionDate($version, $date) {
-        $this->sourceDate = $date;
-        $this->sourceVersion = $version;
+    function setSourceVersionDate($version, $date)
+    {
+        $this->moduleInfos->versionDate = $date;
+        $this->moduleInfos->version = $version;
     }
 
 }
@@ -397,8 +398,9 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
                'testinstall2.version'=>"1.1",
             ));
 
-            $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules, true);
-            $component = new testInstallerComponentModule2($moduleInfos, $this->globalSetup);
+            $moduleStatus = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules, true);
+            $component = new testInstallerComponentModule2($moduleStatus, $this->globalSetup);
+            $component->init();
             $component->setSourceVersionDate('1.1.5','2011-01-15');
             $this->globalSetup->addModuleComponent($component);
 
@@ -423,6 +425,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             ));
             $moduleInfos = new \Jelix\Installer\ModuleStatus('testinstall2', jApp::appPath('modules/testinstall2/'), $conf->modules, true);
             $component = new testInstallerComponentModule2($moduleInfos, $this->globalSetup);
+            $component->init();
             $component->setSourceVersionDate('1.2.5','2011-01-25');
             $this->globalSetup->addModuleComponent($component);
 

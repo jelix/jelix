@@ -6,8 +6,9 @@ ARG php_version
 ARG DEBIAN_FRONTEND=noninteractive
 ENV PHP_VERSION=${php_version}
 
-RUN apt-get update;  \
-    apt-get -y install \
+RUN set -e; apt-get update; \
+    apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' upgrade; \
+    apt-get -y -o Dpkg::Options::='--force-confdef' -o Dpkg::Options::='--force-confold' install \
     php${PHP_VERSION}-odbc \
     php${PHP_VERSION}-xdebug \
     apt-utils \
@@ -15,7 +16,8 @@ RUN apt-get update;  \
     openssl \
     postgresql-client \
     mariadb-client \
-    ; if [ "$PHP_VERSION" != "8.0" -a "$PHP_VERSION" != "8.1" ]; then apt-get -y install \
+    ; if [ "$PHP_VERSION" != "8.0" -a "$PHP_VERSION" != "8.1" ]; then \
+        apt-get -y install \
         php${PHP_VERSION}-xmlrpc \
     ; fi \
     ; \

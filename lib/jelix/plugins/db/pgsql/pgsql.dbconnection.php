@@ -10,7 +10,7 @@
  * @contributor Julien Issler
  * @contributor Alexandre Zanelli
  *
- * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2007-2008 Laurent Raufaste
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2007-2008 Laurent Raufaste
  * @copyright  2009 Julien Issler
  * This class was get originally from the Copix project (CopixDBConnectionPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
  * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -206,7 +206,6 @@ class pgsqlDbConnection extends jDbConnection
     {
         if ($qI = @pg_query($this->_connection, $queryString)) {
             $rs = new pgsqlDbResultSet($qI);
-            $rs->_connector = $this;
         } else {
             throw new jException('jelix~db.error.query.bad', pg_last_error($this->_connection).'('.$queryString.')');
         }

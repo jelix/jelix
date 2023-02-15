@@ -47,6 +47,11 @@ abstract class jDbTable
     protected $references;
 
     /**
+     * @var array
+     */
+    public $attributes = array();
+
+    /**
      * @param string    $name   the table name
      * @param jDbSchema $schema
      */

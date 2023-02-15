@@ -8,7 +8,7 @@
 What is Jelix?
 ==============
 
-Jelix is an open-source framework for PHP. Jelix 1.7 is compatible from PHP 7.2 to 8.0.
+Jelix is an open-source framework for PHP. Jelix 1.7 is compatible from PHP 7.2 to 8.2.
 It may be compatible also with PHP 5.6 and PHP 7.0/7.1 (see below).
 
 It has a modular, extensible architecture. Applications based on Jelix are made with

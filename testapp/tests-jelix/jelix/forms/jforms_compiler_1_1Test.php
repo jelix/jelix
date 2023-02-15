@@ -26,12 +26,10 @@ class testJFormsCompiler11 extends jFormsCompiler_jf_1_1 {
 
     public function testPhpForm($doc){
         $dummysrc = array();
-        $dummyBuilders = array('html'=>null);
-        return $this->compile($doc, $dummysrc, $dummyBuilders);
+        return $this->compile($doc, $dummysrc);
     }
 
     public function testPhpControl($controltype, $control){
-        $this->srcBuilders = array();
 
         return $this->generatePHPControl($controltype, $control);
     }

@@ -1,6 +1,13 @@
 Changes into Jelix 1.7
 ======================
 
+Next
+----
+
+* Jelix 1.7 is now compatible with PHP 8.2.
+
+
+
 Jelix 1.7.12
 ------------
 

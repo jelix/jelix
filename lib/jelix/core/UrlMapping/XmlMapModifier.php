@@ -15,9 +15,25 @@ namespace Jelix\Routing\UrlMapping;
 class XmlMapModifier
 {
     /**
+     * @var string the filename
+     */
+    protected $file;
+
+    /**
+     * @var \DOMDocument the DOM document representing the file
+     */
+    protected $document;
+
+    /**
      * @var XmlEntryPoint
      */
     protected $currentEntryPoint;
+
+    /**
+     * @var bool indicate if the content is modified, to save or not the file.
+     */
+    protected $modified = false;
+
 
     public function __construct($file, $createIfNotExists = false)
     {
