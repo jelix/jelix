@@ -45,6 +45,7 @@ Features
   * new method `findProfile()` on helpers
   * new option to the installer command: `--no-clean-temp`. And the command verifies now that
     all content of the temp directory can be deleted.
+  * Fix the selection of upgraders to execute: in some case, some upgraders may not be executed
 * Unit tests: jUnitTestCase and jUnitTestCaseDb are deprecated. Use  
   `\Jelix\UnitTests\UnitTestCase` and `\Jelix\UnitTests\UnitTestCase` instead.
   Support of PHPUnit versions older than 6.0 is removed.
@@ -67,7 +68,7 @@ Internal changes
 
 * Upgrade Symfony Console to 5.2.1
 * Upgrade PHPUnit to 8.5 for our tests
-* Upgrade PHPMailer to 6.2.0
+* Upgrade PHPMailer to 6.6.*
 * Upgrade Jquery to 3.6.1
 * Upgrade Jquery UI to 1.13.2
 * Upgrade CKEditor to 35.3.0
