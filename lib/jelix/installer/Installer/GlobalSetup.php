@@ -379,9 +379,9 @@ class GlobalSetup
             $isNativeModule = ($enabledGlobally === true);
         }
 
-        $moduleInfos = new ModuleStatus($name, $path, $moduleSetupList, $isNativeModule);
+        $moduleStatus = new ModuleStatus($name, $path, $moduleSetupList, $isNativeModule);
 
-        return new ModuleInstallerLauncher($moduleInfos, $this);
+        return new ModuleInstallerLauncher($moduleStatus, $this);
     }
 
     /**

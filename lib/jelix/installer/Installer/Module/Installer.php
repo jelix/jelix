@@ -13,7 +13,7 @@ use Jelix\Installer\Module\API\InstallHelpers;
 use Jelix\Installer\Module\API\PreInstallHelpers;
 
 /**
- * Bas class for classes that does processing to install a module into
+ * Base class for classes that does processing to install a module into
  * an instance of the application. A module should have a class that inherits
  * from it in order to setup itself into the application.
  *

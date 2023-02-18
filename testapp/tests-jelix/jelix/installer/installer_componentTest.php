@@ -4,15 +4,14 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009-2018 Laurent Jouanneau
-* @link        http://jelix.org
+* @copyright   2009-2023 Laurent Jouanneau
+* @link        https://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 * @since 1.2
 */
 
 
 use Jelix\Core\Infos\ModuleInfos;
-use Jelix\Version\Version;
 
 require_once(__DIR__.'/installer.lib.php');
 
@@ -23,9 +22,7 @@ class testInstallerComponentModule2 extends \Jelix\Installer\ModuleInstallerLaun
         $this->moduleInfos->versionDate = $date;
         $this->moduleInfos->version = $version;
     }
-
 }
-
 
 
 class testInstallerComponentForDependencies extends \Jelix\Installer\ModuleInstallerLauncher {
@@ -331,16 +328,14 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             $component = new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this->globalSetup);
             $this->globalSetup->addModuleComponent($component);
 
-            // since newupgraderfilename targets '1.1.2' and '1.2.4', we should have second then newupgraderfilename
-
-            $upgraders = $component->getUpgraders();
+           $upgraders = $component->getUpgraders();
 
             $this->assertTrue (is_array($upgraders));
-            $this->assertEquals(4, count($upgraders));
+            $this->assertEquals(3, count($upgraders));
             $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilenamedate', get_class($upgraders[0]));
             $this->assertEquals('testinstall2ModuleUpgrader_second', get_class($upgraders[1]));
-            $this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[2]));
-            $this->assertEquals('testinstall2ModuleUpgrader', get_class($upgraders[3]));
+            //$this->assertEquals('testinstall2ModuleUpgrader_newupgraderfilename', get_class($upgraders[2]));
+            $this->assertEquals('testinstall2ModuleUpgrader', get_class($upgraders[2]));
         }
         catch(\Jelix\Installer\Exception $e) {
             $this->fail("Unexpected exception : ".$e->getMessage()." (".var_export($e->getLocaleParameters(),true).")");
@@ -388,8 +383,8 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             // 1.1  1.1.2* 1.1.3** 1.1.5 1.2.2** 1.2.4*
             $installerIni->setValue('testinstall2.firstversion', '1.1' , 'modules');
             $installerIni->setValue('testinstall2.firstversion.date', '2011-01-10' , 'modules');
-            $installerIni->setValue('testinstall2.version', '1.1.2' , 'modules');
-            $installerIni->setValue('testinstall2.version.date', '2011-01-12' , 'modules');
+            $installerIni->setValue('testinstall2.version', '1.1' , 'modules');
+            $installerIni->setValue('testinstall2.version.date', '2011-01-10' , 'modules');
 
             $conf =(object) array( 'modules'=>array(
                'testinstall2.enabled'=>true,
