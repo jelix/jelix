@@ -288,7 +288,6 @@ abstract class jFormsControl
 #includephp controls/jFormsControlReset.class.php
 #includephp controls/jFormsControlHidden.class.php
 #includephp controls/jFormsControlHtmlEditor.class.php
-#includephp controls/jFormsControlImageUpload.class.php
 #includephp controls/jFormsControlInput.class.php
 #includephp controls/jFormsControlListbox.class.php
 #includephp controls/jFormsControlRadiobuttons.class.php
@@ -303,6 +302,7 @@ abstract class jFormsControl
 #includephp controls/jFormsControlTime.class.php
 #includephp controls/jFormsControlUpload.class.php
 #includephp controls/jFormsControlUpload2.class.php
+#includephp controls/jFormsControlImageUpload.class.php
 #includephp controls/jFormsControlDate.class.php
 #includephp controls/jFormsControlDatetime.class.php
 #includephp controls/jFormsControlWikiEditor.class.php
