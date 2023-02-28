@@ -4,7 +4,7 @@
  * @subpackage  jacl2
  *
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -22,12 +22,19 @@ class jacl2ModuleConfigurator extends \Jelix\Installer\Module\Configurator
 
     public function configure(ConfigurationHelpers $helpers)
     {
-        $this->parameters['eps'] = $helpers->cli()->askEntryPoints(
-            'Select entry points on which to setup the acl2 plugin to check acl at each request.',
-            $helpers->getEntryPointsList(),
-            true,
-            $this->parameters['eps']
-        );
+        $epList = $helpers->getEntryPointsList();
+
+        if (count($epList) > 1) {
+            $this->parameters['eps'] = $helpers->cli()->askEntryPoints(
+                'Select entry points on which to setup the acl2 plugin to check acl at each request.',
+                $helpers->getEntryPointsList(),
+                true,
+                $this->parameters['eps']
+            );
+        }
+        else {
+            $this->parameters['eps'] = array_keys($epList);
+        }
         foreach ($this->getParameter('eps') as $epId) {
             $this->configureEntryPoint($epId, $helpers);
         }

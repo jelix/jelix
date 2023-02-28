@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler
  *
- * @copyright   2009-2018 Laurent Jouanneau
+ * @copyright   2009-2023 Laurent Jouanneau
  * @copyright   2011 Julien Issler
  *
  * @see        http://www.jelix.org
@@ -28,12 +28,19 @@ class jauthModuleConfigurator extends \Jelix\Installer\Module\Configurator
     {
         $this->removeDeprecatedKeysFromPluginConf($helpers);
 
-        $this->parameters['eps'] = $helpers->cli()->askEntryPoints(
-            'Select entry points on which to setup authentication plugins.',
-            $helpers->getEntryPointsByType('classic'),
-            true,
-            $this->parameters['eps']
-        );
+        $epList = $helpers->getEntryPointsByType('classic');
+
+        if (count($epList) > 1) {
+            $this->parameters['eps'] = $helpers->cli()->askEntryPoints(
+                'Select entry points on which to setup authentication plugins.',
+                $helpers->getEntryPointsByType('classic'),
+                true,
+                $this->parameters['eps']
+            );
+        }
+        else {
+            $this->parameters['eps'] = array_keys($epList);
+        }
 
         foreach ($this->getParameter('eps') as $epId) {
             $this->configureEntryPoint($epId, $helpers);
