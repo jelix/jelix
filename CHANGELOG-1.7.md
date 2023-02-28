@@ -4,6 +4,9 @@ Changes into Jelix 1.7
 Next
 ----
 
+Jelix 1.7.14
+------------
+
 * Fix compatibility with PHP 8.2.
 * Fix styles for questions into Symfony console commands
 * Installer:
@@ -12,7 +15,9 @@ Next
 * Configurator:
   * Fix configurator with modules installed locally
   * Fix error when a module and its dependencies are upgraded
+  * jacl2 and jauth configurator: do not ask entrypoint if not needed
 * Scripts: fix exit code for console.php and dev.php
+* Fix issues during the launch of the app:init-admin command
 * Fix error in cli commands when using jUrl.
 * Fix mail test commands: template format was not good
 * jForms: replace some calls of deprecated objects
