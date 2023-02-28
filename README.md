@@ -8,8 +8,8 @@
 What is Jelix?
 ==============
 
-Jelix is an open-source framework for PHP. Jelix 1.7 is compatible from PHP 7.2 to 8.2.
-It may be compatible also with PHP 5.6 and PHP 7.0/7.1 (see below).
+Jelix is an open-source framework for PHP. Jelix 1.7 is compatible from PHP 7.4 to 8.2.
+It may be compatible also with PHP 5.6 and PHP 7.0-7.3 (see below).
 
 It has a modular, extensible architecture. Applications based on Jelix are made with
 modules, which allow to reuse features in several projects.
@@ -78,5 +78,5 @@ Command line (`console.php` and `dev.php`) may not work with PHP 7.1 and lower, 
 we have to upgrade `Symfony/Console` to a version that is compatible with PHP 8,
 and that is unfortunately incompatible with PHP 7.1 and lower. 
 
-Anyway, it is higly recommanded to migrate to PHP 7.3 or higher, as PHP 7.2 and
+Anyway, it is higly recommanded to migrate to PHP 8.1 or higher, as PHP 8.0 and
 lower are not maintained any more by the PHP team. See https://www.php.net/supported-versions.php.
