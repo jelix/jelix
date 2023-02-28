@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="testinstall1@testapp.jelix.org" name="testinstall1">
-        <version date="2023-02-28 15:41">1.8.0-rc.4</version>
+        <version date="2023-02-28 15:41">1.8.0-rc.5</version>
         <label>testapp</label>
         <description>module to test installer</description>
         <license URL=""/>
