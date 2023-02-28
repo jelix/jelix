@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor
  *
- * @copyright   2009-2018 Laurent Jouanneau
+ * @copyright   2009-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -68,16 +68,9 @@ class jauthdbModuleInstaller extends \Jelix\Installer\Module\Installer
             $section_driver = 'auth_'.($driver ? strtolower($driver) : 'db');
         }
 
-        if ($driver == '') {
-            $driver = 'Db';
-            $conf->setValue('driver', $driver, $section_auth);
-            $conf->setValue('dao', 'jauthdb~jelixuser', $section_driver);
-            $conf->save();
-        } else {
-            $compatibleWithDb = $conf->getValue('compatiblewithdb', $section_driver);
-            if ($driver != 'Db' && !$compatibleWithDb) {
-                return;
-            }
+        $compatibleWithDb = $conf->getValue('compatiblewithdb', $section_driver);
+        if ($driver == '' || ($driver != 'Db' && !$compatibleWithDb)) {
+            return;
         }
 
         $helpers->database()->useDbProfile($conf->getValue('profile', $section_driver));
