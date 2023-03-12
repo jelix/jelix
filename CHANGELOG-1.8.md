@@ -22,6 +22,9 @@ Features
   * new method `BuilderBase::outputAllControlsValues()`
   * new method `BuilderBase::outputControlRawValue()`
   * new method `WidgetInterface::outputControlRawValue()`
+  * image widget: add possibility to show the temporary new image
+    New option for the image widget: showModeForNewImage.
+    It indicates how the new image can be display.
 * jAcl2Db admin UI: 
   * the user interface has been reworked to be more usable
   * possibility to hide some rights (`hiddenRights` in 
@@ -32,7 +35,7 @@ Features
   * possibility to give an event object to `jEvent::notify()`. So you can have events having their own methods to manipulate
     information for the event.
   * Rework the implementation of the events dispatcher, to follows PSR-14. `jEvent::notify()`
-    will be deprecated in futur versions, prefer to use Prefer to use `\jApp::services()->eventDispatcher()->dispatch($event)` for event objects. 
+    will be deprecated in futur versions, prefer to use `\jApp::services()->eventDispatcher()->dispatch($event)` for event objects. 
 * Configurator:
   * The configurator is now able to declare automatically modules urls, and to remove
     all Urls of a module when it is uninstalled.
@@ -54,7 +57,7 @@ Features
   It is better to write tests outside modules, in order to not include them into
   Composer packages or other deployment system. It also allows you to use
   the PHPunit version you want, or to use other unit tests framework.
-
+* Two new plugins for jTpl: `{ifacl2and}`, `{ifacl2or}`
 
 
 Removes
