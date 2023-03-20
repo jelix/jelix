@@ -26,7 +26,7 @@ class jacl2db_adminModuleUpgrader_webassets2 extends \Jelix\Installer\Module\Ins
                 )
             ),
             'common',
-            false
+            true
         );
     }
 }

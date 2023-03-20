@@ -19,6 +19,6 @@ class jacl2db_adminModuleUpgrader_webassets extends \Jelix\Installer\Module\Inst
             'js' => array(
                 '$jelix/jquery/jquery.min.js',
                 '$jelix/jquery/ui/jquery-ui.min.js'
-            )), 'common', false);
+            )), 'common', true);
     }
 }
