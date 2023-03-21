@@ -228,6 +228,6 @@ class jInstallerEntryPoint
      */
     public function getSingleLocalConfigIni()
     {
-        return $this->localConfigIni->getMaster();
+        return $this->localConfigIni->getMaster()->getOverrider();
     }
 }
