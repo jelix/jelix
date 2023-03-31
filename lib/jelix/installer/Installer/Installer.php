@@ -191,6 +191,12 @@ class Installer
         }
 
         $this->globalSetup->setReadWriteConfigMode(true);
+
+        // reload configuration into legacyInstallerEntryPoint, to remove write lock
+        if ($this->mainEntryPoint->legacyInstallerEntryPoint) {
+            $this->mainEntryPoint->legacyInstallerEntryPoint->setConfiguration($this->mainEntryPoint, $this->globalSetup);
+        }
+
         $installedModules = $this->runInstall($componentsToInstall);
         if ($installedModules === false) {
             $this->warning('install.bad.end');

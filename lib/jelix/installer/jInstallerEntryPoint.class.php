@@ -4,7 +4,7 @@
  * @subpackage  installer
  *
  * @author      Laurent Jouanneau
- * @copyright   2009-2022 Laurent Jouanneau
+ * @copyright   2009-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -102,7 +102,14 @@ class jInstallerEntryPoint
         $this->configFile = $entryPoint->getConfigFileName();
         $this->scriptName = $entryPoint->getScriptName();
         $this->file = $entryPoint->getFileName();
+        $this->config = $entryPoint->getConfigObj();
+        $this->setConfiguration($entryPoint, $globalSetup);
+    }
 
+    public function setConfiguration(
+        Jelix\Installer\EntryPoint $entryPoint,
+        Jelix\Installer\GlobalSetup $globalSetup)
+    {
         $this->epConfigIni = $entryPoint->getSingleConfigIni();
 
         $mainConfig = new \Jelix\IniFile\MultiIniModifier(
@@ -124,8 +131,6 @@ class jInstallerEntryPoint
             $localConfig,
             $this->epConfigIni
         );
-
-        $this->config = $entryPoint->getConfigObj();
 
         $this->liveConfigIni = $globalSetup->getLiveConfigIni();
     }

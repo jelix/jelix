@@ -574,6 +574,16 @@ class ModuleInstallerLauncher
 
                 $this->moduleMainUpgrader->setTargetVersions(array($this->moduleInfos->version));
                 $this->moduleMainUpgrader->setParameters($installParameters);
+                if ($this->moduleMainUpgrader instanceof \jIInstallerComponent) {
+                    $mainEntryPoint = $this->globalSetup->getMainEntryPoint();
+                    if (!$mainEntryPoint->legacyInstallerEntryPoint) {
+                        $mainEntryPoint->legacyInstallerEntryPoint = new \jInstallerEntryPoint($mainEntryPoint, $this->globalSetup);
+                    }
+                    $this->moduleMainUpgrader->setEntryPoint(
+                        $mainEntryPoint->legacyInstallerEntryPoint,
+                        $this->moduleStatus->dbProfile
+                    );
+                }
             }
         }
 

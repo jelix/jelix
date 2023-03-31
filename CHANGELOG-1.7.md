@@ -4,6 +4,12 @@ Changes into Jelix 1.7
 Next
 ----
 
+* Installer: 
+  * fix error about undefined method `Jelix\IniFile\IniModifierReadOnly::setValue()` 
+    in legacy installers/upgraders
+  * Fix `jInstallerEntryPoint::getSingleLocalConfigIni()`
+* tests: upgrade Qunit
+
 Jelix 1.7.14
 ------------
 
