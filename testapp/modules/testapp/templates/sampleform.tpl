@@ -1,3 +1,4 @@
+{meta_html js $j_basepath.'tests/sampleform.js'}
 <h1>A sample form</h1>
 <p>Here is a form generated and managed by jforms, with a personnalized display,  using the builder "{$builder}".</p>
 {if $builder == 'html'}{assign $newbuilder="legacy.htmllight"}{else}{assign $newbuilder="html"}{/if}
@@ -7,31 +8,6 @@
         <a href="{jurl 'testapp~sampleform:show', array('builder'=>$newbuilder)}">click here</a></li>
 </ul>
 
-<script type="text/javascript">
-{literal}
-function myErrorDecorator(){
-    this.message = '';
-}
-
-myErrorDecorator.prototype = {
-    start : function(){
-        this.message = '';
-    },
-    addError : function(control, messageType){
-        if(messageType == 1){
-            this.message  += "* " +control.errRequired + "\n";
-        }else if(messageType == 2){
-            this.message  += "* " +control.errInvalid + "\n";
-        }
-    },
-    end : function(){
-        if(this.message != ''){
-            alert("Message from myErrorDecorator\nError:\n" + this.message);
-        }
-    }
-}
-{/literal}
-</script>
 {*, array('errorDecorator'=>'myErrorDecorator')*}
 {form $form,'sampleform:save', array(), $builder, array('plugins'=>array('explanation' => 'textarea_as_input_html'))}
     {formcontrols}

@@ -19,15 +19,29 @@ testErrorDecorator.prototype = {
 jQuery(document).ready(function(){
 
     var jfo = new jFormsJQForm('jf', 'jf','0');
+    jfo.itIsReady = false;
     var jfoElt = $("#jf").get(0);
     jfo.setErrorDecorator(new testErrorDecorator());
+
+    // let's call onFormReady BEFORE declareForm
+    jFormsJQ.onFormReady('jf', function(ev) {
+       jfo.itIsReady = true
+    });
+
     jFormsJQ.declareForm(jfo);
 
 
     var jfo2 = new jFormsJQForm('jf2', 'jf2','0');
+    jfo2.itIsReady = false;
     var jfo2Elt = $("#jf2").get(0);
     jfo2.setErrorDecorator(new testErrorDecorator());
     jFormsJQ.declareForm(jfo2);
+
+    // let's call onFormReady AFTER declareForm
+    jFormsJQ.onFormReady('jf2', function(ev) {
+        jfo2.itIsReady = true
+    });
+
 
     /*
     module("Module A");
@@ -41,6 +55,11 @@ jQuery(document).ready(function(){
 
     QUnit.test("test jFormsJQForm", function(assert) {
         assert.equal(jfo.element, jfoElt, "jfo.element is a form element");
+    });
+
+    QUnit.test("test onFormReady", function(assert) {
+        assert.ok(jfo.itIsReady);
+        assert.ok(jfo2.itIsReady);
     });
 
 

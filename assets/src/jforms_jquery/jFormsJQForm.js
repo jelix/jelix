@@ -136,7 +136,7 @@ jFormsJQForm.prototype={
     },
 
     /**
-     * update the content of all elements which depends of the value of the given
+     * update the content of all elements which depends on the value of the given
      * control
      * @param {String} controlName the ref value of the control
      */

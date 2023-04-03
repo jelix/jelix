@@ -1,7 +1,7 @@
 /**
  * @author       Laurent Jouanneau
  * @contributor  Julien Issler, Dominique Papin
- * @copyright    2007-2020 Laurent Jouanneau
+ * @copyright    2007-2023 Laurent Jouanneau
  * @copyright    2008-2015 Julien Issler, 2008 Dominique Papin
  * @link         https://jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -22,6 +22,8 @@ const jFormsJQ = {
     selectFillUrl : '',
 
     config : {},
+
+    _onReadyCallback: {},
 
     _submitListener : function(ev) {
         let frm = jFormsJQ.getForm(ev.target.attributes.getNamedItem("id").value);
@@ -55,6 +57,29 @@ const jFormsJQ = {
     declareForm : function(aForm){
         this._forms[aForm.name] = aForm;
         $('#'+aForm.name).bind('submit', jFormsJQ._submitListener);
+        const event = new Event("jformsready");
+        document.getElementById(aForm.name).dispatchEvent(event);
+        if (aForm.name in this._onReadyCallback) {
+            this._onReadyCallback[aForm.name](aForm);
+        }
+    },
+
+    /**
+     * Set a listener that is called when the form corresponding to the given name,
+     * is ready.
+     *
+     * The listener may be called immediately if the form is already ready.
+     * The listener should be a function that accepts a jFormsJQForm as parameter.
+     * For example, the listener can register
+     *
+     * @param {String} formName  should be a name like `jforms_<module>_<name>`
+     * @param {Function} callback
+     */
+    onFormReady: function (formName, callback) {
+        this._onReadyCallback[formName] = callback;
+        if (formName in this._forms) {
+            callback(this._forms[formName]);
+        }
     },
 
     /**
@@ -214,10 +239,12 @@ const jFormsJQ = {
         if (typeof NodeList != "undefined" && elt instanceof NodeList) {
             return true;
         }
-        if (elt instanceof Array)
+        if (elt instanceof Array) {
             return true;
-        if (elt.length != undefined && (elt.localName == undefined || elt.localName == 'SELECT' || elt.localName != 'select'))
+        }
+        if (elt.length !== undefined && (elt.localName === undefined || elt.localName.toLowerCase() === 'select')) {
             return true;
+        }
         return false;
     }
 };
