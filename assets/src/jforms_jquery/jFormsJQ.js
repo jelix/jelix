@@ -12,6 +12,10 @@ import $ from 'jquery';
  * form manager
  */
 const jFormsJQ = {
+
+    /**
+     * list of jFormsJQForm. property name are id value of forms (jforms_<module>_<name>)
+     */
     _forms: {},
 
     tForm: null,
@@ -53,12 +57,17 @@ const jFormsJQ = {
         $('#'+aForm.name).bind('submit', jFormsJQ._submitListener);
     },
 
+    /**
+     *
+     * @param name  should be a name like `jforms_<module>_<name>`
+     * @returns {jFormsJQForm}
+     */
     getForm : function (name) {
         return this._forms[name];
     },
 
     /**
-     *  @param {Element} frmElt  the <form> element
+     *  @param {Element} frmElt  the <form> HTML element
      */
     verifyForm : function(frmElt) {
         this.tForm = this._forms[frmElt.attributes.getNamedItem("id").value]; // we cannot use getAttribute for id because a bug with IE
@@ -154,6 +163,7 @@ const jFormsJQ = {
 
     /**
      * @param {Element} elt
+     * @param {String} clss  CSS class
      */
     hasClass: function (elt,clss) {
         return $(elt).hasClass(clss);
