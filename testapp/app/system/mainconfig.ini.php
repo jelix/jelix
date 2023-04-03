@@ -88,7 +88,7 @@ plugins="debugbar,minify"
 
 
 minifyCSS=off
-minifyJS=on
+minifyJS=off
 minifyExcludeCSS=
 minifyExcludeJS="jelix/ckeditor5/ckeditor.js"
 minifyEntryPoint=minify.php
