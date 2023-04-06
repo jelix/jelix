@@ -1,7 +1,7 @@
 /**
  * @author       Laurent Jouanneau
  * @contributor  Julien Issler, Vincent viaud, Steven Jehannet
- * @copyright    2007-2020 Laurent Jouanneau
+ * @copyright    2007-2023 Laurent Jouanneau
  * @copyright    2008-2015 Julien Issler, 2011 Steven Jehannet, 2010 Vincent viaud
  * @link         https://jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -263,5 +263,20 @@ jFormsJQForm.prototype={
         }
         else
             this.postSubmitHandlers.push(handler);
+    },
+
+    /**
+     *
+     * @param {object} errors each properties are the message string or message code
+     *                        properties names are the control ref name
+     */
+    setErrors : function(errors) {
+        let frm = this;
+        let errDec = this.errorDecorator;
+        errDec.start(this);
+        Object.keys(errors).forEach(
+            ref => errDec.addError(frm.getControl(ref), errors[ref])
+        )
+        errDec.end();
     }
 };

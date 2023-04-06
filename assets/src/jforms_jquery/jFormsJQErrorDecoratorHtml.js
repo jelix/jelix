@@ -1,6 +1,6 @@
 /**
  * @author       Laurent Jouanneau
- * @copyright    2007-2020 Laurent Jouanneau
+ * @copyright    2007-2023 Laurent Jouanneau
  * @link         https://jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -14,10 +14,8 @@ export default function jFormsJQErrorDecoratorHtml(){
 
 jFormsJQErrorDecoratorHtml.prototype = {
     start : function(form){
-        this.message = '';
+        this.clean();
         this.form = form;
-        $("#"+form.name+" .jforms-error").removeClass('jforms-error');
-        $('#'+this.form.name+'_errors').empty().hide();
     },
     addError : function(control, messageType){
         var elt = this.form.element.elements[control.name];
@@ -27,11 +25,13 @@ jFormsJQErrorDecoratorHtml.prototype = {
         var name = control.name.replace(/\[\]/, '');
         $("#"+this.form.name+"_"+name+"_label").addClass('jforms-error');
 
-        if(messageType == 1){
+        if (messageType === 1) {
             this.message  += '<li class="error"> '+control.errRequired + "</li>";
-        }else if(messageType == 2){
+        } else if(messageType === 2) {
             this.message  += '<li class="error"> ' +control.errInvalid + "</li>";
-        }else{
+        } else if(typeof messageType === 'string') {
+            this.message  += '<li class="error"> ' +messageType+ "</li>";
+        } else {
             this.message  += '<li class="error"> Error on \''+control.label+"' </li>";
         }
     },
@@ -46,11 +46,25 @@ jFormsJQErrorDecoratorHtml.prototype = {
                 $(this.form.element).first().before(ul);
             }
             var jul = $(ul);
-            location.hash = "#"+errid;
+
+            if ('scrollIntoView' in ul) {
+                ul.scrollIntoView();
+            }
+            else {
+                location.hash = "#"+errid;
+            }
             jul.hide().html(this.message).fadeIn();
         }
         else if (ul) {
             $(ul).hide();
         }
+    },
+    clean : function() {
+        this.message = '';
+        if (this.form) {
+            $("#"+this.form.name+" .jforms-error").removeClass('jforms-error');
+            $('#'+this.form.name+'_errors').empty().hide();
+        }
+        this.form = null;
     }
 };

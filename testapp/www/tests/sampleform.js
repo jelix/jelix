@@ -1,3 +1,4 @@
+
 function myErrorDecorator(){
     this.message = '';
 }
@@ -28,4 +29,15 @@ jQuery(document).ready(function(){
             return window.confirm('Confirm to submit the form?');
         })
     })
+
+    document.getElementById('showSomeErrors').addEventListener('click', setSomeErrors)
 });
+
+function setSomeErrors()
+{
+    let frm = jFormsJQ.getForm('jforms_testapp_sample');
+    frm.setErrors({
+        'sexe': 1,
+        'mail': 'Do you have an other email?'
+    });
+}

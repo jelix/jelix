@@ -15,3 +15,5 @@
     {/formcontrols}
 <p>{formreset} {formsubmit}</p>
 {/form}
+
+<button id="showSomeErrors">Show some errors</button>
