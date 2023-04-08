@@ -37,10 +37,10 @@ class InstallerCommand extends Command
     {
         \jAppManager::close();
 
-        if ($output->isVerbose()) {
-            $reporter = new \Jelix\Installer\Reporter\Console($output, 'notice', 'Installation');
-        } else {
+        if ($output->isQuiet()) {
             $reporter = new \Jelix\Installer\Reporter\Console($output, 'error', 'Installation');
+        } else {
+            $reporter = new \Jelix\Installer\Reporter\Console($output, 'notice', 'Installation');
         }
 
         $installer = new \Jelix\Installer\Installer($reporter);

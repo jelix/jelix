@@ -65,7 +65,7 @@ class ConfigureCommand extends Command
 
         $reporter = new \Jelix\Installer\Reporter\Console(
             $output,
-            ($output->isVerbose() ? 'notice' : 'error'),
+            ($output->isQuiet() ? 'error': 'notice'),
             'Configuration migration'
         );
 
@@ -75,7 +75,7 @@ class ConfigureCommand extends Command
 
         $reporter = new \Jelix\Installer\Reporter\Console(
             $output,
-            ($output->isVerbose() ? 'notice' : 'error'),
+            ($output->isQuiet() ? 'error': 'notice'),
             'Configuration'
         );
 
