@@ -125,5 +125,24 @@ class sampleFormCtrl extends jController {
       $rep->tplname = 'sampleajaxform';
       return $rep;
   }
+    function saveajax(){
+        // récupérer le formulaire
+        // et le rempli avec les données reçues de la requête
+        /** @var jResponseFormJQJson $rep */
+        $rep= $this->getResponse("formjq");
 
+        $form = jForms::get('sample');
+        $this->prepareForm($form);
+        $form->initFromRequest();
+        if ($form->check()) {
+            $tpl = new jTpl();
+            $tpl->assign('form', $form);
+            $rep->setCustomData(array(
+                'htmlContent' => $tpl->fetch('sampleformajaxresult', 'html')
+            ));
+        }
+
+        $rep->setForm($form);
+        return $rep;
+    }
 }

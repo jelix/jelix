@@ -53,6 +53,10 @@ export default function jFormsJQForm(name, selector, id){
     this.controlsToUpdate = [];
     this.preSubmitHandlers = [];
     this.postSubmitHandlers = [];
+
+    this.isSubmitWithXhr = false;
+    this.xhrValidFormCallback = null;
+    this.xhrFormInErrorCallback = null;
 }
 
 
@@ -67,6 +71,22 @@ jFormsJQForm.prototype={
 
     setErrorDecorator : function (decorator){
         this.errorDecorator = decorator;
+    },
+
+    /**
+     * When the form will be submitted, data will be sent with XHR
+     *
+     * @param {Function} validFormCallback the function that will be called
+     *                  with the result of the http request, when the content of
+     *                  the formulaire is valid
+     * @param {Function} formInErrorCallback the function that will be called
+     *                  with the result of the http request, when the content of
+     *                  the formulaire is not valid
+     */
+    submitWithXHR: function(validFormCallback, formInErrorCallback){
+        this.isSubmitWithXhr = true;
+        this.xhrValidFormCallback = validFormCallback;
+        this.xhrFormInErrorCallback = formInErrorCallback;
     },
 
     /**
@@ -278,5 +298,11 @@ jFormsJQForm.prototype={
             ref => errDec.addError(frm.getControl(ref), errors[ref])
         )
         errDec.end();
+    },
+
+    showSubmitError: function(message) {
+        this.errorDecorator.start(this);
+        this.errorDecorator.showSubmitError(message);
+        this.errorDecorator.end();
     }
 };

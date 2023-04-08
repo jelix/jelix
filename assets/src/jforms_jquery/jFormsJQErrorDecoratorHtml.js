@@ -66,5 +66,8 @@ jFormsJQErrorDecoratorHtml.prototype = {
             $('#'+this.form.name+'_errors').empty().hide();
         }
         this.form = null;
+    },
+    showSubmitError: function(message) {
+        this.message = '<li class="error">'+message+"</li>";
     }
 };

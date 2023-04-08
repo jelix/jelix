@@ -79,6 +79,7 @@ zip=jResponseZip
 css=jResponseCss
 htmlfragment=jResponseHtmlFragment
 htmlauth=jResponseHtml
+formjq=jResponseFormJQJson
 
 [_coreResponses]
 html=jResponseHtml
@@ -98,6 +99,7 @@ zip=jResponseZip
 css=jResponseCss
 htmlfragment=jResponseHtmlFragment
 htmlauth=jResponseHtml
+formjq=jResponseFormJQJson
 
 [jResponseHtml]
 ; list of active plugins for jResponseHtml

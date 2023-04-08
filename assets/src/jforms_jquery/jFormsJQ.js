@@ -48,6 +48,49 @@ const jFormsJQ = {
         catch(e) {
             return false;
         }
+
+        if (frm.isSubmitWithXhr && submitOk) {
+            let fData = new FormData(frm.element);
+            let url = frm.element.getAttribute('action');
+            let httpMethod = frm.element.getAttribute('method');
+
+            $.ajax(url, {
+                data: fData,
+                processData: false,
+                contentType: false,
+                method: httpMethod,
+                dataType: 'json'
+            })
+            .done(function(data, status, xhr) {
+                if (data.success) {
+                    if (frm.xhrValidFormCallback) {
+                        frm.xhrValidFormCallback(data)
+                    }
+                    else if (data.locationUrl) {
+                        window.location.href = data.locationUrl;
+                    }
+                }
+                else {
+                    if (frm.xhrFormInErrorCallback) {
+                        frm.xhrFormInErrorCallback(data)
+                    }
+                    else if (data.locationUrl) {
+                        window.location.href = data.locationUrl;
+                    }
+                    else {
+                        frm.setErrors(data.errors);
+                    }
+                }
+            })
+            .fail(function(xhr, status, error) {
+                if (xhr.responseJSON && 'errorMessage' in xhr.responseJSON) {
+                    error = xhr.responseJSON.errorMessage;
+                }
+                frm.showSubmitError(error);
+            });
+            //ev.preventDefault();
+            return false;
+        }
         return submitOk;
     },
 
