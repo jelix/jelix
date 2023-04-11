@@ -131,7 +131,7 @@ class defaultCtrl extends jController
             $cond->addItemOrder($name, $order);
         }
 
-        $filter = trim($this->param('filter'));
+        $filter = trim($this->param('filter', ''));
         if ($filter && count($this->filteredProperties)) {
             if (count($this->filteredProperties) == 1) {
                 $cond->addCondition($this->filteredProperties[0], 'LIKE', '%' . $filter . '%');
