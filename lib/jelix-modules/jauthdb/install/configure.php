@@ -20,6 +20,11 @@ class jauthdbModuleConfigurator extends \Jelix\Installer\Module\Configurator
         );
     }
 
+    public function declareUrls(\Jelix\Routing\UrlMapping\EntryPointUrlModifier $registerOnEntryPoint)
+    {
+        // no controllers so no urls to declare
+    }
+
     public function configure(ConfigurationHelpers $helpers)
     {
         $this->parameters['defaultuser'] = $helpers->cli()

@@ -123,7 +123,7 @@ class loginCtrl extends jController
         $rep->bodyTpl = 'jauth~index';
 
         $zp = array(
-            'login' => $this->param('login'),
+            'login' => $this->param('login', ''),
             'failed' => $this->param('failed'),
             'showRememberMe' => jAuth::isPersistant(),
         );
