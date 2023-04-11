@@ -6,11 +6,11 @@ function loadForm() {
     jQuery.ajax(urlAjaxForm, {
         complete: function(jqXHR, textStatus) {
             $("#theform").html(jqXHR.responseText);
-            jFormsJQ.onFormReady('jforms_testapp_sample', function(form) {
+            /*jFormsJQ.onFormReady('jforms_testapp_sample', function(form) {
                 form.submitWithXHR(function(result) {
                     $("#theform").html(result.customData.htmlContent);
                 });
-            });
+            });*/
         },
         dataType: 'html',
         error: function(jqXHR, textStatus, errorThrown) {
@@ -18,6 +18,12 @@ function loadForm() {
         }
     });
 }
+
+
+function sampleFormOnSuccess(result) {
+    $("#theform").html(result.customData.htmlContent);
+}
+
 
 function myErrorDecorator(){
     this.message = '';

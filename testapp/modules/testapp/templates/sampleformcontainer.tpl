@@ -11,6 +11,3 @@ managed by jforms, and displayed via an ajax request.</p>
 <div id="theform">
     
 </div>
-<div id="result">
-
-</div>

@@ -40,6 +40,25 @@ class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget
             $builder->getForm()->getSelector()."','".
             $builder->getForm()->getContainer()->formId."');\n";
         $js .= 'jFormsJQ.tForm.setErrorDecorator(new '.$builder->getOption('errorDecorator')."());\n";
+
+        $xhrSubmit = $builder->getOption('xhrSubmit');
+        if ($xhrSubmit) {
+            if ($xhrSubmit === true) {
+                $js .= 'jFormsJQ.tForm.submitWithXHR(null, null);'."\n";
+            }
+            else if (is_array($xhrSubmit)) {
+                $successCallback = 'null';
+                $errorCallback = 'null';
+                if (isset($xhrSubmit['onSuccess'])) {
+                    $successCallback = 'function(result){ '.$xhrSubmit['onSuccess'].';}';
+                }
+                if (isset($xhrSubmit['onError'])) {
+                    $errorCallback = 'function(result){ '.$xhrSubmit['onError'].';}';
+                }
+                $js .= 'jFormsJQ.tForm.submitWithXHR('.$successCallback.', '.$errorCallback.');'."\n";
+            }
+        }
+
         $js .= "jFormsJQ.declareForm(jFormsJQ.tForm);\n";
         $this->addJs($js);
         $this->builder = $builder;
