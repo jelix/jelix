@@ -168,6 +168,10 @@ class InteractiveConfigurator
             return false;
         }
 
+        if (count($choice) == 1) {
+            return array($choice[0]);
+        }
+
         if (!$this->consoleInput->isInteractive()) {
             return $preselectedChoice;
         }
