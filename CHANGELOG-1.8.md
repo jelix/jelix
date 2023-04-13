@@ -25,6 +25,7 @@ Features
   * image widget: add possibility to show the temporary new image
     New option for the image widget: showModeForNewImage.
     It indicates how the new image can be display.
+  * builder option and JS API to ease the submit of a form with an XHR request.
 * jAcl2Db admin UI: 
   * the user interface has been reworked to be more usable
   * possibility to hide some rights (`hiddenRights` in 
@@ -42,6 +43,7 @@ Features
   * Module configurators can indicate a list of url to declare into the urls mapping 
   * more methods on XmlMapModifier to remove urls
   * new method `findProfile()` on helpers
+  * Move information to uninstall modules, from `app:install/uninstall` to `var/config/uninstall`
 * Installer:
   * The PreInstallHelpers class has now the database API to allows to check the
     content of the database before allowing the installation

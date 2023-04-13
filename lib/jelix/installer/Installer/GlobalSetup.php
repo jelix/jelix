@@ -183,9 +183,9 @@ class GlobalSetup
 
         $this->installerIni = $this->loadInstallerIni();
 
-        \jFile::createDir(\jApp::appPath('install/uninstall'));
+        \jFile::createDir(\jApp::varConfigPath('uninstall'));
         $this->uninstallerIni = new IniModifier(
-            \jApp::appPath('install/uninstall/uninstaller.ini.php'),
+            \jApp::varConfigPath('uninstall/uninstaller.ini.php'),
             ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
@@ -296,7 +296,7 @@ class GlobalSetup
         }
 
         // load ghost modules we have to uninstall
-        $uninstallersDir = \jApp::appPath('install/uninstall');
+        $uninstallersDir = \jApp::varConfigPath('uninstall');
         if (file_exists($uninstallersDir)) {
             $dir = new \DirectoryIterator($uninstallersDir);
             $modulesInfos = $this->uninstallerIni->getValues('modules');

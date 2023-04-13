@@ -249,7 +249,7 @@ class ModuleInstallerLauncher
      * module does not exist anymore. This could be the case when the module is
      * bundled into a composer package, and we removed the composer package from
      * composer.json before deploying the application.
-     * The script is copied into the app:install/uninstall/ directory.
+     * The script is copied into the var/config/uninstall/ directory.
      *
      * For some components that don't have an uninstaller script, we should
      * reference them into uninstaller.ini.php anyway, because we need their
@@ -260,7 +260,7 @@ class ModuleInstallerLauncher
      */
     public function backupUninstallScript()
     {
-        $targetPath = \jApp::appPath('install/uninstall/'.$this->moduleStatus->getName());
+        $targetPath = \jApp::varConfigPath('uninstall/'.$this->moduleStatus->getName());
         \jFile::createDir($targetPath);
         copy($this->moduleStatus->getPath().'module.xml', $targetPath);
         $uninstallerIni = $this->globalSetup->getUninstallerIni();
