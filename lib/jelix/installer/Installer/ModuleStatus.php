@@ -291,7 +291,7 @@ class ModuleStatus
             }
             if (isset($defaultParameters[$name]) && $defaultParameters[$name] === $v && $v !== true) {
                 // don't write values that equals to default ones except for
-                // true values else we could not known into the installer if
+                // true values else we could not know into the installer if
                 // the absence of the parameter means the default value or
                 // it if means false
                 continue;
@@ -330,7 +330,12 @@ class ModuleStatus
         if ($action == Resolver::ACTION_UPGRADE) {
             $item = new Item($this->name, $this->version, true);
             $item->setAction(Resolver::ACTION_UPGRADE, $infos->version);
-        } else {
+        }
+        else if ($action == Resolver::ACTION_REMOVE && !$forConfiguration) {
+            $item = new Item($this->name, $this->version, true, false);
+            $item->setAction(Resolver::ACTION_REMOVE);
+        }
+        else {
             $item = new Item($this->name, $this->version, $forConfiguration ? $this->isEnabled : $this->isInstalled);
             $item->setAction($action);
         }
@@ -355,7 +360,7 @@ class ModuleStatus
     }
 
     const FILTER_DISABLED_UNINSTALLED = 37;
-    const FILTER_DISABLED_INSTALLED = 41;
+    const FILTER_DISABLED_INSTALLED = 25;
     const FILTER_ENABLED_UNINSTALLED = 38;
     const FILTER_ENABLED_INSTALLED_UPGRADED = 26;
     const FILTER_ENABLED_INSTALLED_NOT_UPGRADED = 42;
@@ -391,6 +396,9 @@ class ModuleStatus
             if ($this->version != '') {
                 if (VersionComparator::compareVersion($newVersion, $this->version) == 0) {
                     $status |= self::FILTER_VAL_UPGRADED;
+                    if (!$this->isEnabled) {
+                        $selected = Resolver::ACTION_REMOVE;
+                    }
                 }
                 else {
                     $status |= self::FILTER_VAL_NOTUPGRADED;

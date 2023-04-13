@@ -750,6 +750,8 @@ class Configurator
                 /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
 
+                $this->notice('configuration.module.unconfigure.start', array($component->getName()));
+
                 if ($configurator) {
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
                     if ($this->globalSetup->forLocalConfiguration()) {

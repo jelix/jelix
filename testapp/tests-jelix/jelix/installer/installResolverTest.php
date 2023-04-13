@@ -129,5 +129,32 @@ class installResolverTest extends \Jelix\UnitTests\UnitTestCase
     }
 
 
+    function testInstallModuleUnConfigured()
+    {
+        $resolver = new \Jelix\Installer\InstallationResolver();
+        $componentsList = $this->getComponentsList();
+
+        $component = $componentsList['testinstall2'];
+
+        $component[1]->isInstalled  = true;
+        $component[1]->isEnabled = false;
+
+        unset($componentsList['testinstall2']);
+
+        $modules = $resolver->getAllItemsToInstall($componentsList, [$component]);
+        $this->assertEquals(1, count($modules));
+        /** @var \Jelix\Dependencies\Item $module */
+        $module = $modules[0];
+        $this->assertEquals('testinstall2', $module->getName());
+        $this->assertTrue($module->isInstalled());
+        $this->assertFalse($module->canBeInstalled());
+        $this->assertEquals('2.0', $module->getCurrentVersion());
+        $this->assertNull($module->getNextVersion());
+        $this->assertEquals(\Jelix\Dependencies\Resolver::ACTION_REMOVE, $module->getAction());
+        $dependencies = $module->getDependencies();
+        $this->assertEquals(1, count($dependencies));
+        $this->assertTrue(isset($dependencies['jelix']));
+        $this->assertEquals([], $module->getAlternativeDependencies());
+    }
 
 }

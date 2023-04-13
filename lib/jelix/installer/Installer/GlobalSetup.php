@@ -322,7 +322,7 @@ class GlobalSetup
 
                 $moduleStatus = new ModuleStatus(
                     $moduleName,
-                    $dirContent->getPathname(),
+                    $dirContent->getPathname().'/',
                     $modulesInfos,
                     true
                 );
@@ -393,6 +393,10 @@ class GlobalSetup
     {
         if (isset($this->modules[$name])) {
             return $this->modules[$name];
+        }
+
+        if (isset($this->ghostModules[$name])) {
+            return $this->ghostModules[$name];
         }
 
         return null;
@@ -849,7 +853,12 @@ class GlobalSetup
 
     public function setCurrentProcessedModule($name)
     {
-        $this->currentProcessedModule = $this->modules[$name];
+        if (isset($this->modules[$name])) {
+            $this->currentProcessedModule = $this->modules[$name];
+        }
+        else {
+            $this->currentProcessedModule = $this->ghostModules[$name];
+        }
     }
 
     public function getCurrentModulePath()
