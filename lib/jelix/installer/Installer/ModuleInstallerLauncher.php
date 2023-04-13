@@ -262,7 +262,7 @@ class ModuleInstallerLauncher
     {
         $targetPath = \jApp::varConfigPath('uninstall/'.$this->moduleStatus->getName());
         \jFile::createDir($targetPath);
-        copy($this->moduleStatus->getPath().'module.xml', $targetPath);
+        copy($this->moduleStatus->getPath().'module.xml', $targetPath.'/module.xml');
         $uninstallerIni = $this->globalSetup->getUninstallerIni();
         $this->moduleStatus->saveInfos($uninstallerIni);
 
@@ -270,7 +270,7 @@ class ModuleInstallerLauncher
             \jFile::createDir($targetPath.'/install');
             copy(
                 $this->moduleStatus->getPath().'install/uninstall.php',
-                $targetPath.'/install'
+                $targetPath.'/install/uninstall.php'
             );
 
             return true;

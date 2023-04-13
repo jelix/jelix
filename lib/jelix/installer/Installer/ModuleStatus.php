@@ -38,7 +38,7 @@ class ModuleStatus
     /**
      * @var string
      */
-    public $dbProfile;
+    public $dbProfile = '';
 
     /**
      * indicate if the module is marked as installed.
@@ -96,9 +96,12 @@ class ModuleStatus
         $this->name = $name;
         $this->path = $path;
         $this->isEnabled = $config[$name.'.enabled'];
-        $this->dbProfile = $config[$name.'.dbprofile'];
         $this->isInstalled = $config[$name.'.installed'];
         $this->version = (string) $config[$name.'.version'];
+
+        if (isset($config[$name.'.dbprofile'])) {
+            $this->dbProfile = $config[$name.'.dbprofile'];
+        }
 
         if (isset($config[$name.'.installparam'])) {
             $this->parameters = self::unserializeParameters($config[$name.'.installparam']);
