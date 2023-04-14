@@ -43,7 +43,6 @@ Features
   * Module configurators can indicate a list of url to declare into the urls mapping 
   * more methods on XmlMapModifier to remove urls
   * new method `findProfile()` on helpers
-  * Move information to uninstall modules, from `app:install/uninstall` to `var/config/uninstall`
 * Installer:
   * The PreInstallHelpers class has now the database API to allows to check the
     content of the database before allowing the installation

@@ -242,43 +242,6 @@ class ModuleInstallerLauncher
         return $this->moduleStatus->parameters;
     }
 
-    /**
-     * Backup the uninstall.php outside the module.
-     *
-     * It allows to run the uninstall.php script of the module, even if the
-     * module does not exist anymore. This could be the case when the module is
-     * bundled into a composer package, and we removed the composer package from
-     * composer.json before deploying the application.
-     * The script is copied into the var/config/uninstall/ directory.
-     *
-     * For some components that don't have an uninstaller script, we should
-     * reference them into uninstaller.ini.php anyway, because we need their
-     * information because they are reverse dependencies of another module
-     * we should uninstall.
-     *
-     * @return bool true if there is an uninstall.php script
-     */
-    public function backupUninstallScript()
-    {
-        $targetPath = \jApp::varConfigPath('uninstall/'.$this->moduleStatus->getName());
-        \jFile::createDir($targetPath);
-        copy($this->moduleStatus->getPath().'module.xml', $targetPath.'/module.xml');
-        $uninstallerIni = $this->globalSetup->getUninstallerIni();
-        $this->moduleStatus->saveInfos($uninstallerIni);
-
-        if (file_exists($this->moduleStatus->getPath().'install/uninstall.php')) {
-            \jFile::createDir($targetPath.'/install');
-            copy(
-                $this->moduleStatus->getPath().'install/uninstall.php',
-                $targetPath.'/install/uninstall.php'
-            );
-
-            return true;
-        }
-
-        return false;
-    }
-
     public function hasUninstallScript()
     {
         return file_exists($this->moduleStatus->getPath().'install/uninstall.php');
@@ -327,8 +290,7 @@ class ModuleInstallerLauncher
         if ($actionMode == self::CONFIGURATOR_TO_CONFIGURE) {
             // if the module was unconfigured before, let's erase information
             // about it from the uninstaller.ini
-            $uninstallerIni = $this->globalSetup->getUninstallerIni();
-            $this->moduleStatus->clearInfos($uninstallerIni);
+            $this->globalSetup->clearUninstallerData($this->moduleStatus);
         }
 
         return $this->createConfigurator($installParameters);
