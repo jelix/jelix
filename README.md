@@ -8,7 +8,7 @@
 What is Jelix?
 ==============
 
-Jelix is an open-source framework for PHP. Jelix 1.8 is compatible from PHP 7.4 to PHP 8.2.
+Jelix is an open-source framework for PHP. Jelix 1.9 is compatible from PHP 7.4 to PHP 8.2.
 
 It has a modular, extensible architecture. Applications based on Jelix are made with
 modules, which allow to reuse features in several projects.
@@ -26,7 +26,7 @@ Create a directory and a composer.json file :
     "name": "...",
     "require": {
         "php": ">=7.4",
-        "jelix/jelix": "1.8-dev || ^1.8.0"
+        "jelix/jelix": "1.9-dev || ^1.9.0"
     }
 }
 ```
@@ -40,12 +40,12 @@ composer install
 Instead of using Composer, you can also download directly a package containing Jelix ready
 to use. See [the download page](https://jelix.org/articles/en/download).
 
-Read [the documentation to create an application](https://docs.jelix.org/en/manual-1.8/installation/create-application).
+Read [the documentation to create an application](https://docs.jelix.org/en/manual-1.9/installation/create-application).
 
 Documentation and community
 ===========================
 
-There is a full manual to learn Jelix. You can read it [direcly on the website](https://docs.jelix.org/en/manual-1.8).
+There is a full manual to learn Jelix. You can read it [direcly on the website](https://docs.jelix.org/en/manual-1.9).
 
 You can ask your questions [on the forum](https://jelix.org/forums/forum/cat/2-english) or
 on our IRC Channel, #jelix, on the irc.freenode.net network.

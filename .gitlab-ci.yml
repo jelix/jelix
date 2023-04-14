@@ -4,7 +4,7 @@ stages:
   - deploy_package
 
 variables:
-  JELIX_BRANCH: "jelix-1.8.x"
+  JELIX_BRANCH: "jelix-1.9.x"
 
 cache:
   key: "$CI_COMMIT_REF_SLUG"
