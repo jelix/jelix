@@ -68,7 +68,13 @@ class GlobalSetup
     protected $installerIni;
 
     /**
-     *  @var \Jelix\IniFile\IniModifier it represents the install/uninstall/uninstaller.ini.php file.
+     * it represents the var/config/uninstall/uninstaller.ini.php file.
+     *
+     * This file contain informations about modules that are disabled, and for which
+     * there are no more sources, only an uninstaller script.
+     *
+     *
+     *  @var \Jelix\IniFile\IniModifier
      */
     protected $uninstallerIni;
 
@@ -307,12 +313,26 @@ class GlobalSetup
                 }
 
                 $moduleName = $dirContent->getFilename();
-
-                if (
-                    isset($this->modules[$moduleName])
-                    || !$this->installerIni->getValue($moduleName.'.installed', 'modules')
+                $modulePath = $dirContent->getPathname().'/';
+                $isInstalled = $this->installerIni->getValue($moduleName.'.installed', 'modules');
+                if (isset($this->modules[$moduleName])) {
+                    // sources are still there. If the module is disabled and installed, let's consider it
+                    // as a ghost module, so its uninstaller will be called.
+                    if ($isInstalled && ! $this->modules[$moduleName]->isEnabled()) {
+                        // sources are still there, let's use the uninstall script of the module instead of
+                        // the uninstall script of the uninstall directory. It may have changed, or disappeared.
+                        $modulePath = $this->modules[$moduleName]->getPath();
+                        unset($this->modules[$moduleName]);
+                    }
+                    else {
+                        continue;
+                    }
+                }
+                else if ( !$isInstalled
                     || !isset($modulesInfos[$moduleName.'.enabled'])
                 ) {
+                    // sources are gone, and the module is uninstalled or there are no information about the module
+                    // into uninstaller.ini, we should ignore it
                     continue;
                 }
 
@@ -322,7 +342,7 @@ class GlobalSetup
 
                 $moduleStatus = new ModuleStatus(
                     $moduleName,
-                    $dirContent->getPathname().'/',
+                    $modulePath,
                     $modulesInfos,
                     true
                 );
