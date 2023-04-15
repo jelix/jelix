@@ -26,7 +26,7 @@ Create a directory and a composer.json file :
     "name": "...",
     "require": {
         "php": ">=7.4",
-        "jelix/jelix": "1.8-dev || ^1.8.0"
+        "jelix/jelix": "^1.8.0"
     }
 }
 ```
@@ -48,7 +48,7 @@ Documentation and community
 There is a full manual to learn Jelix. You can read it [direcly on the website](https://docs.jelix.org/en/manual-1.8).
 
 You can ask your questions [on the forum](https://jelix.org/forums/forum/cat/2-english) or
-on our IRC Channel, #jelix, on the irc.freenode.net network.
+on our IRC Channel, #jelix, on the libera.chat network.
 
 Contribution & development
 ===========================
