@@ -56,7 +56,9 @@
     "extra" : {
         "branch-alias": {
             "dev-master": "2.0-dev",
-            "dev-jelix-1.7.x": "1.7-dev"
+            "dev-jelix-1.7.x": "1.7-dev",
+            "dev-jelix-1.8.x": "1.8-dev",
+            "dev-jelix-1.9.x": "1.9-dev"
         },
         "jelix": {
             "modules-dir" : [

@@ -14,7 +14,7 @@ It may be compatible also with PHP 5.6 and PHP 7.0-7.3 (see below).
 It has a modular, extensible architecture. Applications based on Jelix are made with
 modules, which allow to reuse features in several projects.
 
-For more informations, read [details about its features](https://jelix.org/articles/en/features).
+For more information, read [details about its features](https://jelix.org/articles/en/features).
 
 Installation
 ============
