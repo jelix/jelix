@@ -1,8 +1,7 @@
 Changes into Jelix 1.8.0
 ========================
 
-Not released yet.
-
+Released on April 17th, 2023
 
 Features
 --------
