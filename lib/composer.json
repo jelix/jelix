@@ -39,6 +39,11 @@
     "replace": {
         "jelix/jelix":"self.version"
     },
+    "config": {
+      "allow-plugins": {
+        "jelix/composer-module-setup": true
+      }
+    },
     "minimum-stability": "stable",
     "extra" : {
         "jelix": {

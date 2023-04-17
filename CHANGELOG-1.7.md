@@ -4,6 +4,10 @@ Changes into Jelix 1.7
 Next
 ----
 
+Jelix 1.7.15
+------------
+
+* Fix package build: zip and tar.gz did not contain the vendor directory.
 * Installer: 
   * fix error about undefined method `Jelix\IniFile\IniModifierReadOnly::setValue()` 
     in legacy installers/upgraders

@@ -8,7 +8,7 @@
  * @author   Laurent Jouanneau
  * @contributor Loic Mathaud, Julien Issler
  *
- * @copyright 2005-2022 Laurent Jouanneau
+ * @copyright 2005-2023 Laurent Jouanneau
  * @copyright 2007 Julien Issler
  *
  * @see     http://www.jelix.org
