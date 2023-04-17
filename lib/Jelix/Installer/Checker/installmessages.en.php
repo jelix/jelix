@@ -98,6 +98,7 @@ return array(
     'configuration.end' => 'Modules are configured',
     'configuration.bad.end' => 'Configuration is aborted',
     'configuration.module.start' => 'Configuration of the module %s',
+    'configuration.module.unconfigure.start' => 'Unconfigure the module %s',
     'configuration.module.configured' => 'Module %s configured',
     'configuration.module.error' => 'An error occured during the configuration of the module %s: %s',
     'configuration.ask.parameters' => 'Parameters to install module %s',

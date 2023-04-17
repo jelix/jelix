@@ -7,7 +7,7 @@ Not released yet.
 Features
 --------
 
-* Jelix 1.8 requires PHP 7.4 and above.
+* Jelix 1.8 is now compatible from PHP 7.4 to PHP 8.2.
 * Core: 
   * new class `Jelix\Core\Services` that will allow to access to some services without using static methods of these service.
     The instance of this object is accessible from `\jApp::services()`.
@@ -22,6 +22,10 @@ Features
   * new method `BuilderBase::outputAllControlsValues()`
   * new method `BuilderBase::outputControlRawValue()`
   * new method `WidgetInterface::outputControlRawValue()`
+  * image widget: add possibility to show the temporary new image
+    New option for the image widget: showModeForNewImage.
+    It indicates how the new image can be display.
+  * builder option and JS API to ease the submit of a form with an XHR request.
 * jAcl2Db admin UI: 
   * the user interface has been reworked to be more usable
   * possibility to hide some rights (`hiddenRights` in 
@@ -32,7 +36,7 @@ Features
   * possibility to give an event object to `jEvent::notify()`. So you can have events having their own methods to manipulate
     information for the event.
   * Rework the implementation of the events dispatcher, to follows PSR-14. `jEvent::notify()`
-    will be deprecated in futur versions, prefer to use Prefer to use `\jApp::services()->eventDispatcher()->dispatch($event)` for event objects. 
+    will be deprecated in futur versions, prefer to use `\jApp::services()->eventDispatcher()->dispatch($event)` for event objects. 
 * Configurator:
   * The configurator is now able to declare automatically modules urls, and to remove
     all Urls of a module when it is uninstalled.
@@ -45,8 +49,16 @@ Features
   * new method `findProfile()` on helpers
   * new option to the installer command: `--no-clean-temp`. And the command verifies now that
     all content of the temp directory can be deleted.
+  * Fix the selection of upgraders to execute: in some case, some upgraders may not be executed
 * Unit tests: jUnitTestCase and jUnitTestCaseDb are deprecated. Use  
   `\Jelix\UnitTests\UnitTestCase` and `\Jelix\UnitTests\UnitTestCase` instead.
+  Support of PHPUnit versions older than 6.0 is removed.
+* the script runtests.php and the unit test mechanism for modules 
+  (tests inside modules) are now deprecated.
+  It is better to write tests outside modules, in order to not include them into
+  Composer packages or other deployment system. It also allows you to use
+  the PHPunit version you want, or to use other unit tests framework.
+* Two new plugins for jTpl: `{ifacl2and}`, `{ifacl2or}`
 
 
 Removes
@@ -60,7 +72,7 @@ Internal changes
 
 * Upgrade Symfony Console to 5.2.1
 * Upgrade PHPUnit to 8.5 for our tests
-* Upgrade PHPMailer to 6.2.0
+* Upgrade PHPMailer to 6.6.*
 * Upgrade Jquery to 3.6.1
 * Upgrade Jquery UI to 1.13.2
 * Upgrade CKEditor to 35.3.0

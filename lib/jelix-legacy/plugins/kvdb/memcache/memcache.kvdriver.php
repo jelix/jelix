@@ -14,7 +14,7 @@
  * @see http://fr2.php.net/manual/en/book.memcache.php
  */
 
-use function \Jelix\Core\is_resource;
+use function \Jelix\Core\Utilities\is_resource;
 
 class memcacheKVDriver extends jKVDriver implements jIKVttl
 {

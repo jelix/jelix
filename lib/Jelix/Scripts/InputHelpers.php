@@ -1,14 +1,15 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
 namespace Jelix\Scripts;
 
+use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -38,6 +39,14 @@ class InputHelpers
         $this->questionHelper = $helper;
         $this->consoleInput = $input;
         $this->consoleOutput = $output;
+
+        $outputStyle = new OutputFormatterStyle('cyan', 'default');
+        $output->getFormatter()->setStyle('question', $outputStyle);
+        $output->getErrorOutput()->getFormatter()->setStyle('question', $outputStyle);
+
+        $outputStyle2 = new OutputFormatterStyle('yellow', 'default', array('bold'));
+        $output->getFormatter()->setStyle('inputstart', $outputStyle2);
+        $output->getErrorOutput()->getFormatter()->setStyle('inputstart', $outputStyle2);
     }
 
     /**

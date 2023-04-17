@@ -12,7 +12,6 @@
 namespace Jelix\Scripts;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -62,12 +61,12 @@ class ConfigureCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->setUpOutput($output);
+
         \Jelix\Core\AppManager::close();
 
         $reporter = new \Jelix\Installer\Reporter\Console(
             $output,
-            ($output->isVerbose() ? 'notice' : 'error'),
+            ($output->isQuiet() ? 'error': 'notice'),
             'Configuration migration'
         );
 
@@ -77,7 +76,7 @@ class ConfigureCommand extends Command
 
         $reporter = new \Jelix\Installer\Reporter\Console(
             $output,
-            ($output->isVerbose() ? 'notice' : 'error'),
+            ($output->isQuiet() ? 'error': 'notice'),
             'Configuration'
         );
 
@@ -158,14 +157,5 @@ class ConfigureCommand extends Command
         }
 
         return substr($ep, 0, $p);
-    }
-
-    protected function setUpOutput(OutputInterface $output)
-    {
-        $outputStyle = new OutputFormatterStyle('cyan', 'default');
-        $output->getFormatter()->setStyle('question', $outputStyle);
-
-        $outputStyle2 = new OutputFormatterStyle('yellow', 'default', array('bold'));
-        $output->getFormatter()->setStyle('inputstart', $outputStyle2);
     }
 }

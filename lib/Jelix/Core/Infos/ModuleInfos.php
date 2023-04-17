@@ -10,7 +10,7 @@
 namespace Jelix\Core\Infos;
 
 /**
- * Informations about the module, retrieved from its module.xml file.
+ * Information about the module, retrieved from its module.xml file.
  */
 class ModuleInfos extends InfosAbstract
 {

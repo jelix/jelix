@@ -116,7 +116,7 @@ function resetPostgresql() {
 function launchInstaller() {
     echo "--- Launch testapp installer in $1"
     local appdir="$1"
-    su $APP_USER -c "php $appdir/install/installer.php --verbose"
+    su $APP_USER -c "php $appdir/install/installer.php"
 }
 
 function setRights() {

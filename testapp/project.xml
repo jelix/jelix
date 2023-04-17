@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project xmlns="http://jelix.org/ns/project/1.0">
     <info id="testapp@jelix.org" name="testapp" createdate="2005-01-01">
-        <version stability="stable" date="2019-09-10 09:00">1.8.0</version>
+        <version stability="stable" date="2023-04-14">1.9.0-pre</version>
         <label lang="en_US">Testapp</label>
         <description lang="en_US">Application to test Jelix</description>
         <licence URL="http://www.gnu.org/licenses/gpl.html">GPL</licence>
-        <copyright>2005-2019 Laurent Jouanneau and other contributors</copyright>
+        <copyright>2005-2023 Laurent Jouanneau and other contributors</copyright>
         <creator name="Laurent Jouanneau" email="laurent@jelix.org"/>
         <homepageURL>https://jelix.org</homepageURL>
     </info>

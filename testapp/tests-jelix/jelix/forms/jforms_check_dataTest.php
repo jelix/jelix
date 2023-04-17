@@ -273,7 +273,6 @@ class jforms_check_data extends \Jelix\UnitTests\UnitTestCaseDb {
     function testDate(){
         $ctrl = new jFormsControlInput('datenaissance');
         $ctrl->datatype= new jDatatypelocaledate();
-        $ctrl->hasHelp=true;
         $this->form->addCtrl($ctrl);
         $this->assertTrue($this->form->check());
 

@@ -50,6 +50,7 @@ class jauthdb_adminModuleConfigurator extends \Jelix\Installer\Module\Configurat
             } else {
                 $section_db = 'auth_db';
             }
+
             $daoName = $conf->getValue('dao', $section_db);
             $formName = $conf->getValue('form', $section_db);
             if ($daoName == 'jauthdb~jelixuser' && $formName == '') {

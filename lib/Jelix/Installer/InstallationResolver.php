@@ -170,17 +170,6 @@ class InstallationResolver
     {
         // get all modules and their dependencies
         $resolver = new Resolver();
-        foreach ($componentsList as $component) {
-            /**
-             * @var ModuleInfos $infos
-             * @var ModuleStatus $status
-             */
-            list($infos, $status) = $component;
-            $resolverItem = $status->getResolverItem($infos,
-                [$status::FILTER_ENABLED_UNINSTALLED,
-                 $status::FILTER_ENABLED_INSTALLED_NOT_UPGRADED]);
-            $resolver->addItem($resolverItem);
-        }
 
         foreach ($ghostComponentsList as $component) {
             /**
@@ -190,6 +179,24 @@ class InstallationResolver
             list($infos, $status) = $component;
             $resolverItem = $status->getResolverItem($infos,
                 [$status::FILTER_DISABLED_INSTALLED]);
+            $resolver->addItem($resolverItem);
+        }
+
+        foreach ($componentsList as $component) {
+            /**
+             * @var ModuleInfos $infos
+             * @var ModuleStatus $status
+             */
+            list($infos, $status) = $component;
+
+            $resolverItem = $status->getResolverItem($infos,
+                [$status::FILTER_ENABLED_UNINSTALLED,
+                 $status::FILTER_ENABLED_INSTALLED_NOT_UPGRADED]);
+
+            if ($resolver->hasItem($resolverItem->getName())) {
+                continue;
+            }
+
             $resolver->addItem($resolverItem);
         }
 

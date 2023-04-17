@@ -424,7 +424,7 @@ class fileKVDriver extends jKVDriver implements jIKVPersistent, jIKVttl
      */
     protected function _setFileContent($filePath, $dataToWrite, $mtime)
     {
-        if (\Jelix\Core\is_resource($dataToWrite)) {
+        if (\Jelix\Core\Utilities\is_resource($dataToWrite)) {
             return false;
         }
 

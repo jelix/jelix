@@ -12,7 +12,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-use function \Jelix\Core\is_resource;
+use function \Jelix\Core\Utilities\is_resource;
 
 /**
  * Interface for cache drivers.

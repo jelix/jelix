@@ -172,7 +172,7 @@ class redis_extCacheDriver implements jICacheDriver
      */
     public function set($key, $value, $ttl = 0)
     {
-        if (\Jelix\Core\is_resource($value)) {
+        if (\Jelix\Core\Utilities\is_resource($value)) {
             return false;
         }
 

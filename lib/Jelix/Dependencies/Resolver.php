@@ -25,10 +25,15 @@ class Resolver
      */
     public function addItem(Item $item)
     {
-        if (isset($this->item[$item->getName()])) {
+        if (isset($this->items[$item->getName()])) {
             throw new Exception('Item has already been added', 1);
         }
         $this->items[$item->getName()] = $item;
+    }
+
+    public function hasItem($itemName)
+    {
+        return isset($this->items[$itemName]);
     }
 
     /**

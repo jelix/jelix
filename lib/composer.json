@@ -9,7 +9,7 @@
         "phpmailer/phpmailer": "^6.6.5",
         "jelix/castor": "^1.1.1",
         "jelix/profiles": "~1.2.0",
-        "jelix/inifile": "^3.3.1",
+        "jelix/inifile": "^3.3.2",
         "jelix/simplelocalization": "^1.7.2",
         "jelix/properties-file": "^1.2.3",
         "jelix/database": "dev-master",
@@ -35,6 +35,11 @@
     },
     "replace": {
         "jelix/jelix":"self.version"
+    },
+    "config": {
+      "allow-plugins": {
+        "jelix/composer-module-setup": true
+      }
     },
     "minimum-stability": "dev",
     "extra" : {

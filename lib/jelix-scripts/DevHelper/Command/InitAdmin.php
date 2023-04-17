@@ -5,7 +5,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler
  *
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2023 Laurent Jouanneau
  * @copyright   2015 Julien Issler
  *
  * @see        http://jelix.org
@@ -178,22 +178,12 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         if (!$doNotInstallJauth) {
             $configurator->setModuleParameters('jauth', array('eps' => array($entrypoint)));
 
-            $authini = new \Jelix\IniFile\IniModifier(App::varConfigPath($entrypoint.'/auth.coord.ini.php'));
-            $authini->setValue('after_login', 'master_admin~default:index');
-            $authini->setValue('timeout', '30');
-            $authini->save();
-
             $modulesToConfigure[] = 'jauth';
 
             $xmlEp->addUrlInclude('/auth', 'jauth', 'urls.xml');
         }
 
         if (!$doNotInstallJauthdb) {
-            if ($profile != '' && !$doNotInstallJauth) {
-                $authini->setValue('profile', $profile, 'Db');
-                $authini->save();
-            }
-
             $configurator->setModuleParameters('jauthdb', array('defaultuser' => true));
             $modulesToConfigure[] = 'jauthdb';
         }
@@ -224,9 +214,19 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
             $modulesToConfigure[] = 'jacl2db_admin';
         }
 
-        $configurator->configureModules($modulesToConfigure, $entrypoint);
+        $configurator->configureModules($modulesToConfigure, $entrypoint, false);
 
         $xmlMap->save();
+
+        if (!$doNotInstallJauth) {
+            $authini = new \Jelix\IniFile\IniModifier(App::appSystemPath($entrypoint . '/auth.coord.ini.php'));
+            $authini->setValue('after_login', 'master_admin~default:index');
+            $authini->setValue('timeout', '30');
+            if (!$doNotInstallJauthdb && $profile != '')  {
+                $authini->setValue('profile', $profile, 'Db');
+            }
+            $authini->save();
+        }
 
         // installation
         $globalSetup = new \Jelix\Installer\GlobalSetup($this->getFrameworkInfos());

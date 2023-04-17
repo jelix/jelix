@@ -87,7 +87,7 @@ jelixWWWPath="jelix/"
 ; list of active plugins for jResponseHtml
 plugins="debugbar,minify"
 minifyCSS=off
-minifyJS=on
+minifyJS=off
 minifyExcludeCSS=
 minifyExcludeJS="jelix/ckeditor5/ckeditor.js"
 minifyEntryPoint=minify.php
@@ -135,3 +135,7 @@ storage=
 jforms_html.js[]="$jelix/js/jforms_jquery.js"
 jforms_html.css="$jelix/design/jform.css"
 jforms_html.require=jquery
+
+qunit.js[]="qunit/qunit.js"
+qunit.css[]="qunit/qunit.css"
+qunit.require=jquery

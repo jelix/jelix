@@ -1,6 +1,6 @@
 <?php
 
-class test1Test extends PHPUnit_Framework_TestCase
+class test1Test extends PHPUnit\Framework\TestCase
 {
 
     function testFirst () {

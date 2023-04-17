@@ -59,7 +59,7 @@ class jLocaleTest extends \Jelix\UnitTests\UnitTestCase {
                                     <string key="ee" value=" "/>
                                     <string key="ff" value="  # other"/>
                                     <string key="hh" value="    "/>
-                                    <string key="ii" value="   '.utf8_encode(chr(160)).' bidule"/>
+                                    <string key="ii" value="   '.\Jelix\Core\Utilities\utf8_encode(chr(160)).' bidule"/>
                                     <string key="jj" value="truc"/>
                                 </array>'),
             array('test_H.properties', '<array><string key="module.description" value="Tests unitaires # jelix" /><string key="ooo" value="bbbb" /></array>'),
@@ -97,8 +97,8 @@ class jLocaleTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals('ceci est une phrase fr_FR',jLocale::get('tests1.first.locale', null, 'de_DE'));
         $this->assertEquals('Chaîne à tester',jLocale::get('tests1.multiline.locale.with.accent'));
         $this->assertEquals('Chaîne à tester à foison',jLocale::get('tests1.multiline.locale.with.accent2'));
-        $this->assertEquals(utf8_decode('Chaîne à tester'),jLocale::get('testunit.multiline.locale.with.accent',null,null,'ISO-8859-1'));
-        $this->assertEquals(utf8_decode('Chaîne à tester à foison'),jLocale::get('testunit.multiline.locale.with.accent2',null,null,'ISO-8859-1'));
+        $this->assertEquals(\Jelix\Core\Utilities\utf8_decode('Chaîne à tester'),jLocale::get('testunit.multiline.locale.with.accent',null,null,'ISO-8859-1'));
+        $this->assertEquals(\Jelix\Core\Utilities\utf8_decode('Chaîne à tester à foison'),jLocale::get('testunit.multiline.locale.with.accent2',null,null,'ISO-8859-1'));
         $this->assertEquals('ceci est une phrase fr_CA',jLocale::get('tests1.first.locale', null, 'fr_CA'));
         $this->assertEquals('this is an en_US sentence',jLocale::get('tests1.first.locale', null, 'en_US'));
         $this->assertEquals('this is an en_EN sentence',jLocale::get('tests1.first.locale', null, 'en_EN'));

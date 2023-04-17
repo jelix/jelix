@@ -215,8 +215,8 @@ abstract class jKVDriver
 
     protected function isResource($value)
     {
-        if (function_exists('\\Jelix\\Core\\is_resource')) {
-            return \Jelix\Core\is_resource($value);
+        if (function_exists('\\Jelix\\Core\\Utilities\\is_resource')) {
+            return \Jelix\Core\Utilities\is_resource($value);
         }
 
         return is_resource($value);

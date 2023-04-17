@@ -12,7 +12,7 @@ class configureAllResolverTest extends \Jelix\UnitTests\UnitTestCase
 
     protected function getComponentsList()
     {
-        $modInfosJelix = ModuleInfos::load(__DIR__.'/../../../vendor/jelix/jelix-essential/jelix/core-modules/jelix');
+        $modInfosJelix = ModuleInfos::load(__DIR__.'/../../../vendor/jelix/jelix-essential/jelix-legacy/core-modules/jelix');
         $modStatusJelix = new ModuleStatus('jelix', '/', [
             'jelix.installed' => true,
             'jelix.enabled' => true,

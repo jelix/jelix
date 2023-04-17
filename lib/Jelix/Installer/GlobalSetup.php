@@ -9,6 +9,7 @@
 
 namespace Jelix\Installer;
 
+use Jelix\FileUtilities\Directory;
 use Jelix\IniFile\IniModifier;
 use Jelix\IniFile\IniModifierArray;
 use Jelix\IniFile\IniModifierReadOnly;
@@ -69,9 +70,23 @@ class GlobalSetup
     protected $installerIni;
 
     /**
-     *  @var \Jelix\IniFile\IniModifier it represents the install/uninstall/uninstaller.ini.php file.
+     * it represents the install/uninstall/uninstaller.ini.php file.
+     *
+     * This file contain informations about modules that are disabled by the developer,
+     * and for which there are no more sources, only an uninstaller script.
+     *
+     *  @var \Jelix\IniFile\IniModifier
      */
-    protected $uninstallerIni;
+    protected $mainUninstallerIni;
+
+    /**
+     * it represents the var/config/uninstall/uninstaller.ini.php file.
+     *
+     * This file contain informations about modules that are disabled by the user, and for which
+     * there are no more sources, only an uninstaller script.
+     *  @var \Jelix\IniFile\IniModifier
+     */
+    protected $localUninstallerIni;
 
     /**
      * list of entry point and their properties.
@@ -185,8 +200,18 @@ class GlobalSetup
         $this->installerIni = $this->loadInstallerIni();
 
         \jFile::createDir(App::appPath('install/uninstall'));
-        $this->uninstallerIni = new IniModifier(
+        $this->mainUninstallerIni = new IniModifier(
             App::appPath('install/uninstall/uninstaller.ini.php'),
+            ";<?php die(''); ?>
+; for security reasons , don't remove or modify the first line
+; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
+
+"
+        );
+
+        \jFile::createDir(App::varConfigPath('uninstall'));
+        $this->localUninstallerIni = new IniModifier(
+            App::varConfigPath('uninstall/uninstaller.ini.php'),
             ";<?php die(''); ?>
 ; for security reasons , don't remove or modify the first line
 ; don't modify this file if you don't know what you do. it is generated automatically by jInstaller
@@ -297,40 +322,14 @@ class GlobalSetup
         }
 
         // load ghost modules we have to uninstall
+        $uninstallersDir = App::varConfigPath('uninstall');
+        if (file_exists($uninstallersDir)) {
+            $this->readUninstallerFile($uninstallersDir, $this->localUninstallerIni);
+        }
+
         $uninstallersDir = App::appPath('install/uninstall');
         if (file_exists($uninstallersDir)) {
-            $dir = new \DirectoryIterator($uninstallersDir);
-            $modulesInfos = $this->uninstallerIni->getValues('modules');
-
-            foreach ($dir as $dirContent) {
-                if ($dirContent->isDot() || !$dirContent->isDir()) {
-                    continue;
-                }
-
-                $moduleName = $dirContent->getFilename();
-
-                if (
-                    isset($this->modules[$moduleName])
-                    || !$this->installerIni->getValue($moduleName.'.installed', 'modules')
-                    || !isset($modulesInfos[$moduleName.'.enabled'])
-                ) {
-                    continue;
-                }
-
-                $modulesInfos[$moduleName.'.installed'] = 1;
-                $modulesInfos[$moduleName.'.version'] = (string) $this->installerIni->getValue($moduleName.'.version', 'modules');
-                $modulesInfos[$moduleName.'.enabled'] = false;
-
-                $moduleStatus = new ModuleStatus(
-                    $moduleName,
-                    $dirContent->getPathname(),
-                    $modulesInfos,
-                    true
-                );
-
-                $this->ghostModules[$moduleName] = new ModuleInstallerLauncher($moduleStatus, $this);
-                $this->ghostModules[$moduleName]->init();
-            }
+            $this->readUninstallerFile($uninstallersDir, $this->mainUninstallerIni);
         }
 
         // remove information about modules that don't exist anymore
@@ -343,6 +342,61 @@ class GlobalSetup
             if (!isset($modulesList[$l[0]]) && !isset($this->ghostModules[$l[0]])) {
                 $this->installerIni->removeValue($key, 'modules');
             }
+        }
+    }
+
+    /**
+     * @param string $uninstallersDir
+     * @param IniModifier $uninstallerIni
+     * @return void
+     * @throws Exception
+     */
+    protected function readUninstallerFile($uninstallersDir, $uninstallerIni)
+    {
+        $dir = new \DirectoryIterator($uninstallersDir);
+        $modulesInfos = $uninstallerIni->getValues('modules');
+
+        foreach ($dir as $dirContent) {
+            if ($dirContent->isDot() || !$dirContent->isDir()) {
+                continue;
+            }
+
+            $moduleName = $dirContent->getFilename();
+            $modulePath = $dirContent->getPathname().'/';
+            $isInstalled = $this->installerIni->getValue($moduleName.'.installed', 'modules');
+            if (isset($this->modules[$moduleName])) {
+                // sources are still there. If the module is disabled and installed, let's consider it
+                // as a ghost module, so its uninstaller will be called.
+                if ($isInstalled && ! $this->modules[$moduleName]->isEnabled()) {
+                    // sources are still there, let's use the uninstall script of the module instead of
+                    // the uninstall script of the uninstall directory. It may have changed, or disappeared.
+                    $modulePath = $this->modules[$moduleName]->getPath();
+                }
+                else {
+                    continue;
+                }
+            }
+            else if ( !$isInstalled
+                || !isset($modulesInfos[$moduleName.'.enabled'])
+            ) {
+                // sources are gone, and the module is uninstalled or there are no information about the module
+                // into uninstaller.ini, we should ignore it
+                continue;
+            }
+
+            $modulesInfos[$moduleName.'.installed'] = 1;
+            $modulesInfos[$moduleName.'.version'] = (string) $this->installerIni->getValue($moduleName.'.version', 'modules');
+            $modulesInfos[$moduleName.'.enabled'] = false;
+
+            $moduleStatus = new ModuleStatus(
+                $moduleName,
+                $modulePath,
+                $modulesInfos,
+                true
+            );
+
+            $this->ghostModules[$moduleName] = new ModuleInstallerLauncher($moduleStatus, $this);
+            $this->ghostModules[$moduleName]->init();
         }
     }
 
@@ -380,9 +434,9 @@ class GlobalSetup
             $isNativeModule = ($enabledGlobally === true);
         }
 
-        $moduleInfos = new ModuleStatus($name, $path, $moduleSetupList, $isNativeModule);
+        $moduleStatus = new ModuleStatus($name, $path, $moduleSetupList, $isNativeModule);
 
-        return new ModuleInstallerLauncher($moduleInfos, $this);
+        return new ModuleInstallerLauncher($moduleStatus, $this);
     }
 
     /**
@@ -394,6 +448,10 @@ class GlobalSetup
     {
         if (isset($this->modules[$name])) {
             return $this->modules[$name];
+        }
+
+        if (isset($this->ghostModules[$name])) {
+            return $this->ghostModules[$name];
         }
 
         return null;
@@ -422,7 +480,7 @@ class GlobalSetup
 
     /**
      * List of modules that should be uninstall and we
-     * have only their uninstaller into install/uninstall/.
+     * have only their uninstaller into install/uninstall/ or var/config/uninstall.
      *
      * @return ModuleInstallerLauncher[]
      */
@@ -608,13 +666,71 @@ class GlobalSetup
     }
 
     /**
-     * the uninstaller.ini.php.
+     * Backup the uninstall.php outside the module.
      *
-     * @return \Jelix\IniFile\IniModifier
+     * It allows to run the uninstall.php script of the module, even if the
+     * module does not exist anymore. This could be the case when the module is
+     * bundled into a composer package, and we removed the composer package from
+     * composer.json before deploying the application.
+     * The script is copied into the install/uninstall or var/config/uninstall/ directory.
+     *
+     * For some components that don't have an uninstaller script, we should
+     * reference them into uninstaller.ini.php anyway, because we need their
+     * information because they are reverse dependencies of another module
+     * we should uninstall.
+     *
+     * @param ModuleStatus $moduleStatus
+     * @return bool true if there is an uninstall.php script
      */
-    public function getUninstallerIni()
+    public function saveUninstallerData($moduleStatus)
     {
-        return $this->uninstallerIni;
+        if ($this->forLocalConfiguration) {
+            $uninstallerIni = $this->localUninstallerIni;
+            $targetPath = App::varConfigPath('uninstall/');
+        }
+        else {
+            $uninstallerIni = $this->mainUninstallerIni;
+            $targetPath = App::appPath('install/uninstall/');
+        }
+
+        $targetPath .= $moduleStatus->getName();
+        \jFile::createDir($targetPath);
+        copy($moduleStatus->getPath().'module.xml', $targetPath.'/module.xml');
+        $moduleStatus->saveInfos($uninstallerIni);
+
+        if (file_exists($moduleStatus->getPath().'install/uninstall.php')) {
+            \jFile::createDir($targetPath.'/install');
+            copy(
+                $moduleStatus->getPath().'install/uninstall.php',
+                $targetPath.'/install/uninstall.php'
+            );
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param ModuleStatus $moduleStatus
+     * @return void
+     */
+    public function clearUninstallerData($moduleStatus)
+    {
+        if ($this->forLocalConfiguration) {
+            $ini = $this->localUninstallerIni;
+            $path = App::varConfigPath('uninstall/');
+        }
+        else {
+            $ini = $this->mainUninstallerIni;
+            $path = App::appPath('install/uninstall/');
+        }
+        $moduleStatus->clearInfos($ini);
+        Directory::remove($path.$moduleStatus->getName(), true);
+    }
+
+    public function saveUninstallerIni()
+    {
+        $this->localUninstallerIni->save();
+        $this->mainUninstallerIni->save();
     }
 
     /**
@@ -850,7 +966,12 @@ class GlobalSetup
 
     public function setCurrentProcessedModule($name)
     {
-        $this->currentProcessedModule = $this->modules[$name];
+        if (isset($this->modules[$name])) {
+            $this->currentProcessedModule = $this->modules[$name];
+        }
+        else {
+            $this->currentProcessedModule = $this->ghostModules[$name];
+        }
     }
 
     public function getCurrentModulePath()

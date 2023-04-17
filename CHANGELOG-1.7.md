@@ -1,6 +1,56 @@
 Changes into Jelix 1.7
 ======================
 
+Next
+----
+
+Jelix 1.7.15
+------------
+
+* Fix package build: zip and tar.gz did not contain the vendor directory.
+* Installer: 
+  * fix error about undefined method `Jelix\IniFile\IniModifierReadOnly::setValue()` 
+    in legacy installers/upgraders
+  * Fix `jInstallerEntryPoint::getSingleLocalConfigIni()`
+* tests: upgrade Qunit
+
+Jelix 1.7.14
+------------
+
+* Fix compatibility with PHP 8.2.
+* Fix styles for questions into Symfony console commands
+* Installer:
+  * fix the migration of localconfig during local migration
+  * Fix the selection of upgraders to execute: in some case, some upgraders may not be executed
+* Configurator:
+  * Fix configurator with modules installed locally
+  * Fix error when a module and its dependencies are upgraded
+  * jacl2 and jauth configurator: do not ask entrypoint if not needed
+* Scripts: fix exit code for console.php and dev.php
+* Fix issues during the launch of the app:init-admin command
+* Fix error in cli commands when using jUrl.
+* Fix mail test commands: template format was not good
+* jForms: replace some calls of deprecated objects
+
+Contributors: René-Luc Dhont and Raphael Martin.
+
+Jelix 1.7.13
+------------
+
+* jForms:
+  * `jFormsBase::saveFile`: new boolean parameter to delete original file
+  * support of `filterhtml` on `<input>`
+  * Fix loading of jforms js: return http 404 when the corresponding form doesn't exist
+  * Fix html form widget, when retrieving the jquery.js from current webassets collection
+  * Fix jForms compiler: allow image into a widget group
+* Installer: upgrade.php should have priority over upgrade_1_6.php
+* Fix file kv driver: use the isResource method instead of is_resource.
+* Fix jDb, AccessParameters: must not generate pdooptions
+* Fix File logger: date and ip were duplicated
+* Fix notices into pagelinks tpl plugin
+* Fix jAcl2Authentication adapter: use jAcl2JAuthAdapter by default
+
+
 Jelix 1.7.12
 ------------
 

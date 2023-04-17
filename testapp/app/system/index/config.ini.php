@@ -11,7 +11,7 @@ soap="jsoap~jResponseSoap"
 
 [jResponseHtml]
 minifyCSS=off
-minifyJS=on
+minifyJS=off
 minifyExcludeCSS=
 minifyExcludeJS="jelix/ckeditor5/ckeditor.js"
 minifyEntryPoint=minify.php

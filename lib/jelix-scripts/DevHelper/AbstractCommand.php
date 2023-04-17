@@ -1,16 +1,15 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2016 Laurent Jouanneau
+ * @copyright   2016-2023 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     MIT
  */
 
 namespace Jelix\DevHelper;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Formatter\OutputFormatterStyle;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -40,7 +39,6 @@ abstract class AbstractCommand extends Command
             $this->isVerbose = true;
         }
         $this->output = $output;
-        $this->setUpOutput($output);
         return 0;
     }
 
@@ -173,14 +171,5 @@ abstract class AbstractCommand extends Command
                 chgrp($dirname, $this->config->chownGroup);
             }
         }
-    }
-
-    protected function setUpOutput(OutputInterface $output)
-    {
-        $outputStyle = new OutputFormatterStyle('cyan', 'default');
-        $output->getFormatter()->setStyle('question', $outputStyle);
-
-        $outputStyle = new OutputFormatterStyle('yellow', 'default', array('bold'));
-        $output->getFormatter()->setStyle('inputstart', $outputStyle);
     }
 }

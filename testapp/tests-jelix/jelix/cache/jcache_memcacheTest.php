@@ -5,7 +5,7 @@
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire
 * @contributor Laurent Jouanneau
-* @copyright   NEOV 2009, 2012 Laurent Jouanneau
+* @copyright   NEOV 2009, 2012-2023 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -28,8 +28,14 @@ class jCache_MemcacheTest extends jCacheAPITest {
         $this->profile = 'usingmemcache';
         if (!extension_loaded('memcache'))
             $this->markTestSkipped('jCache_MemcacheTest  cannot be run because memcache is not installed');
-        if (version_compare(phpversion('memcache'), '3.0.1') == -1)
+
+        if (version_compare(phpversion('memcache'), '3.0.1') == -1) {
             $this->markTestSkipped('jCache_MemcacheTest cannot be run because version of memcache is wrong (should be >= 3.0.1)');
+        }
+        // temporary check
+        if (version_compare(phpversion(), "8.2.0") >= 0 && version_compare(phpversion('memcache'), '4.0.6') < 0) {
+            $this->markTestSkipped('jCache_MemcacheTest cannot be run because the version of memcache is buggy with PHP 8.2 (Creation of dynamic property Memcache::$connection is deprecated)');
+        }
         parent::setUp();
         if (isset($this->conf['servers']))
             list($this->mmhost, $this->mmport) = explode(":",$this->conf['servers']);

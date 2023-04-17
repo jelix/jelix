@@ -8,7 +8,7 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-use function \Jelix\Core\is_resource;
+use function \Jelix\Core\Utilities\is_resource;
 
 /**
  * Driver for jKVDB, that uses an SQL table to store key/value data.

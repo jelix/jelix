@@ -12,7 +12,7 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-use function \Jelix\Core\is_resource;
+use function \Jelix\Core\Utilities\is_resource;
 
 class redis_extKVDriver extends jKVDriver implements jIKVSet, jIKVttl
 {

@@ -9,7 +9,6 @@
 
 namespace Jelix\Installer;
 
-use Jelix\Dependencies\Item;
 use Jelix\Version\VersionComparator;
 
 /**
@@ -243,43 +242,6 @@ class ModuleInstallerLauncher
         return $this->moduleStatus->parameters;
     }
 
-    /**
-     * Backup the uninstall.php outside the module.
-     *
-     * It allows to run the uninstall.php script of the module, even if the
-     * module does not exist anymore. This could be the case when the module is
-     * bundled into a composer package, and we removed the composer package from
-     * composer.json before deploying the application.
-     * The script is copied into the app:install/uninstall/ directory.
-     *
-     * For some components that don't have an uninstaller script, we should
-     * reference them into uninstaller.ini.php anyway, because we need their
-     * information because they are reverse dependencies of another module
-     * we should uninstall.
-     *
-     * @return bool true if there is an uninstall.php script
-     */
-    public function backupUninstallScript()
-    {
-        $targetPath = \Jelix\Core\App::appPath('install/uninstall/'.$this->moduleStatus->getName());
-        \jFile::createDir($targetPath);
-        copy($this->moduleStatus->getPath().'module.xml', $targetPath);
-        $uninstallerIni = $this->globalSetup->getUninstallerIni();
-        $this->moduleStatus->saveInfos($uninstallerIni);
-
-        if (file_exists($this->moduleStatus->getPath().'install/uninstall.php')) {
-            \jFile::createDir($targetPath.'/install');
-            copy(
-                $this->moduleStatus->getPath().'install/uninstall.php',
-                $targetPath.'/install'
-            );
-
-            return true;
-        }
-
-        return false;
-    }
-
     public function hasUninstallScript()
     {
         return file_exists($this->moduleStatus->getPath().'install/uninstall.php');
@@ -328,8 +290,7 @@ class ModuleInstallerLauncher
         if ($actionMode == self::CONFIGURATOR_TO_CONFIGURE) {
             // if the module was unconfigured before, let's erase information
             // about it from the uninstaller.ini
-            $uninstallerIni = $this->globalSetup->getUninstallerIni();
-            $this->moduleStatus->clearInfos($uninstallerIni);
+            $this->globalSetup->clearUninstallerData($this->moduleStatus);
         }
 
         return $this->createConfigurator($installParameters);
@@ -609,54 +570,21 @@ class ModuleInstallerLauncher
         $list = array();
 
         foreach ($this->moduleUpgraders as $upgrader) {
-            $foundVersion = '';
-            // check the version
-            foreach ($upgrader->getTargetVersions() as $version) {
-                if (VersionComparator::compareVersion($this->moduleStatus->version, $version) >= 0) {
-                    // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
-                    continue;
-                }
-                if (VersionComparator::compareVersion($this->moduleInfos->version, $version) < 0) {
-                    // we don't execute upgraders having a version higher than the version indicated in the module.xml
-                    continue;
-                }
-                $foundVersion = $version;
-                // when multiple version are specified, we take the first one which is ok
-                break;
-            }
-            if (!$foundVersion) {
+
+            $version = $this->checkUpgraderValidity(
+                $this->moduleStatus->version,
+                $this->globalSetup->getInstallerIni()
+                    ->getValue($this->name.'.version.date', 'modules'),
+                $this->moduleInfos->version,
+                $this->moduleInfos->versionDate,
+                $upgrader->getTargetVersions(),
+                $upgrader->getDate()
+            );
+            if ($version === false) {
                 continue;
             }
 
-            $upgrader->setVersion($foundVersion);
-
-            // we have to check the date of versions
-            // we should not execute the updater in some case.
-            // for example, we have an updater for the 1.2 and 2.3 version
-            // we have the 1.4 installed, and want to upgrade to the 2.5 version
-            // we should not execute the update for 2.3 since modifications have already been
-            // made into the 1.4. The only way to know that, is to compare date of versions
-            if ($upgrader->getDate() != '') {
-                $upgraderDate = $this->_formatDate($upgrader->getDate());
-                // the date of the first version installed into the application
-                $firstVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()
-                    ->getValue($this->name.'.firstversion.date', 'modules'));
-
-                if ($firstVersionDate !== null) {
-                    if ($firstVersionDate >= $upgraderDate) {
-                        continue;
-                    }
-                }
-
-                // the date of the current installed version
-                $currentVersionDate = $this->_formatDate($this->globalSetup->getInstallerIni()
-                    ->getValue($this->name.'.version.date', 'modules'));
-                if ($currentVersionDate !== null) {
-                    if ($currentVersionDate >= $upgraderDate) {
-                        continue;
-                    }
-                }
-            }
+            $upgrader->setVersion($version);
 
             $class = get_class($upgrader);
             if (!isset($this->upgradersContexts[$class])) {
@@ -677,6 +605,74 @@ class ModuleInstallerLauncher
         }
 
         return $list;
+    }
+
+    /**
+     * @param string $currentVersion
+     * @param string $currentVersionDate
+     * @param string $newVersion
+     * @param string $newVersionDate
+     * @param string[] $upgraderTargetVersions
+     * @param string $upgraderDate
+     * @return false|string
+     */
+    protected function checkUpgraderValidity(
+        $currentVersion,
+        $currentVersionDate,
+        $newVersion,
+        $newVersionDate,
+        array $upgraderTargetVersions,
+        $upgraderDate
+    ) {
+        $foundVersion = '';
+        $severalTargets = count($upgraderTargetVersions) > 1;
+        // check the version
+        foreach ($upgraderTargetVersions as $version) {
+            $res = VersionComparator::compareVersion($currentVersion, $version);
+            if ($res > 0) {
+                // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
+                // but let's verify it another upgrader version targets the current one
+                continue;
+            }
+            if ($res == 0) { // the upgrader targets the current installed version, so we should not execute the upgrader
+                $foundVersion = '';
+                break;
+            }
+
+            if (VersionComparator::compareVersion($newVersion, $version) < 0) {
+                // we don't execute upgraders having a version higher than the version indicated in the module.xml
+                // but let's verify it another upgrader version targets the current one
+                continue;
+            }
+            if ($foundVersion == '' || VersionComparator::compareVersion($foundVersion, $version) > 0) {
+                $foundVersion = $version;
+            }
+        }
+        if ($foundVersion == '') {
+            return false;
+        }
+
+        // we have to check the date of versions
+        // we should not execute the updater in some case.
+        // for example, we have an updater for the 1.2 and 2.3 version
+        // we have the 1.4 installed, and want to upgrade to the 2.5 version
+        // we should not execute the update for 2.3 since modifications have already been
+        // made into the 1.4. The only way to know that, is to compare date of versions
+        if ($upgraderDate != '' && $severalTargets) {
+            $upgraderDate = $this->_formatDate($upgraderDate);
+
+            $newVersionDate = $this->_formatDate($newVersionDate);
+            if ($newVersionDate !== null && $newVersionDate < $upgraderDate) {
+                return false;
+            }
+
+            // the date of the current installed version
+            $currentVersionDate = $this->_formatDate($currentVersionDate);
+            if ($currentVersionDate !== null && $currentVersionDate >= $upgraderDate) {
+                return false;
+            }
+        }
+        return $foundVersion;
     }
 
     public function installFinished()

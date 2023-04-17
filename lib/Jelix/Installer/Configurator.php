@@ -225,7 +225,7 @@ class Configurator
         } else {
             $this->ok('configuration.end');
         }
-        $this->globalSetup->getUninstallerIni()->save();
+        $this->globalSetup->saveUninstallerIni();
 
         $this->endMessage();
 
@@ -296,7 +296,7 @@ class Configurator
         } else {
             $this->ok('configuration.end');
         }
-        $this->globalSetup->getUninstallerIni()->save();
+        $this->globalSetup->saveUninstallerIni();
 
         $this->endMessage();
 
@@ -663,7 +663,7 @@ class Configurator
         } else {
             $this->ok('configuration.end');
         }
-        $this->globalSetup->getUninstallerIni()->save();
+        $this->globalSetup->saveUninstallerIni();
         $this->endMessage();
 
         return $result;
@@ -755,6 +755,8 @@ class Configurator
                 /** @var Module\Configurator $configurator */
                 list($configurator, $component) = $item;
 
+                $this->notice('configuration.module.unconfigure.start', array($component->getName()));
+
                 if ($configurator) {
                     $this->globalSetup->setCurrentProcessedModule($component->getName());
                     if ($this->globalSetup->forLocalConfiguration()) {
@@ -768,7 +770,7 @@ class Configurator
                 }
                 $component->saveModuleStatus();
                 if ($shouldBackupUninstallScript) {
-                    $component->backupUninstallScript();
+                    $this->globalSetup->saveUninstallerData($component->getModuleStatus());
                 }
 
                 $this->saveConfigurationFiles($entryPoint);

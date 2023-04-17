@@ -1,7 +1,7 @@
 /**
  * @author       Laurent Jouanneau
  * @contributor  Julien Issler, Vincent viaud, Steven Jehannet
- * @copyright    2007-2020 Laurent Jouanneau
+ * @copyright    2007-2023 Laurent Jouanneau
  * @copyright    2008-2015 Julien Issler, 2011 Steven Jehannet, 2010 Vincent viaud
  * @link         https://jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -11,6 +11,24 @@ import jFormsJQErrorDecoratorHtml from './jFormsJQErrorDecoratorHtml.js';
 import jFormsJQ from './jFormsJQ.js';
 import $ from 'jquery';
 
+function jFormsJQControl(name, label) {
+    /** @var {string} name the ref value of the control */
+    this.name = name;
+    this.label = label;
+    this.required = false;
+    this.errInvalid = '';
+    this.errRequired = '';
+    this.minLength = -1;
+    this.maxLength = -1;
+    this.regexp = null;
+    this.readOnly = false;
+}
+
+jFormsJQControl.prototype.check = function (val, jfrm) {
+    return true;
+};
+
+
 /**
  * represents a form
  */
@@ -18,10 +36,10 @@ export default function jFormsJQForm(name, selector, id){
     // the jelix selector corresponding to the jforms object
     this.selector = selector;
 
-    // the jforms id (id given to jforms::get)
+    // the jforms id (id given to jForms::get())
     this.formId = id;
 
-    // the value of the id attribute
+    // the value of the id attribute: jforms_<module>_<name>
     this.name = name;
 
     this.controls = [];
@@ -35,12 +53,16 @@ export default function jFormsJQForm(name, selector, id){
     this.controlsToUpdate = [];
     this.preSubmitHandlers = [];
     this.postSubmitHandlers = [];
+
+    this.isSubmitWithXhr = false;
+    this.xhrValidFormCallback = null;
+    this.xhrFormInErrorCallback = null;
 }
 
 
 jFormsJQForm.prototype={
     /**
-     * @param jFormsJQControl ctrl
+     * @param {jFormsJQControl} ctrl
      */
     addControl : function(ctrl){
         this.controls.push(ctrl);
@@ -52,7 +74,24 @@ jFormsJQForm.prototype={
     },
 
     /**
-     * @return jFormsJQControl
+     * When the form will be submitted, data will be sent with XHR
+     *
+     * @param {Function} validFormCallback the function that will be called
+     *                  with the result of the http request, when the content of
+     *                  the formulaire is valid
+     * @param {Function} formInErrorCallback the function that will be called
+     *                  with the result of the http request, when the content of
+     *                  the formulaire is not valid
+     */
+    submitWithXHR: function(validFormCallback, formInErrorCallback){
+        this.isSubmitWithXhr = true;
+        this.xhrValidFormCallback = validFormCallback;
+        this.xhrFormInErrorCallback = formInErrorCallback;
+    },
+
+    /**
+     * @param {String} aControlName the ref value of the control
+     * @return {jFormsJQControl}
      */
     getControl : function(aControlName) {
         var ctrls = this.controls;
@@ -72,7 +111,7 @@ jFormsJQForm.prototype={
     /**
      * declare a list as a dynamic list: its possible values change when an
      * other control is modified.
-     * @param controlName name of the control corresponding to the html list to update
+     * @param {String} controlName the ref value of the control corresponding to the html list to update
      */
     declareDynamicFill : function (controlName) {
         var ctrl = this.getControl(controlName);
@@ -101,11 +140,11 @@ jFormsJQForm.prototype={
     },
 
     /**
-     * update the given list that depends from an other control.
+     * update the given list that depends on another control.
      *
      * Useful if you know that this list has changed at the backend side.
      *
-     * @param controlName the name of the list to update
+     * @param {String} controlName the ref value of the list to update
      */
     updateDynamicList : function(controlName) {
         var ctrl = this.getControl(controlName);
@@ -117,9 +156,9 @@ jFormsJQForm.prototype={
     },
 
     /**
-     * update the content of all elements which depends of the value of the given
+     * update the content of all elements which depends on the value of the given
      * control
-     * @param string controlName
+     * @param {String} controlName the ref value of the control
      */
     updateLinkedElements : function (controlName) {
         if (this.updateInProgress) // we don't want to call same ajax request...
@@ -131,6 +170,10 @@ jFormsJQForm.prototype={
         this.dynamicFillAjax();
     },
 
+    /**
+     *
+     * @param {String} controlName the ref value of the control
+     */
     buildOrderedControlsList : function(controlName) {
         // we should build a graph, to update elements in the right order
         this.controlsToUpdate = [];
@@ -240,5 +283,26 @@ jFormsJQForm.prototype={
         }
         else
             this.postSubmitHandlers.push(handler);
+    },
+
+    /**
+     *
+     * @param {object} errors each properties are the message string or message code
+     *                        properties names are the control ref name
+     */
+    setErrors : function(errors) {
+        let frm = this;
+        let errDec = this.errorDecorator;
+        errDec.start(this);
+        Object.keys(errors).forEach(
+            ref => errDec.addError(frm.getControl(ref), errors[ref])
+        )
+        errDec.end();
+    },
+
+    showSubmitError: function(message) {
+        this.errorDecorator.start(this);
+        this.errorDecorator.showSubmitError(message);
+        this.errorDecorator.end();
     }
 };
