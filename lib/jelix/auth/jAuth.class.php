@@ -49,7 +49,22 @@ class jAuth
     /**
      * Load the configuration of authentification, stored in the auth plugin config.
      *
-     * @param array $newconfig the configuration of jAuth
+     * The configuration is readed from the auth.coord.ini.php if it exists
+     * and indicated into the `coordplugin` section.
+     * or readed from the section `auth` from the main configuration
+     * or readed from the section `coordplugin_auth` from the main configuration
+     *
+     * The plugin configuration file can be merged with the section `auth`
+     * or `coordplugin_auth` if there is a `auth.mergeconfig`
+     * parameter in the `coordplugins` section.
+     *
+     * The driver to should be indicated into the `driver` configuration
+     * parameter from the auth.coord.ini.php file, or into the `driver` configuration
+     * of the `coordplugin_auth` section.
+     *
+     *
+     * @param array|null $newconfig a specific configuration of jAuth. If not given,
+     *                              configuration is readed from the files
      *
      * @throws jException
      *
@@ -157,7 +172,14 @@ class jAuth
     }
 
     /**
-     * @param array $authConfig
+     * read the configuration specific to the authentication driver
+     *
+     * the driver config is readed from the section named after the driver
+     * name, into $authconfig. Or into the `auth_<drivername>` from the
+     * main configuration.
+     *
+     * @param array $authConfig content of the auth.coord.ini.php or the `auth`
+     *                          section or the `coordplugin_auth` section;
      * @param object $appConfig
      * @return array|null
      */
