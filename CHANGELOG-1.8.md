@@ -1,10 +1,20 @@
-Changes into Jelix 1.8.0
-========================
+Changes into Jelix 1.8
+======================
+
+
+Next
+----
+
+* jacl2db: fix a bug when a right is forbidden. All rights were set to "forbid"
+  when a 'view' rights was forbidden.
+
+
+Jelix 1.8.0
+------------
 
 Released on April 17th, 2023
 
-Features
---------
+### Features
 
 * Jelix 1.8 is now compatible from PHP 7.4 to PHP 8.2.
 * Core: 
@@ -60,14 +70,14 @@ Features
 * Two new plugins for jTpl: `{ifacl2and}`, `{ifacl2or}`
 
 
-Removes
--------
+### Removes
+-----------
 
 * the template plugins `swfjs`, `swfbiscuit` and the script `jquery.flash.js`. Flash is dead, so no reason to keep these files.
 * `$GLOBALS['JELIX_EVENTS']` does not exists anymore
 
-Internal changes
-----------------
+### Internal changes
+---------------------
 
 * Upgrade Symfony Console to 5.2.1
 * Upgrade PHPUnit to 8.5 for our tests

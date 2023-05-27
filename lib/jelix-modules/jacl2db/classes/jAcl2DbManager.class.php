@@ -135,7 +135,7 @@ class jAcl2DbManager
         foreach ($subjects as $subject) {
             $matches = array();
             if (preg_match('/(.*)(\.view)$/', $subject->id_aclsbj, $matches)) {
-                $roots[] = $matches[1];
+                $roots[] = $matches[1].'.';
             }
         }
         $alreadyTreatedSbj = array();
@@ -147,7 +147,7 @@ class jAcl2DbManager
             } elseif ($val === true || $val == 'y') {
                 foreach ($roots as $root) {
                     if (strpos($sbj, $root) === 0) {
-                        $viewRight = $root.'.view';
+                        $viewRight = $root.'view';
                         self::addRight($group, $viewRight);
                         if (isset($oldrights[$viewRight])) {
                             unset($oldrights[$viewRight]);
@@ -160,17 +160,23 @@ class jAcl2DbManager
                 // cancel
                 $matches = array();
                 if (preg_match('/(.*)(\.view)$/', $sbj, $matches)) {
+                    $reg = '/^'.preg_quote($matches[1].'.').'/';
+                    //echo " remove $sbj  $reg \n";
                     foreach ($subjects as $subject) {
-                        if (preg_match('/^('.$matches[1].'.)/', $sbj)) {
+                        if (preg_match($reg, $subject->id_aclsbj)) {
+                            //echo "   $sbj  match $reg so remove it\n";
                             self::removeRight($group, $subject->id_aclsbj, '-', true);
                             $alreadyTreatedSbj[] = $subject->id_aclsbj;
+                            if (isset($oldrights[$subject->id_aclsbj])) {
+                                unset($oldrights[$subject->id_aclsbj]);
+                            }
                         }
                     }
                 }
                 if (isset($oldrights[$sbj])) {
                     unset($oldrights[$sbj]);
                 }
-                self::removeRight($group, $sbj, '', true);
+                self::removeRight($group, $sbj, '-', true);
             }
         }
 
