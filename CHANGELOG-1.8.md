@@ -7,6 +7,7 @@ Next
 
 * jacl2db: fix a bug when a right is forbidden. All rights were set to "forbid"
   when a 'view' rights was forbidden.
+* jacl2db_admin: fix applying forbidden state on "view" rights.
 
 
 Jelix 1.8.0
