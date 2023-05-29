@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0" import="jelix_tests~posts">
-    <record extends="jelix_tests~postBlog">
+    <record extends="\JelixTests\Tests\Dao\PostBlog">
         <!-- redefine author property -->
         <property name="author" fieldname="author" datatype="varchar" maxlength="100"/>
         <!-- add new property -->
