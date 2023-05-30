@@ -2,7 +2,7 @@
 /**
  * @author   Gérald Croes, Patrice Ferlet, Laurent Jouanneau, Dominique Papin, Steven Jehannet
  *
- * @copyright 2001-2005 CopixTeam, 2005-2022 Laurent Jouanneau, 2009 Dominique Papin
+ * @copyright 2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2009 Dominique Papin
  *
  * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -45,7 +45,7 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
             $eventName = get_class($event);
         }
 
-        if (!isset($hashListened[$eventName])) {
+        if (!isset($this->hashListened[$eventName])) {
             $this->loadListenersFor($eventName);
         }
 
