@@ -2,11 +2,13 @@ Changes into Jelix 1.8
 ======================
 
 
-Next
-----
+1.8.1
+------
+
+Released on may 30th, 2023
 
 * jEvent: support of any classes for listeners
-  The name of listener into a events.xml can be the full name of a class.
+  The name of listener into the events.xml can be the full name of a class.
   The class must have a namespace and must be autoloadable.
 * jDao: records can now extend from any classes. The `extends` attribute
   can now contain a class name instead of a record class selector.
