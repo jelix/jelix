@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="iso-8859-1"?>
 <events xmlns="http://jelix.org/ns/events/1.0">
-   <listener name="testevents">
+   <listener name="\JelixTests\Tests\Listener\TestEventsListener">
       <event name="TestEventWithParams" />
       <event name="TestEvent" />
        <event name="TestEventResponse" />

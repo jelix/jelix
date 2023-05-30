@@ -61,7 +61,7 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
 
     /**
      * List of listeners for each event
-     *  key = event name, value = array('moduleName', 'listenerName')
+     *  key = event name, value = array('moduleName', 'listener class name', 'listener name if class not autoloadable')
      * @var array|null
      */
     protected $listenersList = null;
@@ -88,17 +88,18 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
             $modules = & $this->config->_modulesPathList;
             $me = $this;
             foreach ($this->listenersList[$eventName] as $listener) {
-                list($module, $listenerName) = $listener;
+                list($module, $listenerClass, $oldListenerName) = $listener;
                 if (!isset($modules[$module])) {  // some modules could be unused
                     continue;
                 }
-                if (!isset($this->listenersSingleton[$module][$listenerName])) {
-                    require_once $modules[$module] . 'classes/' . $listenerName . '.listener.php';
-                    $className = $listenerName . 'Listener';
-                    $this->listenersSingleton[$module][$listenerName] = new $className();
+                if (!isset($this->listenersSingleton[$module][$listenerClass])) {
+                    if ($oldListenerName) {
+                        require_once $modules[$module] . 'classes/' . $oldListenerName . '.listener.php';
+                    }
+                    $this->listenersSingleton[$module][$listenerClass] = new $listenerClass();
                 }
-                $this->hashListened[$eventName][] = function($event) use($me, $module, $listenerName) {
-                    $me->listenersSingleton[$module][$listenerName]->performEvent($event);
+                $this->hashListened[$eventName][] = function($event) use($me, $module, $listenerClass) {
+                    $me->listenersSingleton[$module][$listenerClass]->performEvent($event);
                 };
             }
         }

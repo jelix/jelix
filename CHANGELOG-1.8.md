@@ -5,8 +5,12 @@ Changes into Jelix 1.8
 Next
 ----
 
+* jEvent: support of any classes for listeners
+  The name of listener into a events.xml can be the full name of a class.
+  The class must have a namespace and must be autoloadable.
 * jDao: records can now extend from any classes. The `extends` attribute
-  can now contain a class name instead of a record class selector
+  can now contain a class name instead of a record class selector.
+  The class must have a namespace and must be autoloadable.
 * jEvent: fix loading of listener. They were instantiated at each notification. 
 * jacl2db: fix a bug when a right is forbidden. All rights were set to "forbid"
   when a 'view' rights was forbidden.

@@ -109,7 +109,7 @@ class eventsTest extends \Jelix\UnitTests\UnitTestCase
 
     function testDisabledListener()
     {
-        jApp::config()->disabledListeners['TestEvent'] = array('jelix_tests~testevents');
+        jApp::config()->disabledListeners['TestEvent'] = array('\JelixTests\Tests\Listener\TestEventsListener');
 
         $response = jEvent::notify('TestEvent');
         $response = $response->getResponse();
@@ -118,7 +118,7 @@ class eventsTest extends \Jelix\UnitTests\UnitTestCase
 
     function testSingleDisabledListener()
     {
-        jApp::config()->disabledListeners['TestEvent'] = 'jelix_tests~testevents';
+        jApp::config()->disabledListeners['TestEvent'] = '\JelixTests\Tests\Listener\TestEventsListener';
 
         $response = jEvent::notify('TestEvent');
         $response = $response->getResponse();
