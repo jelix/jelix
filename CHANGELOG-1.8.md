@@ -8,7 +8,8 @@ Next
 * jacl2db: fix a bug when a right is forbidden. All rights were set to "forbid"
   when a 'view' rights was forbidden.
 * jacl2db_admin: fix applying forbidden state on "view" rights.
-
+* installer: fix default module configurator, it did not load installation parameters
+  and then, installers didn't have calculated parameters.
 
 Jelix 1.8.0
 ------------

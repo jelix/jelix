@@ -319,23 +319,22 @@ class ModuleInstallerLauncher
                     $this->moduleStatus->getPath(),
                     $this->moduleInfos->version
                 );
-
-                return $this->moduleConfigurator;
             }
+            else {
+                require_once $this->moduleStatus->getPath().'install/configure.php';
 
-            require_once $this->moduleStatus->getPath().'install/configure.php';
+                $cname = $this->name.'ModuleConfigurator';
+                if (!class_exists($cname)) {
+                    throw new Exception('module.configurator.class.not.found', array($cname, $this->name));
+                }
 
-            $cname = $this->name.'ModuleConfigurator';
-            if (!class_exists($cname)) {
-                throw new Exception('module.configurator.class.not.found', array($cname, $this->name));
+                $this->moduleConfigurator = new $cname(
+                    $this->name,
+                    $this->name,
+                    $this->moduleStatus->getPath(),
+                    $this->moduleInfos->version
+                );
             }
-
-            $this->moduleConfigurator = new $cname(
-                $this->name,
-                $this->name,
-                $this->moduleStatus->getPath(),
-                $this->moduleInfos->version
-            );
 
             // setup installation parameters
             $parameters = $this->moduleConfigurator->getDefaultParameters();
