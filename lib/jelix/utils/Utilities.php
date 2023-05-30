@@ -55,7 +55,7 @@ function utf8_decode($str)
    }
    else {
        // WARNING, utf8_decode is deprecated
-       $str  = utf8_decode($str);
+       $str  = \utf8_decode($str);
    }
    return $str;
 }
@@ -71,7 +71,7 @@ function utf8_encode($str)
     }
     else {
         // WARNING, utf8_encode is deprecated
-        $str  = utf8_encode($str);
+        $str  = \utf8_encode($str);
     }
     return $str;
 }
