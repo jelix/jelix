@@ -17,6 +17,11 @@ Next
 * jacl2db_admin: fix applying forbidden state on "view" rights.
 * installer: fix default module configurator, it did not load installation parameters
   and then, installers didn't have calculated parameters.
+* Upgrade PHPMailer to 6.8
+* Upgrade jQuery to 3.7.0
+* Upgrade Datatables to 1.13.4
+* Upgrade Ckeditor to 38.0.1
+
 
 Jelix 1.8.0
 ------------
@@ -88,7 +93,7 @@ Released on April 17th, 2023
 ### Internal changes
 ---------------------
 
-* Upgrade Symfony Console to 5.2.1
+* Upgrade Symfony Console to 5.4
 * Upgrade PHPUnit to 8.5 for our tests
 * Upgrade PHPMailer to 6.6.*
 * Upgrade Jquery to 3.6.1
