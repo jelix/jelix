@@ -159,17 +159,7 @@ class ConfigurationHelpers extends PreConfigurationHelpers
         } else {
             $newEpPath = App::wwwPath($epFile);
             if (!file_exists($newEpPath)) {
-                $this->copyFile($entryPointModelFile, $newEpPath);
-
-                // change the path to application.init.php into the entrypoint
-                // depending on the application, the path of www/ is not always at the same place, relatively to
-                // application.init.php
-                $appInitFile = App::applicationInitFile();
-                $relativePath = \Jelix\FileUtilities\Path::shortestPath(App::wwwPath(), dirname($appInitFile).'/');
-
-                $epCode = file_get_contents($newEpPath);
-                $epCode = preg_replace('#(require\s*\(?\s*[\'"])(.*)(application\.init\.php)([\'"])#m', '\\1'.$relativePath.'/'.basename($appInitFile).'\\4', $epCode);
-                file_put_contents($newEpPath, $epCode);
+                $this->updateOrCreateEntryPointFile($entryPointModelFile, $newEpPath);
             }
         }
 
@@ -196,19 +186,20 @@ class ConfigurationHelpers extends PreConfigurationHelpers
      * @param string $epType              type of the entry point (classic)
      *
      * @throws \Exception
-     * @since 1.7.11
+     * @since 1.7.16
      */
     public function removeEntryPoint(
         $entryPointWebPath,
         $configFileName,
         $epType = 'classic'
-    ) {
+    )
+    {
 
         if (substr($entryPointWebPath, -4) == '.php') {
             $epFile = $entryPointWebPath;
             $epId = substr($entryPointWebPath, 0, -4);
         } else {
-            $epFile = $entryPointWebPath.'.php';
+            $epFile = $entryPointWebPath . '.php';
             $epId = $entryPointWebPath;
         }
 
@@ -231,5 +222,46 @@ class ConfigurationHelpers extends PreConfigurationHelpers
 
         // undeclare the entry point
         $this->globalSetup->undeclareEntryPoint($epId);
+    }
+
+    /**
+     * @param string $entryPointModelFile path to the entrypoint file to copy, from the install directory
+     * @since 1.7.16
+     */
+    public function updateEntryPointFile($entryPointModelFile, $entryPointWebPath, $epType = 'classic')
+    {
+        if (substr($entryPointWebPath, -4) == '.php') {
+            $epFile = $entryPointWebPath;
+        } else {
+            $epFile = $entryPointWebPath.'.php';
+        }
+
+        if ($epType == 'cmdline') {
+            if (!file_exists(App::scriptsPath($epFile))) {
+                $this->copyFile($entryPointModelFile, App::scriptsPath($epFile));
+            }
+        } else {
+            $epPath = App::wwwPath($epFile);
+            if (!file_exists($epPath)) {
+                throw new \Exception('The entrypoint '.$entryPointModelFile. ' cannot be updated, as it doesn\'t exist');
+            }
+            $this->updateOrCreateEntryPointFile($entryPointModelFile, $epPath);
+        }
+    }
+
+    protected function updateOrCreateEntryPointFile($entryPointFile, $epPath)
+    {
+        // copy the entrypoint and its configuration
+        $this->copyFile($entryPointFile, $epPath, true);
+
+        // change the path to application.init.php into the entrypoint
+        // depending on the application, the path of www/ is not always at the same place, relatively to
+        // application.init.php
+        $appInitFile = App::applicationInitFile();
+        $relativePath = \Jelix\FileUtilities\Path::shortestPath(App::wwwPath(), dirname($appInitFile).'/');
+
+        $epCode = file_get_contents($epPath);
+        $epCode = preg_replace('#(require\s*\(?\s*[\'"])(.*)(application\.init\.php)([\'"])#m', '\\1'.$relativePath.'/'.basename($appInitFile).'\\4', $epCode);
+        file_put_contents($epPath, $epCode);
     }
 }

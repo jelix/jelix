@@ -19,7 +19,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertInstanceOf('postDaoRecord', $post);
         $this->assertInstanceOf('postDaoRecord', $blogPost);
         $this->assertInstanceOf('postDaoRecord', $trackerPost);
-        $this->assertInstanceOf('postBlogDaoRecord', $blogPost);
+        $this->assertInstanceOf('\JelixTests\Tests\Dao\PostBlog', $blogPost);
         $this->assertInstanceOf('postTrackerDaoRecord', $trackerPost);
 
         $postDao = jDao::create('jelix_tests~posts');
@@ -33,7 +33,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertInstanceOf('postDaoRecord', $post);
         $this->assertInstanceOf('postDaoRecord', $blogPost);
         $this->assertInstanceOf('postDaoRecord', $trackerPost);
-        $this->assertInstanceOf('postBlogDaoRecord', $blogPost);
+        $this->assertInstanceOf('\JelixTests\Tests\Dao\PostBlog', $blogPost);
         $this->assertInstanceOf('postTrackerDaoRecord', $trackerPost);
     }
     
@@ -634,7 +634,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
                             $postBlogParser->getOuterJoins());
         $this->assertEquals(array(),
                             $postBlogParser->getInnerJoins());
-        $this->assertEquals('jelix_tests~postBlog',
+        $this->assertEquals('\JelixTests\Tests\Dao\PostBlog',
                             $postBlogParser->getCustomRecord()->toString());
         $daos = $postBlogParser->getImportedDao();
         $this->assertEquals('jelix_tests~posts',

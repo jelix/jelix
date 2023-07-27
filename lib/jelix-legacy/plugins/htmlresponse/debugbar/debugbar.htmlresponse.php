@@ -145,7 +145,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin
      */
     public function atBottom()
     {
-        $css = '';
+        $css = file_get_contents(__DIR__.'/debugbar.css');
         $js = '';
         foreach ($this->plugins as $name => $plugin) {
             $css .= $plugin->getCSS();
@@ -153,12 +153,11 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin
         }
         echo "<style type=\"text/css\">\n";
 
-        require __DIR__.'/debugbar.css';
         $LOGOBULLETPLUS = base64_encode(file_get_contents(__DIR__.'/icons/bullet_toggle_plus.png'));
         $LOGOBULLETMINUS = base64_encode(file_get_contents(__DIR__.'/icons/bullet_toggle_minus.png'));
-        echo "ul.jxdb-list li h5 a {background-image: url('data:image/png;base64,".$LOGOBULLETPLUS."');}\n";
-        echo "ul.jxdb-list li.jxdb-opened  h5 a {background-image: url('data:image/png;base64,".$LOGOBULLETMINUS."');}\n";
-        echo $css."\n</style>\n";
+        $css .=  "ul.jxdb-list li h5 a {background-image: url('data:image/png;base64,".$LOGOBULLETPLUS."');}\n";
+        $css .=  "ul.jxdb-list li.jxdb-opened  h5 a {background-image: url('data:image/png;base64,".$LOGOBULLETMINUS."');}\n";
+        echo preg_replace("/(\\s+)/", " ", $css)."\n</style>\n";
 
         echo "<script type=\"text/javascript\">\n//<![CDATA[\n";
 

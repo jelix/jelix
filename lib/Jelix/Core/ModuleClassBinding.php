@@ -16,8 +16,7 @@ namespace Jelix\Core;
 /**
  * Services binding for jelix.
  *
- * @experimental  This class is EXPERIMENTAL. Its API and its behaviors could
- * change in future version
+ * @deprecated
  */
 class ModuleClassBinding
 {

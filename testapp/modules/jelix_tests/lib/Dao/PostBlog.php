@@ -1,7 +1,9 @@
 <?php 
+namespace  JelixTests\Tests\Dao;
 
-require_once(__DIR__.'/post.daorecord.php');
-abstract class postBlogDaoRecord extends postDaoRecord {
+require_once(__DIR__.'/../../daos/post.daorecord.php');
+
+abstract class PostBlog extends \postDaoRecord {
     
     function publish() {
         $this->status = 'published';

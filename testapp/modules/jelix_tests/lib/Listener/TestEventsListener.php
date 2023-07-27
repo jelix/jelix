@@ -4,12 +4,13 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2007 Laurent Jouanneau
+* @copyright   2006-2023 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+namespace  JelixTests\Tests\Listener;
 
-class testeventsListener extends jEventListener{
+class TestEventsListener extends \jEventListener{
 
    /**
    *
@@ -27,8 +28,8 @@ class testeventsListener extends jEventListener{
    }
 
    function onTestEventResponse($event) {
-       if (isset(eventResponseToReturn::$responses['jelix_tests'])) {
-           $event->add(eventResponseToReturn::$responses['jelix_tests']);
+       if (isset(\eventResponseToReturn::$responses['jelix_tests'])) {
+           $event->add(\eventResponseToReturn::$responses['jelix_tests']);
        }
    }
 

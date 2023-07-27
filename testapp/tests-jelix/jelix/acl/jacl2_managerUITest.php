@@ -2446,4 +2446,245 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 
     }
 
+
+
+
+    public function testSetForbiddenRight()
+    {
+        jAuth::login('theadmin', 'pwd', false);
+        $mgr = new jAcl2DbAdminUIManager();
+
+        $mgr->setRightsOnGroup(array(), 'users', 'theadmin');
+        $newRights = $mgr->getGroupRights();
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => '',
+                ),
+                'acl.group.modify' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'acl.user.view' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'acl.user.modify' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'acl.group.view' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => '',
+                ),
+                'super.cms.delete' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => '',
+                ),
+                'super.cms.list' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'super.cms.update' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+            ),
+            $newRights['rights']
+        );
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array(),
+                'acl.group.modify' => array(),
+                'acl.user.view'    => array(),
+                'acl.user.modify'  => array(),
+                'acl.group.view'   => array(),
+                'super.cms.delete' => array(),
+                'super.cms.list'   => array(),
+                'super.cms.update' => array(),
+            ),
+            $newRights['rightsWithResources']
+        );
+
+
+        $mgr->setRightsOnGroup(array(
+            'acl.group.view'   => 'n',
+        ),'users' , 'theadmin');
+
+        $newRights = $mgr->getGroupRights();
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => 'n',
+                ),
+                'acl.group.modify' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => 'n',
+                ),
+                'acl.user.view' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'acl.user.modify' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'acl.group.view' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => 'n',
+                ),
+                'super.cms.delete' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => '',
+                ),
+                'super.cms.list' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'super.cms.update' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+            ),
+            $newRights['rights']
+        );
+
+
+        // set rights again
+        $mgr->setRightsOnGroup(array(
+            'acl.group.view'   => 'n',
+            'acl.group.delete'   => 'n',
+            'acl.group.modify'   => 'n',
+        ),'users' , 'theadmin');
+
+        $newRights = $mgr->getGroupRights();
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => 'n',
+                ),
+                'acl.group.modify' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => 'n',
+                ),
+                'acl.user.view' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'acl.user.modify' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'acl.group.view' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => 'n',
+                ),
+                'super.cms.delete' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => '',
+                ),
+                'super.cms.list' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'super.cms.update' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+            ),
+            $newRights['rights']
+        );
+    }
+
+
+    public function testRemoveForbiddenRight()
+    {
+        jAuth::login('theadmin', 'pwd', false);
+        $mgr = new jAcl2DbAdminUIManager();
+
+        $mgr->setRightsOnGroup(array(
+            'acl.group.view'   => 'n',
+        ),'users' , 'theadmin');
+
+        // set rights again
+        $mgr->setRightsOnGroup(array(
+            'acl.group.view'   => 'y',
+            'acl.group.delete'   => 'n',
+            'acl.group.modify'   => 'n',
+        ),'users' , 'theadmin');
+
+        $newRights = $mgr->getGroupRights();
+        $this->assertEquals(
+            array(
+                'acl.group.delete' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => 'n',
+                ),
+                'acl.group.modify' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => 'n',
+                ),
+                'acl.user.view' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'acl.user.modify' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'acl.group.view' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => 'y',
+                ),
+                'super.cms.delete' => array(
+                    '__anonymous' => false,
+                    'admins'      => '',
+                    'users'       => '',
+                ),
+                'super.cms.list' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+                'super.cms.update' => array(
+                    '__anonymous' => false,
+                    'admins'      => 'y',
+                    'users'       => '',
+                ),
+            ),
+            $newRights['rights']
+        );
+    }
 }

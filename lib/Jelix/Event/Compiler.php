@@ -35,7 +35,16 @@ class Compiler implements \Jelix\Core\Includer\MultiFileCompilerInterface
             if (isset($xml->listener)) {
                 foreach ($xml->listener as $listener) {
                     $listenerName = (string) $listener['name'];
-                    $selector = $module.'~'.$listenerName;
+                    if (strpos($listenerName, '\\') !== false) {
+                        $selector = $listenerName;
+                        $listenerClass = $listenerName;
+                        $oldListenerName = false;
+                    }
+                    else {
+                        $selector = $module.'~'.$listenerName;
+                        $listenerClass = $listenerName.'Listener';
+                        $oldListenerName = $listenerName;
+                    }
                     foreach ($listener->event as $eventListened) {
                         $name = (string) $eventListened['name'];
                         if (isset($config[$name])) {
@@ -48,7 +57,7 @@ class Compiler implements \Jelix\Core\Includer\MultiFileCompilerInterface
                             }
                         }
                         // key = event name ,  value = list of file listener
-                        $this->eventList[$name][] = array($module, $listenerName);
+                        $this->eventList[$name][] = array($module, $listenerClass, $oldListenerName);
                     }
                 }
             }
