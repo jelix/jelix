@@ -690,7 +690,16 @@ class GlobalSetup
         }
     }
 
-    public function removeEntryPoint($epId)
+    /**
+     * Undeclare an entry point.
+     *
+     * @param string $epId
+     * @param string $epType
+     * @param string $configFileName
+     *
+     * @throws \Exception
+     */
+    public function undeclareEntryPoint($epId)
     {
         if (strpos($epId, '.php') !== false) {
             $epId = substr($epId, 0, -4);
@@ -706,11 +715,8 @@ class GlobalSetup
 
         unset($this->entryPoints[$epId]);
 
-        if ($this->forLocalConfiguration()) {
-            $this->urlLocalMapModifier->removeEntryPoint($epId);
-        } else {
-            $this->urlMapModifier->removeEntryPoint($epId);
-        }
+        $this->urlLocalMapModifier->removeEntryPoint($epId);
+        $this->urlMapModifier->removeEntryPoint($epId);
     }
 
     protected $installerContexts = array();

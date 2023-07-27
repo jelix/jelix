@@ -178,6 +178,51 @@ class ConfigurationHelpers extends PreConfigurationHelpers
     }
 
     /**
+     * Remove an entry point that was installed by a module
+     *
+     * @param string $entryPointWebPath   the path of the entrypoint to create into the www directory
+     * @param string $configFileName      name of the configuration file. path relative to app/system or var/config
+     * @param string $epType              type of the entry point (classic)
+     *
+     * @throws \Exception
+     * @since 1.7.16
+     */
+    public function removeEntryPoint(
+        $entryPointWebPath,
+        $configFileName,
+        $epType = 'classic'
+    ) {
+
+        if (substr($entryPointWebPath, -4) == '.php') {
+            $epFile = $entryPointWebPath;
+            $epId = substr($entryPointWebPath, 0, -4);
+        } else {
+            $epFile = $entryPointWebPath.'.php';
+            $epId = $entryPointWebPath;
+        }
+
+        if ($epType == 'cmdline') {
+            if (file_exists(\jApp::scriptsPath($epFile))) {
+                unlink(\jApp::scriptsPath($epFile));
+            }
+        } else {
+            $newEpPath = \jApp::wwwPath($epFile);
+            if (file_exists($newEpPath)) {
+                unlink($newEpPath);
+            }
+        }
+
+        // remove the configuration file
+        $configFilePath = $this->configFilePath($configFileName);
+        if (file_exists($configFilePath)) {
+            unlink($configFilePath);
+        }
+
+        // undeclare the entry point
+        $this->globalSetup->undeclareEntryPoint($epId);
+    }
+
+    /**
      * @param string $entryPointModelFile path to the entrypoint file to copy, from the install directory
      */
     public function updateEntryPointFile($entryPointModelFile, $entryPointWebPath, $epType = 'classic')

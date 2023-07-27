@@ -7,6 +7,7 @@ Next
 * Support of a default `Reply-To` header into jMailer
 * new method `ConfigurationHelpers::updateEntryPointFile()`
 * new method `InstallHelpers::updateEntryPointFile()` and `InstallHelpers::removeEntryPoint()`
+* backport method `ConfigurationHelpers::removeEntryPoint()`
 * Update header of API documentation
 * Fix `Jelix\Utilities\utf8_*` functions
 

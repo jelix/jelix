@@ -91,21 +91,14 @@ class XmlMapModifier
         $ep = $this->getEntryPoint($name);
         if ($ep) {
 
-            if (($pos = strpos($name, '.php')) !== false) {
-                $name = substr($name, 0, $pos);
+            $xmlEp = $ep->getDomElement();
+            $parent = $xmlEp->parentNode;
+            if ($xmlEp->previousSibling && $xmlEp->previousSibling->nodeType == XML_TEXT_NODE) {
+                // remove indentation
+                $parent->removeChild($xmlEp->previousSibling);
             }
-            foreach ($this->document->documentElement->childNodes as $item) {
-                if ($item->nodeType != XML_ELEMENT_NODE) {
-                    continue;
-                }
-
-                if (preg_match('/^.*entrypoint$/', $item->localName)
-                    && $item->getAttribute('name') == $name
-                ) {
-                    $item->remove();
-                    break;
-                }
-            }
+            $parent->removeChild($xmlEp);
+            $this->modified = true;
         }
     }
 

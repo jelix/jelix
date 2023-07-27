@@ -127,7 +127,7 @@ class InstallHelpers extends PreInstallHelpers
 
     public function removeEntryPoint($entryPointName)
     {
-        $this->globalSetup->removeEntryPoint($entryPointName);
+        $this->globalSetup->undeclareEntryPoint($entryPointName);
     }
 
 }
