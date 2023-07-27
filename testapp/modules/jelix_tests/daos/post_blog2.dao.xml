@@ -4,7 +4,7 @@
         <!-- we declare the same table to see if properties are ok after parsing -->
         <primarytable name="posts" realname="posts" primarykey="id" />
     </datasources>
-    <record extends="jelix_tests~postBlog">
+    <record extends="\JelixTests\Tests\Dao\PostBlog">
         <property name="id" fieldname="id" datatype="int" required="true"/>
         <!-- redefine author property -->
         <property name="author" fieldname="author" datatype="varchar" maxlength="100"/>

@@ -1,11 +1,36 @@
-Changes into Jelix 1.8.0
-========================
-
-Not released yet.
+Changes into Jelix 1.8
+======================
 
 
-Features
---------
+1.8.1
+------
+
+Released on may 30th, 2023
+
+* jEvent: support of any classes for listeners
+  The name of listener into the events.xml can be the full name of a class.
+  The class must have a namespace and must be autoloadable.
+* jDao: records can now extend from any classes. The `extends` attribute
+  can now contain a class name instead of a record class selector.
+  The class must have a namespace and must be autoloadable.
+* jEvent: fix loading of listener. They were instantiated at each notification. 
+* jacl2db: fix a bug when a right is forbidden. All rights were set to "forbid"
+  when a 'view' rights was forbidden.
+* jacl2db_admin: fix applying forbidden state on "view" rights.
+* installer: fix default module configurator, it did not load installation parameters
+  and then, installers didn't have calculated parameters.
+* Upgrade PHPMailer to 6.8
+* Upgrade jQuery to 3.7.0
+* Upgrade Datatables to 1.13.4
+* Upgrade Ckeditor to 38.0.1
+
+
+Jelix 1.8.0
+------------
+
+Released on April 17th, 2023
+
+### Features
 
 * Jelix 1.8 is now compatible from PHP 7.4 to PHP 8.2.
 * Core: 
@@ -61,16 +86,16 @@ Features
 * Two new plugins for jTpl: `{ifacl2and}`, `{ifacl2or}`
 
 
-Removes
--------
+### Removes
+-----------
 
 * the template plugins `swfjs`, `swfbiscuit` and the script `jquery.flash.js`. Flash is dead, so no reason to keep these files.
 * `$GLOBALS['JELIX_EVENTS']` does not exists anymore
 
-Internal changes
-----------------
+### Internal changes
+---------------------
 
-* Upgrade Symfony Console to 5.2.1
+* Upgrade Symfony Console to 5.4
 * Upgrade PHPUnit to 8.5 for our tests
 * Upgrade PHPMailer to 6.6.*
 * Upgrade Jquery to 3.6.1

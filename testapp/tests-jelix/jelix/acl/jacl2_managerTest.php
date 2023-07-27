@@ -301,7 +301,11 @@ class jacl2_managerTest extends \Jelix\UnitTests\UnitTestCaseDb {
         jAcl2DbManager::setRightsOnGroup('group1', $rights);
 
         $expectedRights = array(
+            array('id_aclsbj'=>'super.cms.list' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.update' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.create' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
             array('id_aclsbj'=>'super.cms.view' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
+            array('id_aclsbj'=>'super.cms.delete' ,'id_aclgrp'=>'group1', 'id_aclres'=> '-', 'canceled'=>'1'),
         );
         $this->assertTableContainsRecords('jacl2_rights', $expectedRights);
 

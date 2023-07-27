@@ -9,7 +9,7 @@
  * @contributor Julien Issler, Guillaume Dugas
  * @contributor Philippe Villiers
  *
- * @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
  * @copyright  2007-2008 Julien Issler
  * This class was get originally from the Copix project (CopixDAOGeneratorV1, Copix 2.3dev20050901, http://www.copix.org)
  * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -130,8 +130,14 @@ class jDaoGenerator
         //-----------------------
         $userRecord = $this->_dataParser->getUserRecord();
         if ($userRecord) {
-            $src[] = ' require_once (\''.$userRecord->getPath().'\');';
-            $extendedObject = $userRecord->resource.'DaoRecord';
+            $classPath = $userRecord->getPath();
+            if ($classPath) {
+                $src[] = ' require_once (\''.$userRecord->getPath().'\');';
+                $extendedObject = $userRecord->resource.'DaoRecord';
+            }
+            else {
+                $extendedObject = $userRecord->resource;
+            }
         } else {
             $extendedObject = 'jDaoRecordBase';
         }

@@ -7,7 +7,7 @@ use Testapp\Tests\EventForTest;
  * @subpackage  jelix_tests module
  * @author      Laurent Jouanneau
  * @contributor
- * @copyright   2006-2012 Laurent Jouanneau
+ * @copyright   2006-2023 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -109,7 +109,7 @@ class eventsTest extends \Jelix\UnitTests\UnitTestCase
 
     function testDisabledListener()
     {
-        jApp::config()->disabledListeners['TestEvent'] = array('jelix_tests~testevents');
+        jApp::config()->disabledListeners['TestEvent'] = array('\JelixTests\Tests\Listener\TestEventsListener');
 
         $response = jEvent::notify('TestEvent');
         $response = $response->getResponse();
@@ -118,7 +118,7 @@ class eventsTest extends \Jelix\UnitTests\UnitTestCase
 
     function testSingleDisabledListener()
     {
-        jApp::config()->disabledListeners['TestEvent'] = 'jelix_tests~testevents';
+        jApp::config()->disabledListeners['TestEvent'] = '\JelixTests\Tests\Listener\TestEventsListener';
 
         $response = jEvent::notify('TestEvent');
         $response = $response->getResponse();
@@ -131,4 +131,11 @@ class eventsTest extends \Jelix\UnitTests\UnitTestCase
         jEvent::notify($event);
         $this->assertEquals('onTestEventObject called', $event->getDummyValue());
     }
+
+    function testEventHavingNoListener()
+    {
+        $response = jEvent::notify('eventhavingnolistener');
+        $this->assertEquals(array(), $response->getResponse());
+    }
+
 }

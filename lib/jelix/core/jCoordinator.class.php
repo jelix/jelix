@@ -531,6 +531,15 @@ class jCoordinator
     /**
      * return the configuration of a plugin for the coordinator.
      *
+     * This is the content of the configuration file of the plugin if it is
+     * given,
+     * or the content of the section `<pluginname>` from the main configuration
+     * or the content of the section `coordplugin_<pluginname>` from the main configuration
+     *
+     * The plugin configuration file can be merged with the section `<pluginname>`
+     * or `coordplugin_<pluginname>` if there is a `<pluginname>.mergeconfig`
+     * parameter in the `coordplugins` section.
+     *
      * @param string $pluginName
      *
      * @throws Exception when the configuration filename is not found
