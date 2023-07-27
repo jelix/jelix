@@ -86,6 +86,29 @@ class XmlMapModifier
         return $ep;
     }
 
+    public function removeEntryPoint($name)
+    {
+        $ep = $this->getEntryPoint($name);
+        if ($ep) {
+
+            if (($pos = strpos($name, '.php')) !== false) {
+                $name = substr($name, 0, $pos);
+            }
+            foreach ($this->document->documentElement->childNodes as $item) {
+                if ($item->nodeType != XML_ELEMENT_NODE) {
+                    continue;
+                }
+
+                if (preg_match('/^.*entrypoint$/', $item->localName)
+                    && $item->getAttribute('name') == $name
+                ) {
+                    $item->remove();
+                    break;
+                }
+            }
+        }
+    }
+
     public function setNewDefaultEntryPoint($name, $type)
     {
         $entrypoints = $this->getEntryPointsOfType($type);

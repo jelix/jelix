@@ -690,6 +690,29 @@ class GlobalSetup
         }
     }
 
+    public function removeEntryPoint($epId)
+    {
+        if (strpos($epId, '.php') !== false) {
+            $epId = substr($epId, 0, -4);
+        }
+
+        $ep = $this->frameworkInfos->getEntryPointInfo($epId);
+        if (!$ep) {
+            return;
+        }
+
+        $this->frameworkInfos->removeEntryPointInfo($epId);
+        $this->frameworkInfos->save();
+
+        unset($this->entryPoints[$epId]);
+
+        if ($this->forLocalConfiguration()) {
+            $this->urlLocalMapModifier->removeEntryPoint($epId);
+        } else {
+            $this->urlMapModifier->removeEntryPoint($epId);
+        }
+    }
+
     protected $installerContexts = array();
 
     public function getInstallerContexts($moduleName)
