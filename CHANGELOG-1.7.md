@@ -4,6 +4,14 @@ Changes into Jelix 1.7
 Next
 ----
 
+* Support of a default `Reply-To` header into jMailer
+* new method `ConfigurationHelpers::updateEntryPointFile()`
+* new method `InstallHelpers::updateEntryPointFile()` and `InstallHelpers::removeEntryPoint()`
+* Update header of API documentation
+* Fix `Jelix\Utilities\utf8_*` functions
+
+
+
 Jelix 1.7.15
 ------------
 
