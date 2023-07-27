@@ -830,6 +830,7 @@ class GlobalSetup
         $this->frameworkInfos->save();
 
         unset($this->entryPoints[$epId]);
+
         $this->urlLocalMapModifier->removeEntryPoint($epId);
         $this->urlMapModifier->removeEntryPoint($epId);
     }
