@@ -2,6 +2,20 @@ Changes into Jelix 1.8
 ======================
 
 
+Next
+----
+
+* Fix the display of the debugbar, when having long lines
+
+Improvements and bug fix from Jelix 1.7:
+
+* Support of a default `Reply-To` header into jMailer
+* new method `ConfigurationHelpers::updateEntryPointFile()`
+* new method `InstallHelpers::updateEntryPointFile()` and `InstallHelpers::removeEntryPoint()`
+* Update header of API documentation
+* Fix `Jelix\Utilities\utf8_*` functions
+
+
 1.8.1
 ------
 
