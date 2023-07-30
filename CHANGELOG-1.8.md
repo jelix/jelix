@@ -2,8 +2,8 @@ Changes into Jelix 1.8
 ======================
 
 
-Next
-----
+1.8.2
+-----
 
 * Fix the display of the debugbar, when having long lines
 
@@ -14,6 +14,8 @@ Improvements and bug fix from Jelix 1.7:
 * new method `InstallHelpers::updateEntryPointFile()` and `InstallHelpers::removeEntryPoint()`
 * Update header of API documentation
 * Fix `Jelix\Utilities\utf8_*` functions
+* tests: fix error into the ldap docker image at startup
+* tests: fix a warning in upgraderValidityTest with PHP 8.2
 
 
 1.8.1
