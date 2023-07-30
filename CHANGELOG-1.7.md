@@ -10,8 +10,9 @@ Next
 * backport method `ConfigurationHelpers::removeEntryPoint()`
 * Update header of API documentation
 * Fix `Jelix\Utilities\utf8_*` functions
-
-
+* Update some packages with their minor versions.
+* tests: fix error into the ldap docker image at startup
+* tests: fix a warning in upgraderValidityTest with PHP 8.2
 
 Jelix 1.7.15
 ------------
