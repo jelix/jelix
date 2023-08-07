@@ -1,6 +1,12 @@
 Changes into Jelix 1.8
 ======================
 
+Next
+----
+
+* New method `setHtmlAttributes()` on the `jResponseHtml` class, to set attributes on
+the `<html>` element.
+
 
 1.8.2
 -----
