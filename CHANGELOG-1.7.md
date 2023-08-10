@@ -4,6 +4,11 @@ Changes into Jelix 1.7
 Next
 ----
 
+* Fix regression into the debugging of jMailer: the output was not made anymore into logs
+
+Jelix 1.7.16
+-------------
+
 * Support of a default `Reply-To` header into jMailer
 * new method `ConfigurationHelpers::updateEntryPointFile()`
 * new method `InstallHelpers::updateEntryPointFile()` and `InstallHelpers::removeEntryPoint()`
