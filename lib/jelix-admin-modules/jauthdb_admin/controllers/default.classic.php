@@ -422,6 +422,8 @@ class defaultCtrl extends jController
             jAuth::updateUser($daoUser);
 
             $form->saveAllFiles($this->uploadsDirectory);
+            jEvent::notify('jauthdbAdminAfterUpdate', array('form' => $form, 'user' => $daoUser));
+
             jMessage::add(jLocale::get('crud.message.update.ok', $login), 'notice');
             jForms::destroy($this->form, $login);
 

@@ -6,7 +6,7 @@ Next
 
 * New method `setHtmlAttributes()` on the `jResponseHtml` class, to set attributes on
 the `<html>` element.
-
+* jauthdb_admin module: New event `jauthdbAdminAfterUpdate` when properties of a user has changed.
 
 1.8.2
 -----
