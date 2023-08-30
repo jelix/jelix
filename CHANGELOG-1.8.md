@@ -9,6 +9,8 @@ the `<html>` element.
 * jauthdb_admin module: New event `jauthdbAdminAfterUpdate` when properties of a user has changed.
 * jauthdb: possibility to authenticate with the email or the login, if there is a configuration parameter
   `authenticateWith=login-email`.
+* jauthdb: the section `auth_<driver>` is now merged with the `<driver>` section of `auth.coord.ini.php`, so
+  we can redefine some configuration parameter of the `<driver>` section, into `localconfig.ini.php` for example.
 * Fix debugbar: elements at the same level of the debugbar were not clickable
 
 1.8.2

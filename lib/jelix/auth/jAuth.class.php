@@ -175,8 +175,8 @@ class jAuth
      * read the configuration specific to the authentication driver
      *
      * the driver config is readed from the section named after the driver
-     * name, into $authconfig. Or into the `auth_<drivername>` from the
-     * main configuration.
+     * name, into $authconfig. And into the `auth_<drivername>` from the
+     * main configuration. Both are merged if they exist both.
      *
      * @param array $authConfig content of the auth.coord.ini.php or the `auth`
      *                          section or the `coordplugin_auth` section;
@@ -186,17 +186,22 @@ class jAuth
     protected static function _buildDriverConfig($authConfig, $appConfig)
     {
         $driver = $authConfig['driver'];
+        $driverConfig = array();
         if (isset($authConfig[$driver]) && is_array($authConfig[$driver])) {
             $driverConfig = $authConfig[$driver];
-        } else {
-            $section = 'auth_'.strtolower($driver);
-            if (isset($appConfig->$section) && is_array($appConfig->$section)) {
-                $driverConfig = $appConfig->$section;
-            } else {
-                return null;
-            }
         }
 
+        $section = 'auth_'.strtolower($driver);
+        if (isset($appConfig->$section) && is_array($appConfig->$section)) {
+            $driverConfig = array_merge($driverConfig, $appConfig->$section);
+        }
+
+        if (!count($driverConfig)) {
+            return null;
+        }
+
+        // put the global password_hash_* values into the driver config
+        // so the driver access to it easily
         $driverConfig['password_hash_method'] = $authConfig['password_hash_method'];
         $driverConfig['password_hash_options'] = $authConfig['password_hash_options'];
 
