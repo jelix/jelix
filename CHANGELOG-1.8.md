@@ -8,7 +8,8 @@ Next
 the `<html>` element.
 * jauthdb_admin module: New event `jauthdbAdminAfterUpdate` when properties of a user has changed.
 * jauthdb: possibility to authenticate with the email or the login, if there is a configuration parameter
-  `authenticateWith=login-email`. 
+  `authenticateWith=login-email`.
+* Fix debugbar: elements at the same level of the debugbar were not clickable
 
 1.8.2
 -----
