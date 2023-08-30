@@ -13,6 +13,11 @@ the `<html>` element.
   we can redefine some configuration parameter of the `<driver>` section, into `localconfig.ini.php` for example.
 * Fix debugbar: elements at the same level of the debugbar were not clickable
 
+Improvements and bug fix from Jelix 1.7:
+
+* Fix regression into the debugging of jMailer: the output was not made anymore into logs
+
+
 1.8.2
 -----
 
