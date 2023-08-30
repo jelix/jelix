@@ -529,6 +529,8 @@ class jAuth
         }
 
         if ($user = $dr->verifyPassword($login, $password)) {
+            // the given login may be another property like email, so get the real login
+            $login = $user->login;
             $eventresp = jEvent::notify('AuthCanLogin', array('login' => $login, 'user' => $user));
             foreach ($eventresp->getResponse() as $rep) {
                 if (!isset($rep['canlogin']) || $rep['canlogin'] === false) {
