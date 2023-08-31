@@ -291,6 +291,7 @@ ident="php-%sapi%-%domain%[%pid%]"
 webmasterEmail="root@localhost"
 webmasterName=
 replyTo=
+returnPath=
 
 ; How to send mail : "mail" (mail()), "sendmail" (call sendmail), "smtp" (send directly to a smtp)
 ;                   or "file" (store the mail into a file, in filesDir directory)

@@ -178,6 +178,10 @@ class jMailer extends \PHPMailer\PHPMailer\PHPMailer
             $this->From = $config->mailer['webmasterEmail'];
         }
 
+        if ($config->mailer['returnPath'] != '') {
+            $this->Sender = $config->mailer['returnPath'];
+        }
+
         $this->FromName = $config->mailer['webmasterName'];
         $this->filePath = jApp::varPath($config->mailer['filesDir']);
 
