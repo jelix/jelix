@@ -24,4 +24,9 @@ class jFormsControlReset extends jFormsControl
     {
         return null;
     }
+
+    public function isModified()
+    {
+        return false;
+    }
 }
