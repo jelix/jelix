@@ -4,6 +4,7 @@ Changes into Jelix 1.7
 Next
 ----
 
+* Fix regression into `jFormsBase::getModifiedControls()`: some controls like submit were considered as modified  although it does not make sens
 * Fix regression into the debugging of jMailer: the output was not made anymore into logs
 
 Jelix 1.7.16
