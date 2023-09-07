@@ -6,6 +6,7 @@ Next
 
 * New method `setHtmlAttributes()` on the `jResponseHtml` class, to set attributes on
 the `<html>` element.
+* New method `getFileResponse()` in `jController` to ease to return a file as a response
 * jauthdb_admin module: New event `jauthdbAdminAfterUpdate` when properties of a user has changed.
 * jauthdb: possibility to authenticate with the email or the login, if there is a configuration parameter
   `authenticateWith=login-email`.
@@ -16,6 +17,7 @@ the `<html>` element.
 
 Improvements and bug fix from Jelix 1.7:
 
+* Fix regression into `jFormsBase::getModifiedControls()`: some controls like submit were considered as modified  although it does not make sens
 * Fix regression into the debugging of jMailer: the output was not made anymore into logs
 
 
