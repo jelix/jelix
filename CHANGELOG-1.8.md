@@ -14,6 +14,7 @@ the `<html>` element.
   we can redefine some configuration parameter of the `<driver>` section, into `localconfig.ini.php` for example.
 * new configuration parameter to set default value for the `Return-Path` header into jMailer. 
 * Fix debugbar: elements at the same level of the debugbar were not clickable
+* jForms: fix generated JS into choice, upload2 and group widgets
 
 Improvements and bug fix from Jelix 1.7:
 
