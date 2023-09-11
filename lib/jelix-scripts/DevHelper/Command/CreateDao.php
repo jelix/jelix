@@ -121,7 +121,12 @@ class CreateDao extends \Jelix\DevHelper\AbstractCommandForApp
                 }
 
                 if ($prop->hasDefault) {
-                    $properties .= ' default="'.htmlspecialchars($prop->default).'"';
+                    if ($prop->default === null) {
+                        $properties .= ' default="null"';
+                    }
+                    else {
+                        $properties .= ' default="'.htmlspecialchars($prop->default).'"';
+                    }
                 }
                 if ($prop->length) {
                     $properties .= ' maxlength="'.$prop->length.'"';
