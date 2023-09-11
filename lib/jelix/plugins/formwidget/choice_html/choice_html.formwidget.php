@@ -257,7 +257,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
     {
         echo '<li class="jforms-item-controls">';
         $widget->outputLabel('', false);
-        echo ':';
+        echo ': ';
         $widget->outputControlValue();
         echo "</li>\n";
     }
