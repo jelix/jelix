@@ -16,6 +16,7 @@ the `<html>` element.
     `authenticateWith=login-email`.
   * the section `auth_<driver>` is now merged with the `<driver>` section of `auth.coord.ini.php`, so
     we can redefine some configuration parameter of the `<driver>` section, into `localconfig.ini.php` for example.
+  * new method `getDao()` on the jAuth `db` driver
 * new configuration parameter to set default value for the `Return-Path` header into jMailer. 
 * Fix debugbar: elements at the same level of the debugbar were not clickable
 * jForms: fix generated JS into choice, upload2 and group widgets

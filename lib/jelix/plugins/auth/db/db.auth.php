@@ -123,4 +123,9 @@ class dbAuthDriver extends jAuthDriverBase implements jIAuthDriver
 
         return $user;
     }
+
+    public function getDao()
+    {
+        return jDao::get($this->_params['dao'], $this->_params['profile']);
+    }
 }
