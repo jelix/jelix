@@ -7,8 +7,8 @@ Next
 * Fix regression into `jFormsBase::getModifiedControls()`: some controls like submit were considered as modified  although it does not make sens
 * Fix regression into the debugging of jMailer: the output was not made anymore into logs
 * Fix error in create:dao command with nullable fields
-* Fix jforms choice widget, display control value: add a space betwen label and value.
-
+* Fix jforms choice widget, display control value: add a space between label and value.
+* Fix some PHP warning about passing null values to htmlspecialchars
 
 Jelix 1.7.16
 -------------
