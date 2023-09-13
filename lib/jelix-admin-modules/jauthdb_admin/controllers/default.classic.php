@@ -5,7 +5,7 @@
  * @subpackage jauthdb_admin
  *
  * @author    Laurent Jouanneau
- * @copyright 2009-2022 Laurent Jouanneau
+ * @copyright 2009-2023 Laurent Jouanneau
  *
  * @see      http://jelix.org
  *
@@ -286,10 +286,12 @@ class defaultCtrl extends jController
 
             $form->setData('password', $user->password);
             $form->prepareObjectFromControls($user, $props);
-            $form->saveAllFiles($this->uploadsDirectory);
 
             jAuth::saveNewUser($user);
             jEvent::notify('jauthdbAdminAfterCreate', array('form' => $form, 'user' => $user));
+
+            // it will save files that are not already saved by listeners of jauthdbAdminAfterCreate
+            $form->saveAllFiles($this->uploadsDirectory);
 
             jForms::destroy($this->form);
             jMessage::add(jLocale::get('crud.message.create.ok', $user->login), 'notice');
@@ -421,8 +423,10 @@ class defaultCtrl extends jController
             // all process, events...
             jAuth::updateUser($daoUser);
 
-            $form->saveAllFiles($this->uploadsDirectory);
             jEvent::notify('jauthdbAdminAfterUpdate', array('form' => $form, 'user' => $daoUser));
+
+            // it will save files that are not saved by listeners of jauthdbAdminAfterUpdate
+            $form->saveAllFiles($this->uploadsDirectory);
 
             jMessage::add(jLocale::get('crud.message.update.ok', $login), 'notice');
             jForms::destroy($this->form, $login);

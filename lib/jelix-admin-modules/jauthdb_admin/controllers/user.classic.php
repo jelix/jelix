@@ -5,7 +5,7 @@
  * @subpackage jauthdb_admin
  *
  * @author    Laurent Jouanneau
- * @copyright 2009-2022 Laurent Jouanneau
+ * @copyright 2009-2023 Laurent Jouanneau
  *
  * @see      http://jelix.org
  *
@@ -230,14 +230,21 @@ class userCtrl extends jController
         $form->initFromRequest();
 
         $evresp = array();
-        if ($form->check() && !jEvent::notify('jauthdbAdminCheckUpdateForm', array('form' => $form, 'himself' => true))->inResponse('check', false, $evresp)) {
+        if ($form->check()
+            && !jEvent::notify('jauthdbAdminCheckUpdateForm', array('form' => $form, 'himself' => true))
+                ->inResponse('check', false, $evresp)
+        ) {
             $form->prepareObjectFromControls($daoUser, $daoUser->getProperties());
 
             // we call jAuth instead of using jDao, to allow jAuth to do
             // all process, events...
             jAuth::updateUser($daoUser);
 
+            jEvent::notify('jauthdbAdminAfterUpdate', array('form' => $form, 'user' => $daoUser));
+
+            // it will save files that are not already saved by listeners of jauthdbAdminAfterUpdate
             $form->saveAllFiles($this->uploadsDirectory);
+
             jMessage::add(jLocale::get('crud.message.update.ok', $login), 'notice');
             jForms::destroy($this->form, $login);
 
