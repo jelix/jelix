@@ -73,7 +73,7 @@ class textarea_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         if ($this->ctrl->isHtmlContent()) {
             echo $value;
         } else {
-            echo nl2br(htmlspecialchars($value));
+            echo nl2br(htmlspecialchars($value===null?'':$value));
         }
 
         echo '</div>';
