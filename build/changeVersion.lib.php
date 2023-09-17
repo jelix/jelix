@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  * @link        http://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
  */
@@ -96,9 +96,9 @@ class ChangeVersion {
         }
         else if ($process == 'JELIX_VERSION') {
             $content = file_get_contents($path);
-            preg_replace(
+            $content = preg_replace(
                 "/(define\s*\\('JELIX_VERSION',\s*')([^']+)('\\);)/",
-                "\\1".$version->toString()."\\2",
+                '${1}'.$version->toString().'${3}',
                 $content);
             file_put_contents($path, $content);
         }

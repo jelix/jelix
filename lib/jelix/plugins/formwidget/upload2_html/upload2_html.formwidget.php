@@ -121,7 +121,7 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
         }
         $this->parentWidget->addJs("c.required = true;\n");
         $this->parentWidget->addJs($jFormsJsVarName.".tForm.addControl(c);\n");
-        $this->parentWidget->addJs("c2 = c;\n");
+        $this->parentWidget->addJs("(function(up){let c;\n");
     }
 
     protected function outputJs()
@@ -227,7 +227,7 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
                 $this->_outputControlValue($choices['keep'], 'original');
             }
             $this->displayEndChoiceItem();
-            $this->parentWidget->addJs("c2.items['keep']=[];\n");
+            $this->parentWidget->addJs("up.items['keep']=[];\n");
         }
 
         if (isset($choices['keepnew'])) {
@@ -241,7 +241,7 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
 
             $this->_outputControlValue($choices['keepnew'], 'new');
             $this->displayEndChoiceItem();
-            $this->parentWidget->addJs("c2.items['keepnew']=[];\n");
+            $this->parentWidget->addJs("up.items['keepnew']=[];\n");
         }
 
         $this->displayStartChoiceItem(
@@ -256,7 +256,7 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
 
         $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n");
         $this->parentWidget->addJs($this->commonGetJsConstraints());
-        $this->parentWidget->addJs("c2.addControl(c, 'new');\n");
+        $this->parentWidget->addJs("up.addControl(c, 'new');\n");
 
         if (isset($choices['del'])) {
             $this->displayStartChoiceItem(
@@ -267,10 +267,10 @@ class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implemen
                 jLocale::get('jelix~jforms.upload.choice.del')
             );
             $this->displayEndChoiceItem();
-            $this->parentWidget->addJs("c2.items['del']=[];\n");
+            $this->parentWidget->addJs("up.items['del']=[];\n");
         }
 
-        $this->parentWidget->addJs("c2.activate('".$action."');\n");
+        $this->parentWidget->addJs("up.activate('".$action."');})(c);\n");
 
         $this->displayEndChoice();
     }

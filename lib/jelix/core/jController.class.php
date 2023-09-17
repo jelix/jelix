@@ -7,7 +7,7 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  *
- * @copyright   2005-2022 Laurent Jouanneau, 2006 Loic Mathaud
+ * @copyright   2005-2023 Laurent Jouanneau, 2006 Loic Mathaud
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -185,7 +185,7 @@ abstract class jController
      */
     protected function redirectToUrl($url, $temporary = true)
     {
-        /** @var \jResponseRedirectUrl */
+        /** @var \jResponseRedirectUrl $response */
         $response = $this->request->getResponse('redirectUrl');
         $response->url = $url;
         $response->temporary = $temporary;
@@ -202,12 +202,52 @@ abstract class jController
      */
     protected function redirect($action, $parameters = [], $anchor = '', $temporary = true)
     {
-        /** @var \jResponseRedirect */
+        /** @var \jResponseRedirect $response */
         $response = $this->request->getResponse('redirect');
         $response->action = $action;
         $response->params = $parameters;
         $response->temporary = $temporary;
         $response->anchor = $anchor;
         return $response;
+    }
+
+    /**
+     * Return the given file as a response.
+     *
+     * It reads the file content and will return it into the HTTP Response.
+     * Mimetype will be set. Can use HTTP cache optionally.
+     *
+     * Returns a 404 response if the file does not exists.
+     *
+     * @param string $filename path to the file
+     * @param bool $useCache true if http cache must be activated, based on the
+     * date of the file.
+     * @return jResponseBinary|jResponseHtml
+     */
+    protected function getFileResponse($filename, $useCache = true)
+    {
+        if (!is_file($filename)) {
+            $rep = $this->getResponse('html', true);
+            $rep->bodyTpl = 'jelix~404.html';
+            $rep->setHttpStatus('404', 'Not Found');
+
+            return $rep;
+        }
+
+        $rep = $this->getResponse('binary');
+
+        if ($useCache) {
+            $dateModif = new DateTime();
+            $dateModif->setTimestamp(filemtime($filename));
+            if ($rep->isValidCache($dateModif)) {
+                return $rep;
+            }
+        }
+
+        $rep->doDownload = false;
+        $rep->fileName = $filename;
+        $rep->mimeType = \Jelix\FileUtilities\File::getMimeTypeFromFilename($rep->fileName);
+
+        return $rep;
     }
 }

@@ -1,6 +1,50 @@
 Changes into Jelix 1.8
 ======================
 
+Next
+----
+
+* New method `setHtmlAttributes()` on the `jResponseHtml` class, to set attributes on
+the `<html>` element.
+* New method `getFileResponse()` in `jController` to ease to return a file as a response
+* jauthdb_admin module: 
+  * New event `jauthdbAdminAfterUpdate` when properties of a user has changed.
+  * Fix: uploaded files should be saved after the events `jauthdbAdminAfterCreate` and `jauthdbAdminAfterUpdate`,
+    so listeners can save uploaded files into directories other than into the default one.
+* jauthdb: 
+  * possibility to authenticate with the email or the login, if there is a configuration parameter
+    `authenticateWith=login-email`.
+  * the section `auth_<driver>` is now merged with the `<driver>` section of `auth.coord.ini.php`, so
+    we can redefine some configuration parameter of the `<driver>` section, into `localconfig.ini.php` for example.
+  * new method `getDao()` on the jAuth `db` driver
+* new configuration parameter to set default value for the `Return-Path` header into jMailer. 
+* Fix debugbar: elements at the same level of the debugbar were not clickable
+* jForms: fix generated JS into choice, upload2 and group widgets
+
+Improvements and bug fix from Jelix 1.7:
+
+* Fix regression into `jFormsBase::getModifiedControls()`: some controls like submit were considered as modified  although it does not make sens
+* Fix regression into the debugging of jMailer: the output was not made anymore into logs
+* Fix error in create:dao command with nullable fields
+* Fix jforms choice widget, display control value: add a space betwen label and value.
+* Fix some PHP warning about passing null values to htmlspecialchars
+* Fix the version into the JELIX_VERSION constant. It was not updated in the latest release.
+
+1.8.2
+-----
+
+* Fix the display of the debugbar, when having long lines
+
+Improvements and bug fix from Jelix 1.7:
+
+* Support of a default `Reply-To` header into jMailer
+* new method `ConfigurationHelpers::updateEntryPointFile()`
+* new method `InstallHelpers::updateEntryPointFile()` and `InstallHelpers::removeEntryPoint()`
+* Update header of API documentation
+* Fix `Jelix\Utilities\utf8_*` functions
+* tests: fix error into the ldap docker image at startup
+* tests: fix a warning in upgraderValidityTest with PHP 8.2
+
 
 1.8.1
 ------

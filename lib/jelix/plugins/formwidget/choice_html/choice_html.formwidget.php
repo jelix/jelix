@@ -28,15 +28,16 @@ use Jelix\Forms\HtmlWidget\WidgetInterface;
  * c = new jFormsJQControlChoice('choice2', 'Another choice');
  * c.errInvalid='"Another choice" field is invalid';
  * jFormsJQ.tForm.addControl(c);
- * c2 = c;
- * c2.items['choice1']=[];
- * c2.addControl(c, 'choice2');
- * c2.addControl(c, 'choice2');
- * c2.addControl(c, 'choice2');
- * c2.addControl(c, 'choice3');
- * c2.addControl(c, 'choice4');
- * c2.addControl(c, 'choice4');
- * c2.activate('');
+ * (function(ch){
+ * ch.items['choice1']=[];
+ * ch.addControl(c, 'choice2');
+ * ch.addControl(c, 'choice2');
+ * ch.addControl(c, 'choice2');
+ * ch.addControl(c, 'choice3');
+ * ch.addControl(c, 'choice4');
+ * ch.addControl(c, 'choice4');
+ * ch.activate('');
+ * })(c);
  */
 class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements \jelix\forms\HtmlWidget\ParentWidgetInterface
 {
@@ -76,7 +77,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
 
         $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlChoice('".$this->ctrl->ref."', ".$this->escJsStr($this->ctrl->label).");\n");
         $this->commonJs();
-        $this->parentWidget->addJs("c2 = c;\n");
+        $this->parentWidget->addJs("(function(ch){let c;\n");
     }
 
     public function outputControl()
@@ -141,17 +142,17 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
                 $widget = $this->builder->getWidget($c, $this);
                 $displayedControls = true;
                 $this->displayControl($widget);
-                $this->parentWidget->addJs('c2.addControl(c, '.$this->escJsStr($itemName).");\n");
+                $this->parentWidget->addJs('ch.addControl(c, '.$this->escJsStr($itemName).");\n");
             }
             if (!$displayedControls) {
-                $this->parentWidget->addJs('c2.items['.$this->escJsStr($itemName)."]=[];\n");
+                $this->parentWidget->addJs('ch.items['.$this->escJsStr($itemName)."]=[];\n");
             }
 
             $this->displayEndChoiceItem();
             ++$i;
         }
         $this->displayEndChoice();
-        $this->parentWidget->addJs("c2.activate('".$value."');\n");
+        $this->parentWidget->addJs("ch.activate('".$value."');})(c);\n");
     }
 
     public function outputControlValue()
@@ -257,7 +258,7 @@ class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implement
     {
         echo '<li class="jforms-item-controls">';
         $widget->outputLabel('', false);
-        echo ':';
+        echo ': ';
         $widget->outputControlValue();
         echo "</li>\n";
     }

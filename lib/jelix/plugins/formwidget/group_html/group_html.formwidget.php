@@ -62,7 +62,7 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
         if ($this->ctrl->hasCheckbox) {
             $this->parentWidget->addJs("c.hasCheckbox = true;\n");
         }
-        $this->parentWidget->addJs("c2 = c;\n");
+        $this->parentWidget->addJs("(function(gr){let c;\n");
     }
 
     public function outputLabel($format = '', $editMode = true)
@@ -115,12 +115,12 @@ class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements
             $widget = $this->builder->getWidget($c, $this);
             $this->displayChildControl($widget);
             if ($this->ctrl->hasCheckbox) {
-                $this->parentWidget->addJs("c2.addControl(c);\n");
+                $this->parentWidget->addJs("gr.addControl(c);\n");
             }
         }
         $this->displayEndGroup();
         if ($this->ctrl->hasCheckbox) {
-            $this->parentWidget->addJs("c2.showActivate();\n");
+            $this->parentWidget->addJs("gr.showActivate();})(c);\n");
         }
     }
 

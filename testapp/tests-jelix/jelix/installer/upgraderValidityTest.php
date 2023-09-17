@@ -58,6 +58,8 @@ class testUpgraderComponentModule3 extends \Jelix\Installer\ModuleInstallerLaunc
 
 class upgraderValidityTest extends \Jelix\UnitTests\UnitTestCase
 {
+    public $globalSetup;
+
     function setUp() : void {
         self::initJelixConfig();
         $this->globalSetup = new testInstallerGlobalSetup();

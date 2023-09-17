@@ -115,6 +115,9 @@ filteredProperties="login,email"
 ; should be related to the var directory of the application
 uploadsDirectory=
 
+; login or login-email
+;authenticateWith=login-email
+
 ;------- parameters for the "Class" driver
 [Class]
 ; selector of the class

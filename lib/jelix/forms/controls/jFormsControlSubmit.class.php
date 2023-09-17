@@ -42,4 +42,11 @@ class jFormsControlSubmit extends jFormsControlDatasource
         }
         $this->setData($value);
     }
+
+    public function isModified()
+    {
+        // it does not make sens to compare old and new value, it has never an old value.
+        return false;
+    }
+
 }

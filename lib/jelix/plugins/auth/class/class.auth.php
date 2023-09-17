@@ -170,7 +170,17 @@ class classAuthDriver extends jAuthDriverBase implements jIAuthDriver
             return false;
         }
         $class = jClasses::create($this->_params['class']);
-        $user = $class->getByLogin($login);
+
+        if (isset($this->_params['authenticateWith']) &&
+            $this->_params['authenticateWith'] == 'login-email' &&
+            method_exists($class, 'getByLoginOrEmail'))
+        {
+            $user = $class->getByLoginOrEmail($login);
+        }
+        else {
+            $user = $class->getByLogin($login);
+        }
+
         if (!$user) {
             return false;
         }
@@ -183,7 +193,7 @@ class classAuthDriver extends jAuthDriverBase implements jIAuthDriver
         if ($result !== true) {
             // it is a new hash for the password, let's update it persistently
             $user->password = $result;
-            $class->updatePassword($login, $result);
+            $class->updatePassword($user->login, $result);
         }
 
         return $user;
