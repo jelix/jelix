@@ -9,7 +9,12 @@
 </ul>
 
 {*, array('errorDecorator'=>'myErrorDecorator')*}
-{form $form,'sampleform:save', array(), $builder, array('plugins'=>array('explanation' => 'textarea_as_input_html'))}
+{form $form,'sampleform:save', array(), $builder, array(
+'plugins'=>array(
+   'explanation' => 'textarea_as_input_html',
+    'pwd' => 'password_html',
+    'pwd2' => 'passwordeditor_html'
+))}
     {formcontrols}
     <div>{ctrl_label '', '%s: '} {ctrl_control}</div>
     {/formcontrols}

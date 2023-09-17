@@ -17,7 +17,11 @@ the `<html>` element.
   * the section `auth_<driver>` is now merged with the `<driver>` section of `auth.coord.ini.php`, so
     we can redefine some configuration parameter of the `<driver>` section, into `localconfig.ini.php` for example.
   * new method `getDao()` on the jAuth `db` driver
-* new configuration parameter to set default value for the `Return-Path` header into jMailer. 
+* new configuration parameter to set default value for the `Return-Path` header into jMailer.
+* new jforms widget: `password_html` for `secret` controls. Adds a "view" button aside the input.
+* new jforms widget: `passwordeditor_html` for `secret` controls. It checks the strength of the
+  password, by calculating the entropy, and by comparing the edited password against a list of the most 
+  used passwords. Adds also three buttons:  a "view" button, a "regenerate" button, and a "copy" button.
 * Fix debugbar: elements at the same level of the debugbar were not clickable
 * jForms: fix generated JS into choice, upload2 and group widgets
 
