@@ -4,14 +4,25 @@ Changes into Jelix 1.7
 Next
 ----
 
+* Fix regression into `jFormsBase::getModifiedControls()`: some controls like submit were considered as modified  although it does not make sens
+* Fix regression into the debugging of jMailer: the output was not made anymore into logs
+* Fix error in create:dao command with nullable fields
+* Fix jforms choice widget, display control value: add a space between label and value.
+* Fix some PHP warning about passing null values to htmlspecialchars
+* Fix the version into the JELIX_VERSION constant. It was not updated in the latest release.
+
+Jelix 1.7.16
+-------------
+
 * Support of a default `Reply-To` header into jMailer
 * new method `ConfigurationHelpers::updateEntryPointFile()`
 * new method `InstallHelpers::updateEntryPointFile()` and `InstallHelpers::removeEntryPoint()`
 * backport method `ConfigurationHelpers::removeEntryPoint()`
 * Update header of API documentation
 * Fix `Jelix\Utilities\utf8_*` functions
-
-
+* Update some packages with their minor versions.
+* tests: fix error into the ldap docker image at startup
+* tests: fix a warning in upgraderValidityTest with PHP 8.2
 
 Jelix 1.7.15
 ------------

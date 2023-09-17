@@ -9,7 +9,10 @@ Features
 Removes
 -------
 
-* deprecate jClassBinding
+Deprecated API and features
+---------------------------
+
+* jClassBinding
 
 Internal changes
 ----------------

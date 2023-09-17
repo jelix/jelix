@@ -95,7 +95,17 @@ class dbAuthDriver extends jAuthDriverBase implements jIAuthDriver
             return false;
         }
         $daouser = jDao::get($this->_params['dao'], $this->_params['profile']);
-        $user = $daouser->getByLogin($login);
+
+        if (isset($this->_params['authenticateWith']) &&
+            $this->_params['authenticateWith'] == 'login-email' &&
+            method_exists($daouser, 'getByLoginOrEmail'))
+        {
+            $user = $daouser->getByLoginOrEmail($login);
+        }
+        else {
+            $user = $daouser->getByLogin($login);
+        }
+
         if (!$user) {
             return false;
         }
@@ -108,9 +118,14 @@ class dbAuthDriver extends jAuthDriverBase implements jIAuthDriver
         if ($result !== true) {
             // it is a new hash for the password, let's update it persistently
             $user->password = $result;
-            $daouser->updatePassword($login, $result);
+            $daouser->updatePassword($user->login, $result);
         }
 
         return $user;
+    }
+
+    public function getDao()
+    {
+        return jDao::get($this->_params['dao'], $this->_params['profile']);
     }
 }

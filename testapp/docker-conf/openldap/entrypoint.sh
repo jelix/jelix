@@ -58,7 +58,8 @@ EOF
 
     base_string="BASE ${dc_string:1}"
 
-    sed -i "s/^#BASE.*/${base_string}/g" /etc/ldap/ldap.conf
+    echo $base_string > /etc/ldap/ldap.conf
+    echo "TLS_CACERT	/etc/ssl/certs/ca-certificates.crt" >> /etc/ldap/ldap.conf
 
     if [[ -n "$SLAPD_CONFIG_PASSWORD" ]]; then
         password_hash=`slappasswd -s "${SLAPD_CONFIG_PASSWORD}"`

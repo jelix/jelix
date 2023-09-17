@@ -51,6 +51,6 @@
      {
          echo '<span ';
          $this->_outputAttr($outputAttr);
-         echo '>',htmlspecialchars($value),"</span>\n";
+         echo '>',htmlspecialchars($value===null?'':$value),"</span>\n";
      }
  }

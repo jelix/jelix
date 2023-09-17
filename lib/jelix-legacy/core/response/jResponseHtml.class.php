@@ -7,7 +7,7 @@
  * @contributor Yann, Dominique Papin
  * @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah, Brice Tence
  *
- * @copyright   2005-2022 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+ * @copyright   2005-2023 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
  * @copyright   2008 Warren Seine, Alexis Métaireau
  * @copyright   2009 Julien Issler, Olivier Demah
  * @copyright   2010 Brice Tence
@@ -75,11 +75,19 @@ class jResponseHtml extends jResponseBasicHtml
 
     /**
      * body attributes
-     * This attributes are written on the body tags.
+     * These attributes are written on the body tag.
      *
      * @var array
      */
     public $bodyTagAttributes = array();
+
+    /**
+     * html attributes
+     * These attributes are written on the html tag.
+     *
+     * @var array
+     */
+    public $htmlTagAttributes = array();
 
     /**
      * @var string indicate the value for the X-UA-Compatible meta element, which
@@ -608,6 +616,22 @@ class jResponseHtml extends jResponseBasicHtml
     }
 
     /**
+     * set attributes on the html tag.
+     *
+     * @param array $attrArray an associative array of attributes and their values
+     */
+    public function setHtmlAttributes($attrArray)
+    {
+        if (is_array($attrArray)) {
+            foreach ($attrArray as $attr => $value) {
+                if (!is_numeric($attr)) {
+                    $this->htmlTagAttributes[$attr] = $value;
+                }
+            }
+        }
+    }
+
+    /**
      * set attributes on the body tag.
      *
      * @param array $attrArray an associative array of attributes and their values
@@ -724,11 +748,18 @@ class jResponseHtml extends jResponseBasicHtml
     {
         echo '<!DOCTYPE HTML>', "\n";
         $locale = str_replace('_', '-', $this->_locale);
+        $this->htmlTagAttributes['lang'] = $locale;
         if ($this->_isXhtml) {
-            echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$locale,'" lang="',$locale,'">'."\n";
+            echo '<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="',$locale,'" ';
         } else {
-            echo '<html lang="',$locale,'">'."\n";
+            echo '<html ';
         }
+
+        foreach ($this->htmlTagAttributes as $attr => $value) {
+            echo $attr,'="', htmlspecialchars($value, ENT_COMPAT | ENT_SUBSTITUTE),'" ';
+        }
+
+        echo ">\n";
     }
 
     protected function outputJsScriptTag($fileUrl, $scriptParams)

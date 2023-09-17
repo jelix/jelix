@@ -192,7 +192,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin
         echo '<a href="javascript:jxdb.close();"><img src="data:image/png;base64,'.$LOGOSTOP."\" alt=\"close\" title=\"click to close the debug toolbar\"/></a>\n"; ?>
     </div>
     <div id="jxdb-tabpanels">
-        <div id="jxdb-panel-jelix" class="jxdb-tabpanel" style="display:none">
+        <div id="jxdb-panel-jelix" class="jxdb-tabpanel">
             <ul>
                 <li>Jelix version: <?php echo jFramework::version(); ?></li>
                 <li>Move the debug bar <a id="jxdb-pjlx-a-right" href="javascript:jxdb.moveTo('r')">to right</a>
@@ -211,9 +211,7 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin
             echo '<div id="jxdb-panel-'.$item->id.'" class="jxdb-tabpanel"';
             if ($item->popupOpened && !$alreadyOpen) {
                 $alreadyOpen = true;
-                echo ' style="display:block"';
-            } else {
-                echo ' style="display:none"';
+                echo ' class="jxdb-tabpanel-displayed"';
             }
             echo '>', $item->popupContent;
             echo '</div>';

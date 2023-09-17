@@ -333,7 +333,7 @@ abstract class WidgetBase implements WidgetInterface
             echo substr($s, strlen($this->valuesSeparator));
         } elseif ($this->ctrl->isHtmlContent()) {
             echo $value;
-        } else {
+        } else if ($value !== null) {
             echo htmlspecialchars($value, ENT_COMPAT | ENT_SUBSTITUTE);
         }
         echo '</span>';
@@ -350,7 +350,7 @@ abstract class WidgetBase implements WidgetInterface
             echo substr($s, strlen($this->valuesSeparator));
         } elseif ($this->ctrl->type == 'password') {
             echo "*****";
-        } else {
+        } else if ($value !== null) {
             echo htmlspecialchars($value);
         }
     }

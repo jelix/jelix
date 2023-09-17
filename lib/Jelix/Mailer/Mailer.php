@@ -131,7 +131,6 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
         $this->Hostname = $config->mailer['hostname'];
         $this->Sendmail = $config->mailer['sendmailPath'];
         $this->debugModeEnabled = $config->mailer['debugModeEnabled'];
-        $this->Debugoutput = array($this, 'debugOutputCallback');
 
         if (strtolower($this->Mailer) == 'smtp') {
             if ($this->debugModeEnabled) {
@@ -181,6 +180,10 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
             $this->From = $config->mailer['webmasterEmail'];
         }
 
+        if ($config->mailer['returnPath'] != '') {
+            $this->Sender = $config->mailer['returnPath'];
+        }
+
         $this->FromName = $config->mailer['webmasterName'];
         $this->filePath = \Jelix\Core\App::varPath($config->mailer['filesDir']);
 
@@ -214,6 +217,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
         }
 
         parent::__construct(true);
+        $this->Debugoutput = array($this, 'debugOutputCallback');
     }
 
     /**

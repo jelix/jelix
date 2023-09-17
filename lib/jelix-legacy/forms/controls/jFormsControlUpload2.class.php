@@ -317,6 +317,8 @@ class jFormsControlUpload2 extends jFormsControl
      * If there is already a file with that name, it will be overwritten. If you don't want this behavior, you
      * can call getUniqueFileName to have a unique name.
      *
+     * This method should be idempotent.
+     *
      * @param string $directoryPath  the directory where the file is supposed to be stored
      * @param string $alternateName
      * @return bool

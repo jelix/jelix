@@ -30,4 +30,9 @@ class jFormsControlSwitch extends jFormsControlChoice
             }
         }
     }
+
+    public function isModified()
+    {
+        return false;
+    }
 }
