@@ -22,6 +22,7 @@ the `<html>` element.
 * new jforms widget: `passwordeditor_html` for `secret` controls. It checks the strength of the
   password, by calculating the entropy, and by comparing the edited password against a list of the most 
   used passwords. Adds also three buttons:  a "view" button, a "regenerate" button, and a "copy" button.
+* new method `jAcl2DbUserGroup::renameUser()`
 * Fix debugbar: elements at the same level of the debugbar were not clickable
 * jForms: fix generated JS into choice, upload2 and group widgets
 
