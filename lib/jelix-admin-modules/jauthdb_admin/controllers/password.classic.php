@@ -42,6 +42,11 @@ class passwordCtrl extends jController
             return $this->redirect('master_admin~default:index');
         }
 
+        if (\jApp::isModuleEnabled('jcommunity')) {
+            // jcommunity provides its own password change forms
+            return $this->redirect('master_admin~default:index');
+        }
+
         $rep = $this->getResponse('html');
 
         $tpl = new jTpl();
@@ -70,6 +75,11 @@ class passwordCtrl extends jController
         ) {
             jMessage::add(jLocale::get('jacl2~errors.action.right.needed'), 'error');
 
+            return $this->redirect('master_admin~default:index');
+        }
+
+        if (\jApp::isModuleEnabled('jcommunity')) {
+            // jcommunity provides its own password change forms
             return $this->redirect('master_admin~default:index');
         }
 
