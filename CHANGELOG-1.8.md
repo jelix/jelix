@@ -12,6 +12,7 @@ the `<html>` element.
   * Fix: uploaded files should be saved after the events `jauthdbAdminAfterCreate` and `jauthdbAdminAfterUpdate`,
     so listeners can save uploaded files into directories other than into the default one.
   * Fix Security issue: disable completely the password change form when jCommunity is installed
+  * Use a jForms form for password change
 * jauthdb: 
   * possibility to authenticate with the email or the login, if there is a configuration parameter
     `authenticateWith=login-email`.

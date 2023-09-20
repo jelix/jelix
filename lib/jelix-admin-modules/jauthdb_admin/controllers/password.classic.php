@@ -28,8 +28,6 @@ class passwordCtrl extends jController
     {
         $login = $this->param('j_user_login');
         if ($login === null) {
-            $rep = $this->getResponse('redirect');
-
             return $this->redirect('master_admin~default:index');
         }
 
@@ -49,8 +47,10 @@ class passwordCtrl extends jController
 
         $rep = $this->getResponse('html');
 
+        $form = jForms::create('jauthdb_admin~password_change', $login);
         $tpl = new jTpl();
         $tpl->assign('id', $login);
+        $tpl->assign('form', $form);
         $tpl->assign('randomPwd', jAuth::getRandomPassword());
         $tpl->assign('personalview', $personalView);
         if ($personalView) {
@@ -66,8 +66,6 @@ class passwordCtrl extends jController
     public function update()
     {
         $login = $this->param('j_user_login');
-        $pwd = $this->param('pwd');
-        $pwdconf = $this->param('pwd_confirm');
 
         $personalView = $this->isPersonalView();
         if (($personalView && $login != jAuth::getUserSession()->login)
@@ -83,13 +81,13 @@ class passwordCtrl extends jController
             return $this->redirect('master_admin~default:index');
         }
 
-        if (trim($pwd) == '' || $pwd != $pwdconf) {
-            jMessage::add(jLocale::get('crud.message.bad.password'), 'error');
-
+        $form = jForms::fill('jauthdb_admin~password_change', $login);
+        if (!$form || !$form->check()) {
             return $this->redirect('password:index', ['j_user_login' => $login]);
         }
-
+        $pwd = $form->getData('pwd');
         if (jAuth::changePassword($login, $pwd)) {
+            jForms::destroy('jauthdb_admin~password_change', $login);
             jMessage::add(jLocale::get('crud.message.change.password.ok', $login), 'notice');
             if ($personalView) {
                 return $this->redirect('user:index', ['j_user_login' => $login]);
@@ -98,7 +96,7 @@ class passwordCtrl extends jController
             }
         }
 
-        jMessage::add(jLocale::get('crud.message.change.password.notok'), 'error');
+        $form->setErrorOn('pwd', jLocale::get('crud.message.change.password.notok'));
 
         return $this->redirect('password:index', ['j_user_login' => $login]);
     }
