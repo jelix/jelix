@@ -12,7 +12,7 @@ the `<html>` element.
   * Fix: uploaded files should be saved after the events `jauthdbAdminAfterCreate` and `jauthdbAdminAfterUpdate`,
     so listeners can save uploaded files into directories other than into the default one.
   * Fix Security issue: disable completely the password change form when jCommunity is installed
-  * Use a jForms form for password change
+  * Use a jForms form to change a password 
   * Add a `formOptions` template variable in templates displaying forms of jauthdb_admin,
     so other modules can add options for jforms widgets.
 * jauthdb: 
@@ -21,6 +21,7 @@ the `<html>` element.
   * the section `auth_<driver>` is now merged with the `<driver>` section of `auth.coord.ini.php`, so
     we can redefine some configuration parameter of the `<driver>` section, into `localconfig.ini.php` for example.
   * new method `getDao()` on the jAuth `db` driver
+* new class `jAuthPassword` to check the strength of a password or to generate a random password
 * new configuration parameter to set default value for the `Return-Path` header into jMailer.
 * new jforms widget: `password_html` for `secret` controls. Adds a "view" button aside the input.
 * new jforms widget: `passwordeditor_html` for `secret` controls. It checks the strength of the

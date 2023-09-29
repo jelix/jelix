@@ -13,10 +13,14 @@
 $list = file(__DIR__.'/most_used_passwords.txt', FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
 $content = '';
 foreach($list as $i => $term) {
+
+    $term = preg_replace('/([()[{*+.$^\\|?])/', "\\\\$1", $term);
     $content.= ',"'.$term.'"';
     if (($i % 15)===0) {
         $content.="\n";
     }
 }
+
 $content[0] = '[';
 file_put_contents(__DIR__.'/../lib/jelix-www/js/jforms/password-list.js', 'var JelixPasswordEditorPasswords='.$content.'];' );
+file_put_contents(__DIR__.'/../lib/jelix/auth/jAuthMostUsedPasswords.php', '<'.'?php '."\n". 'return '.$content."];\n" );
