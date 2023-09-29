@@ -51,6 +51,7 @@ class passwordCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign('id', $login);
         $tpl->assign('form', $form);
+        $tpl->assign('formOptions', []);
         $tpl->assign('randomPwd', jAuth::getRandomPassword());
         $tpl->assign('personalview', $personalView);
         if ($personalView) {

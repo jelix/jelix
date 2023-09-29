@@ -3,7 +3,7 @@
 {else}
 <h1>{@jauthdb_admin~crud.title.password@} {$id}</h1>
 {/if}
-{form $form, 'jauthdb_admin~password:update', array('j_user_login'=>$id)}
+{form $form, 'jauthdb_admin~password:update', array('j_user_login'=>$id), '', $formOptions}
 	<fieldset><legend>{@jauthdb_admin~crud.form.new.password@}</legend>
     {formcontrols}
 	<p>{ctrl_label}

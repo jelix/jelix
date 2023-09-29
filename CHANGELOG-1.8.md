@@ -13,6 +13,8 @@ the `<html>` element.
     so listeners can save uploaded files into directories other than into the default one.
   * Fix Security issue: disable completely the password change form when jCommunity is installed
   * Use a jForms form for password change
+  * Add a `formOptions` template variable in templates displaying forms of jauthdb_admin,
+    so other modules can add options for jforms widgets.
 * jauthdb: 
   * possibility to authenticate with the email or the login, if there is a configuration parameter
     `authenticateWith=login-email`.
