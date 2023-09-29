@@ -8,7 +8,7 @@
     {formcontrols}
 	<p>{ctrl_label}
         {ctrl_control}
-	{ifctrl 'pwd'}({@jauthdb_admin~crud.form.random.password@} {$randomPwd}){/ifctrl}
+	{ifctrl 'pwd'}{if $randomPwd}({@jauthdb_admin~crud.form.random.password@} {$randomPwd}){/if}{/ifctrl}
 	</p>
     {/formcontrols}
 

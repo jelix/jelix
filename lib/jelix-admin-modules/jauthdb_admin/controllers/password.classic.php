@@ -54,6 +54,8 @@ class passwordCtrl extends jController
         } else {
             $tpl->assign('viewaction', 'default:view');
         }
+
+        jEvent::notify('jauthdbAdminPasswordForm', array('form' => $form, 'tpl' => $tpl));
         $rep->body->assign('MAIN', $tpl->fetch('password_change'));
 
         return $rep;
@@ -73,7 +75,13 @@ class passwordCtrl extends jController
         }
 
         $form = jForms::fill('jauthdb_admin~password_change', $login);
-        if (!$form || !$form->check()) {
+        if (!$form) {
+            return $this->redirect('password:index', ['j_user_login' => $login]);
+        }
+        $evresp = array();
+        $listenersOk = !jEvent::notify('jauthdbAdminCheckPasswordForm', array('form' => $form))
+                        ->inResponse('check', false, $evresp);
+        if (!$form->check() || !$listenersOk) {
             return $this->redirect('password:index', ['j_user_login' => $login]);
         }
         $pwd = $form->getData('pwd');

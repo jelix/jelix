@@ -14,6 +14,7 @@ the `<html>` element.
   * Use a jForms form to change a password 
   * Add a `formOptions` template variable in templates displaying forms of jauthdb_admin,
     so other modules can add options for jforms widgets.
+  * new events `jauthdbAdminPasswordForm` and `jauthdbAdminCheckPasswordForm` for the password form
 * jauthdb: 
   * possibility to authenticate with the email or the login, if there is a configuration parameter
     `authenticateWith=login-email`.
