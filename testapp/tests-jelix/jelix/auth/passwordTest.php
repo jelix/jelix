@@ -17,6 +17,8 @@ class passwordTest extends TestCase
 
         $this->assertEquals(jAuthPassword::checkPasswordStrength(''), jAuthPassword::STRENGTH_NONE);
         $this->assertEquals(jAuthPassword::checkPasswordStrength('qsdq qwerty qsdoi'), jAuthPassword::STRENGTH_BAD_PASS);
+        $this->assertEquals(jAuthPassword::checkPasswordStrength('qsdq f**k qsdoi'), jAuthPassword::STRENGTH_BAD_PASS);
+        $this->assertEquals(jAuthPassword::checkPasswordStrength('qsdq fp*k qsdoi'), jAuthPassword::STRENGTH_GOOD);
         $this->assertTrue(jAuthPassword::checkPasswordStrength('abcdfg') <= jAuthPassword::STRENGTH_POOR);
         $this->assertTrue(jAuthPassword::checkPasswordStrength('abcd2!fg') <= jAuthPassword::STRENGTH_POOR);
         $this->assertTrue(jAuthPassword::checkPasswordStrength('abcdgqfgfpo') <= jAuthPassword::STRENGTH_WEAK);

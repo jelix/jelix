@@ -14,7 +14,7 @@ $list = file(__DIR__.'/most_used_passwords.txt', FILE_IGNORE_NEW_LINES|FILE_SKIP
 $content = '';
 foreach($list as $i => $term) {
 
-    $term = preg_replace('/([()[{*+.$^\\|?])/', "\\\\$1", $term);
+    $term = preg_replace('/([()[{*+.$^\\|?])/', "\\\\\\\\$1", $term);
     $content.= ',"'.$term.'"';
     if (($i % 15)===0) {
         $content.="\n";
