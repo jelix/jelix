@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jpref_admin@jelix.org" name="jpref_admin" createdate="2012-01-21">
-        <version date="2023-07-30 11:44">1.8.3-pre</version>
+        <version date="2023-10-02 16:48">1.8.3-rc.1</version>
         <label lang="en_US">jPref manager</label>
         <description lang="en_US"/>
         <license URL="http://www.gnu.org/licenses/lgpl.html">GNU Lesser General Public Licence</license>
