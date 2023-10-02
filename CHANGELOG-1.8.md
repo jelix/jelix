@@ -4,6 +4,9 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.3
+-----
+
 * New method `setHtmlAttributes()` on the `jResponseHtml` class, to set attributes on
 the `<html>` element.
 * New method `getFileResponse()` in `jController` to ease to return a file as a response
@@ -22,14 +25,14 @@ the `<html>` element.
     we can redefine some configuration parameter of the `<driver>` section, into `localconfig.ini.php` for example.
   * new method `getDao()` on the jAuth `db` driver
 * new class `jAuthPassword` to check the strength of a password or to generate a random password
-* new configuration parameter to set default value for the `Return-Path` header into jMailer.
 * new jforms widget: `password_html` for `secret` controls. Adds a "view" button aside the input.
 * new jforms widget: `passwordeditor_html` for `secret` controls. It checks the strength of the
   password, by calculating the entropy, and by comparing the edited password against a list of the most 
   used passwords. Adds also three buttons:  a "view" button, a "regenerate" button, and a "copy" button.
-* new method `jAcl2DbUserGroup::renameUser()`
-* Fix debugbar: elements at the same level of the debugbar were not clickable
 * jForms: fix generated JS into choice, upload2 and group widgets
+* new method `jAcl2DbUserGroup::renameUser()`
+* new configuration parameter to set default value for the `Return-Path` header into jMailer.
+* Fix debugbar: elements at the same level of the debugbar were not clickable
 
 Improvements and bug fix from Jelix 1.7:
 
