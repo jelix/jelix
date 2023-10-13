@@ -86,7 +86,7 @@ class jForms
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      *
-     * @return jFormsBase the object representing the form. Return null if there isn't an existing form
+     * @return jFormsBase|null the object representing the form. Return null if there isn't an existing form
      */
     public static function get($formSel, $formId = null)
     {
@@ -109,7 +109,7 @@ class jForms
      * @param string $formSel the selector of the xml jform file
      * @param string $formId  the id of the form (if you use multiple instance of a form)
      *
-     * @return jFormsBase the object representing the form. Return null if there isn't an existing form
+     * @return jFormsBase|null the object representing the form. Return null if there isn't an existing form
      */
     public static function fill($formSel, $formId = null)
     {
