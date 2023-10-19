@@ -33,7 +33,9 @@ the `<html>` element.
 * new method `jAcl2DbUserGroup::renameUser()`
 * new configuration parameter to set default value for the `Return-Path` header into jMailer.
 * Fix debugbar: elements at the same level of the debugbar were not clickable
-* Fix jdb: support of double quotes around schema names into `search_path`
+* Fix jDb: support of double quotes around schema names into `search_path`
+* Fix jDb: jDbSchema for Postgresql did not find table in schemas having upper case
+  letters.
 
 Improvements and bug fix from Jelix 1.7:
 

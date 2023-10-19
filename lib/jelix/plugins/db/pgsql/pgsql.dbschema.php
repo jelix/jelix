@@ -49,7 +49,7 @@ class pgsqlDbTable extends jDbTable
             LEFT OUTER JOIN pg_attrdef AS d
                 ON (d.adrelid = c.oid AND d.adnum = a.attnum)
             WHERE a.attnum > 0 AND c.relname = ".$conn->quote($this->name).
-            ' AND c.relnamespace IN ( SELECT oid FROM pg_namespace WHERE nspname IN ('.$schemas.'))
+            ' AND c.relnamespace IN ( SELECT oid FROM pg_namespace WHERE nspname ILIKE ANY (array['.$schemas.']))
             ORDER BY a.attnum';
         $rs = $conn->query($sql);
         while ($line = $rs->fetch()) {
@@ -393,7 +393,7 @@ class pgsqlDbSchema extends jDbSchema
 
         $results = array();
         $sql = 'SELECT tablename, schemaname FROM pg_tables
-                  WHERE schemaname IN ('.$schemas.')
+                  WHERE schemaname ILIKE ANY (array['.$schemas.'])
                   ORDER BY tablename';
         $rs = $this->getConn()->query($sql);
         while ($line = $rs->fetch()) {
