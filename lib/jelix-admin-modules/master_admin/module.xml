@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="master_admin@modules.jelix.org" name="master_admin" createdate="2008-12-22">
-        <version date="2023-10-24 11:26">1.7.17</version>
+        <version date="2023-10-24 11:26">1.7.18-pre</version>
         <label lang="en_US">Main Administration Interface</label>
         <description lang="en_US">Main Web interface for the administration of an application</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GPL 2.0</license>
