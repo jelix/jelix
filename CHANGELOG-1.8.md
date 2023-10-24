@@ -45,6 +45,7 @@ Improvements and bug fix from Jelix 1.7:
 * Fix jforms choice widget, display control value: add a space betwen label and value.
 * Fix some PHP warning about passing null values to htmlspecialchars
 * Fix the version into the JELIX_VERSION constant. It was not updated in the latest release.
+* Fix the migration 1.6->1.7 of configuration file of entry points.
 
 1.8.2
 -----

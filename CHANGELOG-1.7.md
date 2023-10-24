@@ -1,8 +1,8 @@
 Changes into Jelix 1.7
 ======================
 
-Next
-----
+Jelix 1.7.17
+------------
 
 * Fix regression into `jFormsBase::getModifiedControls()`: some controls like submit were considered as modified  although it does not make sens
 * Fix regression into the debugging of jMailer: the output was not made anymore into logs
@@ -10,6 +10,7 @@ Next
 * Fix jforms choice widget, display control value: add a space between label and value.
 * Fix some PHP warning about passing null values to htmlspecialchars
 * Fix the version into the JELIX_VERSION constant. It was not updated in the latest release.
+* Fix the migration 1.6->1.7 of configuration file of entry points. 
 
 Jelix 1.7.16
 -------------
