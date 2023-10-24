@@ -113,7 +113,7 @@ class Jelix17
                 $configValue = $frameworkIni->getValue('config', $section);
                 $configFile = \jApp::varConfigPath($configValue);
                 if (file_exists($configFile)) {
-                    $epConfigIni = new IniModifier(\jApp::appSystemPath($configFile));
+                    $epConfigIni = new IniModifier(\jApp::appSystemPath($configValue));
                     $localEpConfigIni = new IniModifier($configFile);
                     $this->migrateCoordPluginsConf($localEpConfigIni, true);
                     if ($localEpConfigIni->getValues('modules')) {
@@ -552,6 +552,14 @@ class Jelix17
         $webassets->changeConfig($mainConfig, $mainConfig['main']);
     }
 
+    /**
+     * @param WebAssetsUpgrader $webassets
+     * @param IniModifier $mainConfigIni
+     * @param IniModifier $epConfigIni
+     * @param IniModifier $localConfigIni
+     * @param IniModifier $localEpConfigIni
+     * @return void
+     */
     private function upgradeWebAssetsEp(
         $webassets,
         $mainConfigIni,
