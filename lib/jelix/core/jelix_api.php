@@ -16,32 +16,21 @@ if (function_exists('jelix_version')) {
     return;
 }
 
+/**
+ * @param string $fileName the ini file to read
+ * @param object|null $config the object that will contain properties readed from the ini file
+ * @param array $ignoredSection list of ini section that must not be merged
+ * @return object the updated config object
+ *
+ * @deprecated use \jFile::mergeIniFile() instead
+ */
 function jelix_read_ini($fileName, $config = null, $ignoredSection = array())
 {
-    $conf = \Jelix\IniFile\Util::read($fileName);
-    if ($config !== null) {
-        foreach ($conf as $k => $v) {
-            if (!isset($config->{$k})) {
-                $config->{$k} = $v;
-
-                continue;
-            }
-
-            if ($k[1] == '_' || in_array($k, $ignoredSection)) {
-                continue;
-            }
-
-            if (is_array($v)) {
-                $config->{$k} = array_merge($config->{$k}, $v);
-            } else {
-                $config->{$k} = $v;
-            }
-        }
-
-        return $config;
-    }
-
-    return (object) $conf;
+    return \jFile::mergeIniFile(
+        $fileName,
+        $config,
+        $ignoredSection
+    );
 }
 
 function jelix_scan_module_sel($selStr, $selObj)

@@ -277,4 +277,42 @@ class jFile
 
         return Path::normalizePath($path);
     }
+
+    /**
+     * Read an ini file, and put its properties into the given object
+     *
+     * @param string $fileName the ini file to read
+     * @param object|null $object the object that will contain properties readed from the ini file
+     * @param array $ignoredSection list of ini section that must not be merged
+     * @return object the updated given object or a new object if $object was null
+     * @since 1.9.0
+     */
+    public static function mergeIniFile($fileName, $object = null, $ignoredSection = array())
+    {
+        return \Jelix\IniFile\Util::readAndMergeObject(
+            $fileName,
+            $object,
+            \Jelix\IniFile\Util::NOT_MERGE_PROTECTED_DIRECTIVE | \Jelix\IniFile\Util::NORMAL_MERGE_ARRAY_VALUES_WITH_INTEGER_KEYS,
+            $ignoredSection
+        );
+    }
+
+    /**
+     * Read an ini content, and put its properties into the given object
+     *
+     * @param array $iniContent the ini content
+     * @param object|null $object the object that will contain properties readed from the ini file
+     * @param array $ignoredSection list of ini section that must not be merged
+     * @return object the updated given object or a new object if $object was null
+     * @since 1.9.0
+     */
+    public static function mergeIniContent($contentToImport, $baseContent = null, $ignoredSection = array())
+    {
+        return \Jelix\IniFile\Util::mergeIniObjectContents(
+            $baseContent,
+            (object) $contentToImport,
+            \Jelix\IniFile\Util::NOT_MERGE_PROTECTED_DIRECTIVE | \Jelix\IniFile\Util::NORMAL_MERGE_ARRAY_VALUES_WITH_INTEGER_KEYS,
+            $ignoredSection
+        );
+    }
 }
