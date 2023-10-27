@@ -782,7 +782,8 @@ class jAuth
                 $encrypted = \Defuse\Crypto\Crypto::encrypt(json_encode(array($login, $password)), $cryptokey);
                 setcookie($config['persistant_cookie_name'], $encrypted, $persistence, $config['persistant_cookie_path'], '', false, true);
             } catch (\Defuse\Crypto\Exception\CryptoException $e) {
-                jLog::log('Cookie for persistant authentication. Error during encryption of the cookie token for authentication: '.$e->getMessage(), 'warning');
+                jLog::log('Cookie for persistant authentication. Error during encryption of the cookie token for authentication', 'warning');
+                jLog::logEx($e, 'warning');
 
                 return false;
             }
