@@ -97,6 +97,7 @@ class userCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign('id', $login);
         $tpl->assign('form', $form);
+        $tpl->assign('formOptions', []);
         $tpl->assign('personalview', true);
         $tpl->assign('otherInfo', jEvent::notify('jauthdbAdminGetViewInfo', array('form' => $form, 'tpl' => $tpl, 'himself' => true))->getResponse());
         $form->deactivate('password');
@@ -182,6 +183,7 @@ class userCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign('id', $login);
         $tpl->assign('form', $form);
+        $tpl->assign('formOptions', []);
         $tpl->assign('saveaction', 'user:saveupdate');
         $tpl->assign('viewaction', 'user:index');
         jEvent::notify('jauthdbAdminEditUpdate', array('form' => $form, 'tpl' => $tpl, 'himself' => true));

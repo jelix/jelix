@@ -196,6 +196,7 @@ class defaultCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign('id', $login);
         $tpl->assign('form', $form);
+        $tpl->assign('formOptions', []);
         $tpl->assign('canDelete', (jAuth::getUserSession()->login != $login)
             && jAcl2::check('auth.users.delete'));
         $tpl->assign('canUpdate', jAcl2::check('auth.users.modify'));
@@ -240,6 +241,7 @@ class defaultCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign('id', null);
         $tpl->assign('form', $form);
+        $tpl->assign('formOptions', []);
         $tpl->assign('randomPwd', jAuth::getRandomPassword());
         $tpl->assign('otherInfo', jEvent::notify(
             'jauthdbAdminEditCreate',
@@ -365,6 +367,7 @@ class defaultCtrl extends jController
         $tpl = new jTpl();
         $tpl->assign('id', $login);
         $tpl->assign('form', $form);
+        $tpl->assign('formOptions', []);
         $tpl->assign('otherInfo', jEvent::notify(
             'jauthdbAdminEditUpdate',
             array('form' => $form, 'tpl' => $tpl, 'himself' => false)

@@ -385,4 +385,65 @@ class jAcl2DbUserGroup
     {
         self::$groups = null;
     }
+
+    public static function renameUser($oldLogin, $newLogin)
+    {
+        $groupFactory = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
+        $userGroupFactory = jDao::get('jacl2db~jacl2usergroup', 'jacl2_profile');
+        $rightsFactory = jDao::get('jacl2db~jacl2rights', 'jacl2_profile');
+
+        $oldPrivGroupName = '__priv_'.$oldLogin;
+        $newPrivGroupName = '__priv_'.$newLogin;
+
+        $oldPrivGroup = $groupFactory->get($oldPrivGroupName);
+        if (!$oldPrivGroup) {
+            return;
+        }
+        if ($groupFactory->get($newPrivGroupName)) {
+            // there is already a private group with the new name
+            return;
+        }
+
+        // put the new login to existing groups where the old login is in
+        $GroupsOfUserFactory = jDao::get('jacl2db~jacl2groupsofuser', 'jacl2_profile');
+
+        $oldGroupsList = $GroupsOfUserFactory->getGroupsUser($oldLogin);
+
+        foreach($oldGroupsList as $userGroup) {
+            $newUserGroup = $userGroupFactory->createRecord();
+            $newUserGroup->login = $newLogin;
+            if ($oldPrivGroupName == $userGroup->id_aclgrp) {
+                $newGroup = $groupFactory->createRecord();
+                $newGroup->id_aclgrp = $newPrivGroupName;
+                $newGroup->name = $userGroup->name;
+                $newGroup->grouptype = $userGroup->grouptype;
+                $newGroup->ownerlogin = $newLogin;
+                $groupFactory->insert($newGroup);
+
+                $newUserGroup->id_aclgrp = $newPrivGroupName;
+            }
+            else {
+                $newUserGroup->id_aclgrp = $userGroup->id_aclgrp;
+            }
+            $userGroupFactory->insert($newUserGroup);
+        }
+
+        // set same rights of previous group, onto the new group
+        $oldRights = $rightsFactory->getRightsByGroup($oldPrivGroupName);
+        foreach ($oldRights as $oldRight) {
+            $newRight = $rightsFactory->createRecord();
+            $newRight->id_aclsbj = $oldRight->id_aclsbj;
+            $newRight->id_aclres = $oldRight->id_aclres;
+            $newRight->canceled = $oldRight->canceled;
+            $newRight->id_aclgrp = $newPrivGroupName;
+            $rightsFactory->insert($newRight);
+        }
+
+        // remove rights of the old login, and its private group
+        $rightsFactory->deleteByGroup($oldPrivGroupName);
+        $userGroupFactory->deleteByUser($oldLogin);
+        $groupFactory->delete($oldPrivGroupName);
+        self::clearCache();
+    }
+
 }
