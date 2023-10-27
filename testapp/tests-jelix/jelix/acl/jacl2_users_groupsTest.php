@@ -39,6 +39,14 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $this->emptyTable('jacl2_user_group');
         $this->emptyTable('jacl2_group');
+        $this->emptyTable('jacl2_rights');
+        $this->emptyTable('jacl2_subject');
+        jAcl2DbManager::createRight('super.cms.list', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.update', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('super.cms.delete', 'cms~rights.super.cms');
+        jAcl2DbManager::createRight('admin.access', 'admin~rights.access');
+
+
     }
 
     public function testCreateGroup(){
@@ -299,6 +307,82 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertTableContainsRecords('jacl2_group', self::$groups);
     }
 
+    /**
+     * @depends testRemoveUsedGroup
+     */
+    public function testRenameUser()
+    {
+        jAcl2DbManager::addRight(self::$grpId6, 'super.cms.list' );
+        jAcl2DbManager::addRight(self::$defaultGroupId, 'super.cms.update' );
+
+        $rights = array(
+            array(
+                'id_aclsbj' => 'super.cms.list',
+                'id_aclgrp' => self::$grpId6,
+                'id_aclres' => '-',
+                'canceled' => 0,
+            ),
+            array(
+                'id_aclsbj' => 'super.cms.update',
+                'id_aclgrp' => self::$defaultGroupId,
+                'id_aclres' => '-',
+                'canceled' => 0,
+            ),
+        );
+
+        $this->assertTableContainsRecords('jacl2_rights', $rights);
+
+        // creation d'un user dans les acl, sans le mettre dans les groupes par defaut
+        jAcl2DbUserGroup::renameUser('max', 'maxime');
+
+
+        self::$grpId6 = '__priv_maxime';
+
+        self::$groups = array(
+            array('id_aclgrp'=>self::$grpId1,
+            'name'=>'group1',
+            'grouptype'=>0,
+            'ownerlogin'=>null),
+            array('id_aclgrp'=>self::$grpId2,
+            'name'=>'group2',
+            'grouptype'=>1,
+            'ownerlogin'=>null),
+            array('id_aclgrp'=>self::$grpId5,
+            'name'=>'laurent',
+            'grouptype'=>2,
+            'ownerlogin'=>'laurent'),
+            array('id_aclgrp'=>self::$grpId6,
+            'name'=>'max',
+            'grouptype'=>2,
+            'ownerlogin'=>'maxime'));
+
+        $this->assertTableContainsRecords('jacl2_group', self::$groups);
+
+        self::$usergroups=array(
+            array('login'=>'laurent', 'id_aclgrp'=>self::$grpId5),
+            array('login'=>'maxime', 'id_aclgrp'=>self::$grpId6),
+            array('login'=>'maxime', 'id_aclgrp'=>self::$defaultGroupId),
+        );
+        $this->assertTableContainsRecords('jacl2_user_group', self::$usergroups);
+
+        $rights = array(
+            array(
+                'id_aclsbj' => 'super.cms.list',
+                'id_aclgrp' => self::$grpId6,
+                'id_aclres' => '-',
+                'canceled' => 0,
+            ),
+            array(
+                'id_aclsbj' => 'super.cms.update',
+                'id_aclgrp' => self::$defaultGroupId,
+                'id_aclres' => '-',
+                'canceled' => 0,
+            ),
+        );
+
+        $this->assertTableContainsRecords('jacl2_rights', $rights);
+
+    }
 
     public function testCreateGroupUtf8()
     {
@@ -315,4 +399,7 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertTableContainsRecords('jacl2_group', $records, false);
 
     }
+
+
+
 }

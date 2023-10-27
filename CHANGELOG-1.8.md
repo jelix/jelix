@@ -4,6 +4,9 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.3
+-----
+
 * New method `setHtmlAttributes()` on the `jResponseHtml` class, to set attributes on
 the `<html>` element.
 * New method `getFileResponse()` in `jController` to ease to return a file as a response
@@ -11,15 +14,28 @@ the `<html>` element.
   * New event `jauthdbAdminAfterUpdate` when properties of a user has changed.
   * Fix: uploaded files should be saved after the events `jauthdbAdminAfterCreate` and `jauthdbAdminAfterUpdate`,
     so listeners can save uploaded files into directories other than into the default one.
+  * Use a jForms form to change a password 
+  * Add a `formOptions` template variable in templates displaying forms of jauthdb_admin,
+    so other modules can add options for jforms widgets.
+  * new events `jauthdbAdminPasswordForm` and `jauthdbAdminCheckPasswordForm` for the password form
 * jauthdb: 
   * possibility to authenticate with the email or the login, if there is a configuration parameter
     `authenticateWith=login-email`.
   * the section `auth_<driver>` is now merged with the `<driver>` section of `auth.coord.ini.php`, so
     we can redefine some configuration parameter of the `<driver>` section, into `localconfig.ini.php` for example.
   * new method `getDao()` on the jAuth `db` driver
-* new configuration parameter to set default value for the `Return-Path` header into jMailer. 
-* Fix debugbar: elements at the same level of the debugbar were not clickable
+* new class `jAuthPassword` to check the strength of a password or to generate a random password
+* new jforms widget: `password_html` for `secret` controls. Adds a "view" button aside the input.
+* new jforms widget: `passwordeditor_html` for `secret` controls. It checks the strength of the
+  password, by calculating the entropy, and by comparing the edited password against a list of the most 
+  used passwords. Adds also three buttons:  a "view" button, a "regenerate" button, and a "copy" button.
 * jForms: fix generated JS into choice, upload2 and group widgets
+* new method `jAcl2DbUserGroup::renameUser()`
+* new configuration parameter to set default value for the `Return-Path` header into jMailer.
+* Fix debugbar: elements at the same level of the debugbar were not clickable
+* Fix jDb: support of double quotes around schema names into `search_path`
+* Fix jDb: jDbSchema for Postgresql did not find table in schemas having upper case
+  letters.
 
 Improvements and bug fix from Jelix 1.7:
 
@@ -29,6 +45,7 @@ Improvements and bug fix from Jelix 1.7:
 * Fix jforms choice widget, display control value: add a space betwen label and value.
 * Fix some PHP warning about passing null values to htmlspecialchars
 * Fix the version into the JELIX_VERSION constant. It was not updated in the latest release.
+* Fix the migration 1.6->1.7 of configuration file of entry points.
 
 1.8.2
 -----

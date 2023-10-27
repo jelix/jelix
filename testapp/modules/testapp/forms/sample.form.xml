@@ -109,6 +109,11 @@
     <confirm>Type again the password to confirm</confirm>
   </secret>
 
+  <secret ref="pwd2">
+     <label>An other password with buttons</label>
+     <alert type="invalid" locale="jelix~jforms.password.not.strong.enough"/>
+  </secret>
+
   <upload2 ref="file1" maxsize="500000">
      <label>A document (&lt; 500ko)</label>
   </upload2>
