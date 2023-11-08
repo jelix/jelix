@@ -37,6 +37,7 @@
         </template>
         <template id="user-item-links">
             <a href="" class="user-rights-link  ui-button">{@jacl2db_admin~acl2.rights.link@}</a>
+            <a href="" class="user-profile-link  ui-button">{@jacl2db_admin~acl2.profile.link@}</a>
         </template>
         <table id="users-list"
                data-processing="true"
