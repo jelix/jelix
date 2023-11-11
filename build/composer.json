@@ -15,11 +15,11 @@
   ],
   "require": {
     "jelix/buildtools": "2.1.*",
-    "jelix/inifile": "^3.3.1",
-    "jelix/simplelocalization": "1.7.1",
-    "jelix/file-utilities": "^1.8.3",
-    "jelix/version": "1.1.*",
-    "symfony/console":"^5.4.10"
+    "jelix/inifile": "^3.3.2",
+    "jelix/simplelocalization": "1.7.2",
+    "jelix/file-utilities": "^1.8.5",
+    "jelix/version": "2.0.*",
+    "symfony/console":"^5.4.26"
   },
   "autoload": {
   },

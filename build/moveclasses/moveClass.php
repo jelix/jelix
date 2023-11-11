@@ -2,17 +2,16 @@
 /**
 * @package     jelix
 * @author      Laurent Jouanneau
-* @copyright   2014-2015 Laurent Jouanneau
+* @copyright   2014-2023 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
 
 use Jelix\BuildTools\Cli\Params as CliParams;
 use Jelix\BuildTools\Manifest as Manifest;
-use Jelix\BuildTools\FileSystem\DirUtils as DirUtils;
 
 // we don't use the composer autoloader, as it load legacy init.php
-require(__DIR__.'/../../vendor/jelix/buildtools/lib/autoloader.php');
+require(__DIR__.'/../vendor/jelix/buildtools/lib/autoloader.php');
 
 $sws = array();
 $params = array('sourcedir'=>true, 'sourcefile'=>true, 'targetdir'=>true, 'targetfile'=>true);
