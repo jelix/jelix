@@ -49,7 +49,7 @@ class Router
     /**
      * the selector of the current action.
      *
-     * @var \jSelectorActFast
+     * @var FastActionSelector
      */
     public $action;
 
@@ -57,7 +57,7 @@ class Router
      * the original action when there is an internal redirection to an action
      * different from the one corresponding to the request.
      *
-     * @var \jSelectorAct
+     * @var ActionSelector
      */
     public $originalAction;
 
@@ -192,7 +192,7 @@ class Router
         App::pushCurrentModule($this->moduleName);
 
         $this->action =
-        $this->originalAction = new \jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
+        $this->originalAction = new FastActionSelector($this->request->type, $this->moduleName, $this->actionName);
 
         if (!$config->modules[$this->moduleName.'.enabled']) {
             throw new \jException('jelix~errors.module.untrusted', $this->moduleName);
@@ -228,7 +228,7 @@ class Router
             }
 
             try {
-                $this->action = new \jSelectorAct($notFoundAct);
+                $this->action = new ActionSelector($notFoundAct);
                 $ctrl = $this->getController($this->action);
             } catch (\jException $e2) {
                 throw $e;
@@ -289,13 +289,13 @@ class Router
     /**
      * get the controller corresponding to the selector.
      *
-     * @param \jSelectorActFast $selector
+     * @param FastActionSelector $selector
      *
      * @throws \jException
      *
      * @return \jController the controller corresponding to the selector
      */
-    protected function getController(\jSelectorActFast $selector)
+    protected function getController(FastActionSelector $selector)
     {
         $ctrlpath = $selector->getPath();
         if (isset($_SERVER['HTTP_REFERER'])) {

@@ -2,29 +2,28 @@
 /**
  * see Jelix/Core/Selector/SelectorInterface.php for documentation about selectors.
  *
- * @package     jelix
- * @subpackage  core_selector
- *
  * @author      Laurent Jouanneau
  * @contributor Thibault Piront (nuKs)
  *
  * @copyright   2005-2023 Laurent Jouanneau
  * @copyright   2007 Thibault Piront
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Routing;
+
+use Jelix\Core\App;
+use Jelix\Core\Selector\ModuleSelector;
+use Jelix\Core\Selector\Exception;
 
 /**
- * Special Action selector for jcoordinator
+ * Special Action selector for the router
  * Don't use it ! Only for internal purpose.
  *
  * @internal
- *
- * @package    jelix
- * @subpackage core_selector
  */
-class jSelectorActFast extends jSelectorModule implements jIActionSelector
+class FastActionSelector extends ModuleSelector implements ActionSelectorInterface
 {
     protected $type = 'act';
     /**
@@ -42,7 +41,7 @@ class jSelectorActFast extends jSelectorModule implements jIActionSelector
      * @param $action
      * @param mixed $requestType
      *
-     * @throws jExceptionSelector
+     * @throws Exception
      */
     public function __construct($requestType, $module, $action)
     {
@@ -56,7 +55,7 @@ class jSelectorActFast extends jSelectorModule implements jIActionSelector
             $this->method = $r[1] == '' ? 'index' : $r[1];
         }
         if (substr($this->method, 0, 2) == '__') {
-            throw new jExceptionSelector('jelix~errors.selector.method.invalid', $this->toString());
+            throw new Exception('jelix~errors.selector.method.invalid', $this->toString());
         }
         $this->resource = $this->controller.':'.$this->method;
         $this->request = $requestType;
@@ -65,10 +64,10 @@ class jSelectorActFast extends jSelectorModule implements jIActionSelector
 
     protected function _createPath()
     {
-        if (!jApp::isModuleEnabled($this->module)) {
-            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
+        if (!App::isModuleEnabled($this->module)) {
+            throw new Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
-        $this->_path = jApp::getModulePath($this->module).'controllers/'.$this->controller.'.'.$this->request.'.php';
+        $this->_path = App::getModulePath($this->module).'controllers/'.$this->controller.'.'.$this->request.'.php';
     }
 
     protected function _createCachePath()
@@ -90,7 +89,7 @@ class jSelectorActFast extends jSelectorModule implements jIActionSelector
         return $this->controller.'Ctrl';
     }
 
-    public function isEqualTo(jIActionSelector $otherAction)
+    public function isEqualTo(ActionSelectorInterface $otherAction)
     {
         return $this->module == $otherAction->module
                 && $this->controller == $otherAction->controller

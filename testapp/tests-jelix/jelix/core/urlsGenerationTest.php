@@ -32,7 +32,7 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
                 $this->assertEquals($trueResult[$k], $url, 'expected url '.$k.' ='.str_replace('%','%%',$trueResult[$k]).'   created url='.str_replace('%','%%',$url) );
-            }catch(jExceptionSelector $e){
+            }catch(\Jelix\Core\Selector\Exception $e){
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
             }catch(jException $e){
                 $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
@@ -52,7 +52,7 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
             try{
                 $url = jUrl::get($urldata[0], $urldata[1]);
                 $this->assertTrue( false, ($res[0]?$msg2:$msg).' - No thrown exception !!!');
-            }catch(jExceptionSelector $e){
+            }catch(\Jelix\Core\Selector\Exception $e){
                 $msgerr = 'generated exception, jExceptionSelector code='.$e->getCode().' localkey='.$e->getLocaleKey().' (%s)';
                 $this->assertTrue( ($res[0]==2) ,$msg2.$msgerr);
             }catch(jException $e){
@@ -360,7 +360,7 @@ class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
                 jApp::config()->locale = $urldata[0];
                 $url = jUrl::get($urldata[1], $urldata[2]);
                 $this->assertEquals($trueResult[$k], $url, 'url '.$k.' - %s');
-            }catch(jExceptionSelector $e){
+            }catch(\Jelix\Core\Selector\Exception $e){
                 $this->assertTrue(false,'jExceptionSelector: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');
             }catch(jException $e){
                 $this->assertTrue(false,'jException: '.$e->getMessage().' ('.$e->getLocaleKey().') %s');

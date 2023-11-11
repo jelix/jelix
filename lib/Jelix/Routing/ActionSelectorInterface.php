@@ -9,7 +9,9 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-namespace Jelix\Core\Selector;
+namespace Jelix\Routing;
+
+use Jelix\Core\Selector\SelectorInterface;
 
 /**
  * interface of selector classes.

@@ -117,8 +117,8 @@ class selectors_actionTest extends \Jelix\UnitTests\UnitTestCase {
         foreach($list as $sel=>$res){
             $valid=true;
             try{
-                $s = new jSelectorAct($sel, true);
-            }catch(jExceptionSelector $e){
+                $s = new \Jelix\Routing\ActionSelector($sel, true);
+            }catch(\Jelix\Core\Selector\Exception $e){
                 $valid=false;
             }
             $msg='';
@@ -169,8 +169,8 @@ class selectors_actionTest extends \Jelix\UnitTests\UnitTestCase {
             list($sel, $res) = $test;
             $valid=true;
             try{
-                $s = new jSelectorActFast($sel[0], $sel[1], $sel[2]);
-            }catch(jExceptionSelector $e){
+                $s = new \Jelix\Routing\FastActionSelector($sel[0], $sel[1], $sel[2]);
+            }catch(\Jelix\Core\Selector\Exception $e){
                 $valid=false;
             }
             $msg='';

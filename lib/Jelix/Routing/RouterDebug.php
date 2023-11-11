@@ -79,7 +79,7 @@ class RouterDebug extends Router
 
             try {
                 Log::log('Exception: get notfoundact ctrl ('.$notFoundAct.')');
-                $this->action = new \jSelectorAct($notFoundAct);
+                $this->action = new ActionSelector($notFoundAct);
                 $ctrl = $this->getController($this->action);
             } catch (\jException $e2) {
                 throw $e;
@@ -151,9 +151,9 @@ class RouterDebug extends Router
     /**
      * get the controller corresponding to the selector.
      *
-     * @param jSelectorAct $selector
+     * @param ActionSelector $selector
      */
-    protected function getController(\jSelectorAct $selector)
+    protected function getController(FastActionSelector $selector)
     {
         Log::log('getController for '.$selector->toString());
         $ctrl = parent::getController($selector);

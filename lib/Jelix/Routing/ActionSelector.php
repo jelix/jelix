@@ -2,18 +2,19 @@
 /**
  * see Jelix/Core/Selector/SelectorInterface.php for documentation about selectors.
  *
- * @package     jelix
- * @subpackage  core_selector
- *
  * @author      Laurent Jouanneau
  * @contributor Thibault Piront (nuKs)
  *
  * @copyright   2005-2012 Laurent Jouanneau
  * @copyright   2007 Thibault Piront
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Routing;
+
+use Jelix\Core\App;
+use Jelix\Core\Selector\Exception;
 
 /**
  * Generic Action selector.
@@ -25,7 +26,7 @@
  * @package    jelix
  * @subpackage core_selector
  */
-class jSelectorAct extends jSelectorActFast
+class ActionSelector extends FastActionSelector
 {
     protected $forUrl = false;
 
@@ -34,31 +35,31 @@ class jSelectorAct extends jSelectorActFast
      * @param bool   $enableRequestPart true if the selector can contain the request part
      * @param bool   $toRetrieveUrl     true if the goal to have this selector is to generate an url
      *
-     * @throws jExceptionSelector
+     * @throws Exception
      */
     public function __construct($sel, $enableRequestPart = false, $toRetrieveUrl = false)
     {
-        $coord = jApp::coord();
+        $router = App::router();
         $this->forUrl = $toRetrieveUrl;
 
         // jSelectorAct is called by the url engine parser, before
         // jcoordinator set its properties, so we set a value to avoid a
         // parameter error on jelix_scan_action_sel. the value doesn't matter
         // since the parser call jSelectorAct only for 404 page
-        if ($coord->actionName === null) {
-            $coord->actionName = 'default:index';
+        if ($router->actionName === null) {
+            $router->actionName = 'default:index';
         }
 
-        if ($this->_scan_act_sel($sel, $coord->actionName)) {
+        if ($this->_scan_act_sel($sel, $router->actionName)) {
             if ($this->module == '#') {
-                $this->module = $coord->moduleName;
+                $this->module = $router->moduleName;
             } elseif ($this->module == '') {
-                $this->module = jApp::getCurrentModule();
+                $this->module = App::getCurrentModule();
             }
 
             if ($this->request == '' || !$enableRequestPart) {
-                if ($coord->request) {
-                    $this->request = $coord->request->type;
+                if ($router->request) {
+                    $this->request = $router->request->type;
                 }
                 else {
                     // In the context of a cli command, we don't have request object...
@@ -68,7 +69,7 @@ class jSelectorAct extends jSelectorActFast
 
             $this->_createPath();
         } else {
-            throw new jExceptionSelector('jelix~errors.selector.invalid.syntax', array($sel, $this->type));
+            throw new Exception('jelix~errors.selector.invalid.syntax', array($sel, $this->type));
         }
     }
 
@@ -101,11 +102,11 @@ class jSelectorAct extends jSelectorActFast
 
     protected function _createPath()
     {
-        $conf = jApp::config();
+        $conf = App::config();
         if (isset($conf->_modulesPathList[$this->module])) {
             $p = $conf->_modulesPathList[$this->module];
         } else {
-            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
+            throw new Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
 
         $this->_path = $p.'controllers/'.$this->controller.'.'.$this->request.'.php';

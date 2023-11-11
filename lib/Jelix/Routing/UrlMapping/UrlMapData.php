@@ -49,7 +49,7 @@ class UrlMapData
         if ($this->action) {
             $act = $this->action;
             if (substr($act, -1) == ':') { // this is a rest action
-                // we should add index because jSelectorAct resolve a "ctrl:" as "ctrl:index"
+                // we should add index because ActionSelector resolve a "ctrl:" as "ctrl:index"
                 // and then create the corresponding selector so url create infos will be found
                 $act .= 'index';
             }
