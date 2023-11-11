@@ -4,7 +4,7 @@
  * @subpackage logger
  *
  * @author     Laurent Jouanneau
- * @copyright  2017 Laurent Jouanneau
+ * @copyright  2017-2023 Laurent Jouanneau
  *
  * @see       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -16,11 +16,12 @@
 class soapfileLogger implements jILogger
 {
     /**
-     * @param jILogMessage $message the message to log
+     * @param jLogSoapMessage $message the message to log
      */
     public function logMessage($message)
     {
-        if (!is_writable(jApp::logPath())) {
+        $logPath = \Jelix\Core\App::logPath();
+        if (!is_writable($logPath)) {
             return;
         }
 
@@ -29,8 +30,11 @@ class soapfileLogger implements jILogger
             return;
         }
         $appConf = jApp::config();
+        if (!$appConf) {
+            return;
+        }
 
-        if ($appConf && isset($appConf->soapfileLoggerMethods)) {
+        if (isset($appConf->soapfileLoggerMethods)) {
             $conf = &$appConf->soapfileLoggerMethods;
             if (isset($conf[$message->getFunctionName()])
                 && !$conf[$message->getFunctionName()]
@@ -40,30 +44,27 @@ class soapfileLogger implements jILogger
         }
 
         $date = new DateTime();
-        $f = 'soap/'.$date->format('Ym').'/'.$date->format('dH').'/'.
+        $subPath = $logPath.'soap/'.$date->format('Ym').'/'.$date->format('dH').'/'.
             $date->format('His').'_'.$message->getFunctionName().'_';
-
+        $chmod = $appConf->chmodFile;
         try {
-            $sel = new jSelectorLog($f.'headers.log');
-            $file = $sel->getPath();
-            jFile::createDir(dirname($file), jApp::config()->chmodFile);
+            $file = $subPath.'headers.log';
+            jFile::createDir(dirname($file), $chmod);
 
             file_put_contents($file, $message->getHeaders());
-            @chmod($file, jApp::config()->chmodFile);
+            @chmod($file, $chmod);
 
-            $sel = new jSelectorLog($f.'request.xml');
-            $file = $sel->getPath();
+            $file = $subPath.'request.xml';
             file_put_contents($file, $message->getRequest());
-            @chmod($file, jApp::config()->chmodFile);
+            @chmod($file, $chmod);
 
-            $sel = new jSelectorLog($f.'response.xml');
-            $file = $sel->getPath();
+            $file = $subPath.'response.xml';
             file_put_contents($file, $message->getResponse());
-            @chmod($file, jApp::config()->chmodFile);
+            @chmod($file, $chmod);
         } catch (Exception $e) {
             $file = jApp::logPath('errors.log');
             @error_log(date('Y-m-d H:i:s')."\t\tsoap error\t".$e->getMessage()."\n", 3, $file);
-            @chmod($file, jApp::config()->chmodFile);
+            @chmod($file, $chmod);
         }
     }
 
