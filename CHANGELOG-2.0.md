@@ -1,6 +1,6 @@
 # Changes into Jelix 2.0
 
-- minimum PHP version is 7.3.0
+- minimum PHP version is 8.1.0
 
 - Many Jelix classes are now under a namespace, but some classes with old names
   still exist to ease the transition, although it is recommended to use new name

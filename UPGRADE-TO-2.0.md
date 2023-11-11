@@ -1,11 +1,11 @@
 Migration
 ==========
 
-Here are instructions to migrate your Jelix application from Jelix 1.7 to the dev-master
+Here are instructions to migrate your Jelix application from Jelix 1.8 to the dev-master
 version.
 
-If you didn't use Composer with Jelix 1.7, or if you used Jelix 1.6, first upgrade to Jelix 1.7 with Composer.
-Read the migration documentation of Jelix 1.7. You have to do some things in
+If you didn't use Composer with Jelix 1.8, or if you used Jelix 1.6, first upgrade to Jelix 1.8 with Composer.
+Read the migration documentation of Jelix 1.8. You have to do some things in
 your application.init.php and configuration first.
 
 ## Composer
@@ -106,6 +106,5 @@ if you want to keep your module.xml files, modify them:
 
 ## Modules gone
 
-- Simpletest and the module junittest are gone. If you are using them, convert your tests
-  to PHPUnit.
+
 
