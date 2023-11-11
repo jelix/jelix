@@ -497,7 +497,7 @@ class Router
      *
      * @throws \jException
      *
-     * @return \Jelix\Routing\RouterPlugin
+     * @return \Jelix\Routing\RouterPluginInterface
      */
     public function getPlugin($pluginName, $required = true)
     {

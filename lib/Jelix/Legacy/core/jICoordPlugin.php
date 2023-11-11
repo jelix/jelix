@@ -14,9 +14,9 @@
 /**
  * dummy class for compatibility.
  *
- * @see \Jelix\Routing\RouterPlugin
+ * @see \Jelix\Routing\RouterPluginInterface
  * @deprecated
  */
-interface jICoordPlugin extends \Jelix\Routing\RouterPlugin
+interface jICoordPlugin extends \Jelix\Routing\RouterPluginInterface
 {
 }

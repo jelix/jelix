@@ -12,7 +12,7 @@ namespace Jelix\Routing;
 /**
  * interface that should implement all coordinator plugins.
  */
-interface RouterPlugin
+interface RouterPluginInterface
 {
     /**
      * @param array $config content of the config ini file of the plugin
