@@ -66,7 +66,6 @@ class Config
             $varEpConfig = App::varConfigPath($configFile);
 
             if ((file_exists($dc) && filemtime($dc) > $t)
-                || filemtime(App::appSystemPath($configFile)) > $t
                 || (file_exists($appEpConfig) && filemtime($appEpConfig) > $t)
                 || (file_exists($varEpConfig) && filemtime($varEpConfig) > $t)
                 || (file_exists($lc) && filemtime($lc) > $t)

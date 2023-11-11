@@ -22,7 +22,7 @@ class Autoloader
     /**
      * @var object a configuration object readed from an ini file
      *
-     * @see Jelix\Core\Config
+     * @see Compiler
      */
     protected $config;
 

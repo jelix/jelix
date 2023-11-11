@@ -121,7 +121,7 @@ class Log
 
     /**
      * @param MessageInterface  $message
-     * @param OutputInterface[] $loggers
+     * @param string[] $loggers
      */
     protected static function _log($message, $loggers)
     {

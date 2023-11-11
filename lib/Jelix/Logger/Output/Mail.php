@@ -18,7 +18,7 @@ namespace Jelix\Logger\Output;
 class Mail implements \Jelix\Logger\OutputInterface
 {
     /**
-     *  @var jILogMessage[] messages to send
+     *  @var \Jelix\Logger\MessageInterface[] messages to send
      */
     protected $messages = array();
 
