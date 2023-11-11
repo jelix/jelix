@@ -1,13 +1,15 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2015-2018 Laurent Jouanneau
+ * @copyright  2015-2023 Laurent Jouanneau
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 namespace Jelix\Core\Infos;
+
+use Composer\ClassMapGenerator\ClassMapGenerator;
 
 /**
  * Parse a jelix-module.json file.
@@ -136,7 +138,7 @@ class ModuleJsonParser extends JsonParserAbstract
         if (isset($json['autoload']['classmap'])) {
             $basepath = dirname($this->path).'/';
             foreach ($json['autoload']['classmap'] as $path) {
-                $classes = \Jelix\External\ClassMapGenerator::createMap($basepath.$path);
+                $classes = ClassMapGenerator::createMap($basepath.$path);
                 // remove directory base path
                 $classes = array_map(function ($c) use ($basepath) {
                     if (strpos($c, $basepath) === 0) {

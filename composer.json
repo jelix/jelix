@@ -32,7 +32,8 @@
         "jelix/fakeserverconf": "^1.0.0",
         "defuse/php-encryption": "^2.4.0",
         "google/recaptcha": "~1.2.4",
-        "psr/event-dispatcher": "~1.0.0"
+        "psr/event-dispatcher": "~1.0.0",
+        "composer/class-map-generator": "~1.1.0"
     },
     "archive": {
         "exclude": ["/build", "/temp", "/testapp", "Makefile"]
