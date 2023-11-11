@@ -1,20 +1,22 @@
 <?php
 /**
  * @author   Laurent Jouanneau
- * @copyright 2005-2014 Laurent Jouanneau
+ * @copyright 2005-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-namespace Jelix\Core;
+namespace Jelix\Core\Config;
+
+use Jelix\Core\App;
 
 /**
  * static class which loads the configuration.
  *
  * @static
  */
-class Config
+class AppConfig
 {
     /**
      * indicate if the configuration was loading from the cache (true) or
@@ -51,7 +53,7 @@ class Config
     public static function load($configFile)
     {
         $config = array();
-        $file = Config\Compiler::getCacheFilename($configFile);
+        $file = Compiler::getCacheFilename($configFile);
 
         self::$fromCache = true;
         if (!file_exists($file)) {
@@ -95,7 +97,7 @@ class Config
             }
         }
         if (!self::$fromCache) {
-            $compiler = new Config\Compiler($configFile);
+            $compiler = new Compiler($configFile);
 
             return $compiler->readAndCache();
         }
@@ -105,6 +107,6 @@ class Config
 
     public static function getDefaultConfigFile()
     {
-        return __DIR__.'/Config/defaultconfig.ini.php';
+        return __DIR__.'/defaultconfig.ini.php';
     }
 }

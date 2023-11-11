@@ -6,7 +6,7 @@
  * @contributor Loic Mathaud
  * @contributor Bastien Jaillot
  *
- * @copyright   2005-2018 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
+ * @copyright   2005-2023 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
  *
  * @see        http://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -18,7 +18,6 @@ use Jelix\Core\App as App;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-
 use Symfony\Component\Console\Output\OutputInterface;
 
 class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
@@ -166,7 +165,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
             $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
         }
 
-        $iniDefault = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config::getDefaultConfigFile(), App::mainConfigFile());
+        $iniDefault = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config\AppConfig::getDefaultConfigFile(), App::mainConfigFile());
         $urlsFile = App::appSystemPath($iniDefault->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
 

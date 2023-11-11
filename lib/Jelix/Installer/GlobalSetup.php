@@ -9,12 +9,12 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\App;
 use Jelix\FileUtilities\Directory;
 use Jelix\IniFile\IniModifier;
 use Jelix\IniFile\IniModifierArray;
 use Jelix\IniFile\IniModifierReadOnly;
 use Jelix\IniFile\IniReader;
-use Jelix\Core\App;
 
 /**
  * @since 1.7.0
@@ -189,7 +189,7 @@ class GlobalSetup
             file_put_contents($liveConfigFileName, ';<'.'?php die(\'\');?'.'> live local configuration');
         }
 
-        $this->defaultConfigIni = new IniReader(\Jelix\Core\Config::getDefaultConfigFile());
+        $this->defaultConfigIni = new IniReader(\Jelix\Core\Config\AppConfig::getDefaultConfigFile());
 
         $this->mainConfigIni = new IniModifier($mainConfigFileName);
 

@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor
  *
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -116,7 +116,7 @@ class CreateEntryPoint extends \Jelix\DevHelper\AbstractCommandForApp
             }
         }
 
-        $mainIniFile = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config::getDefaultConfigFile(), App::mainConfigFile());
+        $mainIniFile = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config\AppConfig::getDefaultConfigFile(), App::mainConfigFile());
         $inifile = new \Jelix\IniFile\MultiIniModifier($mainIniFile, $configFilePath);
         $urlsFile = App::appSystemPath($inifile->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);

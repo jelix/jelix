@@ -3,7 +3,7 @@
  * @author       Laurent Jouanneau
  * @contributor  Thibault Piront (nuKs), Christophe Thiriot, Philippe Schelté
  *
- * @copyright    2006-2022 Laurent Jouanneau
+ * @copyright    2006-2023 Laurent Jouanneau
  * @copyright    2007 Thibault Piront, 2008 Christophe Thiriot, 2008 Philippe Schelté
  *
  * @see         http://www.jelix.org
@@ -105,7 +105,7 @@ class Compiler
 
         // read the configuration of the entry point
         if (file_exists($appSystemPath.$configFile)) {
-            if (IniFileMgr::readAndMergeObject($appSystemPath.$configFile, $config, 0, \Jelix\Core\Config::sectionsToIgnoreForEp) === false) {
+            if (IniFileMgr::readAndMergeObject($appSystemPath.$configFile, $config, 0, \Jelix\Core\Config\AppConfig::sectionsToIgnoreForEp) === false) {
                 throw new Exception("Syntax error in the configuration file -- {$configFile}", 6);
             }
         }
@@ -117,7 +117,7 @@ class Compiler
 
         // read the local configuration of the entry point
         if (file_exists($varConfigPath.$configFile)) {
-            if (IniFileMgr::readAndMergeObject($varConfigPath.$configFile, $config, 0, \Jelix\Core\Config::sectionsToIgnoreForEp) === false) {
+            if (IniFileMgr::readAndMergeObject($varConfigPath.$configFile, $config, 0, \Jelix\Core\Config\AppConfig::sectionsToIgnoreForEp) === false) {
                 throw new Exception("Syntax error in the configuration file -- {$configFile}", 6);
             }
         }
@@ -127,7 +127,7 @@ class Compiler
         }
 
         if ($additionalOptions) {
-            IniFileMgr::mergeIniObjectContents($config, $additionalOptions, 0, \Jelix\Core\Config::sectionsToIgnoreForEp);
+            IniFileMgr::mergeIniObjectContents($config, $additionalOptions, 0, \Jelix\Core\Config\AppConfig::sectionsToIgnoreForEp);
         }
 
         return $config;

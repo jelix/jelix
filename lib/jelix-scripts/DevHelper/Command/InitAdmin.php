@@ -125,7 +125,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         $installConfig = new \Jelix\IniFile\IniModifier(App::varConfigPath('installer.ini.php'));
 
         $mainIniFile = new \Jelix\IniFile\MultiIniModifier(
-            \Jelix\Core\Config::getDefaultConfigFile(),
+            \Jelix\Core\Config\AppConfig::getDefaultConfigFile(),
             App::mainConfigFile()
         );
         $inifile = new \Jelix\IniFile\MultiIniModifier(

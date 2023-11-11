@@ -3,13 +3,15 @@
  * @author     Laurent Jouanneau
  * @contributor  Olivier Demah
  *
- * @copyright  2011-2022 Laurent Jouanneau, 2012 Olivier Demah
+ * @copyright  2011-2023 Laurent Jouanneau, 2012 Olivier Demah
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 namespace Jelix\Core;
+
+use Jelix\Core\Config\AppConfig;
 
 /**
  * @method static void setConfig($config)
@@ -237,7 +239,7 @@ class App
         if (is_object($configFile)) {
             self::setConfig($configFile);
         } else {
-            self::setConfig(Config::load($configFile));
+            self::setConfig(AppConfig::load($configFile));
         }
         self::$_currentApp->config->enableErrorHandler = $enableErrorHandler;
     }
