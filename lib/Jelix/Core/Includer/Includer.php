@@ -8,7 +8,10 @@
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-namespace Jelix\Core;
+namespace Jelix\Core\Includer;
+
+use Jelix\Core\App;
+use Jelix\Core\Selector;
 
 /**
  * This object is responsible to load cache files.

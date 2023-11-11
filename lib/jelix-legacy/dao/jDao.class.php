@@ -4,7 +4,7 @@
  * @subpackage dao
  *
  * @author     Laurent Jouanneau
- * @copyright  2005-2021 Laurent Jouanneau
+ * @copyright  2005-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -38,7 +38,7 @@ class jDao
 
         $c = $DaoId->getCompiledFactoryClass();
         if (!class_exists($c, false)) {
-            \Jelix\Core\Includer::inc($DaoId);
+            \Jelix\Core\Includer\Includer::inc($DaoId);
         }
         $conn = jDb::getConnection($profile);
 

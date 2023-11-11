@@ -5,7 +5,7 @@
  * @author   Laurent Jouanneau
  * @contributor
  *
- * @copyright 2014 Laurent Jouanneau
+ * @copyright 2014-2023 Laurent Jouanneau
  *
  * @see     http://www.jelix.org
  * @licence  MIT
@@ -14,7 +14,7 @@
 /**
  * dummy class for compatibility.
  *
- * @see \Jelix\Core\Includer
+ * @see \Jelix\Core\Includer\Includer
  * @deprecated
  */
 class jIncluder
@@ -25,16 +25,16 @@ class jIncluder
 
     public static function inc($aSelector)
     {
-        \Jelix\Core\Includer::inc($aSelector);
+        \Jelix\Core\Includer\Includer::inc($aSelector);
     }
 
     public static function incAll($aType)
     {
-        return \Jelix\Core\Includer::incAll($aType);
+        return \Jelix\Core\Includer\Includer::incAll($aType);
     }
 
     public static function clear()
     {
-        \Jelix\Core\Includer::clear();
+        \Jelix\Core\Includer\Includer::clear();
     }
 }

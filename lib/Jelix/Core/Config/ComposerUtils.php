@@ -13,6 +13,9 @@ namespace Jelix\Core\Config;
 
 use Jelix\Core\App as App;
 
+/**
+ * @deprecated
+ */
 class ComposerUtils
 {
     public static function getAutoloader()

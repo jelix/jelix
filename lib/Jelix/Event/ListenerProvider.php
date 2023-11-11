@@ -10,7 +10,7 @@
 namespace Jelix\Event;
 
 
-use Jelix\Core\Includer;
+use Jelix\Core\Includer\Includer;
 
 class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
 {

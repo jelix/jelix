@@ -11,7 +11,7 @@
 */
 
 
-class UTParseUrlsIncluder extends \Jelix\Core\Includer {
+class UTParseUrlsIncluder extends \Jelix\Core\Includer\Includer {
 
     static function resetUrlCache() {
         self::$_includedFiles = array();
