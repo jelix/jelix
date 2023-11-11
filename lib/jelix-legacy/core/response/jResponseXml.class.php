@@ -16,7 +16,6 @@
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-require_once JELIX_LIB_PATH.'tpl/jTpl.class.php';
 
 /**
  * XML response generator.

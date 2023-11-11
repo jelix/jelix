@@ -9,10 +9,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_PATH.'tpl/jTplCompiler.class.php');
 define('TEST_JTPL_COMPILER_ASSIGN',1);
 
-class testJtplCompiler extends jTplCompiler {
+class testJtplCompiler extends \Jelix\Template\TemplateCompiler {
 
     public function setUserPlugins($userModifiers, $userFunctions) {
         $this->_modifier = array_merge($this->_modifier, $userModifiers);
@@ -83,18 +82,18 @@ class jtpl_expressions_parsingTest extends \Jelix\UnitTests\UnitTestCase {
         'array($aa)'=>'array($t->_vars[\'aa\'])',
         ' array(   $aa  )   '=>' array( $t->_vars[\'aa\'] ) ',
         ' array("e"=>$aa, "tt"=>987  )'=>' array("e"=>$t->_vars[\'aa\'], "tt"=>987 )',
-        '@aa@'=>'jLocale::get(\'aa\')',
-        '@aa.$ooo@'=>'jLocale::get(\'aa.\'.$t->_vars[\'ooo\'].\'\')',
-        '@aa~bbb@'=>'jLocale::get(\'aa~bbb\')',
-        '@aa~trc.$abcd.popo@'=>'jLocale::get(\'aa~trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
-        '@$aa~trc.$abcd.popo@'=>'jLocale::get(\'\'.$t->_vars[\'aa\'].\'~trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
-        '$aa.@trc.$abcd.popo@'=>'$t->_vars[\'aa\'].jLocale::get(\'trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
-        '@aa~trc.234.popo@'=>'jLocale::get(\'aa~trc.234.popo\')',
-        '@aa~trc.23.4.popo@'=>'jLocale::get(\'aa~trc.23.4.popo\')',
-        '@aa~trc.23.4.list@'=>'jLocale::get(\'aa~trc.23.4.list\')',
-        '@aa~trc.print@'=>'jLocale::get(\'aa~trc.print\')',
-        '@aa~trc.use@'=>'jLocale::get(\'aa~trc.use\')',
-        '@aa~trc.namespace@'=>'jLocale::get(\'aa~trc.namespace\')',
+        '@aa@'=>'\\Jelix\\Locale\\Locale::get(\'aa\')',
+        '@aa.$ooo@'=>'\\Jelix\\Locale\\Locale::get(\'aa.\'.$t->_vars[\'ooo\'].\'\')',
+        '@aa~bbb@'=>'\\Jelix\\Locale\\Locale::get(\'aa~bbb\')',
+        '@aa~trc.$abcd.popo@'=>'\\Jelix\\Locale\\Locale::get(\'aa~trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
+        '@$aa~trc.$abcd.popo@'=>'\\Jelix\\Locale\\Locale::get(\'\'.$t->_vars[\'aa\'].\'~trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
+        '$aa.@trc.$abcd.popo@'=>'$t->_vars[\'aa\'].\\Jelix\\Locale\\Locale::get(\'trc.\'.$t->_vars[\'abcd\'].\'.popo\')',
+        '@aa~trc.234.popo@'=>'\\Jelix\\Locale\\Locale::get(\'aa~trc.234.popo\')',
+        '@aa~trc.23.4.popo@'=>'\\Jelix\\Locale\\Locale::get(\'aa~trc.23.4.popo\')',
+        '@aa~trc.23.4.list@'=>'\\Jelix\\Locale\\Locale::get(\'aa~trc.23.4.list\')',
+        '@aa~trc.print@'=>'\\Jelix\\Locale\\Locale::get(\'aa~trc.print\')',
+        '@aa~trc.use@'=>'\\Jelix\\Locale\\Locale::get(\'aa~trc.use\')',
+        '@aa~trc.namespace@'=>'\\Jelix\\Locale\\Locale::get(\'aa~trc.namespace\')',
         '$aa*count($bb)'=>'$t->_vars[\'aa\']*count($t->_vars[\'bb\'])',
         '$aa & $bb'=>'$t->_vars[\'aa\'] & $t->_vars[\'bb\']',
         '$aa | $bb'=>'$t->_vars[\'aa\'] | $t->_vars[\'bb\']',
@@ -103,11 +102,11 @@ class jtpl_expressions_parsingTest extends \Jelix\UnitTests\UnitTestCase {
         '$bb->bar'=>'$t->_vars[\'bb\']->bar',
         '$bb->$bar'=>'$t->_vars[\'bb\']->{$t->_vars[\'bar\']}',
         '$bb->$bar->yo'=>'$t->_vars[\'bb\']->{$t->_vars[\'bar\']}->yo',
-        '@abstract.as.break.case.catch.class.clone@'=>'jLocale::get(\'abstract.as.break.case.catch.class.clone\')',
-        '@const.continue.declare.default.do.echo.else.elseif.empty@'=>'jLocale::get(\'const.continue.declare.default.do.echo.else.elseif.empty\')',
-        '@exit.final.for.foreach.function.global.if.implements.instanceof@'=>'jLocale::get(\'exit.final.for.foreach.function.global.if.implements.instanceof\')',
-        '@interface.and.or.xor.new.private.public@'=>'jLocale::get(\'interface.and.or.xor.new.private.public\')',
-        '@protected.return.static.switch.throw.try.use.var.eval.while@'=>'jLocale::get(\'protected.return.static.switch.throw.try.use.var.eval.while\')',
+        '@abstract.as.break.case.catch.class.clone@'=>'\\Jelix\\Locale\\Locale::get(\'abstract.as.break.case.catch.class.clone\')',
+        '@const.continue.declare.default.do.echo.else.elseif.empty@'=>'\\Jelix\\Locale\\Locale::get(\'const.continue.declare.default.do.echo.else.elseif.empty\')',
+        '@exit.final.for.foreach.function.global.if.implements.instanceof@'=>'\\Jelix\\Locale\\Locale::get(\'exit.final.for.foreach.function.global.if.implements.instanceof\')',
+        '@interface.and.or.xor.new.private.public@'=>'\\Jelix\\Locale\\Locale::get(\'interface.and.or.xor.new.private.public\')',
+        '@protected.return.static.switch.throw.try.use.var.eval.while@'=>'\\Jelix\\Locale\\Locale::get(\'protected.return.static.switch.throw.try.use.var.eval.while\')',
         '$aa*(234+$b)'=>'$t->_vars[\'aa\']*(234+$t->_vars[\'b\'])',
         '$aa[$bb[4]]'=>'$t->_vars[\'aa\'][$t->_vars[\'bb\'][4]]',
     );

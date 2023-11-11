@@ -1,37 +1,36 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  jtpl
- *
  * @author      Laurent Jouanneau
  * @contributor Dominique Papin
  *
- * @copyright   2005-2022 Laurent Jouanneau, 2007 Dominique Papin
+ * @copyright   2005-2023 Laurent Jouanneau, 2007 Dominique Papin
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Template;
+
+use Jelix\Core\App;
+use Jelix\Core\Includer\Includer;
+use Jelix\Locale\Locale;
 
 /**
  * template engine.
- *
- * @package     jelix
- * @subpackage  jtpl
  */
-class jTpl extends \Jelix\Castor\CastorCore
+class Template extends \Jelix\Castor\CastorCore
 {
     public function __construct()
     {
-        $config = jApp::config();
-        $basePath = jApp::urlBasePath();
+        $config = App::config();
+        $basePath = App::urlBasePath();
         $this->_vars['j_basepath'] = $basePath;
         $this->_vars['j_jelixwww'] = $config->urlengine['jelixWWWPath'];
         // @deprecated
         $this->_vars['j_jquerypath'] = $config->urlengine['jqueryPath'];
         $this->_vars['j_themepath'] = $basePath.'themes/'.$config->theme.'/';
         $this->_vars['j_locale'] = $config->locale;
-        $this->_vars['j_lang'] = jLocale::getCurrentLang();
-        $this->_vars['j_country'] = jLocale::getCurrentCountry();
+        $this->_vars['j_lang'] = Locale::getCurrentLang();
+        $this->_vars['j_country'] = Locale::getCurrentCountry();
         $this->_vars['j_assetsRevision'] = $config->urlengine['assetsRevision'];
         $this->_vars['j_assetsRevQueryUrl'] = $config->urlengine['assetsRevQueryUrl'];
         $this->_vars['j_assetsRevisionParameter'] = $config->urlengine['assetsRevisionParameter'];
@@ -49,7 +48,7 @@ class jTpl extends \Jelix\Castor\CastorCore
      */
     public function assignZone($name, $zoneName, $params = array())
     {
-        $this->_vars[$name] = jZone::get($zoneName, $params);
+        $this->_vars[$name] = \jZone::get($zoneName, $params);
     }
 
     /**
@@ -65,9 +64,9 @@ class jTpl extends \Jelix\Castor\CastorCore
     public function appendZone($name, $zoneName, $params = array())
     {
         if (isset($this->_vars[$name])) {
-            $this->_vars[$name] .= jZone::get($zoneName, $params);
+            $this->_vars[$name] .= \jZone::get($zoneName, $params);
         } else {
-            $this->_vars[$name] = jZone::get($zoneName, $params);
+            $this->_vars[$name] = \jZone::get($zoneName, $params);
         }
     }
 
@@ -83,7 +82,7 @@ class jTpl extends \Jelix\Castor\CastorCore
     public function assignZoneIfNone($name, $zoneName, $params = array())
     {
         if (!isset($this->_vars[$name])) {
-            $this->_vars[$name] = jZone::get($zoneName, $params);
+            $this->_vars[$name] = \jZone::get($zoneName, $params);
         }
     }
 
@@ -96,9 +95,9 @@ class jTpl extends \Jelix\Castor\CastorCore
      *
      * @return array
      */
-    public function meta($tpl, $outputtype = '', $trusted = true)
+    public function meta($tpl, $outputType = '', $trusted = true)
     {
-        $sel = new jSelectorTpl($tpl, $outputtype, $trusted);
+        $sel = new TemplateSelector($tpl, $outputType, $trusted);
         $tpl = $sel->toString();
 
         if (in_array($tpl, $this->processedMeta)) {
@@ -109,7 +108,7 @@ class jTpl extends \Jelix\Castor\CastorCore
         }
 
         $this->processedMeta[] = $tpl;
-        $md = $this->getTemplate($sel, $outputtype, $trusted);
+        $md = $this->getTemplate($sel, $outputType, $trusted);
 
         $fct = 'template_meta_'.$md;
         $fct($this);
@@ -124,16 +123,16 @@ class jTpl extends \Jelix\Castor\CastorCore
      * @param string $outputtype the type of output (html, text etc..)
      * @param bool   $trusted    says if the template file is trusted or not
      */
-    public function display($tpl, $outputtype = '', $trusted = true)
+    public function display($tpl, $outputType = '', $trusted = true)
     {
-        $sel = new jSelectorTpl($tpl, $outputtype, $trusted);
+        $sel = new TemplateSelector($tpl, $outputType, $trusted);
         $tpl = $sel->toString();
 
         $previousTpl = $this->_templateName;
         $this->_templateName = $tpl;
         $this->recursiveTpl[] = $tpl;
 
-        $md = $this->getTemplate($sel, $outputtype, $trusted);
+        $md = $this->getTemplate($sel, $outputType, $trusted);
 
         $fct = 'template_'.$md;
         $fct($this);
@@ -144,19 +143,19 @@ class jTpl extends \Jelix\Castor\CastorCore
     /**
      * include the compiled template file and call one of the generated function.
      *
-     * @param jSelectorTpl|string $tpl        template selector
-     * @param string              $outputtype the type of output (html, text etc..)
-     * @param bool                $trusted    says if the template file is trusted or not
+     * @param TemplateSelector $tpl        template selector
+     * @param string           $outputtype the type of output (html, text etc..)
+     * @param bool             $trusted    says if the template file is trusted or not
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return string the suffix name of the function to call
      */
-    protected function getTemplate($tpl, $outputtype = '', $trusted = true)
+    protected function getTemplate($tpl, $outputType = '', $trusted = true)
     {
         $tpl->userModifiers = $this->userModifiers;
         $tpl->userFunctions = $this->userFunctions;
-        jIncluder::inc($tpl);
+        Includer::inc($tpl);
 
         return md5($tpl->module.'_'.$tpl->resource.'_'.$tpl->outputType.($trusted ? '_t' : ''));
     }
@@ -169,33 +168,31 @@ class jTpl extends \Jelix\Castor\CastorCore
      * @param bool   $trusted    says if the template file is trusted or not
      * @param bool   $callMeta   false if meta should not be called
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return string the generated content
      */
-    public function fetch($tpl, $outputtype = '', $trusted = true, $callMeta = true)
+    public function fetch($tpl, $outputType = '', $trusted = true, $callMeta = true)
     {
-        $sel = new jSelectorTpl($tpl, $outputtype, $trusted);
+        $sel = new TemplateSelector($tpl, $outputType, $trusted);
         $tpl = $sel->toString();
 
-        return $this->_fetch($tpl, $sel, $outputtype, $trusted, $callMeta);
+        return $this->_fetch($tpl, $sel, $outputType, $trusted, $callMeta);
     }
 
     protected function getCachePath()
     {
-        return jApp::tempPath('compiled/templates/');
+        return App::tempPath('compiled/templates/');
     }
 
     protected function getCompiler()
     {
-        require_once JELIX_LIB_PATH.'tpl/jTplCompiler.class.php';
-
-        return new jTplCompiler();
+        return new TemplateCompiler();
     }
 
     protected function compilationNeeded($cacheFile)
     {
-        return jApp::config()->compilation['force'] || !file_exists($cacheFile);
+        return App::config()->compilation['force'] || !file_exists($cacheFile);
     }
 
     /**
@@ -205,6 +202,6 @@ class jTpl extends \Jelix\Castor\CastorCore
      */
     public function getEncoding()
     {
-        return jApp::config()->charset;
+        return App::config()->charset;
     }
 }

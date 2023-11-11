@@ -55,8 +55,11 @@
     "jSelectorModule": "core/selector/jSelectorModule.php",
     "jSelectorSimpleFile": "core/selector/jSelectorSimpleFile.php",
     "jSelectorTmp": "core/selector/jSelectorTmp.php",
+    "jSelectorTpl": "core/selector/jSelectorTpl.php",
     "jSelectorVar": "core/selector/jSelectorVar.php",
     "jSmtp": "utils/jSmtp.php",
     "jSyslogLogger": "core/log/jSyslogLogger.php",
+    "jTpl": "tpl/jTpl.php",
+    "jTplCompiler": "tpl/jTplCompiler.php",
     "textInstallReporter": "installer/textInstallReporter.php"
 }

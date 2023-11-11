@@ -4,14 +4,12 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007-2012 Laurent Jouanneau
+* @copyright   2007-2023 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_PATH.'tpl/jTplCompiler.class.php');
-
-class testJtplContentCompiler extends jTplCompiler {
+class testJtplContentCompiler extends \Jelix\Template\TemplateCompiler {
 
     public function setUserPlugins($userModifiers, $userFunctions) {
         $this->_modifier = array_merge($this->_modifier, $userModifiers);

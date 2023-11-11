@@ -18,8 +18,6 @@
  */
 require_once __DIR__.'/jResponseBasicHtml.class.php';
 
-require_once JELIX_LIB_PATH.'tpl/jTpl.class.php';
-
 /**
  * HTML5 response.
  *

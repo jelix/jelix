@@ -2,15 +2,17 @@
 /**
  * see Jelix/Core/Selector/SelectorInterface.php for documentation about selectors.
  *
- * @package     jelix
- * @subpackage  core_selector
- *
  * @author      Laurent Jouanneau
- * @copyright   2005-2019 Laurent Jouanneau
+ * @copyright   2005-2023 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Template;
+
+use Jelix\Core\App;
+use Jelix\Core\Selector\Exception;
+use Jelix\Core\Selector\ModuleSelector;
 
 /**
  * Template selector.
@@ -18,10 +20,8 @@
  * syntax : "module~tplName".
  * file : templates/tplName.tpl .
  *
- * @package    jelix
- * @subpackage core_selector
  */
-class jSelectorTpl extends jSelectorModule
+class TemplateSelector extends ModuleSelector
 {
     protected $type = 'tpl';
     protected $_dirname = 'templates/';
@@ -40,31 +40,29 @@ class jSelectorTpl extends jSelectorModule
     public function __construct($sel, $outputtype = '', $trusted = true)
     {
         if ($outputtype == '') {
-            if (jApp::coord()) {
-                if (jApp::coord()->response) {
-                    $this->outputType = jApp::coord()->response->getFormatType();
+            if (App::router()) {
+                if (App::router()->response) {
+                    $this->outputType = App::router()->response->getFormatType();
                 } else {
-                    $this->outputType = jApp::coord()->request->defaultResponseType;
+                    $this->outputType = App::router()->request->defaultResponseType;
                 }
             }
         } else {
             $this->outputType = $outputtype;
         }
         $this->trusted = $trusted;
-        $this->_compiler = 'jTplCompiler';
-        $this->_compilerPath = JELIX_LIB_PATH.'tpl/jTplCompiler.class.php';
         parent::__construct($sel);
     }
 
     /**
-     * @throws jExceptionSelector
+     * @throws Exception
      */
     protected function _createPath()
     {
-        if (!jApp::isModuleEnabled($this->module)) {
-            throw new jExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
+        if (!App::isModuleEnabled($this->module)) {
+            throw new Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
-        $config = jApp::config();
+        $config = App::config();
         $locale = $config->locale;
         $lpath = $locale.'/'.$this->resource;
         $flpath = '';
@@ -76,7 +74,7 @@ class jSelectorTpl extends jSelectorModule
         $resolutionInCache = $config->compilation['sourceFileResolutionInCache'];
 
         if ($resolutionInCache) {
-            $resolutionPath = jApp::tempPath('resolved/'.$this->module.'/'.$this->_dirname.$config->theme.'/'.$lpath.'.tpl');
+            $resolutionPath = App::tempPath('resolved/'.$this->module.'/'.$this->_dirname.$config->theme.'/'.$lpath.'.tpl');
             $resolutionCachePath = 'resolved/'.$this->module.'/'.$config->theme.'/'.$lpath;
             if (file_exists($resolutionPath)) {
                 $this->_path = $resolutionPath;
@@ -84,7 +82,7 @@ class jSelectorTpl extends jSelectorModule
 
                 return;
             }
-            jFile::createDir(dirname($resolutionPath));
+            \jFile::createDir(dirname($resolutionPath));
         }
 
         $this->findPath($config, $lpath, $flpath);
@@ -95,9 +93,14 @@ class jSelectorTpl extends jSelectorModule
         }
     }
 
+    public function getCompiler()
+    {
+        return new TemplateCompiler();
+    }
+
     protected function findPath($config, $lpath, $flpath)
     {
-        $mpath = jApp::getModulePath($this->module).$this->_dirname;
+        $mpath = App::getModulePath($this->module).$this->_dirname;
         if ($config->theme != 'default') {
             if ($this->checkThemePath($config->theme, $lpath, $flpath, $mpath, $this->resource)) {
                 return;
@@ -133,15 +136,15 @@ class jSelectorTpl extends jSelectorModule
             return;
         }
 
-        throw new jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'template'));
+        throw new Exception('jelix~errors.selector.invalid.target', array($this->toString(), 'template'));
     }
 
     protected function checkThemePath($theme, $lpath, $flpath, $mpath, $path)
     {
         $subDir = $theme.'/'.$this->module;
-        if (file_exists(jApp::varPath('themes/'.$subDir))) {
+        if (file_exists(App::varPath('themes/'.$subDir))) {
             // check if there is a redefined template for the current theme & locale in var/theme
-            $this->_path = jApp::varPath('themes/'.$subDir.'/'.$lpath.'.tpl');
+            $this->_path = App::varPath('themes/'.$subDir.'/'.$lpath.'.tpl');
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'var/themes/'.$subDir.'/'.$lpath;
 
@@ -150,7 +153,7 @@ class jSelectorTpl extends jSelectorModule
 
             if ($flpath) {
                 // check if there is a redefined template for the current theme & fallback locale in var/theme
-                $this->_path = jApp::varPath('themes/'.$subDir.'/'.$flpath.'.tpl');
+                $this->_path = App::varPath('themes/'.$subDir.'/'.$flpath.'.tpl');
                 if (is_readable($this->_path)) {
                     $this->_cachePrefix = 'var/themes/'.$subDir.'/'.$flpath;
 
@@ -159,7 +162,7 @@ class jSelectorTpl extends jSelectorModule
             }
 
             // check if there is a redefined template for the current theme in var/theme
-            $this->_path = jApp::varPath('themes/'.$subDir.'/'.$path.'.tpl');
+            $this->_path = App::varPath('themes/'.$subDir.'/'.$path.'.tpl');
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'var/themes/'.$subDir.'/'.$path;
 
@@ -167,9 +170,9 @@ class jSelectorTpl extends jSelectorModule
             }
         }
 
-        if (file_exists(jApp::appPath('app/themes/'.$subDir))) {
+        if (file_exists(App::appPath('app/themes/'.$subDir))) {
             // check if there is a redefined template for the current theme & locale in app/theme
-            $this->_path = jApp::appPath('app/themes/'.$subDir.'/'.$lpath.'.tpl');
+            $this->_path = App::appPath('app/themes/'.$subDir.'/'.$lpath.'.tpl');
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'app/themes/'.$subDir.'/'.$lpath;
 
@@ -178,7 +181,7 @@ class jSelectorTpl extends jSelectorModule
 
             if ($flpath) {
                 // check if there is a redefined template for the current theme & fallback locale in app/theme
-                $this->_path = jApp::appPath('app/themes/'.$subDir.'/'.$flpath.'.tpl');
+                $this->_path = App::appPath('app/themes/'.$subDir.'/'.$flpath.'.tpl');
                 if (is_readable($this->_path)) {
                     $this->_cachePrefix = 'app/themes/'.$subDir.'/'.$flpath;
 
@@ -187,7 +190,7 @@ class jSelectorTpl extends jSelectorModule
             }
 
             // check if there is a redefined template for the current theme in app/theme
-            $this->_path = jApp::appPath('app/themes/'.$subDir.'/'.$path.'.tpl');
+            $this->_path = App::appPath('app/themes/'.$subDir.'/'.$path.'.tpl');
             if (is_readable($this->_path)) {
                 $this->_cachePrefix = 'app/themes/'.$subDir.'/'.$path;
 
@@ -231,6 +234,6 @@ class jSelectorTpl extends jSelectorModule
     {
         // don't share the same cache for all the possible dirs
         // in case of overload removal
-        $this->_cachePath = jApp::tempPath('compiled/templates/'.$this->_cachePrefix.'_'.$this->outputType.($this->trusted ? '_t' : '').'_15'.$this->_cacheSuffix);
+        $this->_cachePath = App::tempPath('compiled/templates/'.$this->_cachePrefix.'_'.$this->outputType.($this->trusted ? '_t' : '').'_15'.$this->_cacheSuffix);
     }
 }

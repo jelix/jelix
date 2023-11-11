@@ -5,23 +5,23 @@
  * sendmail, PHP mail(), SMTP, or files for tests.  Methods are
  * based upon the standard AspEmail(tm) classes.
  *
- * @package     jelix
- * @subpackage  utils
- *
  * @author      Laurent Jouanneau
  * @contributor Kévin Lepeltier, GeekBay, Julien Issler
  *
- * @copyright   2006-2022 Laurent Jouanneau
+ * @copyright   2006-2023 Laurent Jouanneau
  * @copyright   2008 Kévin Lepeltier, 2009 Geekbay
  * @copyright   2010-2015 Julien Issler
  *
- * @see        http://jelix.org
+ * @see        https://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
 namespace Jelix\Mailer;
 
+use Jelix\Core\App;
 use Jelix\Core\Profiles;
+use Jelix\Logger\Log;
+use Jelix\Template\Template;
 
 /**
  * jMailer based on PHPMailer - PHP email transport class.
@@ -122,7 +122,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
      */
     public function __construct($exception = true)
     {
-        $config = \Jelix\Core\App::config();
+        $config = App::config();
         $this->defaultLang = $config->locale;
         $this->CharSet = $config->charset;
         if ($config->mailer['mailerType']) {
@@ -185,7 +185,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
         }
 
         $this->FromName = $config->mailer['webmasterName'];
-        $this->filePath = \Jelix\Core\App::varPath($config->mailer['filesDir']);
+        $this->filePath = App::varPath($config->mailer['filesDir']);
 
         $this->copyToFiles = $config->mailer['copyToFiles'];
 
@@ -267,12 +267,12 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
      * @param mixed  $html2textConverter
      * @param mixed  $htmlImageBaseDir
      *
-     * @return jTpl the template object
+     * @return Template the template object
      */
     public function Tpl($selector, $isHtml = false, $html2textConverter = false, $htmlImageBaseDir = '')
     {
         $this->bodyTpl = $selector;
-        $this->tpl = new \jTpl();
+        $this->tpl = new Template();
         $this->isHTML($isHtml);
         $this->html2textConverter = $html2textConverter;
         $this->htmlImageBaseDir = $htmlImageBaseDir;
@@ -291,7 +291,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
     {
         if (isset($this->bodyTpl) && $this->bodyTpl != '') {
             if ($this->tpl == null) {
-                $this->tpl = new \jTpl();
+                $this->tpl = new Template();
             }
 
             $mailtpl = $this->tpl;
@@ -332,7 +332,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
                 $this->setFrom($adr[0], $adr[1]);
             }
 
-            $config = \jApp::config();
+            $config = App::config();
             if (count($this->ReplyToQueue) == 0
                 && count($this->ReplyTo) == 0
                 && $config->mailer['replyTo']
@@ -352,7 +352,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
             }
         }
         else {
-            $config = \jApp::config();
+            $config = App::config();
             if (count($this->ReplyToQueue) == 0
                 && count($this->ReplyTo) == 0
                 && $config->mailer['replyTo'])
@@ -416,11 +416,11 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
             $who = $this->debugReceiversType;
             if ($who & self::DEBUG_RECEIVER_USER) {
                 if (class_exists('jAuth', false)
-                    && jAuth::isConnected()
-                    && jAuth::getUserSession()
-                    && !empty(jAuth::getUserSession()->login)
+                    && \jAuth::isConnected()
+                    && \jAuth::getUserSession()
+                    && !empty(\jAuth::getUserSession()->login)
                 ) {
-                    $this->getAddrName(jAuth::getUserSession()->login, 'to');
+                    $this->getAddrName(\jAuth::getUserSession()->login, 'to');
                 } else {
                     $who = self::DEBUG_RECEIVER_CONFIG;
                 }
@@ -499,7 +499,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
 
     protected function getUserIp()
     {
-        $coord = \Jelix\Core\App::coord();
+        $coord = App::router();
 
         if ($coord && $coord->request) {
             return $coord->request->getIP();
@@ -514,9 +514,9 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
         return 'no-ip';
     }
 
-    public function setLanguage($lang_type = 'en', $lang_path = 'language/')
+    public function setLanguage($langcode = 'en', $lang_path = 'language/')
     {
-        $lang = explode('_', $lang_type);
+        $lang = explode('_', $langcode);
 
         return parent::SetLanguage($lang[0], $lang_path);
     }
@@ -602,11 +602,11 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
     protected function setError($msg)
     {
         parent::setError($msg);
-        \jLog::log("jMailer error:\n".$this->ErrorInfo, 'error');
+        Log::log("jMailer error:\n".$this->ErrorInfo, 'error');
     }
 
     public function debugOutputCallback($msg, $smtpDebugLevel)
     {
-        \jLog::log("jMailer debug:\n".$msg);
+        Log::log("jMailer debug:\n".$msg);
     }
 }

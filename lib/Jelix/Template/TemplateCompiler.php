@@ -1,18 +1,19 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  jtpl
- *
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler, Brice Tence
  *
- * @copyright   2005-2015 Laurent Jouanneau
+ * @copyright   2005-2023 Laurent Jouanneau
  * @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
  * @copyright   2010 Julien Issler, 2010 Brice Tence
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\Template;
+
+use Jelix\Core\App;
+use Jelix\Core\Includer\SimpleCompilerInterface;
 
 /**
  * This is the compiler of templates: it converts a template into a php file.
@@ -20,7 +21,7 @@
  * @package     jelix
  * @subpackage  jtpl
  */
-class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompiler
+class TemplateCompiler extends \Jelix\Castor\CompilerCore implements SimpleCompilerInterface
 {
     protected static $castorPluginsPath;
 
@@ -38,7 +39,7 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
      *
      * Store the result (a php content) into a cache file given by the selector.
      *
-     * @param jSelectorTpl $selector the template selector
+     * @param \jSelectorTpl $selector the template selector
      *
      * @return bool true if ok
      */
@@ -49,7 +50,7 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
         $this->trusted = $selector->trusted;
         $md5 = md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted ? '_t' : ''));
 
-        jApp::pushCurrentModule($selector->module);
+        App::pushCurrentModule($selector->module);
 
         if (!file_exists($this->_sourceFile)) {
             $this->doError0('errors.tpl.not.found');
@@ -69,19 +70,19 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
             $footer
         );
 
-        jApp::popCurrentModule();
+        App::popCurrentModule();
 
         return true;
     }
 
-    protected function _saveCompiledString($cachefile, $result)
+    protected function _saveCompiledString($cacheFile, $result)
     {
-        jFile::write($cachefile, $result);
+        \jFile::write($cacheFile, $result);
     }
 
     protected function getCompiledLocaleRetriever($locale)
     {
-        return 'jLocale::get(\''.$locale.'\')';
+        return '\\Jelix\\Locale\\Locale::get(\''.$locale.'\')';
     }
 
     public function addMetaContent($content)
@@ -100,7 +101,7 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
      */
     protected function _getPlugin($type, $name)
     {
-        $config = jApp::config();
+        $config = App::config();
 
         $checker = function ($list, $outputType) use ($type, $name) {
             foreach ($list as $path) {
@@ -145,16 +146,16 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
 
     public function doError0($err)
     {
-        throw new jException('jelix~'.$err, array($this->_sourceFile));
+        throw new \jException('jelix~'.$err, array($this->_sourceFile));
     }
 
     public function doError1($err, $arg)
     {
-        throw new jException('jelix~'.$err, array($arg, $this->_sourceFile));
+        throw new \jException('jelix~'.$err, array($arg, $this->_sourceFile));
     }
 
     public function doError2($err, $arg1, $arg2)
     {
-        throw new jException('jelix~'.$err, array($arg1, $arg2, $this->_sourceFile));
+        throw new \jException('jelix~'.$err, array($arg1, $arg2, $this->_sourceFile));
     }
 }

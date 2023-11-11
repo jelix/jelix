@@ -110,7 +110,6 @@ LegacyJelixAutoloader::$libPath = array(
     'FormsControl' => JELIX_LIB_PATH.'forms/controls/',
     'Forms' => JELIX_LIB_PATH.'forms/',
     'Event' => JELIX_LIB_PATH.'events/',
-    'Tpl' => JELIX_LIB_PATH.'tpl/',
     'Controller' => JELIX_LIB_PATH.'controllers/',
     'Auth' => JELIX_LIB_PATH.'auth/',
     'Installer' => JELIX_LIB_PATH.'installer/',
@@ -131,7 +130,6 @@ require JELIX_LIB_CORE_PATH.'jServer.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorDao.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorDaoRecord.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorForm.class.php';
-require JELIX_LIB_CORE_PATH.'selector/jSelectorTpl.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorZone.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorAppCfg.class.php';
 require JELIX_LIB_CORE_PATH.'jUrlBase.class.php';

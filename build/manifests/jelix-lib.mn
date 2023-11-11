@@ -51,6 +51,8 @@ cd lib/Jelix/Legacy/core
 cd lib/Jelix/Legacy/events
   __ALL__
 
+cd lib/Jelix/Legacy/tpl
+  __ALL__
 
 cd lib/Jelix/Legacy/utils
   __ALL__
@@ -69,6 +71,9 @@ cd lib/Jelix/Mailer
   __ALL__
 
 cd lib/Jelix/Scripts
+  __ALL__
+
+cd lib/Jelix/Template
   __ALL__
 
 cd lib/Jelix/Routing
@@ -190,9 +195,6 @@ cd lib/jelix-legacy/forms
 cd lib/jelix-legacy/kvdb
   __ALL__
 
-
-cd lib/jelix-legacy/tpl/
-  __ALL__
 
 cd lib/jelix-legacy/utils/
   __ALL__

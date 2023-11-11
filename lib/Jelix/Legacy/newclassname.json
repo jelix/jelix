@@ -51,7 +51,10 @@
     "jSelectorLoc": "\\Jelix\\Locale\\LocaleSelector",
     "jSelectorModule": "\\Jelix\\Core\\selector\\ModuleSelector",
     "jSelectorSimpleFile": "\\Jelix\\Core\\Selector\\SimpleFileSelector",
+    "jSelectorTpl": "\\Jelix\\Template\\TemplateSelector",
     "jSmtp": "\\Jelix\\Mailer\\Smtp",
     "jSyslogLogger": "\\Jelix\\Logger\\Output\\Syslog",
+    "jTpl": "\\Jelix\\Template\\Template",
+    "jTplCompiler": "\\Jelix\\Template\\TemplateCompiler",
     "textInstallReporter": "\\Jelix\\installer\\Reporter\\Console"
 }
