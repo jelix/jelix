@@ -90,3 +90,24 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 
 - `jJsonRpc`
 - `JelixTestSuite`, `junittestcase`, `junittestcasedb`
+- `jAuth::reloadUser()`
+- `jIUrlSignificantHandler`
+- `App::appConfigPath()`, `App::configPath()`
+- `jHttpResponseException`
+- `jResponseHtml::$_CSSIELink` `jResponseHtml::$_JSIELink` `jResponseHtml::getJSIELinks` `jResponseHtml::setJSIELinks` `jResponseHtml::getCSSIELinks` `jResponseHtml::setCSSIELinks`
+- `jResponseStreamed`
+- `jEvent::clearCache()`, `Jelix\Event\Event::clearCache()`
+- `jFormsDaoDatasource::getDependentControls()`
+- `jFormsControlCaptcha::$question`, `jFormsControlCaptcha::initExpectedValue()`
+- `Jelix\Forms\HtmlWidget\RootWidget::$builder`
+- `jFile::getMimeType()`, `jFile::shortestPath()`, `jFile::normalizePath()`
+- `jIniFile`, `jIniFileModifier`, `jIniMultiFilesModifier`
+
+Removed plugins
+
+- kvdb: file2
+
+other removes:
+
+_ `j_jquerypath` variable in templates
+

@@ -4,7 +4,7 @@
  * @subpackage  forms
  *
  * @author      Laurent Jouanneau
- * @copyright   2006-2018 Laurent Jouanneau
+ * @copyright   2006-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -38,13 +38,6 @@ class RootWidget implements ParentWidgetInterface
     //------ Other methods
 
     /**
-     * @var \jelix\forms\Builder\HtmlBuilder
-     *
-     * @deprecated
-     */
-    protected $builder;
-
-    /**
      * @param \jelix\forms\Builder\HtmlBuilder $builder
      */
     public function outputHeader($builder)
@@ -55,7 +48,6 @@ class RootWidget implements ParentWidgetInterface
         $js .= $jsVarName.'.tForm.setErrorDecorator(new '.$builder->getOption('errorDecorator')."())\n";
         $js .= $jsVarName.".declareForm(jForms.tForm);\n";
         $this->addJs($js);
-        $this->builder = $builder;
     }
 
     /**

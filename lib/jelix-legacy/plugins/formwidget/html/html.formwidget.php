@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Dominique Papin
  *
- * @copyright   2006-2017 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
+ * @copyright   2006-2023 Laurent Jouanneau, 2008-2011 Julien Issler, 2008 Dominique Papin
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -61,7 +61,6 @@ class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget
 
         $js .= "jFormsJQ.declareForm(jFormsJQ.tForm);\n";
         $this->addJs($js);
-        $this->builder = $builder;
     }
 
     public function outputFooter($builder)

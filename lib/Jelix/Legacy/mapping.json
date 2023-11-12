@@ -1,5 +1,4 @@
 {
-    "ghostInstallReporter": "installer/ghostInstallReporter.php",
     "jApp": "core/jApp.php",
     "jAppManager": "core/jAppManager.php",
     "jAutoloader": "core/jAutoloader.php",
@@ -20,19 +19,14 @@
     "jHttp401UnauthorizedException": "core/jHttp401UnauthorizedException.php",
     "jHttp403ForbiddenException": "core/jHttp403ForbiddenException.php",
     "jHttp404NotFoundException": "core/jHttp404NotFoundException.php",
-    "jHttpResponseException": "core/jHttpResponseException.php",
     "jIActionSelector": "core/jIActionSelector.php",
     "jICoordPlugin": "core/jICoordPlugin.php",
-    "jIInstallReporter": "installer/jIInstallReporter.php",
     "jILogMessage": "core/log/jILogMessage.php",
     "jILogger": "core/log/jILogger.php",
     "jIMultiFileCompiler": "core/jIMultiFileCompiler.php",
     "jISelector": "core/jISelector.php",
     "jISimpleCompiler": "core/jISimpleCompiler.php",
     "jIncluder": "core/jIncluder.php",
-    "jIniFile": "utils/jIniFile.php",
-    "jIniFileModifier": "utils/jIniFileModifier.php",
-    "jIniMultiFilesModifier": "utils/jIniMultiFilesModifier.php",
     "jLocale": "core/jLocale.php",
     "jLog": "core/jLog.php",
     "jLogDumpMessage": "core/log/jLogDumpMessage.php",
@@ -60,6 +54,5 @@
     "jSmtp": "utils/jSmtp.php",
     "jSyslogLogger": "core/log/jSyslogLogger.php",
     "jTpl": "tpl/jTpl.php",
-    "jTplCompiler": "tpl/jTplCompiler.php",
-    "textInstallReporter": "installer/textInstallReporter.php"
+    "jTplCompiler": "tpl/jTplCompiler.php"
 }

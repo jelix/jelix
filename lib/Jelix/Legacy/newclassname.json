@@ -1,5 +1,4 @@
 {
-    "ghostInstallReporter": "\\Jelix\\installer\\Reporter\\NoOutput",
     "jApp": "\\Jelix\\Core\\App",
     "jAppManager": "\\Jelix\\Core\\jAppManager",
     "jAutoloader": "\\Jelix\\Core\\jAutoloader",
@@ -20,19 +19,14 @@
     "jHttp401UnauthorizedException": "\\Jelix\\Routing\\Http401UnauthorizedException",
     "jHttp403ForbiddenException": "\\Jelix\\Routing\\Http403ForbiddenException",
     "jHttp404NotFoundException": "\\Jelix\\Routing\\Http404NotFoundException",
-    "jHttpResponseException": "\\Jelix\\Routing\\HttpErrorException",
     "jIActionSelector": "\\Jelix\\Routing\\ActionSelectorInterface",
     "jICoordPlugin": "\\Jelix\\Routing\\RouterPlugin",
-    "jIInstallReporter": "\\Jelix\\Installer\\ReporterInterface",
     "jILogMessage": "\\Jelix\\Logger\\MessageInterface",
     "jILogger": "\\Jelix\\Logger\\OutputInterface",
     "jIMultiFileCompiler": "\\Jelix\\Core\\Includer\\MultiFileCompilerInterface",
     "jISelector": "\\Jelix\\Core\\Selector\\SelectorInterface",
     "jISimpleCompiler": "\\Jelix\\Core\\Includer\\SimpleCompilerInterface",
     "jIncluder": "\\Jelix\\Core\\Includer",
-    "jIniFile": "\\Jelix\\IniFile\\Util",
-    "jIniFileModifier": "\\Jelix\\IniFile\\IniModifier",
-    "jIniMultiFilesModifier": "\\Jelix\\IniFile\\MultiIniModifier",
     "jLocale": "\\Jelix\\Locale\\Locale",
     "jLog": "\\Jelix\\Logger\\Log",
     "jLogDumpMessage": "\\Jelix\\Logger\\Message\\Dump",
@@ -56,5 +50,4 @@
     "jSyslogLogger": "\\Jelix\\Logger\\Output\\Syslog",
     "jTpl": "\\Jelix\\Template\\Template",
     "jTplCompiler": "\\Jelix\\Template\\TemplateCompiler",
-    "textInstallReporter": "\\Jelix\\installer\\Reporter\\Console"
 }

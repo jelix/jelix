@@ -143,7 +143,7 @@ class jPrefManager
      */
     public static function importFromIni($iniFile)
     {
-        $ini = jIniFile::read($iniFile);
+        $ini = \Jelix\IniFile\Util::read($iniFile);
         if ($ini === false) {
             throw new Exception('Bad ini file: '.basename($iniFile));
         }

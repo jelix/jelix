@@ -131,23 +131,6 @@ class jFile
     }
 
     /**
-     * get the MIME Type of a file.
-     *
-     * @param string $file The full path of the file
-     *
-     * @return string the MIME type of the file
-     *
-     * @since 1.1.6
-     * @deprecated  use \Jelix\FileUtilities\File::getMimeType() instead
-     */
-    public static function getMimeType($file)
-    {
-        trigger_error('jFile::getMimeType is deprecated. Use \\Jelix\\FileUtilities\\File::getMimeType() instead.', E_USER_DEPRECATED);
-
-        return File::getMimeType($file);
-    }
-
-    /**
      * get the MIME Type of a file, only with its name.
      *
      * @param string $fileName the file name
@@ -242,39 +225,5 @@ class jFile
         }
 
         return $path;
-    }
-
-    /**
-     * calculate the shortest path between two directories.
-     *
-     * @param string $from absolute path from which we should start
-     * @param string $to   absolute path to which we should go
-     *
-     * @return string relative path between the two path
-     *
-     * @deprecated use \Jelix\FileUtilities\Path::shortestPath() instead
-     */
-    public static function shortestPath($from, $to)
-    {
-        trigger_error('jFile::shortestPath() is deprecated. Use \\Jelix\\FileUtilities\\Path::shortestPath() instead.', E_USER_DEPRECATED);
-
-        return Path::shortestPath($from, $to);
-    }
-
-    /**
-     * normalize a path : translate '..', '.', replace '\' by '/' and so on..
-     * support windows path.
-     *
-     * @param string $path
-     *
-     * @return string the normalized path
-     *
-     * @deprecated Use \Jelix\FileUtilities\Path::normalizePath() instead
-     */
-    public static function normalizePath($path)
-    {
-        trigger_error('jFile::normalizePath is deprecated. Use \\Jelix\\FileUtilities\\Path::normalizePath() instead.', E_USER_DEPRECATED);
-
-        return Path::normalizePath($path);
     }
 }

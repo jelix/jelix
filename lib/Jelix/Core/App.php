@@ -105,18 +105,6 @@ class App
         return self::$_currentApp->applicationInitFile;
     }
 
-    /**
-     * @deprecated
-     *
-     * @param string $file
-     *
-     * @return string
-     */
-    public static function appConfigPath($file = '')
-    {
-        return self::appSystemPath($file);
-    }
-
     public static function appSystemPath($file = '')
     {
         return self::$_currentApp->appPath.'app/system/'.$file;
@@ -130,20 +118,6 @@ class App
     public static function logPath($file = '')
     {
         return self::$_currentApp->logPath.$file;
-    }
-
-    /**
-     * @param string $file
-     *
-     * @return string
-     *
-     * @deprecated
-     */
-    public static function configPath($file = '')
-    {
-        trigger_error('App::configPath() is deprecated. use App::varConfigPath() instead', E_USER_DEPRECATED);
-
-        return self::$_currentApp->configPath.$file;
     }
 
     public static function varConfigPath($file = '')

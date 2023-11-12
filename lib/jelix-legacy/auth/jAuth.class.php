@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor Frédéric Guillot, Antoine Detante, Julien Issler, Dominique Papin, Tahina Ramaroson, Sylvain de Vathaire, Vincent Viaud
  *
- * @copyright  2001-2005 CopixTeam, 2005-2020 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2007 Frédéric Guillot, 2007 Antoine Detante
  * @copyright  2007-2008 Julien Issler, 2008 Dominique Papin, 2010 NEOV, 2010 BP2I
  *
  * This classes were get originally from an experimental branch of the Copix project (Copix 2.3dev, http://www.copix.org)
@@ -30,15 +30,6 @@ require JELIX_LIB_PATH.'auth/jAuthDriverBase.class.php';
  */
 class jAuth
 {
-    /**
-     * @deprecated
-     * @see jAuth::loadConfig()
-     */
-    protected static function _getConfig()
-    {
-        return self::loadConfig();
-    }
-
     protected static $config;
 
     /**
@@ -160,15 +151,6 @@ class jAuth
         }
 
         return self::$config;
-    }
-
-    /**
-     * @deprecated
-     * @see jAuth::getDriver()
-     */
-    protected static function _getDriver()
-    {
-        return self::getDriver();
     }
 
     /**
@@ -627,15 +609,6 @@ class jAuth
         }
 
         return $_SESSION[$config['session_name']];
-    }
-
-    /**
-     * @deprecated
-     * @see reloadUserSession()
-     */
-    public static function reloadUser()
-    {
-        return self::reloadUserSession();
     }
 
     public static function reloadUserSession()

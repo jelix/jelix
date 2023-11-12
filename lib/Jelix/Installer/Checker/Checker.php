@@ -102,13 +102,6 @@ class Checker extends CheckerBase
 
     protected function loadBuildFile()
     {
-        // @deprecated
-        if (file_exists(JELIX_LIB_PATH.'BUILD')) {
-            $this->buildProperties = parse_ini_file(JELIX_LIB_PATH.'BUILD');
-
-            return;
-        }
-
         $composerFile = __DIR__.'/../../../../../composer.json';
         if (!file_exists($composerFile)) {
             $this->buildProperties['PHP_VERSION_TARGET'] = '7.4';

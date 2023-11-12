@@ -4,7 +4,7 @@
  * @subpackage  forms
  *
  * @author      Laurent Jouanneau
- * @copyright   2006-2008 Laurent Jouanneau
+ * @copyright   2006-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -21,12 +21,7 @@
 class jFormsControlCaptcha extends jFormsControl
 {
     public $type = 'captcha';
-    /**
-     * @var string
-     *
-     * @deprecated
-     */
-    public $question = '';
+
     public $required = true;
 
     protected $validatorName = 'simple';
@@ -91,21 +86,8 @@ class jFormsControlCaptcha extends jFormsControl
     public function initCaptcha()
     {
         $data = $this->getCaptcha()->initOnDisplay();
-        if (is_array($data) && isset($data['question'])) {
-            // to mimic deprecated behavior of a previous version of jFormsControlCaptcha
-            $this->question = $data['question'];
-        }
         $this->container->privateData[$this->ref] = $data;
 
         return $data;
-    }
-
-    /**
-     * @deprecated use initCaptcha() instead
-     */
-    public function initExpectedValue()
-    {
-        jLog::log('captcha jforms control: initExpectedValue is deprecated, use initCaptcha instead', 'deprecated');
-        $this->initCaptcha();
     }
 }

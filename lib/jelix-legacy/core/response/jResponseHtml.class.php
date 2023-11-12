@@ -111,15 +111,6 @@ class jResponseHtml extends jResponseBasicHtml
     protected $_CSSLink = array();
 
     /**
-     * list of css stylesheet for IE.
-     *
-     * @var array[] key = url, value=link attributes + optional parameter _iecondition
-     *
-     * @deprecated since 1.7.0
-     */
-    protected $_CSSIELink = array();
-
-    /**
      * list of CSS code.
      *
      * @var string[]
@@ -132,15 +123,6 @@ class jResponseHtml extends jResponseBasicHtml
      * @var array[] key = url, value=link attributes
      */
     protected $_JSLink = array();
-
-    /**
-     * list of js script for IE.
-     *
-     * @var array[] key = url, value=link attributes + optional parameter _iecondition
-     *
-     * @deprecated since 1.7.0
-     */
-    protected $_JSIELink = array();
 
     /**
      * inline js code to insert before js links.
@@ -363,31 +345,21 @@ class jResponseHtml extends jResponseBasicHtml
      *
      * @param string $src    the link
      * @param array  $params additionals attributes for the script tag
-     * @param bool   $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
      */
-    public function addJSLink($src, $params = array(), $forIE = false)
+    public function addJSLink($src, $params = array())
     {
-        if ($forIE) {
-            if (!isset($this->_JSIELink[$src])) {
-                if (!is_bool($forIE) && !empty($forIE)) {
-                    $params['_ieCondition'] = $forIE;
-                }
-                $this->_JSIELink[$src] = $params;
-            }
-        } else {
-            if (!preg_match('!^https?://!', $src)) {
-                $newSrc = $this->appendRevisionToUrl($src);
+        if (!preg_match('!^https?://!', $src)) {
+            $newSrc = $this->appendRevisionToUrl($src);
 
-                if ($newSrc != $src) {
-                    // if the resource has already been added without the revision let's remove it
-                    unset($this->_JSLink[$src]);
-                    $src = $newSrc;
-                }
+            if ($newSrc != $src) {
+                // if the resource has already been added without the revision let's remove it
+                unset($this->_JSLink[$src]);
+                $src = $newSrc;
             }
+        }
 
-            if (!isset($this->_JSLink[$src])) {
-                $this->_JSLink[$src] = $params;
-            }
+        if (!isset($this->_JSLink[$src])) {
+            $this->_JSLink[$src] = $params;
         }
     }
 
@@ -397,24 +369,14 @@ class jResponseHtml extends jResponseBasicHtml
      * @param string $module the module where file is stored
      * @param mixed  $src    the relative path inside the {module}/www/ directory
      * @param array  $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
-     * @param bool   $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
      */
-    public function addJSLinkModule($module, $src, $params = array(), $forIE = false)
+    public function addJSLinkModule($module, $src, $params = array())
     {
         $jurlParams = array('targetmodule' => $module, 'file' => $src);
         $this->appendRevisionToQueryParameters($jurlParams);
         $src = jUrl::get('jelix~www:getfile', $jurlParams);
-        if ($forIE) {
-            if (!isset($this->_JSIELink[$src])) {
-                if (!is_bool($forIE) && !empty($forIE)) {
-                    $params['_ieCondition'] = $forIE;
-                }
-                $this->_JSIELink[$src] = $params;
-            }
-        } else {
-            if (!isset($this->_JSLink[$src])) {
-                $this->_JSLink[$src] = $params;
-            }
+        if (!isset($this->_JSLink[$src])) {
+            $this->_JSLink[$src] = $params;
         }
     }
 
@@ -439,30 +401,6 @@ class jResponseHtml extends jResponseBasicHtml
     }
 
     /**
-     * returns all JS links for IE.
-     *
-     * @return array key = url, value=link attributes + optional parameter _iecondition
-     *
-     * @deprecated since 1.7.0
-     */
-    public function getJSIELinks()
-    {
-        return $this->_JSIELink;
-    }
-
-    /**
-     * set all JS links for IE.
-     *
-     * @param array $list key = url, value=link attributes
-     *
-     * @deprecated since 1.7.0
-     */
-    public function setJSIELinks($list)
-    {
-        $this->_JSIELink = $list;
-    }
-
-    /**
      * returns all CSS links.
      *
      * @return array key = url, value=link attributes
@@ -483,61 +421,28 @@ class jResponseHtml extends jResponseBasicHtml
     }
 
     /**
-     * returns all CSS links for IE.
-     *
-     * @return array key = url, value=link attributes + optional parameter _iecondition
-     *
-     * @deprecated since 1.7.0
-     */
-    public function getCSSIELinks()
-    {
-        return $this->_CSSIELink;
-    }
-
-    /**
-     * set all CSS links for IE.
-     *
-     * @param array $list key = url, value=link attributes
-     *
-     * @deprecated since 1.7.0
-     */
-    public function setCSSIELinks($list)
-    {
-        $this->_CSSIELink = $list;
-    }
-
-    /**
      * add a link to a css stylesheet in the document head.
      *
      * $forIe parameter exists since 1.0b2
      *
      * @param string $src    the link
      * @param array  $params additionnals attributes for the link tag
-     * @param mixed  $forIE  if true, the style sheet will be only for IE browser. string values possible (ex:'lt IE 7')
      */
-    public function addCSSLink($src, $params = array(), $forIE = false)
+    public function addCSSLink($src, $params = array())
     {
-        if ($forIE) {
-            if (!isset($this->_CSSIELink[$src])) {
-                if (!is_bool($forIE) && !empty($forIE)) {
-                    $params['_ieCondition'] = $forIE;
-                }
-                $this->_CSSIELink[$src] = $params;
-            }
-        } else {
-            if (!preg_match('!^https?://!', $src)) {
-                $newSrc = $this->appendRevisionToUrl($src);
 
-                if ($newSrc != $src) {
-                    // if the resource has already been added without the revision let's remove it
-                    unset($this->_CSSLink[$src]);
-                    $src = $newSrc;
-                }
-            }
+        if (!preg_match('!^https?://!', $src)) {
+            $newSrc = $this->appendRevisionToUrl($src);
 
-            if (!isset($this->_CSSLink[$src])) {
-                $this->_CSSLink[$src] = $params;
+            if ($newSrc != $src) {
+                // if the resource has already been added without the revision let's remove it
+                unset($this->_CSSLink[$src]);
+                $src = $newSrc;
             }
+        }
+
+        if (!isset($this->_CSSLink[$src])) {
+            $this->_CSSLink[$src] = $params;
         }
     }
 
@@ -548,25 +453,15 @@ class jResponseHtml extends jResponseBasicHtml
      * @param mixed  $src    the relative path inside the {module}/www/ directory
      * @params array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
      *
-     * @param bool  $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
      * @param mixed $params
      */
-    public function addCSSLinkModule($module, $src, $params = array(), $forIE = false)
+    public function addCSSLinkModule($module, $src, $params = array())
     {
         $jurlParams = array('targetmodule' => $module, 'file' => $src);
         $this->appendRevisionToQueryParameters($jurlParams);
         $src = jUrl::get('jelix~www:getfile', $jurlParams);
-        if ($forIE) {
-            if (!isset($this->_CSSIELink[$src])) {
-                if (!is_bool($forIE) && !empty($forIE)) {
-                    $params['_ieCondition'] = $forIE;
-                }
-                $this->_CSSIELink[$src] = $params;
-            }
-        } else {
-            if (!isset($this->_CSSLink[$src])) {
-                $this->_CSSLink[$src] = $params;
-            }
+        if (!isset($this->_CSSLink[$src])) {
+            $this->_CSSLink[$src] = $params;
         }
     }
 
@@ -577,26 +472,16 @@ class jResponseHtml extends jResponseBasicHtml
      * @param mixed  $src    the relative path inside the {module}/www/themes/{currenttheme}/ directory
      * @params array $params additionnal parameters for the generated tag (a media attribute for stylesheet for example)
      *
-     * @param bool  $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7')
      * @param mixed $params
      */
-    public function addCSSThemeLinkModule($module, $src, $params = array(), $forIE = false)
+    public function addCSSThemeLinkModule($module, $src, $params = array())
     {
         $file = 'themes/'.jApp::config()->theme.'/'.$src;
         $jurlParams = array('targetmodule' => $module, 'file' => $file);
         $this->appendRevisionToQueryParameters($jurlParams);
         $src = jUrl::get('jelix~www:getfile', $jurlParams);
-        if ($forIE) {
-            if (!isset($this->_CSSIELink[$src])) {
-                if (!is_bool($forIE) && !empty($forIE)) {
-                    $params['_ieCondition'] = $forIE;
-                }
-                $this->_CSSIELink[$src] = $params;
-            }
-        } else {
-            if (!isset($this->_CSSLink[$src])) {
-                $this->_CSSLink[$src] = $params;
-            }
+        if (!isset($this->_CSSLink[$src])) {
+            $this->_CSSLink[$src] = $params;
         }
     }
 
@@ -877,16 +762,6 @@ class jResponseHtml extends jResponseBasicHtml
             $this->outputCssLinkTag($src, $params);
         }
 
-        foreach ($this->_CSSIELink as $src => $params) {
-            // special params for conditions on IE versions
-            if (!isset($params['_ieCondition'])) {
-                $params['_ieCondition'] = 'IE';
-            }
-            echo '<!--[if '.$params['_ieCondition'].' ]>';
-            $this->outputCssLinkTag($src, $params);
-            echo '<![endif]-->';
-        }
-
         if ($this->favicon != '') {
             $fav = htmlspecialchars($this->favicon);
             echo '<link rel="icon" type="image/x-icon" href="',$fav,'" ',$this->_endTag;
@@ -923,15 +798,6 @@ class jResponseHtml extends jResponseBasicHtml
         }
         foreach ($this->_JSLink as $src => $params) {
             $this->outputJsScriptTag($src, $params);
-        }
-
-        foreach ($this->_JSIELink as $src => $params) {
-            if (!isset($params['_ieCondition'])) {
-                $params['_ieCondition'] = 'IE';
-            }
-            echo '<!--[if '.$params['_ieCondition'].' ]>';
-            $this->outputJsScriptTag($src, $params);
-            echo '<![endif]-->';
         }
 
         // styles

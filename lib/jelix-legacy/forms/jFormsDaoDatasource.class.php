@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Dominique Papin, Julien Issler
  *
- * @copyright   2006-2022 Laurent Jouanneau
+ * @copyright   2006-2023 Laurent Jouanneau
  * @copyright   2008 Dominique Papin
  * @copyright   2010-2015 Julien Issler
  *
@@ -152,14 +152,5 @@ class jFormsDaoDatasource extends jFormsDynamicDatasource
         }
 
         return $label;
-    }
-
-    /**
-     * @deprecated
-     * @see jFormsDaoDatasource::getCriteriaControls()
-     */
-    public function getDependentControls()
-    {
-        return $this->getCriteriaControls();
     }
 }

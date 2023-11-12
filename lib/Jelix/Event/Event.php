@@ -3,7 +3,7 @@
 /**
  * @author      Gérald Croes, Patrice Ferlet, Laurent Jouanneau
  *
- * @copyright 2001-2005 CopixTeam, 2005-2022 Laurent Jouanneau
+ * @copyright 2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -301,15 +301,6 @@ class Event implements \Jelix\Event\EventInterface
         }
 
         return App::services()->eventDispatcher()->dispatch($event);
-    }
-
-    /**
-     * do nothing. Use \jApp::reloadServices() instead
-     *
-     * @deprecated
-     */
-    public static function clearCache()
-    {
     }
 
 }
