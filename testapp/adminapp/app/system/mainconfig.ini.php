@@ -27,8 +27,6 @@ jacl2db.installparam=defaultuser
 jelix.enabled=on
 jelix.installparam="wwwfiles=vhost"
 
-jacl.enabled=off
-jacldb.enabled=off
 jsoap.enabled=off
 jauth.enabled=on
 master_admin.enabled=on

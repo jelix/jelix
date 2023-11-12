@@ -137,9 +137,6 @@ class infosreaderTest extends \Jelix\UnitTests\UnitTestCase {
             <array>
                 <string key="name" value="jacl2db" />
             </array>
-            <array>
-                <string key="name" value="jacldb" />
-            </array>
         </array>
         <array property="autoloaders">
             <string>autoloadtest/myautoloader.php</string>
@@ -193,7 +190,6 @@ class infosreaderTest extends \Jelix\UnitTests\UnitTestCase {
     <module name=\"testurls\" minversion=\"1.7.0-beta.5\" maxversion=\"1.7.0-beta.5\"/>
     <module name=\"jauthdb\"/>
     <module name=\"jacl2db\"/>
-    <module name=\"jacldb\"/>
   </dependencies>
   <autoload>
     <autoloader file=\"autoloadtest/myautoloader.php\"/>

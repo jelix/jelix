@@ -135,7 +135,7 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
         $enabledGlobally = $this->mainConfigIni->getValue($name.'.enabled', 'modules');
         $moduleInfos = new \Jelix\Installer\ModuleStatus($name, $path, $moduleSetupList, $enabledGlobally);
 
-        if (in_array($name, array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap'))) {
+        if (in_array($name, array('jelix','jacl2db','jauth','jauthdb','jsoap'))) {
             return new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this);
         }
         else {
@@ -253,7 +253,7 @@ class testInstallerMain extends \Jelix\Installer\Installer {
             , null, null,
             jApp::tempPath('installer_urls.xml'));
 
-        $nativeModules = array('jelix','jacl', 'jacl2db','jacldb','jauth','jauthdb','jsoap');
+        $nativeModules = array('jelix', 'jacl2db','jauth','jauthdb','jsoap');
 
         $config = jApp::config();
         foreach ($this->globalSetup->configContent as $ep=>$conf) {

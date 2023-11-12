@@ -108,6 +108,7 @@ if you want to keep your module.xml files, modify them:
 
 ## Modules gone
 
+- jacl and jacldb. Use jacl2 and jacl2db instead.
 
 ## Test inside modules
 

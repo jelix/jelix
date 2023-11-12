@@ -12,7 +12,6 @@
 default = testapp
 forward = jelix_tests_forward
 wrong_profilname = abdsdpoipoipoer
-jacl_profile = testapp
 jacl2_profile = testapp
 pgsql_profile = testapp_pgsql
 mysqli_profile = testapp_mysqli

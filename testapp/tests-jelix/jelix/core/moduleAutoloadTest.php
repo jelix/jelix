@@ -24,7 +24,7 @@ class moduleAutoloadTest extends \Jelix\UnitTests\UnitTestCase
     
     function testClassSection() {
         $conf = jApp::config();
-        $this->assertEquals(26, count($conf->_autoload_class), '_autoload_class should have 23 declarations');
+        $this->assertEquals(25, count($conf->_autoload_class), '_autoload_class should have 25 declarations');
         $this->assertTrue(isset($conf->_autoload_class['myautoloadedclass']), '_autoload_class should declare info for myautoloadedclass');
         $this->assertEquals(self::$modulePath.'autoloadtest/autoloadtestclass.php', $conf->_autoload_class['myautoloadedclass'] , 'check path of file for myautoloadedclass');
     }
@@ -34,8 +34,8 @@ class moduleAutoloadTest extends \Jelix\UnitTests\UnitTestCase
         $this->assertEquals(2, count($conf->_autoload_classpattern), '_autoload_classpattern should have 2 properties');
         $this->assertTrue(isset($conf->_autoload_classpattern['regexp']), '_autoload_classpattern should have a regexp property');
         $this->assertTrue(isset($conf->_autoload_classpattern['path']), '_autoload_classpattern should have a path property');
-        $this->assertEquals(3, count($conf->_autoload_classpattern['regexp']), '_autoload_classpattern[regexp] should have 3 declarations (for jelix_tests, jacldb and jacl2db modules)');
-        $this->assertEquals(3, count($conf->_autoload_classpattern['path']), '_autoload_classpattern[path] should have 3 declarations (for jelix_tests, jacldb and jacl2db modules)');
+        $this->assertEquals(2, count($conf->_autoload_classpattern['regexp']), '_autoload_classpattern[regexp] should have 3 declarations (for jelix_tests and jacl2db modules)');
+        $this->assertEquals(2, count($conf->_autoload_classpattern['path']), '_autoload_classpattern[path] should have 3 declarations (for jelix_tests and jacl2db modules)');
         $this->assertTrue(in_array("/^myalclass/", $conf->_autoload_classpattern['regexp']), 'check the regexp');
         $this->assertTrue(in_array(self::$modulePath.'autoloadtest/withpattern/|.cl.php', $conf->_autoload_classpattern['path']), 'check path');
     }

@@ -16,8 +16,6 @@ jelix_tests.enabled=on
 testapp.enabled=on
 testurls.enabled=on
 jsoap.enabled=on
-jacl.enabled=on
-jacldb.enabled=on
 jacl2.enabled=on
 jacl2db.enabled=on
 jauthdb.enabled=on
@@ -42,11 +40,6 @@ auth=auth.coord.ini.php
 [jacl2]
 on_error=2
 error_message="jacl2~errors.action.right.needed"
-on_error_action="jelix~error:badright"
-
-[coordplugin_jacl]
-on_error=2
-error_message="jacl~errors.action.right.needed"
 on_error_action="jelix~error:badright"
 
 [responses]

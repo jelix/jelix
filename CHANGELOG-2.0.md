@@ -28,6 +28,7 @@
 
 - the script runtests.php and the unit test mechanism for modules
   (tests inside modules) are now gone. See upgrade instructions.
+- the modules jacl and jacldb are not provided anymore. Use jacl2 and jacl2db instead.
 
 ## changes in jDb
 

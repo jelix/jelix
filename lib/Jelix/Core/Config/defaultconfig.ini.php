@@ -51,10 +51,6 @@ enableAllModules=off
 jelix.enabled=off
 jelix.path="lib:jelix-legacy/core-modules/jelix"
 
-; jacldb is deprecated. keep it uninstall if possible
-jacldb.enabled=off
-
-
 [coordplugins]
 
 [tplplugins]

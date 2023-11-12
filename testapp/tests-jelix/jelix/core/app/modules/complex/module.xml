@@ -15,7 +15,6 @@
         <module name="testurls" minversion="1.7.0-beta.5" maxversion="1.7.0-beta.5"/>
                <module name="jauthdb"/>
                <module name="jacl2db"/>
-               <module name="jacldb"/>
     </dependencies>
     <autoload>
         <class name="myautoloadedclass" file="autoloadtest/autoloadtestclass.php"/>

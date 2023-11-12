@@ -132,7 +132,7 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
         <jelix minversion="1.0" maxversion="1.1" />
         <module name="jauthdb" />
         <module name="jacl2db" id="jacl2db@jelix.org"  />
-        <module name="jacldb"  id="jacldb@jelix.org"  minversion="1.0" optional="true"/>
+        <module name="news"  id="news@testapp.jelix.org"  minversion="1.0" optional="true"/>
     </dependencies>
 </module>';
 
@@ -167,8 +167,8 @@ class jInstaller_ComponentTest extends \Jelix\UnitTests\UnitTestCase {
             ),
             array(
                 'type'=> 'module',
-                'id' => 'jacldb@jelix.org',
-                'name' => 'jacldb',
+                'id' => 'news@testapp.jelix.org',
+                'name' => 'news',
                 'minversion' => '1.0',
                 'maxversion' => '*',
                 'version' => '>=1.0',

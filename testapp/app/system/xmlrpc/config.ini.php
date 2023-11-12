@@ -4,13 +4,9 @@
 [coordplugins]
 auth = auth_ws.coord.ini.php
 jacl2 = 1
-jacl = 1
 
 [responses]
 soap="jsoap~jResponseSoap"
 
 [jacl2]
-on_error=1
-
-[coordplugin_jacl]
 on_error=1

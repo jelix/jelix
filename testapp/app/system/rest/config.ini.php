@@ -3,7 +3,6 @@
 
 [coordplugins]
 jacl2=1
-jacl=1
 
 [responses]
 html=myHtmlResponse

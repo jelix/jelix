@@ -3,41 +3,6 @@ cd lib/jelix-modules
   INSTALL
   CREDITS
 
-cd lib/jelix-modules/jacl
-  __ALL__
-cd lib/jelix-modules/jacl/classes
-  __ALL__
-cd lib/jelix-modules/jacl/install
-  __ALL__
-cd lib/jelix-modules/jacl/locales/en_GB/
-cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jacl/locales/en_US/
-cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jacl/locales/fr_FR/
-cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jacl/plugins/coord/jacl
-  __ALL__
-cd lib/jelix-modules/jacl/plugins/tpl/common/
-  __ALL__
-
-cd lib/jelix-modules/jacldb
-  __ALL__
-cd lib/jelix-modules/jacldb/classes
-  __ALL__
-cd lib/jelix-modules/jacldb/daos
-  __ALL__
-cd lib/jelix-modules/jacldb/install
-  __ALL__
-cd lib/jelix-modules/jacldb/locales/en_US
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
-cd lib/jelix-modules/jacldb/locales/en_GB
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
-cd lib/jelix-modules/jacldb/locales/fr_FR
-cch acldb.UTF-8.properties(acldb.%charset%.properties)
-cd lib/jelix-modules/jacldb/plugins/acl/db/
-  __ALL__
-
-
 cd lib/jelix-modules/jacl2
   module.xml
 cd lib/jelix-modules/jacl2/classes
