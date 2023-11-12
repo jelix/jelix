@@ -24,6 +24,11 @@
 
 - Remove support of infoIDSuffix from jelix-scripts.ini files
 
+- Functions declared into the namespace `Jelix\Utilities` are now into the namespace `Jelix\Core\Utilities`
+
+- the script runtests.php and the unit test mechanism for modules
+  (tests inside modules) are now gone. See upgrade instructions.
+
 ## changes in jDb
 
 jDb is now relying on [JelixDatabase](https://github.com/jelix/JelixDatabase).
@@ -83,3 +88,4 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 ## removed classes and methods
 
 - `jJsonRpc`
+- `JelixTestSuite`, `junittestcase`, `junittestcasedb`

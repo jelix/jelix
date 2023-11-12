@@ -154,9 +154,6 @@ cd testapp/tests-jelix/jelix/tpl/
 cd testapp/tests-jelix/jelix/utils/
   __ALL__
 
-cd testapp/tests/
-  __ALL__
-
 cd testapp/var
   .htaccess
 cd testapp/var/log

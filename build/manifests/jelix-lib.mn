@@ -258,9 +258,6 @@ cd lib/jelix-plugins/cache/
 cd lib/jelix-plugins/kvdb/
   __ALL_RECURSIVELY__
 
-cd lib/jelix-tests/
-  __ALL_RECURSIVELY__
-
 cd lib/installwizard/
   __ALL__
 cd lib/installwizard/pages/end/

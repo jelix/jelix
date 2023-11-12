@@ -104,7 +104,20 @@ if you want to keep your module.xml files, modify them:
   by `\Jelix\Core\AppManager::errorIfAppInstalled()` and `\Jelix\Core\AppManager::errorIfAppClosed()`
 
 
+- Functions declared into the namespace `Jelix\Utilities` are now into the namespace `Jelix\Core\Utilities`
+
 ## Modules gone
 
 
+## Test inside modules
 
+
+Since the script runtests.php and the unit test mechanism for modules
+(tests inside modules) don't exist anymore, you must write tests outside modules, 
+in order to not include them into Composer packages or other deployment system. 
+It also allows you to use the PHPunit version you want, or to use other unit tests framework.
+
+So migrate your existing tests inside modules to another place, and configure
+your own PHPunit setup.
+
+And delete the runtests.php script from your application if it exist.
