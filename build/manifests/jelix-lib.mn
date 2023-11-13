@@ -219,9 +219,6 @@ cd lib/jelix-legacy/plugins/formbuilder/
 cd lib/jelix-legacy/plugins/formwidget/
   __ALL_RECURSIVELY__
 
-cd lib/jelix-legacy/plugins/jforms/
-  __ALL_RECURSIVELY__
-
 cd lib/jelix-legacy/plugins/kvdb/
   __ALL_RECURSIVELY__
 

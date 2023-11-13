@@ -126,6 +126,17 @@ your own PHPunit setup.
 
 And delete the runtests.php script from your application if it exist.
 
+## Migrate legacy jforms builder or replace them
+
+jForms builder named `legacy.html`,  `legacy.htmllight` or having name starting with `legacy.`
+are not supported anymore. 
+
+You should use supported builders (named `html` or else). Your template may have to
+be modified.
+
+Or migrate your custom builder, if you have one, to base it on the supported builders.
+
+
 ## Other API changed
 
 - If you use plugins, you have to change their base class name for some of them:

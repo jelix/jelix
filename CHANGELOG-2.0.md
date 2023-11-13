@@ -32,6 +32,9 @@
 
 - remove support of the deprecated command line scripts system of Jelix <=1.6. Only Symphony console scripts are supported from now.
 
+- remove the deprecated jforms builder based on `jFormsBuilderBase` and `jFormsBuilderHtml`
+  and so, builders named `legacy.html` or `legacy.htmllight`
+
 ## changes in jDb
 
 jDb is now relying on [JelixDatabase](https://github.com/jelix/JelixDatabase).
@@ -108,6 +111,8 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 - `Jelix\Forms\HtmlWidget\RootWidget::$builder`
 - `jFile::getMimeType()`, `jFile::shortestPath()`, `jFile::normalizePath()`
 - `jIniFile`, `jIniFileModifier`, `jIniMultiFilesModifier`
+- `jFormsBuilderBase`, `jFormsBuilderHtml`, `htmlJformsBuilder`, `htmllightJformsBuilder`
+
 
 From the command line scripts system of Jelix <=1.6:
 

@@ -8,7 +8,7 @@
  * @contributor Bastien Jaillot, Steven Jehannet
  * @contributor Christophe Thiriot, Julien Issler, Olivier Demah
  *
- * @copyright   2006-2022 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
+ * @copyright   2006-2023 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
  * @copyright   2008-2015 Julien Issler, 2009 Olivier Demah, 2010 Steven Jehannet
  *
  * @see         http://www.jelix.org
@@ -812,20 +812,15 @@ abstract class jFormsBase
 
     /**
      * @param string $buildertype the type name of a form builder.
-     *                            if the name begins by 'legacy.', it load a legacy builder plugin (jelix <=1.4)
      *
      * @throws jExceptionForms
      *
-     * @return \jelix\forms\Builder\BuilderBase|jFormsBuilderBase
+     * @return \jelix\forms\Builder\BuilderBase
      */
     public function getBuilder($buildertype)
     {
-        $legacy = false;
         if ($buildertype == '') {
             $buildertype = $plugintype = 'html';
-        } elseif (preg_match('/^legacy\.(.*)$/', $buildertype, $m)) {
-            $legacy = true;
-            $plugintype = $m[1];
         } else {
             $plugintype = $buildertype;
         }
@@ -834,12 +829,8 @@ abstract class jFormsBase
             return $this->builders[$buildertype];
         }
 
-        if (!$legacy) {
-            $o = jApp::loadPlugin($plugintype, 'formbuilder', '.formbuilder.php', $plugintype.'FormBuilder', $this);
-        } else {
-            include_once JELIX_LIB_PATH.'forms/legacy/jFormsBuilderBase.class.php';
-            $o = jApp::loadPlugin($plugintype, 'jforms', '.jformsbuilder.php', $plugintype.'JformsBuilder', $this);
-        }
+        /** @var \jelix\forms\Builder\BuilderBase $o */
+        $o = jApp::loadPlugin($plugintype, 'formbuilder', '.formbuilder.php', $plugintype.'FormBuilder', $this);
 
         if ($o) {
             $this->builders[$buildertype] = $o;
