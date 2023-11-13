@@ -127,4 +127,4 @@ From the command line scripts system of Jelix <=1.6:
 ## other removes:
 
 _ `j_jquerypath` variable in templates
-
+- configuration parameter `loadClasses` from the `sessions` section

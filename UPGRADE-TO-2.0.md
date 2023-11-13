@@ -106,6 +106,14 @@ The deprecated installation system, based on jInstaller* classes, has gone. You 
 use the official installation system, based on `\Jelix\Installer\` classes.
 
 
+## Changes into the configuration
+
+- configuration parameter `loadClasses` from the `sessions` section has gone. You should
+  declare classes that were listed into this parameter, in the autoloading
+  section of module.xml/jelix-module.json files (or if you prefer, into the 
+  composer.json if the module is a Composer package)
+
+
 ## Convert test inside modules
 
 Since the script runtests.php and the unit test mechanism for modules

@@ -405,9 +405,6 @@ storage=
 ; dao_selector = "jelix~jsession"
 ; dao_db_profile = ""
 
-; list of selectors of classes to load before the session_start
-; @deprecated please use autoload configuration in jelix-app.json/module.xml files instead
-loadClasses=
 
 [forms]
 ; define input type for datetime widgets : "textboxes" or "menulists"
