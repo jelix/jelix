@@ -126,7 +126,6 @@ spl_autoload_register('LegacyJelixAutoloader::loadClass');
 
 require JELIX_LIB_CORE_PATH.'jBasicErrorHandler.class.php';
 require JELIX_LIB_CORE_PATH.'jException.class.php';
-require JELIX_LIB_CORE_PATH.'jServer.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorDao.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorDaoRecord.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorForm.class.php';
@@ -136,7 +135,6 @@ require JELIX_LIB_CORE_PATH.'jUrlBase.class.php';
 require JELIX_LIB_CORE_PATH.'jUrlAction.class.php';
 require JELIX_LIB_CORE_PATH.'jUrl.class.php';
 require JELIX_LIB_CORE_PATH.'jController.class.php';
-require JELIX_LIB_CORE_PATH.'jSession.class.php';
 
 require __DIR__.'/../Jelix/Core/Utilities.php';
 

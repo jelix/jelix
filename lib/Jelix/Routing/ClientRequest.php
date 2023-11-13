@@ -15,6 +15,7 @@
 namespace Jelix\Routing;
 
 use Jelix\Core\App;
+use Jelix\Core\Server;
 
 /**
  * base class for object which retrieve all parameters of an http request. The
@@ -348,7 +349,7 @@ abstract class ClientRequest
      */
     public function isHttps()
     {
-        return \jServer::isHttps();
+        return Server::isHttps();
     }
 
     /**
@@ -392,7 +393,7 @@ abstract class ClientRequest
      */
     public function getDomainName()
     {
-        return \jServer::getDomainName();
+        return Server::getDomainName();
     }
 
     /**
@@ -406,7 +407,7 @@ abstract class ClientRequest
      */
     public function getServerURI($forceHttps = null)
     {
-        return \jServer::getServerURI($forceHttps);
+        return Server::getServerURI($forceHttps);
     }
 
     /**
@@ -420,7 +421,7 @@ abstract class ClientRequest
      */
     public function getPort($forceHttps = null)
     {
-        return \jServer::getPort($forceHttps);
+        return Server::getPort($forceHttps);
     }
 
     protected $_rawBody;

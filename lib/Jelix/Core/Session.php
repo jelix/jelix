@@ -1,8 +1,5 @@
 <?php
 /**
- * @package    jelix
- * @subpackage core
- *
  * @author     Julien Issler
  * @contributor Laurent Jouanneau
  *
@@ -10,19 +7,13 @@
  *
  * @see       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- *
- * @since 1.0
  */
+namespace Jelix\Core;
 
 /**
  * session management class of the jelix core.
- *
- * @package  jelix
- * @subpackage core
- *
- * @since 1.0
  */
-class jSession
+class Session
 {
     protected static $_params;
 
@@ -31,7 +22,7 @@ class jSession
      */
     public static function start()
     {
-        $params = &jApp::config()->sessions;
+        $params = &App::config()->sessions;
 
         // do not start the session if the request is made from the command line or if sessions are disabled in configuration
         if (!$params['start']) {
@@ -47,7 +38,7 @@ class jSession
 
         if (!$params['shared_session']) {
             //make sure that the session cookie is only for the current application
-            $cookieOptions['path'] = jApp::urlBasePath();
+            $cookieOptions['path'] = App::urlBasePath();
         }
 
         if (PHP_VERSION_ID < 70300) {
@@ -62,7 +53,7 @@ class jSession
         if ($params['storage'] != '') {
 
             /* on debian/ubuntu (maybe others), garbage collector launch probability is set to 0
-               and replaced by a simple cron job which is not enough for jSession (different path, db storage, ...),
+               and replaced by a simple cron job which is not enough for Session (different path, db storage, ...),
                so we set it to 1 as PHP's default value */
             if (!ini_get('session.gc_probability')) {
                 ini_set('session.gc_probability', '1');
@@ -92,7 +83,7 @@ class jSession
         if ($params['name'] != '') {
             if (!preg_match('#^[a-zA-Z0-9]+$#', $params['name'])) {
                 // regexp check because session name can only be alpha numeric according to the php documentation
-                throw new jException('jelix~errors.jsession.name.invalid');
+                throw new \jException('jelix~errors.jsession.name.invalid');
             }
             session_name($params['name']);
         }
@@ -124,9 +115,9 @@ class jSession
     protected static function _getDao()
     {
         if (isset(self::$_params['dao_db_profile']) && self::$_params['dao_db_profile']) {
-            $dao = jDao::get(self::$_params['dao_selector'], self::$_params['dao_db_profile']);
+            $dao = \jDao::get(self::$_params['dao_selector'], self::$_params['dao_db_profile']);
         } else {
-            $dao = jDao::get(self::$_params['dao_selector']);
+            $dao = \jDao::get(self::$_params['dao_selector']);
         }
 
         return $dao;
@@ -218,10 +209,10 @@ class jSession
      */
     public static function daoGarbageCollector($maxlifetime)
     {
-        $date = new jDateTime();
+        $date = new \jDateTime();
         $date->now();
         $date->sub(0, 0, 0, 0, 0, $maxlifetime);
-        self::_getDao()->deleteExpired($date->toString(jDateTime::DB_DTFORMAT));
+        self::_getDao()->deleteExpired($date->toString(\jDateTime::DB_DTFORMAT));
 
         return true;
     }

@@ -11,6 +11,8 @@ cd lib
 cd lib/Jelix/Core
   __ALL__
 
+  Server.php
+  Session.php
 cd lib/Jelix/Core/Config
   __ALL__
 ! defaultconfig.ini.php
@@ -48,6 +50,8 @@ cd lib/Jelix/Legacy/
 cd lib/Jelix/Legacy/core
    __ALL_RECURSIVELY__
 
+  jServer.php
+  jSession.php
 cd lib/Jelix/Legacy/events
   __ALL__
 

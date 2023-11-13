@@ -1,24 +1,17 @@
 <?php
 /**
- * @package    jelix
- * @subpackage core
- *
  * @author     Laurent Jouanneau
- * @copyright  2012-2020 Laurent Jouanneau
+ * @copyright  2012-2023 Laurent Jouanneau
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+namespace Jelix\Core;
 
 /**
- * Static class providing some utilities to retrieve informations about the server.
- *
- * @package    jelix
- * @subpackage core
- *
- * @since 1.3.2
+ * Static class providing some utilities to retrieve information about the server.
  */
-class jServer
+class Server
 {
     /**
      * tells if we are in a CLI (Command Line Interface) context or not.
@@ -64,8 +57,8 @@ class jServer
     {
         // domainName should not be empty, as it is filled by jConfigCompiler
         // but let's check it anyway, jConfigCompiler cache may not be valid anymore
-        if (jApp::config()->domainName != '') {
-            return jApp::config()->domainName;
+        if (App::config()->domainName != '') {
+            return App::config()->domainName;
         }
         list($domain, $port) = self::getDomainPortFromServer();
 
@@ -114,7 +107,7 @@ class jServer
             $https = $forceHttps;
         }
 
-        $forcePort = ($https ? jApp::config()->forceHTTPSPort : jApp::config()->forceHTTPPort);
+        $forcePort = ($https ? App::config()->forceHTTPSPort : App::config()->forceHTTPPort);
         if ($forcePort === true || $forcePort === '1') {
             return '';
         }
@@ -149,9 +142,9 @@ class jServer
      */
     public static function isHttps()
     {
-        if (jApp::config()->urlengine['forceProxyProtocol'] == 'https') {
-            if (trim(jApp::config()->forceHTTPSPort) === '') {
-                jApp::config()->forceHTTPSPort = true;
+        if (App::config()->urlengine['forceProxyProtocol'] == 'https') {
+            if (trim(App::config()->forceHTTPSPort) === '') {
+                App::config()->forceHTTPSPort = true;
             }
 
             return true;

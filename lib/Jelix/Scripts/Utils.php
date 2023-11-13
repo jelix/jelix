@@ -9,17 +9,20 @@
 
 namespace Jelix\Scripts;
 
+use Jelix\Core\Server;
+use Jelix\Core\App;
+
 class Utils
 {
     public static function checkEnv()
     {
-        if (!\jServer::isCLI()) {
+        if (!Server::isCLI()) {
             echo "Error: you're not allowed to execute this script outside a command line shell.\n";
 
             exit(1);
         }
 
-        if (!\Jelix\Core\App::isInit()) {
+        if (!App::isInit()) {
             echo "Error: should run within an application\n";
 
             exit(1);
@@ -28,7 +31,7 @@ class Utils
 
     public static function checkTempPath()
     {
-        $tempBasePath = \Jelix\Core\App::tempBasePath();
+        $tempBasePath = App::tempBasePath();
 
         // we always clean the temp directory. But first, let's check the temp path (see ticket #840)...
 
@@ -38,6 +41,6 @@ class Utils
                 "       Correct the path for the temp directory or create the directory you\n".
                 "       indicated with App in your application.init.php.\n");
         }
-        //\jFile::removeDir(\Jelix\Core\App::tempPath(), false, array('.svn', '.dummy', '.empty'));
+        //\jFile::removeDir(App::tempPath(), false, array('.svn', '.dummy', '.empty'));
     }
 }

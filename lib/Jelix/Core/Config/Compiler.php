@@ -14,7 +14,7 @@ namespace Jelix\Core\Config;
 
 use Jelix\Core\App as App;
 use Jelix\IniFile\Util as IniFileMgr;
-use jServer;
+use Jelix\Core\Server;
 
 /**
  * This class merges two ini files in a single array and store it in a temporary file.
@@ -216,7 +216,7 @@ class Compiler
     public static function getCacheFilename($configFile)
     {
         $filename = App::tempPath().str_replace('/','~',$configFile);
-        list($domain, $port) = jServer::getDomainPortFromServer();
+        list($domain, $port) = Server::getDomainPortFromServer();
         if ($domain) {
             $filename .= '.'.$domain.'-'.$port;
         }
@@ -253,10 +253,10 @@ class Compiler
         if ($config->domainName == '') {
             // as each compiled config is stored in a file based on the domain
             // name/port, we can store the guessed domain name into the configuration
-            list($domain, $port) = jServer::getDomainPortFromServer();
+            list($domain, $port) = Server::getDomainPortFromServer();
             if ($domain) {
                 $config->domainName = $domain;
-                $isHttps = jServer::isHttpsFromServer();
+                $isHttps = Server::isHttpsFromServer();
                 if ($config->forceHTTPPort == '' && !$isHttps && $port != '80') {
                     $config->forceHTTPPort = $port;
                 } elseif ($config->forceHTTPSPort == '' && $isHttps && $port != '443') {

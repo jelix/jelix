@@ -15,6 +15,7 @@
 namespace Jelix\Routing;
 
 use Jelix\Core\App;
+use Jelix\Core\Session;
 
 /**
  * the main class of the routing core.
@@ -215,7 +216,7 @@ class Router
                 $this->setRequest($request);
             }
 
-            \jSession::start();
+            Session::start();
 
             $ctrl = $this->getController($this->action);
         } catch (\jException $e) {
@@ -223,8 +224,8 @@ class Router
             if ($notFoundAct == '') {
                 throw $e;
             }
-            if (!\jSession::isStarted()) {
-                \jSession::start();
+            if (!Session::isStarted()) {
+                Session::start();
             }
 
             try {
@@ -283,7 +284,7 @@ class Router
         }
 
         App::popCurrentModule();
-        \jSession::end();
+        Session::end();
     }
 
     /**
@@ -458,7 +459,7 @@ class Router
 
         $resp = $this->request->getErrorResponse($this->response);
         $resp->outputErrors();
-        \jSession::end();
+        Session::end();
 
         exit(1);
     }

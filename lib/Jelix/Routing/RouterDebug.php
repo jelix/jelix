@@ -15,6 +15,7 @@
 namespace Jelix\Routing;
 
 use Jelix\Core\App;
+use Jelix\Core\Session;
 use Jelix\Logger\Log;
 
 /**
@@ -65,7 +66,7 @@ class RouterDebug extends Router
                 $this->setRequest($request);
             }
 
-            \jSession::start();
+            Session::start();
 
             $ctrl = $this->getController($this->action);
         } catch (\jException $e) {
@@ -73,8 +74,8 @@ class RouterDebug extends Router
             if ($notFoundAct == '') {
                 throw $e;
             }
-            if (!\jSession::isStarted()) {
-                \jSession::start();
+            if (!Session::isStarted()) {
+                Session::start();
             }
 
             try {
@@ -144,7 +145,7 @@ class RouterDebug extends Router
         }
 
         App::popCurrentModule();
-        \jSession::end();
+        Session::end();
         Log::log('process: end');
     }
 

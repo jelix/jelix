@@ -114,7 +114,7 @@ class AppManager
     public static function errorIfAppClosed()
     {
         if (!App::isInit()) {
-            if (!\jServer::isCLI()) {
+            if (!Server::isCLI()) {
                 header('HTTP/1.1 500 Internal Server Error');
                 header('Content-type: text/html');
             }
@@ -124,7 +124,7 @@ class AppManager
         if (!self::isOpened()) {
             $message = file_get_contents(App::varConfigPath('CLOSED'));
 
-            if (\jServer::isCLI()) {
+            if (Server::isCLI()) {
                 echo 'Application closed.'.($message ? "\n{$message}\n" : "\n");
                 exit(1);
             }
@@ -187,7 +187,7 @@ class AppManager
     public static function errorIfAppInstalled()
     {
         if (self::isAppInstalled()) {
-            if (\jServer::isCLI()) {
+            if (Server::isCLI()) {
                 echo "Application is installed. The script cannot be runned.\n";
             } else {
                 header('HTTP/1.1 500 Internal Server Error');
