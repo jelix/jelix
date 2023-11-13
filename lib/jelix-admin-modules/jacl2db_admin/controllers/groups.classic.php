@@ -246,7 +246,7 @@ class groupsCtrl extends jController
         if ($groupid === null || $groupid == '') {
             jMessage::add('Invalid Group', 'error');
 
-            return $this->redirect('jacldb_admin~groups:index');
+            return $this->redirect('jacl2db_admin~groups:index');
         }
 
         $daogroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
@@ -255,7 +255,7 @@ class groupsCtrl extends jController
             if (!$group) {
                 jMessage::add('Invalid Group', 'error');
 
-                return $this->redirect('jacldb_admin~groups:index');
+                return $this->redirect('jacl2db_admin~groups:index');
             }
             $groupname = $group->name;
         } else {
@@ -292,7 +292,7 @@ class groupsCtrl extends jController
         $groupid = $this->param('group', null);
         if ($groupid === null || $groupid == '') {
 
-            return $this->redirect('jacldb_admin~groups:allrights');
+            return $this->redirect('jacl2db_admin~groups:allrights');
         }
 
         $daogroup = jDao::get('jacl2db~jacl2group', 'jacl2_profile');
@@ -300,7 +300,7 @@ class groupsCtrl extends jController
             $group = $daogroup->get($groupid);
             if (!$group) {
 
-                return $this->redirect('jacldb_admin~groups:allrights');
+                return $this->redirect('jacl2db_admin~groups:allrights');
             }
         }
 
@@ -309,7 +309,7 @@ class groupsCtrl extends jController
 
         jMessage::add(jLocale::get('jacl2db_admin~acl2.message.group.rights.ok'), 'ok');
 
-        return $this->redirect('jacldb_admin~groups:rightres', array('group' => $groupid));
+        return $this->redirect('jacl2db_admin~groups:rightres', array('group' => $groupid));
     }
 
     /**
