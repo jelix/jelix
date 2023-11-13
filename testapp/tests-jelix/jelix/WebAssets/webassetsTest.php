@@ -62,6 +62,7 @@ a.js = a.js
                       'webassets_a.deps' => array(),
                       'webassets_a.js' => array('k>a.js>'),
                       'webassets_a.css' => array(),
+                      'webassets_a.icon' => array(),
                   ))
           ),
 
@@ -91,9 +92,11 @@ a.js = a.js
                       'webassets_a.deps' => array(),
                       'webassets_a.js' => array('k>a.js>'),
                       'webassets_a.css' => array(),
+                      'webassets_a.icon' => array(),
                       'webassets_b.deps' => array('a'),
                       'webassets_b.js' => array('k>b.js>'),
                       'webassets_b.css' => array(),
+                      'webassets_b.icon' => array(),
                   ))
           ),
 
@@ -123,9 +126,11 @@ a.js = a.js
                       'webassets_a.deps' => array(),
                       'webassets_a.js' => array('k>a.js?_r=234>'),
                       'webassets_a.css' => array(),
+                      'webassets_a.icon' => array(),
                       'webassets_b.deps' => array('a'),
                       'webassets_b.js' => array('k>b.js?_r=234>'),
                       'webassets_b.css' => array(),
+                      'webassets_b.icon' => array(),
                   ))
           ),
 
@@ -158,12 +163,15 @@ c.require = a
                       'webassets_a.deps' => array(),
                       'webassets_a.js' => array('k>a.js>'),
                       'webassets_a.css' => array(),
+                      'webassets_a.icon' => array(),
                       'webassets_b.deps' => array('a'),
                       'webassets_b.js' => array('k>b.js>'),
                       'webassets_b.css' => array(),
+                      'webassets_b.icon' => array(),
                       'webassets_c.deps' => array('a'),
                       'webassets_c.js' => array('k>c.js>'),
                       'webassets_c.css' => array(),
+                      'webassets_c.icon' => array(),
 
                   ))
           ),
@@ -189,6 +197,7 @@ a2.js = "mymodule.js|type=module"
 a2.css = "a2.css|media=screen and (max-width: 600px)|rel=stylesheet"
 
 c.js = c.js
+c.icon = favicon.ico
 c.require = a
 c.include = b
 ',
@@ -201,15 +210,19 @@ c.include = b
                       'webassets_a.deps' => array(),
                       'webassets_a.js' => array('k>a.js>defer'),
                       'webassets_a.css' => array('k>a.css>media=screen'),
+                      'webassets_a.icon' => array(),
                       'webassets_a2.deps' => array(),
                       'webassets_a2.js' => array('k>mymodule.js>type=module'),
                       'webassets_a2.css' => array('k>a2.css>media=screen and (max-width: 600px)|rel=stylesheet'),
+                      'webassets_a2.icon' => array(),
                       'webassets_b.deps' => array('a'),
                       'webassets_b.js' => array('k>b.js>'),
                       'webassets_b.css' => array(),
+                      'webassets_b.icon' => array(),
                       'webassets_c.deps' => array('a','b'),
                       'webassets_c.js' => array('k>c.js>'),
                       'webassets_c.css' => array(),
+                      'webassets_c.icon' => array('k>favicon.ico>'),
 
                   ))
           ),
@@ -248,30 +261,38 @@ c.require = a
                       'webassets_a.deps' => array(),
                       'webassets_a.js' => array('k>a.js>'),
                       'webassets_a.css' => array(),
+                      'webassets_a.icon' => array(),
                       'webassets_b.deps' => array('a'),
                       'webassets_b.js' => array('k>b.js>'),
                       'webassets_b.css' => array(),
+                      'webassets_b.icon' => array(),
                       'webassets_c.deps' => array('a', 'd', 'b'),
                       'webassets_c.js' => array('k>c.js>'),
                       'webassets_c.css' => array(),
+                      'webassets_c.icon' => array(),
                       'webassets_d.deps' => array(),
                       'webassets_d.js' => array('k>d.js>'),
                       'webassets_d.css' => array(),
+                      'webassets_d.icon' => array(),
                   ),
                   'compiled_webassets_foo' => array(
                       'dependencies_order' => array('a', 'c', 'b', 'd'),
                       'webassets_a.deps' => array(),
                       'webassets_a.js' => array('k>a.js>'),
                       'webassets_a.css' => array(),
+                      'webassets_a.icon' => array(),
                       'webassets_b.deps' => array('a'),
                       'webassets_b.js' => array('k>b.js>'),
                       'webassets_b.css' => array(),
+                      'webassets_b.icon' => array(),
                       'webassets_c.deps' => array('a'),
                       'webassets_c.js' => array('k>c2.js>'),
                       'webassets_c.css' => array(),
+                      'webassets_c.icon' => array(),
                       'webassets_d.deps' => array(),
                       'webassets_d.js' => array('k>d.js>'),
                       'webassets_d.css' => array(),
+                      'webassets_d.icon' => array(),
                   )
               )
           ),
@@ -295,6 +316,7 @@ a.include = e
 b.js = b.js
 
 c.js = c.js
+c.icon = "favico.png|sizes=32x32"
 c.require = k
 c.include = r
 
@@ -304,6 +326,8 @@ e.js = e.js
 e.require = g
 
 f.js = f.js,f2.js
+f.icon[] = "$theme/favico.png|sizes=32x32"
+f.icon[] = "$theme/favico-64x64.png|sizes=64x64|type=image/png"
 f.require = a
 f.include = r
 
@@ -322,30 +346,44 @@ r.js = r.js
                       'webassets_a.deps' => array('b', 'c', 'k', 'r', 'e', 'g'),
                       'webassets_a.js' => array('k>a.js>'),
                       'webassets_a.css' => array(),
+                      'webassets_a.icon' => array(),
                       'webassets_b.deps' => array(),
                       'webassets_b.js' => array('k>b.js>'),
                       'webassets_b.css' => array(),
+                      'webassets_b.icon' => array(),
                       'webassets_c.deps' => array('k', 'r'),
                       'webassets_c.js' => array('k>c.js>'),
                       'webassets_c.css' => array(),
+                      'webassets_c.icon' => array(
+                          'k>favico.png>sizes=32x32|type=image/png'
+                      ),
                       'webassets_d.deps' => array(),
                       'webassets_d.js' => array('k>d.js>'),
                       'webassets_d.css' => array(),
+                      'webassets_d.icon' => array(),
                       'webassets_e.deps' => array('g'),
                       'webassets_e.js' => array('k>e.js>'),
                       'webassets_e.css' => array(),
+                      'webassets_e.icon' => array(),
                       'webassets_f.deps' => array('a', 'b', 'c', 'k', 'r', 'e', 'g'),
                       'webassets_f.js' => array('k>f.js>', 'k>f2.js>'),
                       'webassets_f.css' => array(),
+                      'webassets_f.icon' => array(
+                          't>$theme/favico.png>sizes=32x32|type=image/png',
+                          't>$theme/favico-64x64.png>sizes=64x64|type=image/png'
+                      ),
                       'webassets_g.deps' => array(),
                       'webassets_g.js' => array('k>g.js>'),
                       'webassets_g.css' => array(),
+                      'webassets_g.icon' => array(),
                       'webassets_k.deps' => array(),
                       'webassets_k.js' => array('k>k.js>'),
                       'webassets_k.css' => array(),
+                      'webassets_k.icon' => array(),
                       'webassets_r.deps' => array(),
                       'webassets_r.js' => array('k>r.js>'),
                       'webassets_r.css' => array(),
+                      'webassets_r.icon' => array(),
                   ),
               )
           ),
@@ -469,6 +507,7 @@ b.js = b.js
 b.css = b.css
 
 c.js = "c.js|type=module"
+
 c.require = k
 c.include = r
 
@@ -479,6 +518,7 @@ e.require = g
 
 f.js = f.js,$jelix/f2.js
 f.css = f.css,$theme/f2.css
+
 f.require = a
 f.include = r
 

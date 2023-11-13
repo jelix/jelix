@@ -6,7 +6,8 @@ Next
 
 * Fix redirections when there is an error, into the rights management interface (jacl2db_admin)
 * new method `jResponseFormJQJson::setError()` to force to return an error message/url redirection to the form.
-
+* New: Support of favicons into WebAssets (ex: `mygroup.icon=favicon-32x32.png|sizes=32x32`).
+* new method `WebAssetsSelection::getIconLinks()`
 
 1.8.3
 -----

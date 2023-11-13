@@ -4,7 +4,7 @@
  * @subpackage  WebAssets
  *
  * @author      Laurent Jouanneau
- * @copyright   2019-2022 Laurent Jouanneau
+ * @copyright   2019-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -12,6 +12,84 @@
 
 namespace Jelix\WebAssets;
 
+/**
+ * It reads webassets configuration and transform this configuration into
+ * a list that is readable very fast during the response construction.
+ *
+ * `webassets_*` section ar webassets collections. The webassets_common section
+ * is collection that is merged with any other collections.
+ *
+ * In each section there can be several group of assets.
+ * A group is often corresponding to a list of CSS and JS links used by a specific component.
+ *
+ * To declare JS files of a group, you have to use the name of the group, following by .js.
+ * To declare CSS files, use the suffix `.css`.
+ * To declare icon files, use the suffix `.icon`.
+ *
+ * For example, to declare CSS and JS links for the group `mygroup`:
+ *
+ * mygroup.js= "js/scripts.js"
+ * mygroup.css= "design/super.css"
+ * mygroup.icon= "favicon.png"
+ *
+ * List of assets is supported, using a comma or the array notation of the ini format:
+ *
+ * mygroup1.js= "js/foo.js, js/bar.js"
+ *
+ * mygroup2.js[]= "js/bla.js"
+ * mygroup2.js[]= "js/baz.js"
+ *
+ * The path for JS and CSS links, can be:
+ *
+ * - an absolute path, starting with /, or a full URL (starting with http:// )
+ * - a path relative to the base path (so it doesn't start with /)
+ * - a path starting with $theme/, where $theme will be replaced by a path like <basepath>/themes/<current_theme>/
+ * - a path starting with $jelix/, where $jelix will be replaced by the path of the jelix-www directory.
+ * - a selector of a module action: <module>~<controller>:<method>. This action should return a JS or CSS content.
+ * - a module name, followed by : and then by a path. This path should correspond to a file inside the www/ directory of the indicated module.
+ *
+ * Path like 1) to 4) can contain also some variables, $locale or $lang, that will be
+ * replaced respectively by the current locale code (xx_YY) and the current language code (xx).
+ *
+ * Example:
+ *
+ * example.js[]= "/absolute/path.js"
+ * example.js[]= "http://my.site/absolute/path.js"
+ * example.js[]= related/to/basepath
+ * example.js[]= "module:path/to/file.js, module~ctrl:meth"
+ * example.js[]= "$theme/path/to/file.js, path/$lang/machin.js, /$locale/truc.js"
+ *
+ * some html attributes can be indicated, which will be added to the script or the link element, like defer or media attributes:
+ *
+ * example.js[]= "myscript.js|defer"
+ * example.js[]= "https://popular.com/script.js.js|defer|integrity=sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K|crossorigin=anonymous"
+ * example.js[]= "mymodule.mjs|type=module"
+ * example.css[]= "mystyle.css|media=screen and (max-width: 600px)"
+ * example.css[]= "fancy.css|rel=alternate stylesheet|title=Fancy"
+ * example.icon[]= "favicon-32x32.png|sizes=32x32"
+ * example.icon[]= "favicon-64x64.png|sizes=64x64"
+ *
+ *
+ * A group can be included into an other group. For example, the assets group "mygroup"
+ * must always used with the group "jquery". A dependency should then be indicated.
+ *
+ * Two kind of dependencies: require and include.
+ *
+ *
+ * example1.js = ex1.js
+ * example2.js = ex2.js
+ * example2.css = ex2.css
+ * example3.js = ex3.js
+ * example3.css = ex3.css
+ *
+ * example.require = example1, example2
+ * example.include = example3
+ * example.js = foo.js
+ * example.css = foo.css
+ *
+ * `.require` allows to include given groups before the declaration of JS and CSS files of the group into the HTML.
+ * Whereas `.include` allows to include given groups after the assets of the group.
+ */
 class WebAssetsCompiler
 {
     protected $config;
@@ -74,10 +152,11 @@ class WebAssetsCompiler
             );
 
             foreach ($collection as $groupName => $assets) {
-                list($deps, $js, $css) = $this->getGroupProperties($name, $groupName);
+                list($deps, $js, $css, $icon) = $this->getGroupProperties($name, $groupName);
                 $compilation->{$collectionName}['webassets_'.$groupName.'.deps'] = $deps;
                 $compilation->{$collectionName}['webassets_'.$groupName.'.js'] = $js;
                 $compilation->{$collectionName}['webassets_'.$groupName.'.css'] = $css;
+                $compilation->{$collectionName}['webassets_'.$groupName.'.icon'] = $icon;
             }
         }
 
@@ -99,6 +178,7 @@ class WebAssetsCompiler
                 $assetsGroups[$groupName] = array(
                     'css' => array(),
                     'js' => array(),
+                    'icon' => array(),
                     'include' => array(),
                     'require' => array(),
                     // conditional require (reverse include)
@@ -107,7 +187,7 @@ class WebAssetsCompiler
             }
 
             $values = array();
-            if ($property == 'css' || $property == 'js') {
+            if ($property == 'css' || $property == 'js' || $property == 'icon') {
                 if (!is_array($val)) {
                     $val = array($val);
                 }
@@ -116,7 +196,7 @@ class WebAssetsCompiler
                     $list = preg_split('/ *, */', $assetItem);
                     foreach ($list as $asset) {
                         if ($asset != '') {
-                            $values[] = $this->parseAsset($asset);
+                            $values[] = $this->parseAsset($asset, $property);
                         }
                     }
                 }
@@ -179,14 +259,26 @@ class WebAssetsCompiler
         return $url;
     }
 
-    protected function parseAsset($asset)
+    protected function parseAsset($asset, $type)
     {
         if (strpos($asset, '|') !== false) {
             list($asset, $attributes) = explode('|', $asset, 2);
-            $attributes = '>'.$attributes;
         } else {
-            $attributes = '>';
+            $attributes = '';
         }
+
+        if ($type == 'icon' && strpos($attributes, 'type=') === false) {
+            if (preg_match('/\\.png$/', $asset)) {
+                if ($attributes) {
+                    $attributes .= '|type=image/png';
+                }
+                else {
+                    $attributes .= 'type=image/png';
+                }
+            }
+        }
+
+        $attributes = '>'.$attributes;
 
         $isHttp = preg_match('!^https?://!', $asset);
         if (!$isHttp) {
@@ -270,6 +362,7 @@ class WebAssetsCompiler
             $this->getGroupDependencies($groupName),
             $this->assets[$groupName]['js'],
             $this->assets[$groupName]['css'],
+            $this->assets[$groupName]['icon'],
         );
     }
 
