@@ -649,9 +649,6 @@ class jResponseHtml extends jResponseBasicHtml
     {
         $params = '';
         foreach ($scriptParams as $param_name => $param_value) {
-            if ($param_name == '_ieCondition') {
-                continue;
-            }
             if (is_bool($param_value)) {
                 if ($param_value === true) {
                     $params .= $param_name.' ';
@@ -670,9 +667,6 @@ class jResponseHtml extends jResponseBasicHtml
     {
         $params = '';
         foreach ($cssParams as $param_name => $param_value) {
-            if ($param_name == '_ieCondition') {
-                continue;
-            }
             if (is_bool($param_value)) {
                 if ($param_value === true) {
                     $params .= $param_name.' ';
