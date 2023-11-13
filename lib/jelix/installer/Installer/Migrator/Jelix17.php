@@ -165,7 +165,7 @@ class Jelix17
             }
         }
 
-        if (!file_exists(\jApp::appPath('app/responses'))) {
+        if (!file_exists(\jApp::appPath('app/responses')) && file_exists(\jApp::appPath('responses'))) {
             $this->reporter->message('Move responses/ to app/responses/', 'notice');
             rename(\jApp::appPath('responses'), \jApp::appPath('app/responses'));
         }
@@ -322,7 +322,9 @@ class Jelix17
             $this->reporter->message('Import plugin conf file '.$conf.' into global configuration', 'notice');
             $config->import($ini, $name);
             $config->setValue($name, '1', 'coordplugins');
-            unlink($ini->getFileName());
+            if (file_exists($ini->getFileName())) {
+                unlink($ini->getFileName());
+            }
         }
         $config->save();
     }

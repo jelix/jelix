@@ -4,6 +4,8 @@ Changes into Jelix 1.8
 Next
 ----
 
+* Fix redirections when there is an error, into the rights management interface (jacl2db_admin)
+
 1.8.3
 -----
 

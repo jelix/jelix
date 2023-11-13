@@ -260,13 +260,13 @@ class jAcl2DbUserGroup
             return;
         }
 
-        // delete the rights on the private group (jacl_rights)
+        // delete the rights on the private group (jacl2_rights)
         jDao::get('jacl2db~jacl2rights', 'jacl2_profile')->deleteByGroup($privategrp->id_aclgrp);
 
-        // remove from all the groups (jacl_users_group)
+        // remove from all the groups (jacl2_users_group)
         jDao::get('jacl2db~jacl2usergroup', 'jacl2_profile')->deleteByUser($login);
 
-        // remove the user's personal group (jacl_group)
+        // remove the user's personal group (jacl2_group)
         $daogroup->delete($privategrp->id_aclgrp);
     }
 
