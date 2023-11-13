@@ -20,7 +20,7 @@ About stable versions and branches
 ==================================
 
 **WARNING**: many changes occurs in the master branch, because of a "namespacification"
-which is not finished yet. So API may change or may be broken (even if we try to no do it)
+which is not finished yet. So API may change or may be broken.
 **Don't use it for production for the moment**! However if you want to migrate an existing
 application to this unstable Jelix version ( **just for tests**! ), read the file
 [UPGRADE-TO-2.0.md].
@@ -36,7 +36,8 @@ not master! So **do pull requests** on stable branches!
 Installation
 ===========
 
-The source code of the master branch (Jelix 2.0) is compatible only with PHP 7.4 or more.
+The source code of the master branch (Jelix 2.0) is compatible only with PHP 8.1 
+or more.
 
 The best way is to use [Composer](https://getcomposer.org).
 Create a directory and a composer.json file : 
