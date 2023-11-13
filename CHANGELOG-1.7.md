@@ -6,7 +6,7 @@ Next
 
 * Fix jAuth: regenerate the encryption key for the cookie "remember me" at each upgrade, in particularly
   when upgrading from Jelix 1.6
-
+* Fix some few issues with the migrator 1.6 to 1.7.
 
 Jelix 1.7.17
 ------------
