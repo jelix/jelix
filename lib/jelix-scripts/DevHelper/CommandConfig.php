@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2011-2015 Laurent Jouanneau
+ * @copyright  2011-2023 Laurent Jouanneau
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -104,7 +104,6 @@ class CommandConfig
     public $layoutVarPath = '%appdir%/var/';
     public $layoutLogPath = '%appdir%/var/log/';
     public $layoutConfigPath = '%appdir%/var/config/';
-    public $layoutScriptsPath = '%appdir%/scripts/';
 
     /*
     // linux layout example
@@ -115,7 +114,6 @@ class CommandConfig
     public $layoutVarPath = '/var/lib/jelix-apps/%appname%/';
     public $layoutLogPath = '/var/log/jelix-apps//%appname%/';
     public $layoutConfigPath = '/etc/jelix-apps/%appname%/';
-    public $layoutScriptsPath = '%appdir%/scripts/';
     */
 
     /**
@@ -166,8 +164,7 @@ class CommandConfig
             str_replace($search, $replace, $this->layoutWwwPath),
             str_replace($search, $replace, $this->layoutVarPath),
             str_replace($search, $replace, $this->layoutLogPath),
-            str_replace($search, $replace, $this->layoutConfigPath),
-            str_replace($search, $replace, $this->layoutScriptsPath)
+            str_replace($search, $replace, $this->layoutConfigPath)
         );
         \Jelix\Core\App::setTempBasePath(str_replace($search, $replace, $this->layoutTempPath));
     }

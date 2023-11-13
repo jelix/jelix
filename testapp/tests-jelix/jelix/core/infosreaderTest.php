@@ -357,11 +357,6 @@ class infosreaderTest extends \Jelix\UnitTests\UnitTestCase {
                 <string method="getConfigFile()" value="rest/config.ini.php" />
                 <string method="getType()" value="classic" />
             </object>
-            <object key="cmdline">
-                <string method="getId()" value="cmdline" />
-                <string method="getConfigFile()" value="cmdline/config.ini.php" />
-                <string method="getType()" value="cmdline" />
-            </object>
         </array>';
         $this->assertComplexIdenticalStr($result, $expected);
     }
@@ -385,11 +380,6 @@ class infosreaderTest extends \Jelix\UnitTests\UnitTestCase {
                 <string method="getConfigFile()" value="rest/config.ini.php" />
                 <string method="getType()" value="classic" />
             </object>
-            <object key="cmdline">
-                <string method="getId()" value="cmdline" />
-                <string method="getConfigFile()" value="cmdline/config.ini.php" />
-                <string method="getType()" value="cmdline" />
-            </object>
         </array>';
         $this->assertComplexIdenticalStr($result, $expected);
 
@@ -401,7 +391,7 @@ class infosreaderTest extends \Jelix\UnitTests\UnitTestCase {
 
         $ini= new \Jelix\IniFile\IniModifier(__DIR__.'/../../../temp/testframework.ini');
         $this->assertEquals(array(
-            'entrypoint:index.php', 'entrypoint:cmdline.php', 'entrypoint:foo.php',
+            'entrypoint:index.php', 'entrypoint:foo.php',
             ), $ini->getSectionList()
         );
         $this->assertEquals(array('config'=>'foo/config.ini', 'type'=>'classic'), $ini->getValues('entrypoint:foo.php'));

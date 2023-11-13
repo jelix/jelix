@@ -6,7 +6,7 @@
  * @author     Julien Issler
  * @contributor Laurent Jouanneau
  *
- * @copyright  2007-2009 Julien Issler, 2008-2020 Laurent Jouanneau
+ * @copyright  2007-2009 Julien Issler, 2008-2023 Laurent Jouanneau
  *
  * @see       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -34,7 +34,7 @@ class jSession
         $params = &jApp::config()->sessions;
 
         // do not start the session if the request is made from the command line or if sessions are disabled in configuration
-        if (jApp::coord()->request instanceof jCmdLineRequest || !$params['start']) {
+        if (!$params['start']) {
             return false;
         }
 

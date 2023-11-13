@@ -5,7 +5,7 @@
  * @author   Laurent Jouanneau
  * @contributor
  *
- * @copyright 2014 Laurent Jouanneau
+ * @copyright 2014-2023 Laurent Jouanneau
  *
  * @see     http://www.jelix.org
  * @licence  MIT
@@ -39,6 +39,6 @@ class jConfigCompiler
 
     public static function findServerName($ext = '.php', $isCli = false)
     {
-        return \Jelix\Core\Config\Compiler::findServerName($ext, $isCli);
+        return \Jelix\Core\Config\Compiler::findServerName($ext);
     }
 }

@@ -59,8 +59,7 @@
                 { "file":"news.php",    "config":"index/config.ini.php"},
                 { "file":"soap.php",    "config":"soap/config.ini.php", "type":"soap"},
                 { "file":"jsonrpc.php", "config":"jsonrpc/config.ini.php", "type":"jsonrpc"},
-                { "file":"xmlrpc.php",  "config":"jsonrpc/config.ini.php", "type":"xmlrpc"},
-                { "file":"cmdline.php", "config":"cmdline/config.ini.php", "type":"cmdline"}
+                { "file":"xmlrpc.php",  "config":"jsonrpc/config.ini.php", "type":"xmlrpc"}
             ],
             "modules-dir" : [
                 "modules/"

@@ -27,12 +27,11 @@ class Compiler
 
     protected $configFileName = '';
 
-    protected $isCli = false;
 
     protected $pseudoScriptName = '';
 
     /**
-     * @var StdClass
+     * @var \StdClass
      */
     protected $config;
 
@@ -44,13 +43,10 @@ class Compiler
     /**
      * @param string $configFile       the name and path of the config file related to config dir of the app
      * @param string $pseudoScriptName the name of the entry point, relative to the base path,
-     *                                 corresponding to the readed configuration. It should start with a leading /
-     *                                 for non cli script.
-     * @param bool   $isCli            indicate if the configuration to read is for a CLI script or no
+     *                                 corresponding to the readed configuration. It should start with a leading /.
      */
-    public function __construct($configFile = '', $pseudoScriptName = '', $isCli = null)
+    public function __construct($configFile = '', $pseudoScriptName = '')
     {
-        $this->isCli = ($isCli !== null ? $isCli : \jServer::isCLI());
         $this->pseudoScriptName = $pseudoScriptName;
         $this->configFileName = $configFile;
     }
@@ -243,7 +239,7 @@ class Compiler
     protected function prepareConfig($allModuleInfo)
     {
         $this->checkMiscParameters($this->config);
-        $this->getPaths($this->config->urlengine, $this->pseudoScriptName, $this->isCli);
+        $this->getPaths($this->config->urlengine, $this->pseudoScriptName);
         $this->modulesInfos = $this->_loadModulesInfo($this->config, $allModuleInfo);
         $this->_loadPluginsPathList($this->config);
         $this->checkCoordPluginsPath($this->config);
@@ -551,11 +547,10 @@ class Compiler
      * @param array  $urlconf          urlengine configuration. scriptNameServerVariable, basePath,
      *                                 jelixWWWPath and jqueryPath should be present
      * @param string $pseudoScriptName
-     * @param bool   $isCli
      *
      * @throws Exception
      */
-    protected function getPaths(&$urlconf, $pseudoScriptName = '', $isCli = false)
+    protected function getPaths(&$urlconf, $pseudoScriptName = '')
     {
         // retrieve the script path+name.
         // for cli, it will be the path from the directory were we execute the script (given to the php exec).
@@ -565,99 +560,79 @@ class Compiler
             $urlconf['urlScript'] = $pseudoScriptName;
         } else {
             if ($urlconf['scriptNameServerVariable'] == '') {
-                $urlconf['scriptNameServerVariable'] = self::findServerName('.php', $isCli);
+                $urlconf['scriptNameServerVariable'] = self::findServerName('.php');
             }
             $urlconf['urlScript'] = $_SERVER[$urlconf['scriptNameServerVariable']];
         }
 
         // now we separate the path and the name of the script, and then the basePath
-        if ($isCli) {
-            $lastslash = strrpos($urlconf['urlScript'], DIRECTORY_SEPARATOR);
-            if ($lastslash === false) {
-                $urlconf['urlScriptPath'] = ($pseudoScriptName ? App::appPath('/scripts/') : getcwd().'/');
-                $urlconf['urlScriptName'] = $urlconf['urlScript'];
-            } else {
-                $urlconf['urlScriptPath'] = getcwd().'/'.substr($urlconf['urlScript'], 0, $lastslash).'/';
-                $urlconf['urlScriptName'] = substr($urlconf['urlScript'], $lastslash + 1);
-            }
+        $lastslash = strrpos($urlconf['urlScript'], '/');
+        $urlconf['urlScriptPath'] = substr($urlconf['urlScript'], 0, $lastslash).'/';
+        $urlconf['urlScriptName'] = substr($urlconf['urlScript'], $lastslash + 1);
 
-            $snp = $urlconf['urlScriptName'];
-            $urlconf['urlScript'] = $urlconf['urlScriptPath'].$snp;
-
-            if ($urlconf['basePath'] == '') {
-                // we should have a basePath when generating url from a command line
-                // script. We cannot guess the url base path so we use a default value
-                $urlconf['basePath'] = '/';
-            }
+        $basepath = $urlconf['basePath'];
+        if ($basepath == '') {
+            // for beginners or simple site, we "guess" the base path
+            $basepath = $localBasePath = $urlconf['urlScriptPath'];
         } else {
-            $lastslash = strrpos($urlconf['urlScript'], '/');
-            $urlconf['urlScriptPath'] = substr($urlconf['urlScript'], 0, $lastslash).'/';
-            $urlconf['urlScriptName'] = substr($urlconf['urlScript'], $lastslash + 1);
-
-            $basepath = $urlconf['basePath'];
-            if ($basepath == '') {
-                // for beginners or simple site, we "guess" the base path
-                $basepath = $localBasePath = $urlconf['urlScriptPath'];
-            } else {
-                if ($basepath != '/') {
-                    if ($basepath[0] != '/') {
-                        $basepath = '/'.$basepath;
-                    }
-                    if (substr($basepath, -1) != '/') {
-                        $basepath .= '/';
-                    }
+            if ($basepath != '/') {
+                if ($basepath[0] != '/') {
+                    $basepath = '/'.$basepath;
                 }
-
-                if ($pseudoScriptName) {
-                    // with pseudoScriptName, we aren't in a true context, we could be in a cli context
-                    // (the installer), and we want the path like when we are in a web context.
-                    // $pseudoScriptName is supposed to be relative to the basePath
-                    $urlconf['urlScriptPath'] = substr($basepath, 0, -1).$urlconf['urlScriptPath'];
-                    $urlconf['urlScript'] = $urlconf['urlScriptPath'].$urlconf['urlScriptName'];
-                }
-                $localBasePath = $basepath;
-                if ($urlconf['backendBasePath']) {
-                    $localBasePath = $urlconf['backendBasePath'];
-                    // we have to change urlScriptPath. it may contains the base path of the backend server
-                    // we should replace this base path by the basePath of the frontend server
-                    if (strpos($urlconf['urlScriptPath'], $urlconf['backendBasePath']) === 0) {
-                        $urlconf['urlScriptPath'] = $basepath.substr($urlconf['urlScriptPath'], strlen($urlconf['backendBasePath']));
-                    } else {
-                        $urlconf['urlScriptPath'] = $basepath.substr($urlconf['urlScriptPath'], 1);
-                    }
-                } elseif (strpos($urlconf['urlScriptPath'], $basepath) !== 0) {
-                    throw new Exception('Error in main configuration on basePath -- basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$urlconf['urlScriptPath']);
+                if (substr($basepath, -1) != '/') {
+                    $basepath .= '/';
                 }
             }
-            $urlconf['basePath'] = $basepath;
 
-            if ($urlconf['jelixWWWPath'][0] != '/') {
-                $urlconf['jelixWWWPath'] = $basepath.$urlconf['jelixWWWPath'];
+            if ($pseudoScriptName) {
+                // with pseudoScriptName, we aren't in a true context, we could be in a cli context
+                // (the installer), and we want the path like when we are in a web context.
+                // $pseudoScriptName is supposed to be relative to the basePath
+                $urlconf['urlScriptPath'] = substr($basepath, 0, -1).$urlconf['urlScriptPath'];
+                $urlconf['urlScript'] = $urlconf['urlScriptPath'].$urlconf['urlScriptName'];
             }
-            $urlconf['jelixWWWPath'] = rtrim($urlconf['jelixWWWPath'], '/').'/';
-
-            if ($urlconf['jqueryPath'][0] != '/') {
-                $urlconf['jqueryPath'] = $basepath.rtrim($urlconf['jqueryPath'], '/').'/';
+            $localBasePath = $basepath;
+            if ($urlconf['backendBasePath']) {
+                $localBasePath = $urlconf['backendBasePath'];
+                // we have to change urlScriptPath. it may contains the base path of the backend server
+                // we should replace this base path by the basePath of the frontend server
+                if (strpos($urlconf['urlScriptPath'], $urlconf['backendBasePath']) === 0) {
+                    $urlconf['urlScriptPath'] = $basepath.substr($urlconf['urlScriptPath'], strlen($urlconf['backendBasePath']));
+                } else {
+                    $urlconf['urlScriptPath'] = $basepath.substr($urlconf['urlScriptPath'], 1);
+                }
+            } elseif (strpos($urlconf['urlScriptPath'], $basepath) !== 0) {
+                throw new Exception('Error in main configuration on basePath -- basePath ('.$basepath.') in config file doesn\'t correspond to current base path. You should setup it to '.$urlconf['urlScriptPath']);
             }
-            $urlconf['jqueryPath'] = rtrim($urlconf['jqueryPath'], '/').'/';
+        }
+        $urlconf['basePath'] = $basepath;
 
-            $snp = substr($urlconf['urlScript'], strlen($localBasePath));
+        if ($urlconf['jelixWWWPath'][0] != '/') {
+            $urlconf['jelixWWWPath'] = $basepath.$urlconf['jelixWWWPath'];
+        }
+        $urlconf['jelixWWWPath'] = rtrim($urlconf['jelixWWWPath'], '/').'/';
 
-            if (isset($_SERVER['DOCUMENT_ROOT'])) {
-                $urlconf['documentRoot'] = $_SERVER['DOCUMENT_ROOT'];
-            } else {
-                $urlconf['documentRoot'] = App::wwwPath();
-            }
+        if ($urlconf['jqueryPath'][0] != '/') {
+            $urlconf['jqueryPath'] = $basepath.rtrim($urlconf['jqueryPath'], '/').'/';
+        }
+        $urlconf['jqueryPath'] = rtrim($urlconf['jqueryPath'], '/').'/';
 
-            if ($localBasePath != '/') {
-                // if wwwPath ends with the base path, we remove the base path from the wwwPath to have
-                // the document root
-                $posBP = strpos(App::wwwPath(), $localBasePath);
-                if ($posBP !== false) {
-                    $lenWP = strlen(App::wwwPath()) - strlen($localBasePath);
-                    if ($posBP == $lenWP) {
-                        $urlconf['documentRoot'] = substr(App::wwwPath(), 0, $lenWP);
-                    }
+        $snp = substr($urlconf['urlScript'], strlen($localBasePath));
+
+        if (isset($_SERVER['DOCUMENT_ROOT'])) {
+            $urlconf['documentRoot'] = $_SERVER['DOCUMENT_ROOT'];
+        } else {
+            $urlconf['documentRoot'] = App::wwwPath();
+        }
+
+        if ($localBasePath != '/') {
+            // if wwwPath ends with the base path, we remove the base path from the wwwPath to have
+            // the document root
+            $posBP = strpos(App::wwwPath(), $localBasePath);
+            if ($posBP !== false) {
+                $lenWP = strlen(App::wwwPath()) - strlen($localBasePath);
+                if ($posBP == $lenWP) {
+                    $urlconf['documentRoot'] = substr(App::wwwPath(), 0, $lenWP);
                 }
             }
         }
@@ -676,12 +651,11 @@ class Compiler
         }
     }
 
-    public static function findServerName($ext = '.php', $isCli = false)
+    public static function findServerName($ext = '.php')
     {
         $extlen = strlen($ext);
 
-        if (strrpos($_SERVER['SCRIPT_NAME'], $ext) === (strlen($_SERVER['SCRIPT_NAME']) - $extlen)
-           || $isCli) {
+        if (strrpos($_SERVER['SCRIPT_NAME'], $ext) === (strlen($_SERVER['SCRIPT_NAME']) - $extlen)) {
             return 'SCRIPT_NAME';
         }
         if (isset($_SERVER['REDIRECT_URL'])

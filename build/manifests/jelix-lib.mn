@@ -111,7 +111,6 @@ cd lib/jelix-legacy/core/selector
 cd lib/jelix-legacy/core-modules/jelix
    __ALL__
 cd lib/jelix-legacy/core-modules/jelix/controllers
-! help.cmdline.php
 ! error.classic.php
 ! error.jsonrpc.php
 ! error.xmlrpc.php

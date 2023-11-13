@@ -4,7 +4,7 @@
  * @subpackage  jauthdb_admin
  *
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -42,7 +42,7 @@ class jauthdb_adminModuleConfigurator extends \Jelix\Installer\Module\Configurat
     {
         $authconfig = $entryPoint->getCoordPluginConfig('auth');
 
-        if ($authconfig && $entryPoint->getType() != 'cmdline') {
+        if ($authconfig) {
             /** @var \Jelix\IniFile\IniModifierInterface $conf */
             list($conf, $section) = $authconfig;
             if ($section === 0) {

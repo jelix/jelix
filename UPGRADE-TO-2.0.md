@@ -84,8 +84,41 @@ if you want to keep your module.xml files, modify them:
   eg: ```minversion="1.0" maxversion="1.1"```
   should become ```version=">=1.0,<=1.1"```
 
+## Convert old controllers for command lines to commands for Symfony Console
 
-## API changed
+Old command line script using controllers based on `jControllerCmdLine` and entrypoints based on `jCmdlineCoordinator`
+are not supported anymore. The upgrade scripts delete automatically corresponding entrypoints, but you have
+to convert your controllers into commands based on Symfony Console. See documentation of Jelix.
+
+## changes into `application.init.php`
+
+`App::initPaths()` and `jApp::initPaths()`: the `$scriptPath` parameter is deprecated and not used anymore.
+Be sure you don't give this parameter into your `application.init.php` script.
+
+## changes into your entrypoints
+
+- replace `checkAppNotInstalled()` and/or `checkAppOpened()`
+  by `\Jelix\Core\AppManager::errorIfAppInstalled()` and `\Jelix\Core\AppManager::errorIfAppClosed()`
+
+## Convert old installation scripts of your module
+
+The deprecated installation system, based on jInstaller* classes, has gone. You should
+use the official installation system, based on `\Jelix\Installer\` classes.
+
+
+## Convert test inside modules
+
+Since the script runtests.php and the unit test mechanism for modules
+(tests inside modules) don't exist anymore, you must write tests outside modules,
+in order to not include them into Composer packages or other deployment system.
+It also allows you to use the PHPunit version you want, or to use other unit tests framework.
+
+So migrate your existing tests inside modules to another place, and configure
+your own PHPunit setup.
+
+And delete the runtests.php script from your application if it exist.
+
+## Other API changed
 
 - If you use plugins, you have to change their base class name for some of them:
    - jelix\core\ConfigCompilerPluginInterface to Jelix\Core\Config\CompilerPluginInterface
@@ -93,32 +126,15 @@ if you want to keep your module.xml files, modify them:
         You have to change this method in your plugins
         See Jelix\Core\Config\CompilerPluginInterface
 
-- The deprecated installation system, based on jInstaller* classes, has gone. You should
-  use the official installation system, based on `\Jelix\Installer\` classes.
-
 - Files that have gone
    - lib/jelix/checker.php: if you included these file, replace the inclusion instruction
      by a call to ```\Jelix\Installer\Checker\CheckerPage::show();```
 
-- in your entry points, replace `checkAppNotInstalled()` and/or `checkAppOpened()`
-  by `\Jelix\Core\AppManager::errorIfAppInstalled()` and `\Jelix\Core\AppManager::errorIfAppClosed()`
-
-
 - Functions declared into the namespace `Jelix\Utilities` are now into the namespace `Jelix\Core\Utilities`
 
-## Modules gone
+- See the list of classes and methods that have been removed (see [CHANGELOG-2.0.md]), and be sure you don't use it anymore into your application.
 
-- jacl and jacldb. Use jacl2 and jacl2db instead.
+- See the list of classes and methods that have been marked as deprecated (see [CHANGELOG-2.0.md]), and it is
+  strongly recommended to not use it anymore from now. However, you could do changes later, until the release of 
+  Jelix 3.0, from which these deprecated classes and methods will be removed.
 
-## Test inside modules
-
-
-Since the script runtests.php and the unit test mechanism for modules
-(tests inside modules) don't exist anymore, you must write tests outside modules, 
-in order to not include them into Composer packages or other deployment system. 
-It also allows you to use the PHPunit version you want, or to use other unit tests framework.
-
-So migrate your existing tests inside modules to another place, and configure
-your own PHPunit setup.
-
-And delete the runtests.php script from your application if it exist.

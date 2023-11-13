@@ -2,7 +2,7 @@
 
 /**
  * @author     Laurent Jouanneau
- * @copyright  2015-2022 Laurent Jouanneau
+ * @copyright  2015-2023 Laurent Jouanneau
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -23,13 +23,6 @@ class AppInstance
     public $configPath = '';
 
     public $wwwPath = '';
-
-    /**
-     * @var string
-     *
-     * @deprecated
-     */
-    public $scriptPath = '';
 
     public $env = 'www/';
 
@@ -78,7 +71,7 @@ class AppInstance
      * @param string $varPath    var directory
      * @param string $logPath    log directory
      * @param string $configPath config directory
-     * @param string $scriptPath scripts directory (deprecated)
+     * @param string $scriptPath scripts directory (deprecated, not used anymore)
      */
     public function __construct(
         $appPath,
@@ -94,6 +87,18 @@ class AppInstance
         $this->configAutoloader = null;
     }
 
+    /**
+     * initialize the application paths.
+     *
+     * Warning: given paths should be ended by a directory separator.
+     *
+     * @param string $appPath    application directory
+     * @param string $wwwPath    www directory
+     * @param string $varPath    var directory
+     * @param string $logPath    log directory
+     * @param string $configPath config directory
+     * @param string $scriptPath scripts directory (deprecated, not used anymore)
+     */
     public function setPaths(
         $appPath,
         $wwwPath = null,
@@ -107,7 +112,6 @@ class AppInstance
         $this->varPath = (is_null($varPath) ? $appPath.'var/' : $varPath);
         $this->logPath = (is_null($logPath) ? $this->varPath.'log/' : $logPath);
         $this->configPath = (is_null($configPath) ? $this->varPath.'config/' : $configPath);
-        $this->scriptPath = (is_null($scriptPath) ? $appPath.'scripts/' : $scriptPath);
         $this->applicationInitFile = $appPath.'application.init.php';
     }
 

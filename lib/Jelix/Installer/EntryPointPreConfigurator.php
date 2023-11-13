@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -17,7 +17,6 @@ use Jelix\Routing\UrlMapping\XmlEntryPoint;
  * @method string getType()
  * @method string getScriptName()
  * @method string getFileName()
- * @method bool isCliScript()
  * @method string getEpId()
  * @method string[] getModulesList()
  * @method \Jelix\IniFile\IniModifierArray getConfigIni()

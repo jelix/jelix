@@ -13,7 +13,6 @@
     </entrypoint>
     <entrypoint name="soap" type="soap" default="true"/>
     <entrypoint name="rest" type="classic"/>
-    <entrypoint name="cmdline" type="cmdline"/>
     <entrypoint name="testnews" type="classic"/>
     <entrypoint name="bar" type="classic"/>
     <entrypoint name="invisible" type="classic"/>

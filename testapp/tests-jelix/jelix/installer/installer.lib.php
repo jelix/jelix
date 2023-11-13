@@ -77,7 +77,7 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
         $urlLocalXmlFileName = null
     ) {
         foreach(array(
-            'index', 'rest', 'soap', 'jsonrpc', 'xmlrpc', 'cmdline', 'newep'
+            'index', 'rest', 'soap', 'jsonrpc', 'xmlrpc', 'newep'
                 ) as $epName
         ) {
             $this->configContent[$epName.'/config.ini.php'] = array(
@@ -129,7 +129,6 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
             (object) $this->configContent[$configFile]);
     }
 
-
     protected function createComponentModule($name, $path) {
         $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
         $enabledGlobally = $this->mainConfigIni->getValue($name.'.enabled', 'modules');
@@ -154,9 +153,8 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
     function __construct(\Jelix\Installer\GlobalSetup $globalSetup,
                          $configFile, $file, $type, $isLocalEp, $configContent) {
         $this->type = $type;
-        $this->_isCliScript = ($type == 'cmdline');
         $this->configFileName = $configFile;
-        $this->scriptName =  ($this->isCliScript()?$file:'/'.$file);
+        $this->scriptName = '/'.$file;
         $this->file = $file;
         $this->globalSetup = $globalSetup;
         $this->isLocalEp = $isLocalEp;

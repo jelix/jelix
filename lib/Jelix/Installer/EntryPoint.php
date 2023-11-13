@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2009-2018 Laurent Jouanneau
+ * @copyright   2009-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -48,12 +48,6 @@ class EntryPoint
     protected $localEpConfigIni;
 
     /**
-     * @var bool true if the script corresponding to the configuration
-     *           is a script for CLI
-     */
-    protected $_isCliScript;
-
-    /**
      * @var string the url path of the entry point
      */
     protected $scriptName;
@@ -93,9 +87,8 @@ class EntryPoint
         $isLocalEp
     ) {
         $this->type = $type;
-        $this->_isCliScript = ($type == 'cmdline');
         $this->configFileName = $configFile;
-        $this->scriptName = ($this->_isCliScript ? $file : '/'.$file);
+        $this->scriptName = '/';
         $this->file = $file;
         $this->globalSetup = $globalSetup;
         $this->isLocalEp = $isLocalEp;
@@ -112,8 +105,7 @@ class EntryPoint
         $this->localEpConfigIni = new IniModifier($varConfigPath, ';<'.'?php die(\'\');?'.'>');
 
         $compiler = new Compiler($configFile,
-            $this->scriptName,
-            $this->_isCliScript
+            $this->scriptName
         );
         $this->config = $compiler->read(true);
     }
@@ -144,10 +136,11 @@ class EntryPoint
 
     /**
      * @return bool
+     * @deprecated
      */
     public function isCliScript()
     {
-        return $this->_isCliScript;
+        return false;
     }
 
     /**

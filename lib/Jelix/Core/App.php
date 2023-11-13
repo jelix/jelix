@@ -51,7 +51,7 @@ class App
      * @param string $varPath    var directory
      * @param string $logPath    log directory
      * @param string $configPath var config directory
-     * @param string $scriptPath scripts directory (deprecated)
+     * @param string $scriptPath scripts directory (deprecated, not used anymore)
      */
     public static function initPaths(
         $appPath,
@@ -128,19 +128,6 @@ class App
     public static function wwwPath($file = '')
     {
         return self::$_currentApp->wwwPath.$file;
-    }
-
-    /**
-     * @param string $file
-     *
-     * @return string
-     *
-     * @deprecated implement cli script using Symfony Console instead
-     * @see https://docs.jelix.org/en/manual-1.7/application/cmdline
-     */
-    public static function scriptsPath($file = '')
-    {
-        return self::$_currentApp->scriptPath.$file;
     }
 
     public static function tempPath($file = '')

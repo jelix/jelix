@@ -5,7 +5,7 @@
  * @author   Laurent Jouanneau
  * @contributor
  *
- * @copyright 2014 Laurent Jouanneau
+ * @copyright 2014-2023 Laurent Jouanneau
  *
  * @see     http://www.jelix.org
  * @licence  MIT
@@ -73,11 +73,6 @@ class jApp
     public static function wwwPath($file = '')
     {
         return \Jelix\Core\App::wwwPath($file);
-    }
-
-    public static function scriptsPath($file = '')
-    {
-        return \Jelix\Core\App::scriptsPath($file);
     }
 
     public static function tempPath($file = '')

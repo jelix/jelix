@@ -27,8 +27,6 @@ cd testapp/app/system/xmlrpc
   config.ini.php
 cd testapp/app/system/jsonrpc
   config.ini.php
-cd testapp/app/system/cmdline
-  config.ini.php
 cd testapp/app/system/soap
   config.ini.php
 cd testapp/app/system/urlsfiles
@@ -62,9 +60,6 @@ cd testapp/modules
 
 cd testapp/install
   __ALL_RECURSIVELY__
-
-cd testapp/scripts
-    cmdline.php
 
 cd testapp/modules/testapp
   __ALL_RECURSIVELY__

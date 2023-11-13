@@ -11,7 +11,6 @@ class jAppContextTest extends \PHPUnit\Framework\TestCase {
         $appSystemPath = jApp::appSystemPath();
         $configPath = jApp::varConfigPath();
         $wwwPath = jApp::wwwPath();
-        $scriptsPath = jApp::scriptsPath();
         $tempPath = jApp::tempPath();
 
         // first save
@@ -24,7 +23,6 @@ class jAppContextTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($appSystemPath, jApp::appSystemPath());
         $this->assertEquals($configPath, jApp::varConfigPath());
         $this->assertEquals($wwwPath, jApp::wwwPath());
-        $this->assertEquals($scriptsPath, jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
 
         // change the path
@@ -35,7 +33,6 @@ class jAppContextTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('/myapp/var/log/', jApp::logPath());
         $this->assertEquals('/myapp/var/config/', jApp::varConfigPath());
         $this->assertEquals('/myapp/www/', jApp::wwwPath());
-        $this->assertEquals('/myapp/scripts/', jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
 
         // second save
@@ -47,7 +44,6 @@ class jAppContextTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('/myapp2/var/log/', jApp::logPath());
         $this->assertEquals('/myapp2/var/config/', jApp::varConfigPath());
         $this->assertEquals('/myapp2/www/', jApp::wwwPath());
-        $this->assertEquals('/myapp2/scripts/', jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
 
         // pop the second save, we should be with the first saved values
@@ -58,7 +54,6 @@ class jAppContextTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals('/myapp/var/log/', jApp::logPath());
         $this->assertEquals('/myapp/var/config/', jApp::varConfigPath());
         $this->assertEquals('/myapp/www/', jApp::wwwPath());
-        $this->assertEquals('/myapp/scripts/', jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
 
         // pop the first save, we should be with initial paths
@@ -69,7 +64,6 @@ class jAppContextTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals($logPath, jApp::logPath());
         $this->assertEquals($configPath, jApp::varConfigPath());
         $this->assertEquals($wwwPath, jApp::wwwPath());
-        $this->assertEquals($scriptsPath, jApp::scriptsPath());
         $this->assertEquals($tempPath, jApp::tempPath());
     }
 }

@@ -543,8 +543,7 @@ class Installer
             // we re-load configuration file for each module because
             // previous module installer could have modify it.
             $compiler = new Compiler($entryPoint->getConfigFileName(),
-                $entryPoint->getScriptName(),
-                $entryPoint->isCliScript()
+                $entryPoint->getScriptName()
             );
             $entryPoint->setConfigObj(
                 $compiler->read(true)

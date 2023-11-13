@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2016-2019 Laurent Jouanneau
+ * @copyright   2016-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -38,6 +38,9 @@ class Migration
         $jelix17 = new Migrator\Jelix17($this->reporter);
         $jelix17->migrate();
 
+        $jelix20 = new Migrator\Jelix20($this->reporter);
+        $jelix20->migrate();
+
         $this->reporter->end();
     }
 
@@ -52,6 +55,9 @@ class Migration
         // Migration objects should be idempotent
         $jelix17 = new Migrator\Jelix17($this->reporter);
         $jelix17->localMigrate();
+
+        $jelix20 = new Migrator\Jelix20($this->reporter);
+        $jelix20->localMigrate();
 
         $this->reporter->end();
     }

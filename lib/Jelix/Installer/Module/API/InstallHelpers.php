@@ -1,13 +1,15 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018-2022 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
 namespace Jelix\Installer\Module\API;
+
+use Jelix\Core\App;
 
 /**
  * @since 1.7
@@ -77,17 +79,11 @@ class InstallHelpers extends PreInstallHelpers
             $epFile = $entryPointWebPath.'.php';
         }
 
-        if ($epType == 'cmdline') {
-            if (!file_exists(\jApp::scriptsPath($epFile))) {
-                $this->copyFile($entryPointModelFile, \jApp::scriptsPath($epFile));
-            }
-        } else {
-            $epPath = \jApp::wwwPath($epFile);
-            if (!file_exists($epPath)) {
-                throw new \Exception('The entrypoint '.$entryPointModelFile. ' cannot be updated, as it doesn\'t exist');
-            }
-            $this->updateOrCreateEntryPointFile($entryPointModelFile, $epPath);
+        $epPath = App::wwwPath($epFile);
+        if (!file_exists($epPath)) {
+            throw new \Exception('The entrypoint '.$entryPointModelFile. ' cannot be updated, as it doesn\'t exist');
         }
+        $this->updateOrCreateEntryPointFile($entryPointModelFile, $epPath);
     }
 
     protected function updateOrCreateEntryPointFile($entryPointFile, $epPath)
@@ -98,8 +94,8 @@ class InstallHelpers extends PreInstallHelpers
         // change the path to application.init.php into the entrypoint
         // depending on the application, the path of www/ is not always at the same place, relatively to
         // application.init.php
-        $appInitFile = \jApp::applicationInitFile();
-        $relativePath = \Jelix\FileUtilities\Path::shortestPath(\jApp::wwwPath(), dirname($appInitFile).'/');
+        $appInitFile = App::applicationInitFile();
+        $relativePath = \Jelix\FileUtilities\Path::shortestPath(App::wwwPath(), dirname($appInitFile).'/');
 
         $epCode = file_get_contents($epPath);
         $epCode = preg_replace('#(require\s*\(?\s*[\'"])(.*)(application\.init\.php)([\'"])#m', '\\1'.$relativePath.'/'.basename($appInitFile).'\\4', $epCode);

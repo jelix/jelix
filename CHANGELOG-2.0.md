@@ -30,6 +30,8 @@
   (tests inside modules) are now gone. See upgrade instructions.
 - the modules jacl and jacldb are not provided anymore. Use jacl2 and jacl2db instead.
 
+- remove support of the deprecated command line scripts system of Jelix <=1.6. Only Symphony console scripts are supported from now.
+
 ## changes in jDb
 
 jDb is now relying on [JelixDatabase](https://github.com/jelix/JelixDatabase).
@@ -79,12 +81,16 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 
 ## test environment
 
-- Vagrant environment has been removed.
 - upgrade PHPUnit to 8.5.0
 
 
 ## internal
 
+
+## deprecated
+
+- `App::initPaths()` and `jApp::initPaths()`: the `$scriptPath` parameter is deprecated and not used anymore
+- `\Jelix\Installer\EntryPoint::isCliScript()` (it returns always false from now)
 
 ## removed classes and methods
 
@@ -103,11 +109,22 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 - `jFile::getMimeType()`, `jFile::shortestPath()`, `jFile::normalizePath()`
 - `jIniFile`, `jIniFileModifier`, `jIniMultiFilesModifier`
 
-Removed plugins
+From the command line scripts system of Jelix <=1.6:
+
+- `jApp::scriptsPath()`, `App::scriptsPath()`, `AppInstance::$scriptsPath`, 
+- `jControllerCmdLine`, `jCmdLineRequest`, `jResponseCmdline`, `jCmdlineCoordinator`, `jCmdUtils`
+- `Jelix\DevHelper\CommandConfig::$layoutScriptsPath`
+
+
+## Removed modules
+
+- jacl and jacldb. Use jacl2 and jacl2db instead.
+
+## Removed plugins
 
 - kvdb: file2
 
-other removes:
+## other removes:
 
 _ `j_jquerypath` variable in templates
 

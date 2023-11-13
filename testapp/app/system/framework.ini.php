@@ -34,10 +34,6 @@ type=jsonrpc
 [entrypoint:xmlrpc.php]
 config="xmlrpc/config.ini.php"
 type=xmlrpc
-[entrypoint:cmdline.php]
-config="cmdline/config.ini.php"
-type=cmdline
-
 [entrypoint:newep.php]
 config="newep/config.ini.php"
 type=classic

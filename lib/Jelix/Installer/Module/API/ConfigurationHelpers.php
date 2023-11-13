@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018-2022 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -152,15 +152,9 @@ class ConfigurationHelpers extends PreConfigurationHelpers
             $epId = $entryPointWebPath;
         }
 
-        if ($epType == 'cmdline') {
-            if (!file_exists(App::scriptsPath($epFile))) {
-                $this->copyFile($entryPointModelFile, App::scriptsPath($epFile));
-            }
-        } else {
-            $newEpPath = App::wwwPath($epFile);
-            if (!file_exists($newEpPath)) {
-                $this->updateOrCreateEntryPointFile($entryPointModelFile, $newEpPath);
-            }
+        $newEpPath = App::wwwPath($epFile);
+        if (!file_exists($newEpPath)) {
+            $this->updateOrCreateEntryPointFile($entryPointModelFile, $newEpPath);
         }
 
         // create the configuration file
@@ -203,15 +197,9 @@ class ConfigurationHelpers extends PreConfigurationHelpers
             $epId = $entryPointWebPath;
         }
 
-        if ($epType == 'cmdline') {
-            if (file_exists(App::scriptsPath($epFile))) {
-                unlink(App::scriptsPath($epFile));
-            }
-        } else {
-            $newEpPath = App::wwwPath($epFile);
-            if (file_exists($newEpPath)) {
-                unlink($newEpPath);
-            }
+        $newEpPath = App::wwwPath($epFile);
+        if (file_exists($newEpPath)) {
+            unlink($newEpPath);
         }
 
         // remove the configuration file
@@ -236,17 +224,11 @@ class ConfigurationHelpers extends PreConfigurationHelpers
             $epFile = $entryPointWebPath.'.php';
         }
 
-        if ($epType == 'cmdline') {
-            if (!file_exists(App::scriptsPath($epFile))) {
-                $this->copyFile($entryPointModelFile, App::scriptsPath($epFile));
-            }
-        } else {
-            $epPath = App::wwwPath($epFile);
-            if (!file_exists($epPath)) {
-                throw new \Exception('The entrypoint '.$entryPointModelFile. ' cannot be updated, as it doesn\'t exist');
-            }
-            $this->updateOrCreateEntryPointFile($entryPointModelFile, $epPath);
+        $epPath = App::wwwPath($epFile);
+        if (!file_exists($epPath)) {
+            throw new \Exception('The entrypoint '.$entryPointModelFile. ' cannot be updated, as it doesn\'t exist');
         }
+        $this->updateOrCreateEntryPointFile($entryPointModelFile, $epPath);
     }
 
     protected function updateOrCreateEntryPointFile($entryPointFile, $epPath)

@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor Brice Tence
  *
- * @copyright  2006-2014 Laurent Jouanneau, 2011 Brice Tence
+ * @copyright  2006-2023 Laurent Jouanneau, 2011 Brice Tence
  *
  * @see       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -124,7 +124,7 @@ class Error implements \Jelix\Logger\MessageInterface
             $remoteAddr = $req->getIP();
         } else {
             $params = $this->sanitizeParams(isset($_GET) ? $_GET : array());
-            // When we are in cmdline we need to fix the remoteAddr
+            // When we are in CLI context, we need to fix the remoteAddr
             $remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
         }
 
