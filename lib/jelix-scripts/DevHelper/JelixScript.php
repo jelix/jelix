@@ -28,7 +28,7 @@ class JelixScript
         $config = new CommandConfig();
 
         if ($appname === '') {
-            $appname = $config->loadFromProject(\jApp::appPath('project.xml'));
+            $appname = $config->loadFromProject();
         } elseif ($appname === false) {
             // don't load from project..
             $appname = '';

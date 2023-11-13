@@ -179,11 +179,11 @@ class CommandConfig
      *
      * @return string the application name
      */
-    public function loadFromProject($projectFile)
+    public function loadFromProject()
     {
-        $infos = new \Jelix\Core\Infos\AppInfos(\Jelix\Core\App::appPath());
+        $infos = \Jelix\Core\Infos\AppInfos::load();
         if (!$infos->exists()) {
-            throw new Exception('cannot load jelix-app.json or project.xml');
+            throw new \Exception('cannot load jelix-app.json or project.xml');
         }
 
         $this->infoLicence = $infos->license;
