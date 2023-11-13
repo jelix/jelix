@@ -21,8 +21,9 @@ build_dev:
     name: "jelix-${CI_COMMIT_SHA}"
     paths:
       - _dist
-  except:
-    - tags
+  only:
+    - /^jelix-.*$/
+    - master
   tags:
     - jelix
 
@@ -58,8 +59,9 @@ deploy_package_dev:
     - make deploy_unstable
   dependencies:
     - build_dev
-  except:
-    - tags
+  only:
+    - /^jelix-.*$/
+    - master
   tags:
     - jelix
 
