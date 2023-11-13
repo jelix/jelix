@@ -138,6 +138,7 @@ class ModuleJsonParser extends JsonParserAbstract
         if (isset($json['autoload']['classmap'])) {
             $basepath = dirname($this->path).'/';
             foreach ($json['autoload']['classmap'] as $path) {
+                $infos->autoloadClassMap[] = $path;
                 $classes = ClassMapGenerator::createMap($basepath.$path);
                 // remove directory base path
                 $classes = array_map(function ($c) use ($basepath) {

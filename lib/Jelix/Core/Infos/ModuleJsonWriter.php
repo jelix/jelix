@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Laurent Jouanneau
- * @copyright 2018 Laurent Jouanneau
+ * @copyright 2018-2023 Laurent Jouanneau
  *
  * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -86,7 +86,7 @@ class ModuleJsonWriter extends JsonWriterAbstract
     {
         $autoload = array();
         if (count($infos->autoloaders)) {
-            $autoload['autoloaders'] = $infos->autoloaders;
+            $autoload['files'] = $infos->autoloaders;
         }
         if (count($infos->autoloadIncludePath)) {
             $autoload['include-path'] = array_map(function ($d) {
@@ -98,12 +98,10 @@ class ModuleJsonWriter extends JsonWriterAbstract
             }, $infos->autoloadIncludePath);
         }
 
-        foreach ($infos->autoloadClasses as $name => $file) {
-            // not supported yet
-        }
+        $autoload['classmap'] = $infos->autoloadClassMap;
 
         if (count($infos->autoloadPsr0Namespaces)) {
-            $json['autoload']['psr-0'] = array();
+            $autoload['psr-0'] = array();
         }
         foreach ($infos->autoloadPsr0Namespaces as $ns => $directories) {
             $directoryPaths = array();
@@ -121,9 +119,9 @@ class ModuleJsonWriter extends JsonWriterAbstract
             }
 
             if ($ns === 0) {
-                $json['autoload']['psr-0'][''] = $directoryPaths;
+                $autoload['psr-0'][''] = $directoryPaths;
             } else {
-                $json['autoload']['psr-0'][$ns] = $directoryPaths;
+                $autoload['psr-0'][$ns] = $directoryPaths;
             }
         }
 
@@ -143,10 +141,12 @@ class ModuleJsonWriter extends JsonWriterAbstract
             }
 
             if ($ns === 0) {
-                $json['autoload']['psr-4'][''] = $directoryPaths;
+                $autoload['psr-4'][''] = $directoryPaths;
             } else {
-                $json['autoload']['psr-4'][$ns] = $directoryPaths;
+                $autoload['psr-4'][$ns] = $directoryPaths;
             }
         }
+
+        $json['autoload'] = $autoload;
     }
 }

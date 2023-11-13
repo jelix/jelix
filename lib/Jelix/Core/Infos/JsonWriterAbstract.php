@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Laurent Jouanneau
- * @copyright 2018 Laurent Jouanneau
+ * @copyright 2018-2023 Laurent Jouanneau
  *
  * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -80,8 +80,8 @@ abstract class JsonWriterAbstract
         if ($infos->description) {
             $json['description'] = $infos->description;
         }
-        if ($infos->authors) {
-            $json['authors'] = $infos->authors;
+        if ($infos->author) {
+            $json['authors'] = $infos->author;
         }
         if ($infos->license) {
             $json['license'] = $infos->license;
@@ -90,7 +90,7 @@ abstract class JsonWriterAbstract
             $json['licenseURL'] = $infos->licenseURL;
         }
         if ($infos->homepageURL) {
-            $json['homepageURL'] = $infos->homepageURL;
+            $json['homepage'] = $infos->homepageURL;
         }
         if ($infos->updateURL) {
             $json['updateURL'] = $infos->updateURL;

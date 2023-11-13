@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2014-2018 Laurent Jouanneau
+ * @copyright  2014-2023 Laurent Jouanneau
  *
  * @see     http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -38,9 +38,20 @@ class ModuleInfos extends InfosAbstract
     /**
      * List of classes and their relative path to the module.
      *
+     * This is the result of parsing all class files stored
+     * into directories indicated into $autoloadClassMap
+     *
      * @var string[] Keys are class name, values are path
      */
     public $autoloadClasses = array();
+
+    /**
+     * List of directories path (related to the module directory),
+     * from which files are parsed to retrieve classes. The result
+     * is stored into $autoloadClasses
+     * @var string[]
+     */
+    public $autoloadClassMap = array();
 
     /**
      * List of directories where to find classes having a specific name pattern.

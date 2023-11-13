@@ -63,26 +63,15 @@ jelix-app.json:
         "description": "a description",
         "homepage":"",
         "license":"",
-        "authors":[],
-        "directories": {
-            "config":"",
-            "var":"",
-            "www":"",
-            "log":"",
-            "temp":""
-        },
-        "entrypoints" : [
-            { "file": "entrypoint.php", "config":"config file", "type": "classic|soap|jsonrpc..."}
-        ]
+        "authors":[]
     }
 ```
 
 if you want to keep your module.xml files, modify them:
 
-- attributes minversion and maxversion on <dependency> elements are deprecated. Replace
-  them by a version attribute, containing same syntax as in Composer
-  eg: ```minversion="1.0" maxversion="1.1"```
-  should become ```version=">=1.0,<=1.1"```
+- attributes `minversion` and `maxversion` on `<dependency>` elements are deprecated. Replace
+  them by a `version` attribute, containing same syntax as in Composer
+  eg: `minversion="1.0" maxversion="1.1"` should become `version=">=1.0,<=1.1"`
 
 ## Convert old controllers for command lines to commands for Symfony Console
 
