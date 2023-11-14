@@ -78,7 +78,6 @@ return array(
     'install.start' => 'L\'installation démarre',
     'install.end' => 'Tous les modules sont installés ou mis à jour',
     'install.bad.end' => 'Installation interrompue pour cause d\'erreurs',
-    'install.installers.disabled' => 'Les scripts d\'installation et de mise à jour ne seront pas executés, ils sont désactivés dans la configuration.',
 
     'install.dependencies.ok' => 'Toutes les dépendances des modules sont valides',
     'install.bad.dependencies' => 'Il y a des erreurs dans les dépendances.',

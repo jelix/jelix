@@ -28,6 +28,7 @@
 - remove the deprecated jforms builder based on `jFormsBuilderBase` and `jFormsBuilderHtml`
   and so, builders named `legacy.html` or `legacy.htmllight`
 
+
 ## changes in jDb
 
 jDb is now relying on [JelixDatabase](https://github.com/jelix/JelixDatabase).
@@ -128,4 +129,8 @@ From the command line scripts system of Jelix <=1.6:
 - `lib/jelix-scripts`. Its DevHelper classes and templates have been moved to `lib/Jelix`
 - `lib/jelix-scripts/includes/cmd.inc.php` and `lib/jelix-scripts/includes/scripts.inc.php`
 _ `j_jquerypath` variable in templates
-- configuration parameter `loadClasses` from the `sessions` section
+
+- remove support of configuration parameters
+  - `enableAllModules`
+  - `disableInstallers`
+  - `loadClasses` from the `sessions` section

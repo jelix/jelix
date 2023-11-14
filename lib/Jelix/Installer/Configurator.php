@@ -198,10 +198,6 @@ class Configurator
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
         App::setConfig($entryPoint->getConfigObj());
 
-        if ($entryPoint->getConfigObj()->disableInstallers) {
-            $this->notice('install.installers.disabled');
-        }
-
         $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig ?: false);
         $this->globalSetup->setReadWriteConfigMode(false);
 
@@ -267,10 +263,6 @@ class Configurator
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getMainEntryPoint();
         App::setConfig($entryPoint->getConfigObj());
-
-        if ($entryPoint->getConfigObj()->disableInstallers) {
-            $this->notice('install.installers.disabled');
-        }
 
         $forLocalConfig = true;
         $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
@@ -382,7 +374,6 @@ class Configurator
     {
         $result = true;
         $componentsToInstall = array();
-        $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
 
         $preconfigHelpers = new PreConfigurationHelpers($this->globalSetup);
 
@@ -391,16 +382,12 @@ class Configurator
             $component = $this->globalSetup->getModuleComponent($resolverItem->getName());
 
             try {
-                if ($installersDisabled) {
-                    $configurator = null;
+                if (isset($this->moduleParameters[$component->getName()])) {
+                    $parameters = $this->moduleParameters[$component->getName()];
                 } else {
-                    if (isset($this->moduleParameters[$component->getName()])) {
-                        $parameters = $this->moduleParameters[$component->getName()];
-                    } else {
-                        $parameters = null;
-                    }
-                    $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE, $forLocalConfig, $parameters);
+                    $parameters = null;
                 }
+                $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_CONFIGURE, $forLocalConfig, $parameters);
                 $componentsToInstall[] = array($configurator, $component);
 
                 if ($configurator) {
@@ -636,10 +623,6 @@ class Configurator
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
         App::setConfig($entryPoint->getConfigObj());
 
-        if ($entryPoint->getConfigObj()->disableInstallers) {
-            $this->notice('install.installers.disabled');
-        }
-
         $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
         $this->globalSetup->setReadWriteConfigMode(false);
 
@@ -680,7 +663,6 @@ class Configurator
     {
         $result = true;
         $componentsToInstall = array();
-        $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
         $preconfigHelpers = new PreConfigurationHelpers($this->globalSetup);
 
         foreach ($moduleschain as $resolverItem) {
@@ -688,11 +670,7 @@ class Configurator
             $component = $this->globalSetup->getModuleComponent($resolverItem->getName());
 
             try {
-                if ($installersDisabled) {
-                    $configurator = null;
-                } else {
-                    $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_UNCONFIGURE);
-                }
+                $configurator = $component->getConfigurator($component::CONFIGURATOR_TO_UNCONFIGURE);
                 $componentsToInstall[] = array($configurator, $component);
 
                 if ($configurator) {

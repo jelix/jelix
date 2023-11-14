@@ -78,7 +78,6 @@ return array(
     'install.start' => 'Installation starts',
     'install.end' => 'All modules are installed or upgraded',
     'install.bad.end' => 'Installation/upgrade is aborted',
-    'install.installers.disabled' => 'Installation scripts and update scripts will not be executed: it is disabled in the configuration.',
 
     'install.entrypoint.wrong.config' => 'The entry point %s should have its own configuration file',
 

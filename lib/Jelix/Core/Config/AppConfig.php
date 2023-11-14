@@ -26,8 +26,7 @@ class AppConfig
 
     const sectionsToIgnoreForEp = array(
         'httpVersion', 'timeZone', 'domainName', 'forceHTTPPort', 'forceHTTPSPort',
-        'chmodFile', 'chmodDir', 'disableInstallers', 'enableAllModules',
-        'modules', '_coreResponses', 'compilation',
+        'chmodFile', 'chmodDir', 'modules', '_coreResponses', 'compilation',
     );
 
     /**

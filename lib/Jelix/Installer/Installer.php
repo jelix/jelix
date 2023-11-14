@@ -170,10 +170,6 @@ class Installer
         $this->notice('install.start');
         App::setConfig($this->mainEntryPoint->getConfigObj());
 
-        if ($this->mainEntryPoint->getConfigObj()->disableInstallers) {
-            $this->notice('install.installers.disabled');
-        }
-
         $this->globalSetup->setReadWriteConfigMode(false);
         $componentsToInstall = $this->runPreInstall($modulesChain);
         if ($componentsToInstall === false) {
@@ -276,7 +272,6 @@ class Installer
         // put available installers into $componentsToInstall for
         // the next step
         $componentsToInstall = array();
-        $installersDisabled = $this->mainEntryPoint->getConfigObj()->disableInstallers;
 
         $databaseHelpers = new Module\API\DatabaseHelpers($this->globalSetup);
         $helpers = new Module\API\PreInstallHelpers($this->globalSetup, $databaseHelpers);
@@ -288,32 +283,20 @@ class Installer
             try {
                 $this->globalSetup->setCurrentProcessedModule($component->getName());
                 if ($resolverItem->getAction() == Resolver::ACTION_INSTALL) {
-                    if ($installersDisabled) {
-                        $installer = null;
-                    } else {
-                        $installer = $component->getInstaller();
-                    }
+                    $installer = $component->getInstaller();
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_INSTALL);
                     if ($installer) {
                         $installer->preInstall($helpers);
                     }
                 } elseif ($resolverItem->getAction() == Resolver::ACTION_UPGRADE) {
-                    if ($installersDisabled) {
-                        $upgraders = array();
-                    } else {
-                        $upgraders = $component->getUpgraders();
-                    }
+                    $upgraders = $component->getUpgraders();
 
                     foreach ($upgraders as $upgrader) {
                         $upgrader->preInstall($helpers);
                     }
                     $componentsToInstall[] = array($upgraders, $component, Resolver::ACTION_UPGRADE);
                 } elseif ($resolverItem->getAction() == Resolver::ACTION_REMOVE) {
-                    if ($installersDisabled) {
-                        $installer = null;
-                    } else {
-                        $installer = $component->getUninstaller();
-                    }
+                    $installer = $component->getUninstaller();
                     $componentsToInstall[] = array($installer, $component, Resolver::ACTION_REMOVE);
                     if ($installer) {
                         $installer->preUninstall($helpers);

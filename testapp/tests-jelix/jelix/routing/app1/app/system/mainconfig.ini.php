@@ -1,8 +1,5 @@
 ;---
 
-disableInstallers = on
-;enableAllModules = on
-
 [modules]
 jelix.enabled = on
 aaa.enabled = on

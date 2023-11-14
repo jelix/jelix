@@ -383,9 +383,7 @@ class Compiler
     {
         $installerFile = App::varConfigPath('installer.ini.php');
 
-        if ($config->disableInstallers) {
-            $installation = array();
-        } elseif (file_exists($installerFile)) {
+        if (file_exists($installerFile)) {
             $installation = parse_ini_file($installerFile, true, INI_SCANNER_TYPED);
         } else {
             if ($allModuleInfo) {
@@ -434,24 +432,14 @@ class Compiler
             return null;
         }
         $f = $moduleInfo->name;
-        if ($config->disableInstallers) {
-            $installation['modules'][$f.'.installed'] = 1;
-        } elseif (!isset($installation['modules'][$f.'.installed'])) {
+        if (!isset($installation['modules'][$f.'.installed'])) {
             $installation['modules'][$f.'.installed'] = 0;
         }
 
         if ($f == 'jelix') {
             $config->modules['jelix.enabled'] = true; // the jelix module should always be public
         } else {
-            if ($config->enableAllModules) {
-                if ($config->disableInstallers
-                    || $installation['modules'][$f.'.installed']
-                    || $allModuleInfo) {
-                    $config->modules[$f.'.enabled'] = true;
-                } else {
-                    $config->modules[$f.'.enabled'] = false;
-                }
-            } elseif (!isset($config->modules[$f.'.enabled'])) {
+            if (!isset($config->modules[$f.'.enabled'])) {
                 // no given access in defaultconfig and ep config
                 $config->modules[$f.'.enabled'] = 0;
             } elseif (!$installation['modules'][$f.'.installed']) {

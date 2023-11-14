@@ -8,8 +8,6 @@ class fakeConfigCompiler extends \Jelix\Core\Config\Compiler {
 }
 
 class fakeConfig {
-    public $disableInstallers = false;
-    public $enableAllModules = false;
     public $modules = array();
     public $_allModulesPathList = array();
     public $_externalModulesPathList = array();

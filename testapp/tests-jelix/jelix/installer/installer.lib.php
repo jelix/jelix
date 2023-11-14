@@ -82,11 +82,9 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
         ) {
             $this->configContent[$epName.'/config.ini.php'] = array(
                 'dbProfils'=>"default",
-                "disableInstallers"=>false,
-                "enableAllModules"=>false,
                 'modules'=>array(
                 ),
-                'urlengine'=>array('urlScriptId'=>$epName,
+                'urlengine'=>array(
                     'urlScript'=>"/$epName.php",
                     'urlScriptPath'=>"/",
                     'urlScriptName'=>"$epName.php",

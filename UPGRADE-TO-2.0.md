@@ -101,7 +101,7 @@ use the official installation system, based on `\Jelix\Installer\` classes.
   declare classes that were listed into this parameter, in the autoloading
   section of module.xml/jelix-module.json files (or if you prefer, into the 
   composer.json if the module is a Composer package)
-
+- if you used `enableAllModules`, you should enable into the configuration all modules you want to use
 
 ## Convert test inside modules
 
