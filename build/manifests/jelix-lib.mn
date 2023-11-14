@@ -11,8 +11,6 @@ cd lib
 cd lib/Jelix/Core
   __ALL__
 
-  Server.php
-  Session.php
 cd lib/Jelix/Core/Config
   __ALL__
 ! defaultconfig.ini.php
@@ -33,10 +31,10 @@ cd lib/Jelix/Dependencies
   LICENCE
   Resolver.php
 
-cd lib/Jelix/Event
+cd lib/Jelix/DevHelper
   __ALL__
 
-cd lib/Jelix/External
+cd lib/Jelix/Event
   __ALL__
 
 cd lib/Jelix/Installer
@@ -74,14 +72,17 @@ cd lib/Jelix/Logger
 cd lib/Jelix/Mailer
   __ALL__
 
+cd lib/Jelix/Routing
+  __ALL_RECURSIVELY__
+
 cd lib/Jelix/Scripts
   __ALL__
 
 cd lib/Jelix/Template
   __ALL__
 
-cd lib/Jelix/Routing
-  __ALL_RECURSIVELY__
+cd lib/Jelix/UnitTests
+  __ALL__
 
 cd lib/Jelix/WebAssets
   __ALL__
@@ -198,58 +199,11 @@ cd lib/jelix-legacy/forms
 cd lib/jelix-legacy/kvdb
   __ALL__
 
+cd lib/jelix-legacy/plugins/
+  __ALL_RECURSIVELY__
 
 cd lib/jelix-legacy/utils/
   __ALL__
-
-cd lib/jelix-legacy/plugins/auth
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/cache/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/configcompiler/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/coord/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/debugbar/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/formbuilder/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/formwidget/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/kvdb/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/logger/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/htmlresponse/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/profiles/jdb/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix-legacy/plugins/tpl/common
-  __ALL__
-
-cd lib/jelix-legacy/plugins/tpl/html
-  __ALL__
-
-cd lib/jelix-legacy/plugins/tpl/ltx2pdf
-  __ALL__
-
-cd lib/jelix-legacy/plugins/tpl/text
-  __ALL__
-
-cd lib/jelix-legacy/plugins/tpl/xml
-  __ALL__
-
 
 
 cd lib/jelix-plugins/cache/
