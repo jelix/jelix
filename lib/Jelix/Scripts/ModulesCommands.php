@@ -35,9 +35,9 @@ class ModulesCommands
         $ep = $fmkInfos->getDefaultEntryPointInfo();
 
         $compiler = new Compiler($ep->getConfigFile(), 'console.php', true);
-
-        App::setRouter(new Router());
         App::setConfig($compiler->read(true));
+        App::setRouter(new Router());
+
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);
 
         // ----- init the Application object
