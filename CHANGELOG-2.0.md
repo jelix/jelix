@@ -87,6 +87,7 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 
 - `App::initPaths()` and `jApp::initPaths()`: the `$scriptPath` parameter is deprecated and not used anymore
 - `\Jelix\Installer\EntryPoint::isCliScript()` (it returns always false from now)
+- constant `JELIX_SCRIPTS_PATH`. Its value is now `<vendor path>/lib/Jelix/DevHelper/`.
 
 ## removed classes and methods
 
@@ -124,5 +125,7 @@ From the command line scripts system of Jelix <=1.6:
 
 ## other removes:
 
+- `lib/jelix-scripts`. Its DevHelper classes and templates have been moved to `lib/Jelix`
+- `lib/jelix-scripts/includes/cmd.inc.php` and `lib/jelix-scripts/includes/scripts.inc.php`
 _ `j_jquerypath` variable in templates
 - configuration parameter `loadClasses` from the `sessions` section

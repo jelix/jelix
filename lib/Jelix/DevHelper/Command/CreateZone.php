@@ -1,11 +1,9 @@
 <?php
 /**
- * @package     jelix-scripts
- *
  * @author      Laurent Jouanneau
  * @contributor
  *
- * @copyright   2005-2016 Laurent Jouanneau
+ * @copyright   2005-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html

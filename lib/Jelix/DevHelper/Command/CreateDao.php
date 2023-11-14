@@ -1,13 +1,11 @@
 <?php
 /**
- * @package     jelix-scripts
- *
  * @author      Laurent Jouanneau
  * @contributor Nicolas Jeudy (patch ticket #99)
  * @contributor Gwendal Jouannic (patch ticket #615)
  * @contributor Loic Mathaud
  *
- * @copyright   2005-2016 Laurent Jouanneau
+ * @copyright   2005-2023 Laurent Jouanneau
  * @copyright   2007 Nicolas Jeudy, 2008 Gwendal Jouannic, 2008 Loic Mathaud
  *
  * @see        http://www.jelix.org

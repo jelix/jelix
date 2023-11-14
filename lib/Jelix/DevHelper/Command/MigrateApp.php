@@ -1,12 +1,10 @@
 <?php
 
 /**
- * @package     jelix-scripts
- *
  * @author      Laurent Jouanneau
  * @contributor Julien Issler
  *
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2023 Laurent Jouanneau
  * @copyright   2009 Julien Issler
  *
  * @see        http://jelix.org

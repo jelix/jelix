@@ -1,7 +1,5 @@
 <?php
 /**
- * @package    jelix-scripts
- *
  * @author     Laurent Jouanneau
  * @copyright  2011-2016 Laurent Jouanneau
  *
@@ -11,10 +9,12 @@
 
 namespace Jelix\DevHelper;
 
+use Jelix\Core\App;
 use Symfony\Component\Console\Application;
 
 error_reporting(E_ALL);
-define('JELIX_SCRIPTS_PATH', __DIR__.'/../');
+/** @deprecated */
+define('JELIX_SCRIPTS_PATH', __DIR__.'/');
 
 /**
  * Class JelixCommands.
@@ -27,7 +27,7 @@ class JelixCommands
     {
         \Jelix\Scripts\Utils::checkEnv();
 
-        \jApp::setEnv('jelix-scripts');
+        App::setEnv('jelix-scripts');
         \Jelix\Scripts\Utils::checkTempPath();
 
         $jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();

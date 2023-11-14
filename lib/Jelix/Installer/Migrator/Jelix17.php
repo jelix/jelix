@@ -604,12 +604,12 @@ class Jelix17
 
         $devPath = App::appPath('dev.php');
         if (!file_exists($devPath)) {
-            copy(LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
+            copy(LIB_PATH.'Jelix/DevHelper/templates/dev.php.tpl', $devPath);
             $this->reporter->message('create dev.php to launch module commands', 'notice');
         } else {
             $content = file_get_contents($devPath);
             if (strpos($content, 'JelixCommands::launch') === false) {
-                copy(LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
+                copy(LIB_PATH.'Jelix/DevHelper/templates/dev.php.tpl', $devPath);
                 $this->reporter->message('Update dev.php to launch developer commands', 'notice');
             }
         }

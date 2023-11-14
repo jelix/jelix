@@ -1,7 +1,5 @@
 <?php
 /**
- * @package    jelix-scripts
- *
  * @author     Laurent Jouanneau
  * @copyright  2011-2016 Laurent Jouanneau
  *
@@ -16,7 +14,7 @@ class JelixScript
     public static $debugMode = false;
 
     /**
-     * load the configuration of jelix-scripts.
+     * load the configuration of DevHelper.
      *
      * @param string $appname the application name. leave empty to load it from
      *                        the project file

@@ -25,7 +25,6 @@
     },
     "autoload": {
         "psr-4": {
-            "Jelix\\DevHelper\\": "jelix-scripts/DevHelper/",
             "Jelix\\": "Jelix/",
             "jelix\\": "jelix-legacy/"
         },

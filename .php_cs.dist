@@ -8,8 +8,7 @@ $finder = PhpCsFixer\Finder::create()
                 __DIR__.'/lib/jelix-legacy/',
                 __DIR__.'/lib/jelix-admin-modules/',
                 __DIR__.'/lib/jelix-modules/',
-                __DIR__.'/lib/jelix-plugins/',
-                __DIR__.'/lib/jelix-scripts/',
+                __DIR__.'/lib/jelix-plugins/'
           ))
         ;
 

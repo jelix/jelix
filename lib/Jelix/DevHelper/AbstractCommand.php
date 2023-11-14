@@ -9,6 +9,7 @@
 
 namespace Jelix\DevHelper;
 
+use Jelix\Core\Framework;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -49,8 +50,8 @@ abstract class AbstractCommand extends Command
 
     /**
      * helper method to create a file from a template stored in the templates/
-     * directory of jelix-scripts. it set the rights
-     * on the file as indicated in the configuration of jelix-scripts.
+     * directory of DevHelper. it set the rights
+     * on the file as indicated in the configuration of DevHelper.
      *
      * @param string $filename the path of the new file created from the template
      * @param string $template relative path to the templates/ directory, of the
@@ -78,7 +79,7 @@ abstract class AbstractCommand extends Command
             'default_creator_email' => $this->config->infoCreatorMail,
             'default_copyright' => $this->config->infoCopyright,
             'createdate' => date('Y-m-d'),
-            'jelix_version' => \jFramework::version(),
+            'jelix_version' => Framework::version(),
             'appname' => $this->config->appName,
             'default_timezone' => $this->config->infoTimezone,
             'default_locale' => $this->config->infoLocale,
@@ -98,7 +99,7 @@ abstract class AbstractCommand extends Command
 
             return false;
         }
-        $tplpath = JELIX_SCRIPTS_PATH.'templates/'.$template;
+        $tplpath = __DIR__.'/templates/'.$template;
 
         if (!file_exists($tplpath)) {
             $this->output->writeln('<error>Warning:  to create '.$displayedFilename.', template file "'.$tplpath.'" doesn\'t exists.</error>');
@@ -147,7 +148,7 @@ abstract class AbstractCommand extends Command
 
     /**
      * helper method to create a new directory. it set the rights
-     * on the directory as indicated in the configuration of jelix-scripts.
+     * on the directory as indicated in the configuration of DevHelper.
      *
      * @param string $dirname the path of the directory
      */

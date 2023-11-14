@@ -51,7 +51,6 @@
     "autoload": {
         "psr-4": {
             "jelix\\": "lib/jelix-legacy",
-            "Jelix\\DevHelper\\": "lib/jelix-scripts/DevHelper/",
             "Jelix\\": "lib/Jelix"
         },
         "classmap": [ ],

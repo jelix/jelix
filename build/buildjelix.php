@@ -158,7 +158,6 @@ Manifest::process('build/manifests/jelix-www.mn', $repoDir, $BUILD_TARGET_PATH, 
 
 Manifest::$stripComment = false;
 
-Manifest::process('build/manifests/jelix-scripts.mn',$repoDir, $BUILD_TARGET_PATH , Environment::getAll());
 Manifest::process('build/manifests/jelix-modules.mn', $repoDir, $BUILD_TARGET_PATH, Environment::getAll(), true);
 Manifest::process('build/manifests/jelix-admin-modules.mn', $repoDir, $BUILD_TARGET_PATH, Environment::getAll());
 

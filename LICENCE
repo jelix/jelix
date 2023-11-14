@@ -3,7 +3,6 @@ Some external librairies are released under other licences. See:
 
 - lib/jelix-plugins/cache/file/LICENCE (MIT or BSD like licence)
 - lib/jelix-plugins/kvdb/file/LICENCE (MIT or BSD like licence)
-- lib/jelix-scripts/LICENCE (GPL)
 - lib/jelix-www/ckeditor5/LICENSE.md (GPL 2+)
 - lib/jelix-www/jquery/MIT-LICENSE.txt
 - lib/jelix-www/markitup/MIT-LICENSE

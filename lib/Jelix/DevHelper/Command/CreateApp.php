@@ -1,8 +1,6 @@
 <?php
 
 /**
- * @package     jelix-scripts
- *
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  * @contributor Gildas Givaja (bug #83)
@@ -10,7 +8,7 @@
  * @contributor Bastien Jaillot
  * @contributor Dominique Papin, Olivier Demah
  *
- * @copyright   2005-2019 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
+ * @copyright   2005-2023 Laurent Jouanneau, 2006 Loic Mathaud, 2007 Gildas Givaja, 2007 Christophe Thiriot, 2008 Bastien Jaillot, 2008 Dominique Papin
  * @copyright   2011 Olivier Demah
  *
  * @see        http://www.jelix.org

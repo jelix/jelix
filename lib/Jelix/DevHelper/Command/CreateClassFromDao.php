@@ -1,11 +1,9 @@
 <?php
 /**
- * @package     jelix-scripts
- *
  * @author      Bisse Romain
  * @contributor Laurent Jouanneau
  *
- * @copyright   2009 Bisse Romain, 2016 Laurent Jouanneau
+ * @copyright   2009 Bisse Romain, 2016-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html

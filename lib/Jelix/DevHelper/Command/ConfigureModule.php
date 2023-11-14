@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018-2022 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -9,6 +9,7 @@
 
 namespace Jelix\DevHelper\Command;
 
+use Jelix\Core\AppManager;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -57,7 +58,7 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
 
     protected function _execute(InputInterface $input, OutputInterface $output)
     {
-        \jAppManager::close();
+        AppManager::close();
 
         $modules = $input->getArgument('modules');
         $parameters = $input->getOption('parameters');
@@ -93,7 +94,7 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
             $input->getOption('force')
         );
 
-        \jAppManager::open();
+        AppManager::open();
         return 0;
     }
 }
