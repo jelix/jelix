@@ -196,10 +196,12 @@ class Template extends \Jelix\Castor\CastorCore
     /**
      * return the current encoding.
      *
+     * Always UTF-8 into Jelix 2+
+     *
      * @return string the charset string
      */
     public function getEncoding()
     {
-        return App::config()->charset;
+        return 'UTF-8';
     }
 }

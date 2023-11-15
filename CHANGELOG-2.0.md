@@ -8,6 +8,9 @@
 
 - `jApp::coord()` is replaced by `\Jelix\Core\App::router()`
 
+- The `charset` configuration property is deprecated. Everything in Jelix works
+  with the UTF-8 charset from now. Locales must be only in UTF-8.
+
 - project.xml can be replaced by a json file named jelix-app.json
 - module.xml can be replaced by a json file named jelix-module.json
 

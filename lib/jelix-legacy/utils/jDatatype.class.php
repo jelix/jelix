@@ -133,7 +133,7 @@ class jDatatypeString extends jDatatype implements jIFilteredDatatype
                 $this->filteredValue = $value;
             }
 
-            $len = iconv_strlen($value, jApp::config()->charset);
+            $len = iconv_strlen($value, 'UTF-8');
 
             if ($this->length !== null && $len != $this->length) {
                 return false;
@@ -194,9 +194,9 @@ class jDatatypeHtml extends jDatatype implements jIFilteredDatatype
     {
         if ($this->hasFacets) {
             if ($this->fromWysiwyg) {
-                $len = iconv_strlen(strip_tags($value, '<img><img/><object><embed><video><video/><svg>'), jApp::config()->charset);
+                $len = iconv_strlen(strip_tags($value, '<img><img/><object><embed><video><video/><svg>'), 'UTF-8');
             } else {
-                $len = iconv_strlen($value, jApp::config()->charset);
+                $len = iconv_strlen($value, 'UTF-8');
             }
             if ($this->length !== null && $len != $this->length) {
                 return false;

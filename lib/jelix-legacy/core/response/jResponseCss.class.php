@@ -49,7 +49,7 @@ class jResponseCss extends jResponse
             return true;
         }
 
-        $this->_httpHeaders['Content-Type'] = 'text/css;charset='.jApp::config()->charset;
+        $this->_httpHeaders['Content-Type'] = 'text/css;charset=UTF-8';
         $this->sendHttpHeaders();
         echo $this->content;
 

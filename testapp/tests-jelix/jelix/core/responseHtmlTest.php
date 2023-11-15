@@ -6,7 +6,6 @@ require_once(JELIX_LIB_PATH.'core/response/jResponseHtml.class.php');
 class htmlRespTest extends jResponseHtml {
 
     function __construct (){
-        $this->_charset = 'UTF-8';
         $this->_locale = 'en_US';
         $this->_lang = 'en';
         $this->body = new jTpl();

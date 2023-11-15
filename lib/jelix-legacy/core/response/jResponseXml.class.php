@@ -58,7 +58,7 @@ class jResponseXml extends jResponse
      *
      * @var string
      */
-    protected $_charset;
+    protected $_charset = 'UTF-8';
 
     private $_css = array();
     private $_xsl = array();
@@ -78,7 +78,6 @@ class jResponseXml extends jResponse
      */
     public function __construct()
     {
-        $this->_charset = jApp::config()->charset;
         $this->content = new jTpl();
         parent::__construct();
     }
@@ -135,7 +134,7 @@ class jResponseXml extends jResponse
     final public function outputErrors()
     {
         header('HTTP/1.0 500 Internal Jelix Error');
-        header('Content-Type: text/plain;charset='.jApp::config()->charset);
+        header('Content-Type: text/plain;charset=UTF-8');
         echo jApp::coord()->getGenericErrorMessage();
     }
 

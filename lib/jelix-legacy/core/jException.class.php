@@ -41,15 +41,17 @@ class jException extends Exception
      * @param array  $localeParams parameters for the message (for sprintf)
      * @param int    $code         error code (can be provided by the localized message)
      * @param string $lang
-     * @param string $charset
+     * @param string $charset  deprecated. Not used anymore
      */
     public function __construct($localekey, $localeParams = array(), $code = 1, $lang = null, $charset = null)
     {
         $this->localeKey = $localekey;
         $this->localeParams = $localeParams;
-
+        if ($charset !== null) {
+            trigger_error("jException::__construct(): charset parameter is deprecated and not used any more.", E_USER_DEPRECATED);
+        }
         try {
-            $message = jLocale::get($localekey, $localeParams, $lang, $charset);
+            $message = \Jelix\Locale\Locale::get($localekey, $localeParams, $lang);
         } catch (Exception $e) {
             $message = $e->getMessage();
         }

@@ -22,7 +22,7 @@ use Jelix\Core\App;
 class Locale
 {
     /**
-     * @var jBundle[][]
+     * @var Bundle[][]
      */
     public static $bundles = array();
 
@@ -78,7 +78,6 @@ class Locale
      * @param string $key             the key of the localized string
      * @param array  $args            arguments to apply to the localized string with sprintf
      * @param string $locale          the lang code. if null, use the default language
-     * @param string $charset         the charset code. if null, use the default charset
      * @param bool   $tryOtherLocales if true and if the method does not find
      *                                the locale file or the key, it will try with the default
      *                                locale, the fallback local or similar locale
@@ -88,24 +87,21 @@ class Locale
      *
      * @return string the localized string
      */
-    public static function get($key, $args = null, $locale = null, $charset = null, $tryOtherLocales = true)
+    public static function get($key, $args = null, $locale = null, $tryOtherLocales = true)
     {
         $config = App::config();
 
         try {
-            $file = new LocaleSelector($key, $locale, $charset);
+            $file = new LocaleSelector($key, $locale);
         } catch (\Jelix\Core\Selector\Exception $e) {
             // the file is not found
             if ($e->getCode() == 12) {
                 // unknown module..
                 throw $e;
             }
-            if ($charset === null) {
-                $charset = $config->charset;
-            }
 
             throw new Exception('(212)No locale file found for the given locale key "'.$key
-                            .'" in any other default languages (charset '.$charset.')');
+                            .'" in any other default languages');
         }
 
         $locale = $file->locale;
@@ -118,20 +114,19 @@ class Locale
         $bundle = self::$bundles[$keySelector][$locale];
 
         //try to get the message from the bundle.
-        $string = $bundle->get($file->messageKey, $file->charset);
+        $string = $bundle->get($file->messageKey);
         if ($string === null) {
 
             // locale key has not been found
             if (!$tryOtherLocales) {
                 throw new Exception('(210)The given locale key "'.$file->toString().
-                                    '" does not exists (lang:'.$file->locale.
-                                    ', charset:'.$file->charset.')');
+                                    '" does not exists (lang:'.$file->locale.')');
             }
 
-            $words = self::tryOtherLocales($key, $args, $locale, $charset, $config);
+            $words = self::tryOtherLocales($key, $args, $locale, $config);
             if ($words === null) {
                 throw new Exception('(213)The given locale key "'.$file->toString().
-                                    '" does not exists in any default languages for the '.$file->charset.' charset');
+                                    '" does not exists in any default languages');
             }
 
             return $words;
@@ -172,12 +167,12 @@ class Locale
         return $otherLocales;
     }
 
-    protected static function tryOtherLocales($key, $args, $locale, $charset, $config)
+    protected static function tryOtherLocales($key, $args, $locale, $config)
     {
         $otherLocales = self::getAlternativeLocales($locale, $config);
         foreach ($otherLocales as $loc) {
             try {
-                return Locale::get($key, $args, $loc, $charset, false);
+                return Locale::get($key, $args, $loc, false);
             } catch (\Exception $e) {
             }
         }

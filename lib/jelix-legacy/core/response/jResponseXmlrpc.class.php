@@ -41,9 +41,9 @@ final class jResponseXmlRpc extends jResponse
             return true;
         }
 
-        $content = jXmlRpc::encodeResponse($this->response, jApp::config()->charset);
+        $content = jXmlRpc::encodeResponse($this->response);
 
-        $this->_httpHeaders['Content-Type'] = 'text/xml;charset='.jApp::config()->charset;
+        $this->_httpHeaders['Content-Type'] = 'text/xml;charset=UTF-8';
         $this->sendHttpHeaders();
         echo $content;
 
@@ -61,10 +61,10 @@ final class jResponseXmlRpc extends jResponse
         }
 
         $this->clearHttpHeaders();
-        $content = jXmlRpc::encodeFaultResponse($errorCode, $errorMessage, jApp::config()->charset);
+        $content = jXmlRpc::encodeFaultResponse($errorCode, $errorMessage);
 
         header('HTTP/1.0 500 Internal Server Error');
-        header('Content-Type: text/xml;charset='.jApp::config()->charset);
+        header('Content-Type: text/xml;charset=UTF-8');
         echo $content;
     }
 }

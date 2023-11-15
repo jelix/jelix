@@ -19,4 +19,16 @@
  */
 class jSelectorLoc extends \Jelix\Locale\LocaleSelector
 {
+    /**
+     * @var string
+     */
+    public $charset = 'UTF-8';
+
+    public function __construct($sel, $locale = null, $charset = null)
+    {
+        if ($charset !== null) {
+            trigger_error("jSelectorLoc::__construct(): charset parameter is deprecated and not used any more.", E_USER_DEPRECATED);
+        }
+        parent::__construct($sel, $locale);
+    }
 }

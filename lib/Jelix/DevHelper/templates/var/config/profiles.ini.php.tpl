@@ -18,7 +18,7 @@ database="appdb.sqlite"
 persistent=on
 
 ; when you have charset issues, enable force_encoding so the connection will be
-; made with the charset indicated in jelix config
+; made with the charset of Jelix, UTF-8
 ;force_encoding = on
 
 ; with the following parameter, you can specify a table prefix which will be

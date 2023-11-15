@@ -25,8 +25,8 @@ use Jelix\Core\App;
  *
  * localisation string are stored in file properties.
  * syntax : "module~prefixFile.keyString".
- * Corresponding file : locales/xx_XX/prefixFile.CCC.properties.
- * xx_XX and CCC are lang and charset set in the configuration
+ * Corresponding file : locales/xx_XX/prefixFile.UTF-8.properties.
+ * xx_XX is lang code set in the configuration
  */
 class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
 {
@@ -34,23 +34,19 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
     public $fileKey = '';
     public $messageKey = '';
     public $locale = '';
-    public $charset = '';
+
     protected $_where;
 
-    public function __construct($sel, $locale = null, $charset = null)
+    public function __construct($sel, $locale = null)
     {
         if ($locale === null) {
             $locale = App::config()->locale;
-        }
-        if ($charset === null) {
-            $charset = App::config()->charset;
         }
         if (strpos($locale, '_') === false) {
             $locale = Locale::langToLocale($locale);
         }
         $this->locale = $locale;
-        $this->charset = $charset;
-        $this->_suffix = '.'.$charset.'.properties';
+        $this->_suffix = '.UTF-8.properties';
 
         if ($this->_scan_sel($sel)) {
             if ($this->module == '') {
@@ -91,7 +87,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
             throw new \Jelix\Core\Selector\Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
 
-        $this->_cacheSuffix = '.'.$this->locale.'.'.$this->charset.'.php';
+        $this->_cacheSuffix = '.'.$this->locale.'.UTF-8.php';
 
         $resolutionInCache = App::config()->compilation['sourceFileResolutionInCache'];
 
@@ -118,19 +114,17 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
                 }
             }
             if (!$found) {
-                // to avoid infinite loop in a specific lang or charset, we should check if we don't
+                // to avoid infinite loop in a specific lang, we should check if we don't
                 // try to retrieve the same message as the one we use for the exception below,
                 // and if it is this message, it means that the error message doesn't exist
-                // in the specific lang or charset, so we retrieve it in en_US language and UTF-8 charset
+                // in the specific lang, so we retrieve it in en_US language
                 if ($this->toString() == 'jelix~errors.selector.invalid.target') {
                     $l = 'en_US';
-                    $c = 'UTF-8';
                 } else {
                     $l = null;
-                    $c = null;
                 }
 
-                throw new \jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'locale'), 1, $l, $c);
+                throw new \jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'locale'), 1, $l);
             }
         }
         if ($resolutionInCache) {

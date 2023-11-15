@@ -4,7 +4,6 @@
 
 locale = "%%default_locale%%"
 availableLocales = "%%default_locale%%"
-charset = "UTF-8"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
 timeZone = "%%default_timezone%%"

@@ -85,7 +85,7 @@ class jResponseHtmlFragment extends jResponse
 
         $content .= implode("\n", $this->_contentBottom);
 
-        $this->_httpHeaders['Content-Type'] = 'text/plain;charset='.jApp::config()->charset;
+        $this->_httpHeaders['Content-Type'] = 'text/plain;charset=UTF-8';
         $this->sendHttpHeaders();
         echo $content;
 
@@ -127,7 +127,7 @@ class jResponseHtmlFragment extends jResponse
         $this->_httpStatusCode = '500';
         $this->_httpStatusMsg = 'Internal Jelix Error';
         // FIXME : text/plain or text/html ?
-        $this->_httpHeaders['Content-Type'] = 'text/plain;charset='.jApp::config()->charset;
+        $this->_httpHeaders['Content-Type'] = 'text/plain;charset=UTF-8';
 
         $content = '<p class="htmlfragmenterror">';
         $content .= htmlspecialchars(jApp::coord()->getGenericErrorMessage());

@@ -124,7 +124,7 @@ class Mailer extends \PHPMailer\PHPMailer\PHPMailer
     {
         $config = App::config();
         $this->defaultLang = $config->locale;
-        $this->CharSet = $config->charset;
+        $this->CharSet = self::CHARSET_UTF8;
         if ($config->mailer['mailerType']) {
             $this->Mailer = $config->mailer['mailerType'];
         }

@@ -11,6 +11,7 @@ availableLocales=en_US
 fallbackLocale=en_US
 
 ; the charset used in the application
+; deprecated. The framework is working only with UTF-8, starting from Jelix 2
 charset=UTF-8
 
 ; the default theme

@@ -82,8 +82,7 @@ class SubjectCreate extends \Jelix\Scripts\ModuleCommandAbstract
             && preg_match('/^([a-zA-Z0-9_\\.]+)~([a-zA-Z0-9_]+)\\.([a-zA-Z0-9_\\.]+)$/', $labelkey, $m)) {
             $localestring = "\n".$m[3].'='.$subjectlabel;
             $path = \jApp::getModulePath($m[1]);
-            $file = $path.'locales/'.\jApp::config()->locale.'/'.$m[2].'.'.
-                    \jApp::config()->charset.'.properties';
+            $file = $path.'locales/'.\jApp::config()->locale.'/'.$m[2].'.UTF-8.properties';
             if (file_exists($file)) {
                 $localestring = file_get_contents($file).$localestring;
             }

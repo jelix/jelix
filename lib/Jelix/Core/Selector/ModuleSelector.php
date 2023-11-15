@@ -109,7 +109,7 @@ abstract class ModuleSelector implements SelectorInterface
         $this->_path = App::getModulePath($this->module).$this->_dirname.$this->resource.$this->_suffix;
         if (!is_readable($this->_path)) {
             if ($this->type == 'loc') {
-                throw new \Exception('(202) The file of the locale key "'.$this->toString().'" (charset '.$this->charset.', lang '.$this->locale.') does not exist');
+                throw new \Exception('(202) The file of the locale key "'.$this->toString().'" (lang '.$this->locale.') does not exist');
             }
             if ($this->toString() == 'jelix~errors.selector.invalid.target') {
                 throw new \Exception("Jelix Panic ! don't find localization files to show you an other error message !");

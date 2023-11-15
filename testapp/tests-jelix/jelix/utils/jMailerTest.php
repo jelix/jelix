@@ -54,7 +54,7 @@ class jMailerTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue(strpos($content, 'To: titi@machin.local, toto@machin.local') !== false);
         $this->assertTrue(strpos($content, 'From: Super Me <toto@truc.local>') !== false);
         $this->assertTrue(strpos($content, 'Subject: Email test') !== false);
-        $this->assertTrue(strpos($content, 'Content-Type: text/plain; charset=UTF-8') !== false);
+        $this->assertTrue(strpos($content, 'Content-Type: text/plain; charset=utf-8') !== false);
         $this->assertTrue(strpos($content, 'This is a test mail') !== false);
     }
 
@@ -95,7 +95,7 @@ class jMailerTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue(strpos($content, 'To: debug1@machin.local, debug2@machin.local') !== false);
         $this->assertTrue(strpos($content, 'From: Super Me <toto@truc.local>') !== false);
         $this->assertTrue(strpos($content, 'Subject: [MyDEBUG] Email test') !== false);
-        $this->assertTrue(strpos($content, 'Content-Type: text/plain; charset=UTF-8') !== false);
+        $this->assertTrue(strpos($content, 'Content-Type: text/plain; charset=utf-8') !== false);
         $this->assertTrue(strpos($content, "Hello this is debug
 
  - From: Super Me <toto@truc.local>

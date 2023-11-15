@@ -56,7 +56,7 @@ class jResponseText extends jResponse
             return true;
         }
 
-        $this->addHttpHeader('Content-Type', $this->mimeType.';charset='.jApp::config()->charset, false);
+        $this->addHttpHeader('Content-Type', $this->mimeType.';charset=UTF-8', false);
         $this->sendHttpHeaders();
         echo $this->content;
 
@@ -69,7 +69,7 @@ class jResponseText extends jResponse
     public function outputErrors()
     {
         header('HTTP/1.0 500 Internal Jelix Error');
-        header('Content-Type: text/plain;charset='.jApp::config()->charset);
+        header('Content-Type: text/plain;charset=UTF-8');
         echo jApp::coord()->getGenericErrorMessage();
     }
 }

@@ -7,12 +7,8 @@ cd lib/jelix-modules/jacl2
   module.xml
 cd lib/jelix-modules/jacl2/classes
   __ALL__
-cd lib/jelix-modules/jacl2/locales/en_GB/
-cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jacl2/locales/en_US/
-cch errors.UTF-8.properties(errors.%charset%.properties)
-cd lib/jelix-modules/jacl2/locales/fr_FR/
-cch errors.UTF-8.properties(errors.%charset%.properties)
+cd lib/jelix-modules/jacl2/locales/
+   __ALL_RECURSIVELY__
 cd lib/jelix-modules/jacl2/install
   __ALL__
 cd lib/jelix-modules/jacl2/plugins/
@@ -30,12 +26,8 @@ cd lib/jelix-modules/jacl2db/install
   __ALL_RECURSIVELY__
 cd lib/jelix-modules/jacl2db/Command
   __ALL_RECURSIVELY__
-cd lib/jelix-modules/jacl2db/locales/en_GB/
-cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
-cd lib/jelix-modules/jacl2db/locales/en_US/
-cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
-cd lib/jelix-modules/jacl2db/locales/fr_FR/
-cch acl2db.UTF-8.properties(acl2db.%charset%.properties)
+cd lib/jelix-modules/jacl2db/locales/
+   __ALL_RECURSIVELY__
 
 cd lib/jelix-modules/jacl2db/plugins/
   __ALL_RECURSIVELY__
@@ -56,15 +48,8 @@ cd lib/jelix-modules/jauth/controllers
 cd lib/jelix-modules/jauth/install/
   __ALL_RECURSIVELY__
 
-cd lib/jelix-modules/jauth/locales/en_US
-cch auth.UTF-8.properties(auth.%charset%.properties)
-cch autherror.UTF-8.properties(autherror.%charset%.properties)
-cd lib/jelix-modules/jauth/locales/en_GB
-cch auth.UTF-8.properties(auth.%charset%.properties)
-cch autherror.UTF-8.properties(autherror.%charset%.properties)
-cd lib/jelix-modules/jauth/locales/fr_FR
-cch auth.UTF-8.properties(auth.%charset%.properties)
-cch autherror.UTF-8.properties(autherror.%charset%.properties)
+cd lib/jelix-modules/jauth/locales/
+   __ALL_RECURSIVELY__
 cd lib/jelix-modules/jauth/templates
   __ALL__
 cd lib/jelix-modules/jauth/zones
@@ -76,13 +61,8 @@ cd lib/jelix-modules/jpref/classes/
   __ALL__
 cd lib/jelix-modules/jpref/install/
   __ALL__
-cd lib/jelix-modules/jpref/locales/en_US
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
-cd lib/jelix-modules/jpref/locales/en_GB
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
-cd lib/jelix-modules/jpref/locales/fr_FR
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
-
+cd lib/jelix-modules/jpref/locales/
+   __ALL_RECURSIVELY__
 
 cd lib/jelix-plugins
   INSTALL

@@ -19,4 +19,11 @@
  */
 class jLocale extends \Jelix\Locale\Locale
 {
+    public static function get($key, $args = null, $locale = null, $charset = null, $tryOtherLocales = true)
+    {
+        if ($charset !== null) {
+            trigger_error("jLocale::get(): charset parameter is deprecated and not used any more.", E_USER_DEPRECATED);
+        }
+        return parent::get($key, $args, $locale, $tryOtherLocales);
+    }
 }

@@ -172,7 +172,7 @@ class jResponseHtml extends jResponseBasicHtml
      *
      * @since 1.6.17
      */
-    protected $_MetaOldContentType = true;
+    protected $_MetaOldContentType = false;
 
     /**
      * @var array[] list of arrays containing attributes for each meta elements
@@ -705,11 +705,11 @@ class jResponseHtml extends jResponseBasicHtml
         echo "<head>\n";
         echo implode("\n", $this->_headTop);
         if ($this->_isXhtml && $this->xhtmlContentType && strstr($_SERVER['HTTP_ACCEPT'], 'application/xhtml+xml')) {
-            echo '<meta content="application/xhtml+xml; charset='.$this->_charset.'" http-equiv="content-type"'.$this->_endTag;
+            echo '<meta content="application/xhtml+xml; charset=UTF-8" http-equiv="content-type"'.$this->_endTag;
         } elseif (!$this->_MetaOldContentType) {
-            echo '<meta charset="'.$this->_charset.'" '.$this->_endTag;
+            echo '<meta charset="UTF-8" '.$this->_endTag;
         } else {
-            echo '<meta content="text/html; charset='.$this->_charset.'" http-equiv="content-type"'.$this->_endTag;
+            echo '<meta content="text/html; charset=UTF-8" http-equiv="content-type"'.$this->_endTag;
         }
 
         if ($this->IECompatibilityMode) {

@@ -94,6 +94,15 @@ Be sure you don't give this parameter into your `application.init.php` script.
 The deprecated installation system, based on jInstaller* classes, has gone. You should
 use the official installation system, based on `\Jelix\Installer\` classes.
 
+## Use only UTF-8
+
+Other charsets are not supported anymore, the `charset` configuration property
+is deprecated.
+
+Convert your properties files, your templates and any other data, into the UTF-8 charsets.
+For databases, if they contain data in another charset, you should use the 
+`force_encoding` parameter in the connection profile, so they will be converted
+into UTF-8 into your application.
 
 ## Changes into the configuration
 

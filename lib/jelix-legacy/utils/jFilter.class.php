@@ -224,8 +224,7 @@ class jFilter
      */
     public static function cleanHtml($html, $isXhtml = false)
     {
-        $charset = jApp::config()->charset;
-        $doc = new DOMDocument('1.0', $charset);
+        $doc = new DOMDocument('1.0', 'UTF-8');
         $foot = '</body></html>';
 
         if (strpos($html, "\r") !== false) {
@@ -233,7 +232,7 @@ class jFilter
             $html = str_replace("\r", "\n", $html); // removed standalone \r
         }
 
-        $head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset='.$charset.'"/><title></title></head><body>';
+        $head = '<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/><title></title></head><body>';
         if (!@$doc->loadHTML($head.$html.$foot)) {
             return jFilter::INVALID_HTML;
         }

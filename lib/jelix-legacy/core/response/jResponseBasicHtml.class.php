@@ -65,8 +65,9 @@ class jResponseBasicHtml extends jResponse
      * the charset of the document.
      *
      * @var string
+     * @deprecated not used anymore. Always UTF-8.
      */
-    protected $_charset;
+    protected $_charset = 'UTF-8';
 
     /**
      * the lang of the document (xx from locale xx_YY).
@@ -141,11 +142,10 @@ class jResponseBasicHtml extends jResponse
 
     /**
      * constructor;
-     * setup the charset, the lang.
+     * setup the lang.
      */
     public function __construct()
     {
-        $this->_charset = jApp::config()->charset;
         $this->_locale = jLocale::getCurrentLocale();
         $this->_lang = jLocale::getCurrentLang();
 
@@ -225,9 +225,9 @@ class jResponseBasicHtml extends jResponse
     protected function setContentType()
     {
         if ($this->_isXhtml && $this->xhtmlContentType && strstr($_SERVER['HTTP_ACCEPT'], 'application/xhtml+xml')) {
-            $this->_httpHeaders['Content-Type'] = 'application/xhtml+xml;charset='.$this->_charset;
+            $this->_httpHeaders['Content-Type'] = 'application/xhtml+xml;charset=UTF-8';
         } else {
-            $this->_httpHeaders['Content-Type'] = 'text/html;charset='.$this->_charset;
+            $this->_httpHeaders['Content-Type'] = 'text/html;charset=UTF-8';
         }
     }
 
@@ -323,7 +323,7 @@ class jResponseBasicHtml extends jResponse
         $BASEPATH = jApp::urlBasePath();
 
         header("HTTP/{$this->httpVersion} 500 Internal jelix error");
-        header('Content-Type: text/html;charset='.$this->_charset);
+        header('Content-Type: text/html;charset=UTF-8');
 
         include $file;
     }
