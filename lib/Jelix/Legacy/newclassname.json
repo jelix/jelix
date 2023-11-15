@@ -3,7 +3,6 @@
     "jAppManager": "\\Jelix\\Core\\jAppManager",
     "jAutoloader": "\\Jelix\\Core\\jAutoloader",
     "jBundle": "\\Jelix\\Locale\\Bundle",
-    "jClassBinding": "\\Jelix\\Core\\ModuleClassBinding",
     "jClasses": "\\Jelix\\Core\\ModuleClass",
     "jConfig": "\\Jelix\\Core\\Config",
     "jConfigAutoloader": "\\Jelix\\Core\\Config\\Autoloader",

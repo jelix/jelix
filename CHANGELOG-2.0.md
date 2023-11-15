@@ -27,7 +27,7 @@
 
 - remove the deprecated jforms builder based on `jFormsBuilderBase` and `jFormsBuilderHtml`
   and so, builders named `legacy.html` or `legacy.htmllight`
-
+- remove binding feature from jClasses
 
 ## changes in jDb
 
@@ -107,7 +107,7 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 - `jFile::getMimeType()`, `jFile::shortestPath()`, `jFile::normalizePath()`
 - `jIniFile`, `jIniFileModifier`, `jIniMultiFilesModifier`
 - `jFormsBuilderBase`, `jFormsBuilderHtml`, `htmlJformsBuilder`, `htmllightJformsBuilder`
-
+- `jClassBinding`, `jClasses::createBinded()`, `jClasses::getBindedService()`, `jClasses::bind()`, `jClasses::resetBindings()`  
 
 From the command line scripts system of Jelix <=1.6:
 

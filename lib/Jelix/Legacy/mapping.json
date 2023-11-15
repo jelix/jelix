@@ -3,7 +3,6 @@
     "jAppManager": "core/jAppManager.php",
     "jAutoloader": "core/jAutoloader.php",
     "jBundle": "core/jBundle.php",
-    "jClassBinding": "utils/jClassBinding.php",
     "jClasses": "utils/jClasses.php",
     "jConfig": "core/jConfig.php",
     "jConfigAutoloader": "core/jConfigAutoloader.php",
