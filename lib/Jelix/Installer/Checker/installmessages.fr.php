@@ -101,4 +101,6 @@ return array(
     'configuration.module.installed' => 'Le module %s est configuré',
     'configuration.module.error' => 'Une erreur est survenue durant la configuration du module %s: %s',
     'configuration.ask.parameters' => 'Paramètres pour installer le module %s',
+
+    'install.warmup.start' => 'Génération de fichiers pour l\'execution de l\'application'
 );

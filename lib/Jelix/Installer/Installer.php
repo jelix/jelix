@@ -16,6 +16,8 @@ use Jelix\Dependencies\ItemException;
 use Jelix\Dependencies\Resolver;
 use Jelix\Core\App;
 use Jelix\Core\Config\Compiler;
+use Jelix\FileUtilities\Directory;
+use Jelix\Installer\WarmUp\WarmUp;
 
 /**
  * main class for the installation.
@@ -153,6 +155,16 @@ class Installer
 
         $result = $this->_installModules($modulesChains);
         $this->globalSetup->getInstallerIni()->save();
+
+        $this->ok('install.warmup.start');
+
+        $buildPath = App::buildPath();
+        if (!file_exists($buildPath)) {
+            Directory::create($buildPath);
+        }
+
+        $warmUp = new WarmUp($this->globalSetup, $buildPath);
+        $warmUp->launch();
 
         $this->endMessage();
 
