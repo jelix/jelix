@@ -5,6 +5,8 @@ Next
 ----
 
 * Fix redirections when there is an error, into the rights management interface (jacl2db_admin)
+* new method `jResponseFormJQJson::setError()` to force to return an error message/url redirection to the form.
+
 
 1.8.3
 -----

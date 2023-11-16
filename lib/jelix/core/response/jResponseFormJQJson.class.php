@@ -32,6 +32,10 @@ class jResponseFormJQJson extends jResponse
 
     protected $locationUrl = '';
 
+    protected $errorLocationUrl = '';
+
+    protected $errorMessage = '';
+
     /**
      * Set the form for the response.
      *
@@ -48,6 +52,7 @@ class jResponseFormJQJson extends jResponse
 
     /**
      * Arbitrary data that will be sent
+     *
      * @param $data
      * @return void
      */
@@ -58,7 +63,7 @@ class jResponseFormJQJson extends jResponse
 
     /**
      * Set the url of the page that the browser will load (in Javascript) after
-     * receiving the http response.
+     * receiving the http response, in case of there is no errors into the form.
      *
      * @param string $url
      * @return void
@@ -66,6 +71,19 @@ class jResponseFormJQJson extends jResponse
     public function changeLocation($url)
     {
         $this->locationUrl = $url;
+    }
+
+    /**
+     * The response will be an error.
+     *
+     * @param string $message the error message to be displayed
+     * @param string $locationUrl the url to load into the browser. Will override
+     *        the url given to changeLocation, if any.
+     */
+    public function setError($message = '', $locationUrl = '')
+    {
+        $this->errorLocationUrl = $locationUrl;
+        $this->errorMessage = $message;
     }
 
     public function output()
@@ -78,16 +96,25 @@ class jResponseFormJQJson extends jResponse
 
         $this->_httpHeaders['Content-Type'] = 'application/json';
 
-        $data = array(
-            'success' => true,
-            'customData' => $this->customData,
-            'locationUrl' => $this->locationUrl
-        );
-
-        $errors = $this->form->getErrors();
-        if (count($errors)) {
-            $data['success'] = false;
-            $data['errors'] = $errors;
+        if ($this->errorMessage || $this->errorLocationUrl) {
+            $data = array(
+                'success' => false,
+                'errorMessage' => $this->errorMessage,
+                'locationUrl' => $this->errorLocationUrl,
+                'customData' => $this->customData,
+            );
+        }
+        else {
+            $data = array(
+                'success' => true,
+                'customData' => $this->customData,
+                'locationUrl' => $this->locationUrl
+            );
+            $errors = $this->form->getErrors();
+            if (count($errors)) {
+                $data['success'] = false;
+                $data['errors'] = $errors;
+            }
         }
 
         $content = json_encode($data);
