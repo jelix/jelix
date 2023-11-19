@@ -17,7 +17,7 @@
 
 define ("NB_USERS_LDAP",3);
 
-class ldap_pluginAuthTest extends \Jelix\UnitTests\UnitTestCase {
+class ldap_pluginTest extends \Jelix\UnitTests\UnitTestCase {
 
     protected $config;
 

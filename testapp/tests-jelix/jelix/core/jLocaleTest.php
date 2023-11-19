@@ -45,7 +45,7 @@ class jLocaleTest extends \Jelix\UnitTests\UnitTestCase {
         }
     }
 
-    public function getPropertiesContent(){
+    static public function getPropertiesContent(){
         return array(
             array('test_A.properties', '<array> </array>'),
             array('test_B.properties', '<array>{"aaa":"bbb","ccc":""}</array>'),

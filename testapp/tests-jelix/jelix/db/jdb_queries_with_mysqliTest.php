@@ -11,7 +11,7 @@ require_once(__DIR__.'/jdb.lib.php');
 /**
  * same tests as UTjdb, but with a pdo connection
  */
-class jDb_queries_mysqliTest extends jDb_queryBase {
+class jdb_queries_with_mysqliTest extends jDb_queryBase {
 
     protected $dbProfile ='mysqli_profile';
 }

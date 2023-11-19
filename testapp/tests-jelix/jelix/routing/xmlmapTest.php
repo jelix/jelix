@@ -21,7 +21,7 @@ class xmlmapTest extends \Jelix\UnitTests\UnitTestCase {
     function tearDown() : void {
     }
 
-    function getEpTestsList() {
+    static function getEpTestsList() {
         return array(
             array('res_urls_addep.xml', 'foo', 'classic', array("https"=>true)),
             array('res_urls_addexistep.xml', 'bar', 'classic', array("https"=>true)),

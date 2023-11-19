@@ -19,7 +19,7 @@
     "jelix/simplelocalization": "1.7.2",
     "jelix/file-utilities": "^1.8.5",
     "jelix/version": "2.0.*",
-    "symfony/console":"^5.4.26"
+    "symfony/console":"^6.3.8"
   },
   "autoload": {
   },

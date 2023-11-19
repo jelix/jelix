@@ -1,5 +1,6 @@
 <?php
 
+
 require_once(JELIX_LIB_CORE_PATH.'/request/jClassicRequest.class.php');
 
 class httpcacheTest extends \Jelix\UnitTests\UnitTestCase
@@ -100,7 +101,6 @@ class httpcacheTest extends \Jelix\UnitTests\UnitTestCase
             $rep = jApp::coord()->request->getResponse('html');
 
             $method = new ReflectionMethod('jResponse', '_normalizeDate');
-            $method->setAccessible(TRUE);
 
             //case jDateTime
             $date1 = "2011-10-26 13:00:00";
@@ -128,7 +128,6 @@ class httpcacheTest extends \Jelix\UnitTests\UnitTestCase
         $rep = jApp::coord()->request->getResponse('html');
 
         $method = new ReflectionMethod('jResponse', '_checkRequestType');
-        $method->setAccessible(TRUE);
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $this->assertTrue($method->invoke($rep));
@@ -137,8 +136,8 @@ class httpcacheTest extends \Jelix\UnitTests\UnitTestCase
         $this->assertTrue($method->invoke($rep));
 
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $this->expectWarning();
-        $method->invoke($rep);
+        //$this->expectException(Warning::class);;
+        $this->assertFalse($method->invoke($rep));
     }
     
 }

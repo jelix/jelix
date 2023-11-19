@@ -5,6 +5,7 @@ namespace Jelix\Scripts;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
 
 class SingleCommandApplication extends Application
 {
@@ -16,12 +17,12 @@ class SingleCommandApplication extends Application
         $this->myCommand = $command;
     }
 
-    protected function getCommandName(InputInterface $input)
+    protected function getCommandName(InputInterface $input): ?string
     {
         return $this->myCommand->getName();
     }
 
-    protected function getDefaultCommands()
+    protected function getDefaultCommands(): array
     {
         // Keep the core default commands to have the HelpCommand
         // which is used when using the --help option
@@ -32,7 +33,7 @@ class SingleCommandApplication extends Application
         return $defaultCommands;
     }
 
-    public function getDefinition()
+    public function getDefinition(): InputDefinition
     {
         $inputDefinition = parent::getDefinition();
         // clear out the normal first argument, which is the command name

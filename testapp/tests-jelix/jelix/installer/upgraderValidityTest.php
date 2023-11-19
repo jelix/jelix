@@ -70,7 +70,7 @@ class upgraderValidityTest extends \Jelix\UnitTests\UnitTestCase
         jApp::restoreContext();
     }
 
-    public function getUpgraderInfos()
+    static public function getUpgraderInfos()
     {
         return array(
             // v,    v date,       new v,  new v date,  targets,  upgrader date, expected result

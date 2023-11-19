@@ -31,7 +31,7 @@ class dbProfileHelpersTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    function getFindProfileData()
+    static function getFindProfileData()
     {
         return array(
             array('', array(), 'foo'),

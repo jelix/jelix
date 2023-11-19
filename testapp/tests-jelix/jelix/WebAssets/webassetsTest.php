@@ -17,7 +17,7 @@ class htmlRespAssetsTest extends jResponseHtml {
 class webassetsTest extends \Jelix\UnitTests\UnitTestCase
 {
 
-    public function getWebAssets() {
+    static public function getWebAssets() {
         return array(
           array(
               '
@@ -367,7 +367,7 @@ r.js = r.js
     }
 
 
-    function getLinks() {
+    static function getLinks() {
         return array(
             array(
                 array(),
@@ -506,7 +506,7 @@ r.js = r.$locale.js
         $this->assertEquals($cssLinks, $select->getCssLinks());
     }
 
-    function getLinksWithRevision() {
+    static function getLinksWithRevision() {
         return array(
             array(
                 array(),

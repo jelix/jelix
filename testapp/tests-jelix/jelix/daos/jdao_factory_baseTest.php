@@ -44,7 +44,6 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
     {
         $reflection = new ReflectionClass($object);
         $reflection_property = $reflection->getProperty($property);
-        $reflection_property->setAccessible(true);
         $reflection_property->setValue($object, $value);
     }
 
@@ -52,7 +51,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
     {
         $conn = $this->getMockBuilder('\Jelix\Database\Connector\Mysqli\Connection')
                         ->disableOriginalConstructor()
-                        ->setMethods(array('query', 'exec', 'limitQuery', 'disconnect'))
+                        ->onlyMethods(array('query', 'exec', 'limitQuery', '_disconnect'))
                         ->getMock();
         $this->setProtectedProperty($conn, '_profile', $profile);
 
@@ -61,13 +60,13 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
                     ->getMock();
         $conn->expects($this->any())
                     ->method('query')
-                    ->will($this->returnValue($rs));
+                    ->willReturn($rs);
         $conn->expects($this->any())
                     ->method('limitQuery')
-                    ->will($this->returnValue($rs));
+                    ->willReturn($rs);
         $conn->expects($this->any())
                     ->method('query')
-                    ->will($this->returnValue(0));
+                    ->willReturn(0);
         return [$conn, $rs];
     }
 
@@ -113,7 +112,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $o->c = '54';
         $rs->expects($this->any())
                     ->method('fetch')
-                    ->will($this->returnValue($o));
+                    ->willReturn($o);
 
         $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
         $conn->expects($this->once())
@@ -128,7 +127,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $o->c = '54';
         $rs->expects($this->any())
                     ->method('fetch')
-                    ->will($this->returnValue($o));
+                    ->willReturn($o);
         $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
         $conn->expects($this->once())
                     ->method('query')
@@ -142,7 +141,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $o->c = '54';
         $rs->expects($this->any())
                     ->method('fetch')
-                    ->will($this->returnValue($o));
+                    ->willReturn($o);
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
         $conn->expects($this->once())
                     ->method('query')
@@ -157,7 +156,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $o->c = '54';
         $rs->expects($this->any())
                     ->method('fetch')
-                    ->will($this->returnValue($o));
+                    ->willReturn($o);
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
         $conn->expects($this->once())
                     ->method('query')
@@ -171,7 +170,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $o = new stdClass();
         $rs->expects($this->any())
                     ->method('fetch')
-                    ->will($this->returnValue($o));
+                    ->willReturn($o);
         $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
         $conn->expects($this->once())
                     ->method('query')
@@ -184,7 +183,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
         $rs->expects($this->any())
                     ->method('fetch')
-                    ->will($this->returnValue($o));
+                    ->willReturn($o);
         $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
         $conn->expects($this->once())
                     ->method('query')
@@ -197,7 +196,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         list($conn, $rs) = $this->getConn(self::$unprefixProfile);
         $rs->expects($this->any())
                     ->method('fetch')
-                    ->will($this->returnValue($o));
+                    ->willReturn($o);
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
         $conn->expects($this->once())
                     ->method('query')
@@ -210,7 +209,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
         $rs->expects($this->any())
                     ->method('fetch')
-                    ->will($this->returnValue($o));
+                    ->willReturn($o);
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
         $conn->expects($this->once())
                     ->method('query')

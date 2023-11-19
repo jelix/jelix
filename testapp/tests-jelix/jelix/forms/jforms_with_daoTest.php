@@ -29,11 +29,6 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
     function setUp() : void {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
-        if ($this->getName() == 'testInsertDao') {
-            $this->emptyTable('product_test');
-            $this->emptyTable('product_tags_test');
-            $this->emptyTable('labels_test');
-        }
     }
 
     function tearDown() : void {
@@ -51,6 +46,9 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
     static protected $id2;
     
     function testInsertDao(){
+        $this->emptyTable('product_test');
+        $this->emptyTable('product_tags_test');
+        $this->emptyTable('labels_test');
         $req = jApp::coord()->request;
 
         $req->params['name'] = 'phone';

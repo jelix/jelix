@@ -17,7 +17,7 @@
     ],
     "require": {
         "php": ">=7.4",
-        "jelix/composer-module-setup": "^1.0.5",
+        "jelix/composer-module-setup": "2.0.x-dev",
         "jelix/jelix-essential" : "@dev"
     },
     "minimum-stability": "stable"

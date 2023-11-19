@@ -21,7 +21,7 @@ class testCDForm extends jFormsBase {
     }
 }
 
-class jforms_check_data extends \Jelix\UnitTests\UnitTestCaseDb {
+class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
     protected $form;
     protected $container;
     function setUp() : void {

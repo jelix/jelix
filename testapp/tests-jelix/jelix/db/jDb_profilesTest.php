@@ -149,7 +149,7 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
     }
 
 
-    function getDuplicateProfileData()
+    static function getDuplicateProfileData()
     {
         return array(
             // test 1 : alias to a pgsql profile

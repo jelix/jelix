@@ -20,7 +20,7 @@ class UTParseUrlsIncluder extends \Jelix\Core\Includer\Includer {
 }
 
 
-class UTParseUrls extends \Jelix\UnitTests\UnitTestCase {
+class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
 
     function setUp()  : void {
         jApp::saveContext();
@@ -665,7 +665,7 @@ class UTParseUrls extends \Jelix\UnitTests\UnitTestCase {
 
 
 
-    public function getErrors() {
+    static public function getErrors() {
         return array(
             array('urlsfiles/url_twodefaultep.xml', 'urlsfiles/url_twodefaultep.xml: Only one default entry point for the type classic is allowed (<entrypoint name="testnews" default="true">)'),
             array('urlsfiles/url_nodefaultep.xml', 'There are several entrypoint of the same type classic, but no one as default'),

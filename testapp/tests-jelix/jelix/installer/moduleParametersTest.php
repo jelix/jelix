@@ -3,7 +3,7 @@
 class moduleParametersTest extends \PHPUnit\Framework\TestCase
 {
 
-    function getSerializedToUnserialized() {
+    static function getSerializedToUnserialized() {
         return array(
             array(
                 '',
@@ -79,7 +79,7 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    function getUnserializedToSerializedAsString() {
+    static function getUnserializedToSerializedAsString() {
         return array(
             array(
                 array(),
@@ -134,7 +134,7 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    function getUnserializedToSerializedAsStringWithDefParam() {
+    static function getUnserializedToSerializedAsStringWithDefParam() {
         return array(
             array(
                 array(),
@@ -234,7 +234,7 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    function getUnserializedToSerializedAsArray() {
+    static function getUnserializedToSerializedAsArray() {
         return array(
             array(
                 array(),
@@ -289,7 +289,7 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    function getUnserializedToSerializedAsArrayWithDefParam() {
+    static function getUnserializedToSerializedAsArrayWithDefParam() {
         return array(
             array(
                 array(),

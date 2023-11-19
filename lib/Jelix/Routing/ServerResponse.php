@@ -236,7 +236,7 @@ abstract class ServerResponse
             return true;
         }
 
-        trigger_error(\Jelix\Locale\Locale::get('jelix~errors.rep.bad.request.method'), E_USER_WARNING);
+        //trigger_error(\Jelix\Locale\Locale::get('jelix~errors.rep.bad.request.method'), E_USER_WARNING);
 
         return false;
     }

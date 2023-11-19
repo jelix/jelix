@@ -20,10 +20,6 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         try{
             // check if we have profile
             $prof = jProfiles::get('jdb', $this->dbProfile, true);
-            if ($this->getName() == 'testInsert') {
-                // only empty table at the first test
-                $this->emptyTable('product_test');
-            }
         }
         catch (Exception $e) {
             $this->markTestSkipped('jDb_PgsqlTest cannot be run: '.$e->getMessage());
@@ -39,6 +35,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
     protected static $prod1, $prod2, $prod3;
 
     function testInsert() {
+        $this->emptyTable('product_test');
         $dao = jDao::create ('products', $this->dbProfile);
 
         self::$prod1 = jDao::createRecord ('products', $this->dbProfile);
