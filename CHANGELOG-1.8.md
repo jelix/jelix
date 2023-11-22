@@ -8,6 +8,8 @@ Next
 * new method `jResponseFormJQJson::setError()` to force to return an error message/url redirection to the form.
 * New: Support of favicons into WebAssets (ex: `mygroup.icon=favicon-32x32.png|sizes=32x32`).
 * new method `WebAssetsSelection::getIconLinks()`
+* Fix issue into the password editor: the new value of the password changed by the button to regenerate one,
+  was not taken account when submitted the form
 
 1.8.3
 -----
