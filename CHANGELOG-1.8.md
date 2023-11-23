@@ -1,8 +1,8 @@
 Changes into Jelix 1.8
 ======================
 
-Next
-----
+1.8.4
+-----
 
 * Fix redirections when there is an error, into the rights management interface (jacl2db_admin)
 * new method `jResponseFormJQJson::setError()` to force to return an error message/url redirection to the form.
