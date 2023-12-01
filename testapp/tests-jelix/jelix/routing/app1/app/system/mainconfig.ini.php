@@ -13,6 +13,5 @@ basePath = ""
 backendBasePath =
 checkHttpsOnParsing = on
 jelixWWWPath = "jelix/"
-jqueryPath="jelix/jquery/"
 significantFile = "urls.xml"
 

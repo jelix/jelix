@@ -110,7 +110,8 @@ into UTF-8 into your application.
   declare classes that were listed into this parameter, in the autoloading
   section of module.xml/jelix-module.json files (or if you prefer, into the 
   composer.json if the module is a Composer package)
-- if you used `enableAllModules`, you should enable into the configuration all modules you want to use
+- if you used `enableAllModules`, you should enable into the configuration all modules you want to use. This parameter has been removed.
+- `jqueryPath` into the `urlengine` section has been removed.
 
 ## Convert test inside modules
 

@@ -524,7 +524,7 @@ class Compiler
      * in the given array : script path, script name, documentRoot ..
      *
      * @param array  $urlconf          urlengine configuration. scriptNameServerVariable, basePath,
-     *                                 jelixWWWPath and jqueryPath should be present
+     *                                 and jelixWWWPath should be present
      * @param string $pseudoScriptName
      *
      * @throws Exception
@@ -590,11 +590,6 @@ class Compiler
             $urlconf['jelixWWWPath'] = $basepath.$urlconf['jelixWWWPath'];
         }
         $urlconf['jelixWWWPath'] = rtrim($urlconf['jelixWWWPath'], '/').'/';
-
-        if ($urlconf['jqueryPath'][0] != '/') {
-            $urlconf['jqueryPath'] = $basepath.rtrim($urlconf['jqueryPath'], '/').'/';
-        }
-        $urlconf['jqueryPath'] = rtrim($urlconf['jqueryPath'], '/').'/';
 
         $snp = substr($urlconf['urlScript'], strlen($localBasePath));
 

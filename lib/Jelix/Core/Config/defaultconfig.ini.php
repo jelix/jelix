@@ -186,10 +186,6 @@ checkHttpsOnParsing=on
 ; at runtime, it contains the absolute path (basePath+the value) if you give a relative path
 jelixWWWPath="jelix/"
 
-; DEPRECATED. if you modify it, modify also its path into webassets
-; see below in webassets sections
-jqueryPath="jelix/jquery/"
-
 ; action to show the 'page not found' error
 notFoundAct="jelix~error:notfound"
 

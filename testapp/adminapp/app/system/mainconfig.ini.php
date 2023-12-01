@@ -62,7 +62,6 @@ htmlauth=adminLoginHtmlResponse
 ; so you should indicate the relative path of this link/directory to the basePath, or an absolute path.
 ; if you change it, you probably want to change path in datepickers, wikieditors and htmleditors sections
 jelixWWWPath="/jelix/"
-jqueryPath="/jelix/jquery/"
 
 ; enable the parsing of the url. Set it to off if the url is already parsed by another program
 ; (like mod_rewrite in apache)

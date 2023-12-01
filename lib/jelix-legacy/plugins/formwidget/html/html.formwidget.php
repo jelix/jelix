@@ -33,7 +33,6 @@ class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget
         $js = "jFormsJQ.selectFillUrl='".jUrl::get('jelix~jforms:getListData')."';\n";
         $js .= 'jFormsJQ.config = {locale:'.$builder->escJsStr(jApp::config()->locale).
                 ',basePath:'.$builder->escJsStr(jApp::urlBasePath()).
-                ',jqueryPath:'.$builder->escJsStr($conf['jqueryPath']).
                 ',jqueryFile:'.$builder->escJsStr($jquery).
                 ',jelixWWWPath:'.$builder->escJsStr($conf['jelixWWWPath'])."};\n";
         $js .= "jFormsJQ.tForm = new jFormsJQForm('".$builder->getName()."','".

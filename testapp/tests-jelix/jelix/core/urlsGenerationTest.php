@@ -609,7 +609,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
           'documentRoot'=>$conf->urlengine['documentRoot'],
           'checkHttpsOnParsing'=>true,
           'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
-          'jqueryPath' =>$conf->urlengine['jqueryPath'],
           'forceProxyProtocol' =>''
         );
 
@@ -645,7 +644,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
           'documentRoot'=>$conf->urlengine['documentRoot'],
           'checkHttpsOnParsing'=>true,
           'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
-          'jqueryPath' =>$conf->urlengine['jqueryPath'],
           'forceProxyProtocol' =>''
         );
         jUrl::getEngine(true);
