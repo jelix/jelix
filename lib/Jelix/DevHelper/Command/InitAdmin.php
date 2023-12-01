@@ -114,8 +114,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
 
         $compiler = new \Jelix\Core\Config\Compiler(
             $ep->getConfigFile(),
-            $ep->getFile(),
-            true);
+            $ep->getFile());
         App::setConfig($compiler->read(true));
 
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);

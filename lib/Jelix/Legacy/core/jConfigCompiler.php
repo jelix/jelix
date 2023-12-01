@@ -25,14 +25,14 @@ class jConfigCompiler
 
     public static function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName = '')
     {
-        $compiler = new \Jelix\Core\Config\Compiler($configFile, $pseudoScriptName, $isCli);
+        $compiler = new \Jelix\Core\Config\Compiler($configFile, $pseudoScriptName);
 
         return $compiler->read($allModuleInfo);
     }
 
     public static function readAndCache($configFile, $isCli = null, $pseudoScriptName = '')
     {
-        $compiler = new \Jelix\Core\Config\Compiler($configFile, $pseudoScriptName, $isCli);
+        $compiler = new \Jelix\Core\Config\Compiler($configFile, $pseudoScriptName);
 
         return $compiler->readAndCache();
     }

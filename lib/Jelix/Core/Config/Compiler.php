@@ -41,6 +41,11 @@ class Compiler
     protected $modulesInfos = array();
 
     /**
+     *
+     * If you are in a CLI script but you want to load a configuration file for a web
+     * entry point or vice-versa, you need to indicate the $pseudoScriptName parameter
+     * with the name of the entry point
+     *
      * @param string $configFile       the name and path of the config file related to config dir of the app
      * @param string $pseudoScriptName the name of the entry point, relative to the base path,
      *                                 corresponding to the readed configuration. It should start with a leading /.
@@ -63,13 +68,12 @@ class Compiler
      * - var/config/liveconfig.ini.php
      *
      * @param string $configFile
-     * @param array  $additionalOptions some options to add to the configuration
      *
      * @throws Exception
      *
      * @return object the object containing content of all configuration files
      */
-    protected function readConfigFiles($configFile, $additionalOptions)
+    protected function readConfigFiles($configFile)
     {
         $appSystemPath = App::appSystemPath();
         $varConfigPath = App::varConfigPath();
@@ -85,12 +89,6 @@ class Compiler
         $this->commonConfig = clone $config;
 
         if (!file_exists($appSystemPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
-            if ($additionalOptions) {
-                IniFileMgr::mergeIniObjectContents($config, $additionalOptions);
-
-                return $config;
-            }
-
             throw new Exception("Configuration file of the entrypoint is missing -- {$configFile}", 5);
         }
 
@@ -122,10 +120,6 @@ class Compiler
             IniFileMgr::readAndMergeObject($varConfigPath.'liveconfig.ini.php', $config);
         }
 
-        if ($additionalOptions) {
-            IniFileMgr::mergeIniObjectContents($config, $additionalOptions, 0, \Jelix\Core\Config\AppConfig::sectionsToIgnoreForEp);
-        }
-
         return $config;
     }
 
@@ -133,20 +127,17 @@ class Compiler
      * read the ini file given to the constructor. It Merges it with the content of
      * mainconfig.ini.php. It also calculates some options.
      *
-     * If you are in a CLI script but you want to load a configuration file for a web
-     * entry point or vice-versa, you need to indicate the $pseudoScriptName parameter
-     * with the name of the entry point
+
      *
-     * @param bool  $allModuleInfo     may be true for the installer, which needs all informations
-     *                                 else should be false, these extra informations are
-     *                                 not needed to run the application
-     * @param array $additionalOptions some options to add to the configuration
-     *
-     * @throws Exception
+     * @param bool $installationMode must be true for the installer, which needs extra information
+     *                                and need config values as they are into the files.
+     *                                It must be false for runtime to harden some configuration values.
      *
      * @return \StdClass an object which contains configuration values
+     *@throws Exception
+     *
      */
-    public function read($allModuleInfo = false, $additionalOptions = null)
+    public function read($installationMode = false)
     {
         $tempPath = App::tempBasePath();
 
@@ -163,8 +154,8 @@ class Compiler
         if (!is_writable(App::logPath())) {
             throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
         }
-        $this->config = $this->readConfigFiles($this->configFileName, $additionalOptions);
-        $this->prepareConfig($allModuleInfo);
+        $this->config = $this->readConfigFiles($this->configFileName);
+        $this->prepareConfig($installationMode);
 
         return $this->config;
     }
@@ -232,15 +223,15 @@ class Compiler
     /**
      * fill some config properties with calculated values.
      *
-     * @param bool $allModuleInfo may be true for the installer, which needs all informations
-     *                            else should be false, these extra informations are
-     *                            not needed to run the application
+     * @param bool $installationMode must be true for the installer, which needs extra information
+     *                               and need config values as they are into the files.
+     *                               It must be false for runtime to harden some configuration values.
      */
-    protected function prepareConfig($allModuleInfo)
+    protected function prepareConfig($installationMode)
     {
         $this->checkMiscParameters($this->config);
         $this->getPaths($this->config->urlengine, $this->pseudoScriptName);
-        $this->modulesInfos = $this->_loadModulesInfo($this->config, $allModuleInfo);
+        $this->modulesInfos = $this->_loadModulesInfo($this->config, $installationMode);
         $this->_loadPluginsPathList($this->config);
         $this->checkCoordPluginsPath($this->config);
         $this->runConfigCompilerPlugins($this->config, $this->modulesInfos);
@@ -317,7 +308,7 @@ class Compiler
     }
 
     /**
-     * @param StdClass                        $config
+     * @param \StdClass                        $config
      * @param \Jelix\Core\Infos\ModuleInfos[] $modules
      */
     protected function runConfigCompilerPlugins($config, $modules)
@@ -379,14 +370,14 @@ class Compiler
      *
      * @return \Jelix\Core\Infos\ModuleInfos[]
      */
-    protected function _loadModulesInfo($config, $allModuleInfo)
+    protected function _loadModulesInfo($config, $installationMode)
     {
         $installerFile = App::varConfigPath('installer.ini.php');
 
         if (file_exists($installerFile)) {
             $installation = parse_ini_file($installerFile, true, INI_SCANNER_TYPED);
         } else {
-            if ($allModuleInfo) {
+            if ($installationMode) {
                 $installation = array();
             } else {
                 throw new Exception("The application is not installed -- installer.ini.php doesn't exist!\n", 9);
@@ -408,7 +399,7 @@ class Compiler
         $modules = array();
         $list = App::getAllModulesPath();
         foreach ($list as $k => $path) {
-            $module = $this->_readModuleInfo($config, $allModuleInfo, $path, $installation);
+            $module = $this->_readModuleInfo($config, $installationMode, $path, $installation);
             if ($module !== null) {
                 $modules[$module->name] = $module;
             }
@@ -419,13 +410,13 @@ class Compiler
 
     /**
      * @param mixed $config
-     * @param mixed $allModuleInfo
+     * @param mixed $installationMode
      * @param mixed $path
      * @param mixed $installation
      *
      * @return \Jelix\Core\Infos\ModuleInfos
      */
-    protected function _readModuleInfo($config, $allModuleInfo, $path, &$installation)
+    protected function _readModuleInfo($config, $installationMode, $path, &$installation)
     {
         $moduleInfo = \Jelix\Core\Infos\ModuleInfos::load($path);
         if (!$moduleInfo->exists()) {
@@ -446,7 +437,7 @@ class Compiler
                 // module is not installed.
                 // outside installation mode, we force the access to 0
                 // so the module is unusable until it is installed
-                if (!$allModuleInfo) {
+                if (!$installationMode) {
                     $config->modules[$f.'.enabled'] = false;
                 }
             }
@@ -462,7 +453,7 @@ class Compiler
             $config->modules[$f.'.dbprofile'] = $installation['modules'][$f.'.dbprofile'];
         }
 
-        if ($allModuleInfo) {
+        if ($installationMode) {
             if (!isset($installation['modules'][$f.'.version'])) {
                 $installation['modules'][$f.'.version'] = '';
             }
@@ -529,7 +520,7 @@ class Compiler
     }
 
     /**
-     * calculate miscellaneous path, depending of the server configuration and other information
+     * calculate miscellaneous path, depending on the server configuration and other information
      * in the given array : script path, script name, documentRoot ..
      *
      * @param array  $urlconf          urlengine configuration. scriptNameServerVariable, basePath,
@@ -582,7 +573,7 @@ class Compiler
             $localBasePath = $basepath;
             if ($urlconf['backendBasePath']) {
                 $localBasePath = $urlconf['backendBasePath'];
-                // we have to change urlScriptPath. it may contains the base path of the backend server
+                // we have to change urlScriptPath. it may contain the base path of the backend server
                 // we should replace this base path by the basePath of the frontend server
                 if (strpos($urlconf['urlScriptPath'], $urlconf['backendBasePath']) === 0) {
                     $urlconf['urlScriptPath'] = $basepath.substr($urlconf['urlScriptPath'], strlen($urlconf['backendBasePath']));

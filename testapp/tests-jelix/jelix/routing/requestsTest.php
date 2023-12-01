@@ -41,8 +41,7 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         $this->fServer->setHttpRequest($url);
 
         $compiler = new \Jelix\Core\Config\Compiler('index/config.ini.php',
-                                                    $scriptPath,
-                                                    false);
+                                                    $scriptPath);
         $config = $compiler->read(false);
         if ($scriptNameServerVariable) {
             $config->urlengine['scriptNameServerVariable'] = $scriptNameServerVariable;

@@ -34,8 +34,8 @@ class ModulesCommands
         $fmkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
         $ep = $fmkInfos->getDefaultEntryPointInfo();
 
-        $compiler = new Compiler($ep->getConfigFile(), 'console.php', true);
-        App::setConfig($compiler->read(true));
+        $compiler = new Compiler($ep->getConfigFile(), 'console.php');
+        App::setConfig($compiler->read(false));
         App::setRouter(new Router());
 
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);

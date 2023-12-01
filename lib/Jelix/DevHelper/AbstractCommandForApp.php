@@ -130,7 +130,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
 
         $configFile = $entrypoint->getConfigFile();
 
-        $compiler = new \Jelix\Core\Config\Compiler($configFile, $entrypoint->getFile(), true);
+        $compiler = new \Jelix\Core\Config\Compiler($configFile, $entrypoint->getFile());
         \Jelix\Core\App::setConfig($compiler->read(true));
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);
     }
