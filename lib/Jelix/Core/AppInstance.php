@@ -460,11 +460,10 @@ class AppInstance
      * Says if the given module $name is enabled.
      *
      * @param string $moduleName
-     * @param bool   $includingExternal deprecated
      *
      * @return bool true : module is ok
      */
-    public function isModuleEnabled($moduleName, $includingExternal = false)
+    public function isModuleEnabled($moduleName)
     {
         if (!$this->config) {
             throw new \Exception('Configuration is not loaded');
@@ -477,11 +476,10 @@ class AppInstance
      * return the real path of an enabled module.
      *
      * @param string $module            a module name
-     * @param bool   $includingExternal deprecated
      *
      * @return string the corresponding path
      */
-    public function getModulePath($module, $includingExternal = false)
+    public function getModulePath($module)
     {
         if (!$this->config) {
             throw new \Exception('Configuration is not loaded');

@@ -124,11 +124,6 @@ checkCacheFiletime=on
 force=off
 
 [urlengine]
-; enable the parsing of the url. Set it to off if the url is already parsed by another program
-; (like mod_rewrite in apache)
-; @deprecated
-enableParser=on
-
 ; if multiview is activated in apache, eg, you don't have to indicate the ".php" suffix
 ; then set this parameter to on
 multiview=off

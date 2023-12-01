@@ -212,12 +212,12 @@ class jApp
 
     public static function isModuleEnabled($moduleName, $includingExternal = false)
     {
-        return \Jelix\Core\App::isModuleEnabled($moduleName, $includingExternal);
+        return \Jelix\Core\App::isModuleEnabled($moduleName);
     }
 
     public static function getModulePath($module, $includingExternal = false)
     {
-        return \Jelix\Core\App::getModulePath($module, $includingExternal);
+        return \Jelix\Core\App::getModulePath($module);
     }
 
     public static function pushCurrentModule($module)

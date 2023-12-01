@@ -82,21 +82,15 @@ class UrlActionMapper
      */
     public function parseFromRequest(\jRequest $request, $params)
     {
-        if ($this->config->enableParser) {
-            $file = App::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$this->config->entryPointName.'.entrypoint.php');
-            if (file_exists($file)) {
-                require $file;
-                $this->dataParseUrl = &$GLOBALS['SIGNIFICANT_PARSEURL'][$this->config->entryPointName];
-            }
-
-            $isHttps = ($request->getProtocol() == 'https://');
-
-            return $this->_parse($request->urlScript, $request->urlPathInfo, $params, $isHttps);
+        $file = App::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$this->config->entryPointName.'.entrypoint.php');
+        if (file_exists($file)) {
+            require $file;
+            $this->dataParseUrl = &$GLOBALS['SIGNIFICANT_PARSEURL'][$this->config->entryPointName];
         }
 
-        $urlact = new \jUrlAction($params);
+        $isHttps = ($request->getProtocol() == 'https://');
 
-        return $urlact;
+        return $this->_parse($request->urlScript, $request->urlPathInfo, $params, $isHttps);
     }
 
     /**
@@ -110,25 +104,24 @@ class UrlActionMapper
      */
     public function parse($scriptNamePath, $pathinfo, $params)
     {
-        if ($this->config->enableParser) {
-            if (strpos($scriptNamePath, $this->config->basePath) === 0) {
-                $snp = substr($scriptNamePath, strlen($this->config->basePath));
-            } else {
-                $snp = $scriptNamePath;
-            }
-            $pos = strrpos($snp, '.php');
-            if ($pos !== false) {
-                $snp = substr($snp, 0, $pos);
-            }
-            $snp = rawurlencode($snp);
-            $file = App::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$snp.'.entrypoint.php');
-            if (file_exists($file)) {
-                require $file;
-                $this->dataParseUrl = &$GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
-
-                return $this->_parse($scriptNamePath, $pathinfo, $params, false);
-            }
+        if (strpos($scriptNamePath, $this->config->basePath) === 0) {
+            $snp = substr($scriptNamePath, strlen($this->config->basePath));
+        } else {
+            $snp = $scriptNamePath;
         }
+        $pos = strrpos($snp, '.php');
+        if ($pos !== false) {
+            $snp = substr($snp, 0, $pos);
+        }
+        $snp = rawurlencode($snp);
+        $file = App::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$snp.'.entrypoint.php');
+        if (file_exists($file)) {
+            require $file;
+            $this->dataParseUrl = &$GLOBALS['SIGNIFICANT_PARSEURL'][$snp];
+
+            return $this->_parse($scriptNamePath, $pathinfo, $params, false);
+        }
+
         $urlact = new \jUrlAction($params);
 
         return $urlact;

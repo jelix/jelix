@@ -41,7 +41,6 @@ class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
        $req->params = array();
        $config = jApp::config();
        $config->urlengine = array(
-         'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
          'notFoundAct'=>'jelix~error:notfound',
@@ -269,7 +268,6 @@ class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
         $req->params = array();
         $config = jApp::config();
         $config->urlengine = array(
-            'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
             'notFoundAct'=>'jelix~error:notfound',
@@ -351,7 +349,6 @@ class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
         $req->params = array();
         $config = jApp::config();
         $config->urlengine = array(
-          'enableParser'=>true,
           'multiview'=>false,
           'basePath'=>'/',
           'notFoundAct'=>'jelix~error:notfound',
@@ -417,7 +414,6 @@ class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
         $req->params = array();
         $config = jApp::config();
         $config->urlengine = array(
-          'enableParser'=>true,
           'multiview'=>false,
           'basePath'=>'/',
           'notFoundAct'=>'jelix~error:notfound',
@@ -499,7 +495,6 @@ class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
         $req->params = array();
         $config = jApp::config();
         $config->urlengine = array(
-            'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
             'notFoundAct'=>'jelix~error:notfound',
@@ -580,7 +575,6 @@ class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
         $req->params = array();
         $config = jApp::config();
         $config->urlengine = array(
-            'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
             'notFoundAct'=>'jelix~error:notfound',
@@ -683,7 +677,6 @@ class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
        $req->params = array();
        $config = jApp::config();
        $config->urlengine = array(
-         'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
          'notFoundAct'=>'jelix~error:notfound',

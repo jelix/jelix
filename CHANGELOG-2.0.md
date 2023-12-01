@@ -139,3 +139,4 @@ _ `j_jquerypath` variable in templates
   - `disableInstallers`
   - `loadClasses` from the `sessions` section
   - `jqueryPath` from the `urlengine` section.
+  - `enableParser` from the `urlengine` section.

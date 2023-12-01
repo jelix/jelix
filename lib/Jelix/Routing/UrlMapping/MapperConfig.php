@@ -11,8 +11,6 @@ namespace Jelix\Routing\UrlMapping;
 
 class MapperConfig
 {
-    protected $enableParser = true;
-
     protected $entryPointName = 'index';
 
     protected $basePath = '/';
@@ -46,9 +44,11 @@ class MapperConfig
 
     public function __construct(array $options = array())
     {
-        $availableOptions = array('enableParser', 'basePath',
+        $availableOptions = array(
+            'basePath',
             'checkHttpsOnParsing',
-            'notFoundAct', );
+            'notFoundAct',
+        );
         foreach ($availableOptions as $opt) {
             if (isset($options[$opt])) {
                 $this->{$opt} = $options[$opt];

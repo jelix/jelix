@@ -57,10 +57,6 @@ force=off
 
 [urlengine]
 
-; enable the parsing of the url. Set it to off if the url is already parsed by another program
-; (like mod_rewrite in apache)
-enableParser=on
-
 multiview=off
 
 ; basePath corresponds to the path to the base directory of your application.

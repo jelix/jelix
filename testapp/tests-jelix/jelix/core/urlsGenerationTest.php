@@ -77,7 +77,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
        $conf->forceHTTPPort = true;
        $conf->forceHTTPSPort = true;
        $conf->urlengine = array(
-         'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
          'notFoundAct'=>'jelix~error:notfound',
@@ -252,7 +251,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $conf->forceHTTPPort = true;
         $conf->forceHTTPSPort = true;
         $conf->urlengine = array(
-            'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
             'notFoundAct'=>'jelix~error:notfound',
@@ -379,7 +377,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $conf->forceHTTPPort = true;
         $conf->forceHTTPSPort = true;
         $conf->urlengine = array(
-            'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
             'notFoundAct'=>'jelix~error:notfound',
@@ -432,7 +429,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
 
        $conf = jApp::config();
        $conf->urlengine = array(
-         'enableParser'=>true,
          'multiview'=>false,
          'basePath'=>'/',
          'notFoundAct'=>'jelix~error:notfound',
@@ -473,7 +469,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
 
         $conf = jApp::config();
         $conf->urlengine = array(
-          'enableParser'=>true,
           'multiview'=>false,
           'basePath'=>'/',
           'notFoundAct'=>'jelix~error:notfound',
@@ -593,7 +588,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $conf = jApp::config();
         $conf->domainName = TESTAPP_HOST;
         $conf->urlengine = array(
-          'enableParser'=>true,
           'multiview'=>false,
           'basePath'=>'/',
           'backendBasePath'=>'/',
@@ -628,7 +622,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $conf = jApp::config();
         $conf->domainName = TESTAPP_HOST;
         $conf->urlengine = array(
-          'enableParser'=>true,
           'multiview'=>true,
           'basePath'=>'/',
           'backendBasePath'=>'/',
@@ -672,7 +665,6 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $conf->forceHTTPPort = true;
         $conf->forceHTTPSPort = true;
         $conf->urlengine = array(
-            'enableParser'=>true,
             'multiview'=>false,
             'basePath'=>'/',
             'notFoundAct'=>'jelix~error:notfound',
