@@ -28,9 +28,8 @@ abstract class InstallerAbstract
      * @param string $name            name of the installer
      * @param string $path            the component path
      * @param string $version         version of the component
-     * @param bool   $installWholeApp deprecated
      */
-    public function __construct($componentName, $name, $path, $version, $installWholeApp = true)
+    public function __construct($componentName, $name, $path, $version)
     {
         $this->path = $path;
         $this->version = $version;

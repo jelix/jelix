@@ -23,7 +23,7 @@ namespace Jelix\Core\Selector;
 /**
  * Create instance of selectors object.
  *
- * @deprecated
+ * @deprecated since 2.0
  */
 class Factory
 {

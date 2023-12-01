@@ -136,7 +136,7 @@ class EntryPoint
 
     /**
      * @return bool
-     * @deprecated
+     * @deprecated since 2.0
      */
     public function isCliScript()
     {

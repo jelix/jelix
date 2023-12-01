@@ -111,6 +111,7 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 - `jIniFile`, `jIniFileModifier`, `jIniMultiFilesModifier`
 - `jFormsBuilderBase`, `jFormsBuilderHtml`, `htmlJformsBuilder`, `htmllightJformsBuilder`
 - `jClassBinding`, `jClasses::createBinded()`, `jClasses::getBindedService()`, `jClasses::bind()`, `jClasses::resetBindings()`  
+- remove parameter `$installWholeApp` from the `Jelix\Installer\Module\InstallerAbstract` constructor.
 
 From the command line scripts system of Jelix <=1.6:
 
