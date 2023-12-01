@@ -12,6 +12,7 @@
 namespace Jelix\Installer\Migrator;
 
 use Jelix\Core\App;
+use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\IniFile\IniModifier;
 use Jelix\Installer\ModuleStatus;
 
@@ -476,7 +477,7 @@ class Jelix17
 
         $jelixInstallParams = $masterConfigIni->getValue('jelix.installparam', 'modules');
         if ($jelixInstallParams) {
-            $jelixInstallParams = $originalJelixInstallParams = ModuleStatus::unserializeParameters($jelixInstallParams);
+            $jelixInstallParams = $originalJelixInstallParams = ModuleStatusDeclaration::unserializeParameters($jelixInstallParams);
             if (!isset($jelixInstallParams['wwwfiles'])) {
                 $jelixInstallParams['wwwfiles'] = $wwwfiles;
             }
@@ -484,8 +485,8 @@ class Jelix17
             $originalJelixInstallParams = array();
             $jelixInstallParams = array('wwwfiles' => $wwwfiles);
         }
-        $jelixInstallParams = ModuleStatus::serializeParametersAsArray($jelixInstallParams);
-        $originalJelixInstallParams = ModuleStatus::serializeParametersAsArray($originalJelixInstallParams);
+        $jelixInstallParams = ModuleStatusDeclaration::serializeParametersAsArray($jelixInstallParams);
+        $originalJelixInstallParams = ModuleStatusDeclaration::serializeParametersAsArray($originalJelixInstallParams);
         if ($jelixInstallParams != $originalJelixInstallParams) {
             $this->reporter->message('Update installer parameters for the jelix : '.json_encode($jelixInstallParams), 'notice');
             $masterConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');

@@ -10,6 +10,7 @@
 namespace Jelix\Installer;
 
 use Jelix\Core\Infos\ModuleInfos;
+use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\Dependencies\Item;
 use Jelix\Dependencies\Resolver;
 use Jelix\IniFile\IniModifierInterface;
@@ -104,7 +105,7 @@ class ModuleStatus
         }
 
         if (isset($config[$name.'.installparam'])) {
-            $this->parameters = self::unserializeParameters($config[$name.'.installparam']);
+            $this->parameters = ModuleStatusDeclaration::unserializeParameters($config[$name.'.installparam']);
         }
 
         if (isset($config[$name.'.skipinstaller']) && $config[$name.'.skipinstaller'] == 'skip') {
@@ -133,7 +134,7 @@ class ModuleStatus
         }
 
         $this->setConfigInfo($configIni, 'dbprofile', ($this->dbProfile != 'default' ? $this->dbProfile : ''), '');
-        $this->setConfigInfo($configIni, 'installparam', self::serializeParametersAsArray($this->parameters, $defaultParameters), '');
+        $this->setConfigInfo($configIni, 'installparam', ModuleStatusDeclaration::serializeParametersAsArray($this->parameters, $defaultParameters), '');
         $this->setConfigInfo($configIni, 'skipinstaller', ($this->skipInstaller ? 'skip' : ''), '');
         $this->setConfigInfo(
             $configIni,
@@ -183,41 +184,12 @@ class ModuleStatus
      * @param array|string $parameters
      *
      * @return array
+     * @deprecated since 2.0
+     * @see ModuleStatusDeclaration::unserializeParameters
      */
     public static function unserializeParameters($parameters)
     {
-        $trueParams = array();
-        if (!is_array($parameters)) {
-            $parameters = trim($parameters);
-            if ($parameters == '') {
-                return $trueParams;
-            }
-            $params = array();
-            foreach (explode(';', $parameters) as $param) {
-                $kp = explode('=', $param);
-                if (count($kp) > 1) {
-                    $params[$kp[0]] = $kp[1];
-                } else {
-                    $params[$kp[0]] = true;
-                }
-            }
-        } else {
-            $params = $parameters;
-        }
-
-        foreach ($params as $key => $v) {
-            if (is_string($v) && (strpos($v, ',') !== false || (strlen($v) && $v[0] == '['))) {
-                $trueParams[$key] = explode(',', trim($v, '[]'));
-            } elseif ($v === 'false') {
-                $trueParams[$key] = false;
-            } elseif ($v === 'true') {
-                $trueParams[$key] = true;
-            } else {
-                $trueParams[$key] = $v;
-            }
-        }
-
-        return $trueParams;
+        return ModuleStatusDeclaration::unserializeParameters($parameters);
     }
 
     /**
@@ -230,43 +202,12 @@ class ModuleStatus
      * @param array $defaultParameters
      *
      * @return string
+     * @deprecated since 2.0
+     * @see ModuleStatusDeclaration::serializeParametersAsString
      */
     public static function serializeParametersAsString($parameters, $defaultParameters = array())
     {
-        $p = array();
-        foreach ($parameters as $name => $v) {
-            if (is_array($v)) {
-                if (!count($v)) {
-                    continue;
-                }
-                $v = '['.implode(',', $v).']';
-            }
-            if (isset($defaultParameters[$name]) && $defaultParameters[$name] === $v && $v !== true) {
-                // don't write values that equals to default ones except for
-                // true values else we could not known into the installer if
-                // the absence of the parameter means the default value or
-                // it if means false
-                continue;
-            }
-            if ($v === true || $v === 'true') {
-                $p[] = $name;
-            } elseif ($v === false || $v === 'false') {
-                if (isset($defaultParameters[$name]) && is_bool($defaultParameters[$name])) {
-                    continue;
-                }
-                $p[] = $name.'=false';
-            } else {
-                $p[] = $name.'='.$v;
-            }
-        }
-
-        foreach ($defaultParameters as $name => $v) {
-            if ($v === true && !isset($parameters[$name])) {
-                $p[] = $name;
-            }
-        }
-
-        return implode(';', $p);
+        return ModuleStatusDeclaration::serializeParametersAsString($parameters, $defaultParameters);
     }
 
     /**
@@ -278,43 +219,12 @@ class ModuleStatus
      * @param array $defaultParameters
      *
      * @return array
+     * @deprecated since 2.0
+     * @see ModuleStatusDeclaration::serializeParametersAsArray
      */
     public static function serializeParametersAsArray($parameters, $defaultParameters = array())
     {
-        $p = array();
-        foreach ($parameters as $name => $v) {
-            if (is_array($v)) {
-                if (!count($v)) {
-                    continue;
-                }
-                $v = '['.implode(',', $v).']';
-            }
-            if (isset($defaultParameters[$name]) && $defaultParameters[$name] === $v && $v !== true) {
-                // don't write values that equals to default ones except for
-                // true values else we could not know into the installer if
-                // the absence of the parameter means the default value or
-                // it if means false
-                continue;
-            }
-            if ($v === true) {
-                $p[$name] = true;
-            } elseif ($v === false) {
-                if (isset($defaultParameters[$name]) && is_bool($defaultParameters[$name])) {
-                    continue;
-                }
-                $p[$name] = false;
-            } else {
-                $p[$name] = $v;
-            }
-        }
-
-        foreach ($defaultParameters as $name => $v) {
-            if ($v === true && !isset($parameters[$name])) {
-                $p[$name] = true;
-            }
-        }
-
-        return $p;
+        return ModuleStatusDeclaration::serializeParametersAsArray($parameters, $defaultParameters);
     }
 
 

@@ -359,6 +359,29 @@ class infosreaderTest extends \Jelix\UnitTests\UnitTestCase {
             </object>
         </array>';
         $this->assertComplexIdenticalStr($result, $expected);
+
+        $result = $fmkInfos->getModules();
+        $expected = '<?xml version="1.0"?>
+        <array>
+            <object key="complex">
+                <string property="name" value="complex" />
+                <boolean property="isEnabled" value="true" />
+            </object>
+            <object key="simple">
+                <string property="name" value="simple" />
+                <boolean property="isEnabled" value="true" />
+                <array property="parameters">
+                    <string key="foo" value="bar" />
+                </array>
+            </object>
+            <object key="package">
+                <string property="name" value="package" />
+                <boolean property="isEnabled" value="false" />
+            </object>
+        </array>';
+        $this->assertComplexIdenticalStr($result, $expected);
+
+
     }
 
     function testLocalFrameworkInfo() {
@@ -391,7 +414,11 @@ class infosreaderTest extends \Jelix\UnitTests\UnitTestCase {
 
         $ini= new \Jelix\IniFile\IniModifier(__DIR__.'/../../../temp/testframework.ini');
         $this->assertEquals(array(
-            'entrypoint:index.php', 'entrypoint:foo.php',
+            'entrypoint:index.php',
+            'module:complex',
+            'module:simple',
+            'module:package',
+            'entrypoint:foo.php',
             ), $ini->getSectionList()
         );
         $this->assertEquals(array('config'=>'foo/config.ini', 'type'=>'classic'), $ini->getValues('entrypoint:foo.php'));

@@ -10,6 +10,7 @@
 namespace Jelix\DevHelper\Command;
 
 use Jelix\Core\AppManager;
+use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -66,7 +67,7 @@ class ConfigureModule extends \Jelix\DevHelper\AbstractCommandForApp
         $parsedParameters = array();
         if ($parameters) {
             foreach($parameters as $param) {
-                $result = \Jelix\Installer\ModuleStatus::unserializeParameters($param);
+                $result = ModuleStatusDeclaration::unserializeParameters($param);
                 if ($result) {
                     $parsedParameters = array_merge($parsedParameters, $result);
                 }
