@@ -1,7 +1,7 @@
 <?php
 /**
  * @author Laurent Jouanneau
- * @copyright   2018-2023 Laurent Jouanneau
+ * @copyright   2018-2026 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -9,6 +9,7 @@
 
 namespace Jelix\Scripts;
 
+use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -98,7 +99,7 @@ class ConfigureCommand extends Command
             $parsedParameters = array();
             if ($parameters) {
                 foreach($parameters as $param) {
-                    $result = \Jelix\Installer\ModuleStatus::unserializeParameters($param);
+                    $result = ModuleStatusDeclaration::unserializeParameters($param);
                     if ($result) {
                         $parsedParameters = array_merge($parsedParameters, $result);
                     }
