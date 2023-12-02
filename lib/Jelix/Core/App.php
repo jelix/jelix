@@ -1,9 +1,8 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @contributor  Olivier Demah
  *
- * @copyright  2011-2023 Laurent Jouanneau, 2012 Olivier Demah
+ * @copyright  2011-2023 Laurent Jouanneau
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file

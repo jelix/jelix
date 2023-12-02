@@ -92,6 +92,8 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 - `App::initPaths()` and `jApp::initPaths()`: the `$scriptPath` parameter is deprecated and not used anymore
 - `\Jelix\Installer\EntryPoint::isCliScript()` (it returns always false from now)
 - constant `JELIX_SCRIPTS_PATH`. Its value is now `<vendor path>/lib/Jelix/DevHelper/`.
+- `jConfigCompiler::findServerName()` has been moved to `Jelix\Core\Server::findServerName()`
+
 
 ## removed classes and methods
 
@@ -112,6 +114,7 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 - `jFormsBuilderBase`, `jFormsBuilderHtml`, `htmlJformsBuilder`, `htmllightJformsBuilder`
 - `jClassBinding`, `jClasses::createBinded()`, `jClasses::getBindedService()`, `jClasses::bind()`, `jClasses::resetBindings()`  
 - remove parameter `$installWholeApp` from the `Jelix\Installer\Module\InstallerAbstract` constructor.
+
 
 From the command line scripts system of Jelix <=1.6:
 

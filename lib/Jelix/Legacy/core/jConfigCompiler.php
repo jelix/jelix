@@ -51,6 +51,6 @@ class jConfigCompiler
 
     public static function findServerName($ext = '.php', $isCli = false)
     {
-        return \Jelix\Core\Config\Compiler::findServerName($ext);
+        return \Jelix\Core\Server::findServerName($ext);
     }
 }

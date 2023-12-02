@@ -135,7 +135,7 @@ class AppManager
             $basePath = App::urlBasePath();
             if ($basePath == null) {
                 try {
-                    $urlScript = $_SERVER[Compiler::findServerName()];
+                    $urlScript = $_SERVER[Server::findServerName()];
                     $basePath = substr($urlScript, 0, strrpos($urlScript, '/')) . '/';
                 } catch (\Exception $e) {
                     $basePath = '/';
