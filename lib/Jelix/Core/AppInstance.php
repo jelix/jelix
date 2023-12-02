@@ -10,6 +10,11 @@
 
 namespace Jelix\Core;
 
+/**
+ * Store some application parameter for the current application
+ *
+ * @internal
+ */
 class AppInstance
 {
     public $tempBasePath = '';
@@ -71,17 +76,15 @@ class AppInstance
      * @param string $varPath    var directory
      * @param string $logPath    log directory
      * @param string $configPath config directory
-     * @param string $scriptPath scripts directory (deprecated, not used anymore)
      */
     public function __construct(
         $appPath,
         $wwwPath = null,
         $varPath = null,
         $logPath = null,
-        $configPath = null,
-        $scriptPath = null
+        $configPath = null
     ) {
-        $this->setPaths($appPath, $wwwPath, $varPath, $logPath, $configPath, $scriptPath);
+        $this->setPaths($appPath, $wwwPath, $varPath, $logPath, $configPath);
         $this->router = null;
         $this->config = null;
         $this->configAutoloader = null;
@@ -97,15 +100,13 @@ class AppInstance
      * @param string $varPath    var directory
      * @param string $logPath    log directory
      * @param string $configPath config directory
-     * @param string $scriptPath scripts directory (deprecated, not used anymore)
      */
     public function setPaths(
         $appPath,
         $wwwPath = null,
         $varPath = null,
         $logPath = null,
-        $configPath = null,
-        $scriptPath = null
+        $configPath = null
     ) {
         $this->appPath = $appPath;
         $this->wwwPath = (is_null($wwwPath) ? $appPath.'www/' : $wwwPath);

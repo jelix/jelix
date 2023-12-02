@@ -61,9 +61,9 @@ class App
         $scriptPath = null
     ) {
         if (self::$_currentApp) {
-            self::$_currentApp->setPaths($appPath, $wwwPath, $varPath, $logPath, $configPath, $scriptPath);
+            self::$_currentApp->setPaths($appPath, $wwwPath, $varPath, $logPath, $configPath);
         } else {
-            self::$_currentApp = new AppInstance($appPath, $wwwPath, $varPath, $logPath, $configPath, $scriptPath);
+            self::$_currentApp = new AppInstance($appPath, $wwwPath, $varPath, $logPath, $configPath);
         }
         self::$_mainConfigFile = null;
     }
@@ -122,6 +122,11 @@ class App
     public static function varConfigPath($file = '')
     {
         return self::$_currentApp->configPath.$file;
+    }
+
+    public static function buildPath($file = '')
+    {
+        return self::$_currentApp->varPath.'build/'.$file;
     }
 
     public static function wwwPath($file = '')
