@@ -13,6 +13,7 @@
 namespace Jelix\DevHelper\Command;
 
 use Jelix\Core\App;
+use Jelix\Core\Config\AppConfig;
 use Jelix\DevHelper\AbstractCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -112,10 +113,7 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
             }
         }
 
-        $compiler = new \Jelix\Core\Config\Compiler(
-            $ep->getConfigFile(),
-            $ep->getFile());
-        App::setConfig($compiler->read(true));
+        App::setConfig(AppConfig::loadForInstaller($ep->getConfigFile(), $ep->getFile()));
 
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);
 

@@ -15,6 +15,7 @@ use Jelix\Core\App;
  * static class which loads the configuration.
  *
  * @static
+ * @see \Jelix\Core\Config\Compiler
  */
 class AppConfig
 {
@@ -37,17 +38,14 @@ class AppConfig
     }
 
     /**
-     * load and read the configuration of the application
-     * The combination of all configuration files (the given file
-     * and the mainconfig.ini.php) is stored
-     * in a single temporary file. So it calls the jConfigCompiler
-     * class if needed.
+     * Loads the configuration by optimizing it and hardening values, and use a cache to avoid reading all
+     * configuration files at each call.
      *
-     * @param string $configFile the config file name
+     * To be used only for web runtime.
      *
-     * @return object it contains all configuration options
+     * @param string $configFile the configuration file name of the entrypoint
      *
-     * @see \Jelix\Core\Config\Compiler
+     * @return object it contains all configuration parameters
      */
     public static function load($configFile)
     {
@@ -103,6 +101,41 @@ class AppConfig
 
         return $config;
     }
+
+    /**
+     * Loads the configuration by optimizing it and hardening values, without using a cache.
+     *
+     * To be used for web runtime and users cli commands.
+     *
+     * @param string $configFile the configuration file name of the entrypoint
+     * @param string $scriptName the entrypoint script name
+     * @return object
+     * @throws Exception
+     */
+    public static function loadWithoutCache($configFile, $scriptName = '')
+    {
+        $compiler = new \Jelix\Core\Config\Compiler($configFile, $scriptName);
+        return $compiler->read(false);
+    }
+
+    /**
+     * Loads the configuration as is, for component that needs to manipulate the configuration content, without
+     * configuration values hardened
+     *
+     * Do not call it for web runtime.
+     *
+     * @internal
+     * @param string $configFile  the entrypoint configuration file
+     * @param string $scriptName
+     * @return object
+     * @throws Exception
+     */
+    public static function loadForInstaller($configFile, $scriptName = '')
+    {
+        $compiler = new \Jelix\Core\Config\Compiler($configFile, $scriptName);
+        return $compiler->read(true);
+    }
+
 
     public static function getDefaultConfigFile()
     {

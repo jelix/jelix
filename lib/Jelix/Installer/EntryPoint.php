@@ -9,6 +9,7 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\Config\AppConfig;
 use Jelix\IniFile\IniModifier;
 use Jelix\IniFile\IniModifierReadOnly;
 use Jelix\Core\Config\Compiler;
@@ -104,10 +105,7 @@ class EntryPoint
         $this->appEpConfigIni = new IniModifier($appSystemPath, ';<'.'?php die(\'\');?'.'>');
         $this->localEpConfigIni = new IniModifier($varConfigPath, ';<'.'?php die(\'\');?'.'>');
 
-        $compiler = new Compiler($configFile,
-            $this->scriptName
-        );
-        $this->config = $compiler->read(true);
+        $this->config = AppConfig::loadForInstaller($configFile, $this->scriptName);
     }
 
     /**

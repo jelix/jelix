@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     MIT
@@ -9,6 +9,7 @@
 
 namespace Jelix\Scripts;
 
+use Jelix\Core\Config\AppConfig;
 use Jelix\Routing\Router;
 use Symfony\Component\Console\Application;
 use Jelix\Core\App;
@@ -34,8 +35,7 @@ class ModulesCommands
         $fmkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
         $ep = $fmkInfos->getDefaultEntryPointInfo();
 
-        $compiler = new Compiler($ep->getConfigFile(), 'console.php');
-        App::setConfig($compiler->read(false));
+        App::setConfig(AppConfig::loadWithoutCache($ep->getConfigFile(), 'console.php'));
         App::setRouter(new Router());
 
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);

@@ -17,9 +17,10 @@ use Jelix\IniFile\Util as IniFileMgr;
 use Jelix\Core\Server;
 
 /**
- * This class merges two ini files in a single array and store it in a temporary file.
+ * This class loads all configuration files and generate a single configuration file
+ * that is ready to be used by the application
  *
- * @static
+ * @internal
  */
 class Compiler
 {

@@ -40,9 +40,7 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         $this->fServer = $server;
         $this->fServer->setHttpRequest($url);
 
-        $compiler = new \Jelix\Core\Config\Compiler('index/config.ini.php',
-                                                    $scriptPath);
-        $config = $compiler->read(false);
+        $config = \Jelix\Core\Config\AppConfig::loadWithoutCache('index/config.ini.php', $scriptPath);
         if ($scriptNameServerVariable) {
             $config->urlengine['scriptNameServerVariable'] = $scriptNameServerVariable;
         }
