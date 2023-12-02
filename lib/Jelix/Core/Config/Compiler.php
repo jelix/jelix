@@ -161,64 +161,9 @@ class Compiler
         return $this->config;
     }
 
-    /**
-     * Identical to read(), but also stores the result in a temporary file.
-     *
-     * @throws Exception
-     *
-     * @return object an object which contains configuration values
-     */
-    public function readAndCache()
-    {
-        $config = $this->read(false);
-        $tempPath = App::tempPath();
-        \jFile::createDir($tempPath, $config->chmodDir);
-        $filename = self::getCacheFilename($this->configFileName);
-
-        if (BYTECODE_CACHE_EXISTS) {
-            if ($f = @fopen($filename, 'wb')) {
-                fwrite($f, '<?php $config = '.var_export(get_object_vars($config), true).";\n?>");
-                fclose($f);
-                chmod($filename, $config->chmodFile);
-            } else {
-                throw new Exception('Error while writing configuration cache file -- '.$filename);
-            }
-        } else {
-            IniFileMgr::write(get_object_vars($config), $filename.'.resultini.php', ";<?php die('');?>\n", $config->chmodFile);
-        }
-
-        return $config;
-    }
-
     public function getModulesInfos()
     {
         return $this->modulesInfos;
-    }
-
-    /**
-     * return the path of file where to store the cache of the configuration.
-     *
-     * @param string $configFile the name of the configuration file of the entry
-     *                           point into var/config/
-     *
-     * @return string the full path of the cache
-     *
-     * @since 1.6.26
-     */
-    public static function getCacheFilename($configFile)
-    {
-        $filename = App::tempPath().str_replace('/','~',$configFile);
-        list($domain, $port) = Server::getDomainPortFromServer();
-        if ($domain) {
-            $filename .= '.'.$domain.'-'.$port;
-        }
-        if (BYTECODE_CACHE_EXISTS) {
-            $filename .= '.conf.php';
-        } else {
-            $filename .= '.resultini.php';
-        }
-
-        return $filename;
     }
 
     /**

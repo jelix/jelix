@@ -10,6 +10,8 @@
 namespace Jelix\Core\Config;
 
 use Jelix\Core\App;
+use Jelix\Core\Server;
+use Jelix\IniFile\Util as IniFileMgr;
 
 /**
  * static class which loads the configuration.
@@ -19,12 +21,6 @@ use Jelix\Core\App;
  */
 class AppConfig
 {
-    /**
-     * indicate if the configuration was loading from the cache (true) or
-     * if the cache configuration was regenerated (false).
-     */
-    public static $fromCache = true;
-
     const sectionsToIgnoreForEp = array(
         'httpVersion', 'timeZone', 'domainName', 'forceHTTPPort', 'forceHTTPSPort',
         'chmodFile', 'chmodDir', 'modules', '_coreResponses', 'compilation',
@@ -35,6 +31,31 @@ class AppConfig
      */
     private function __construct()
     {
+    }
+
+
+    /**
+     * return the path of file where to store the cache of the configuration.
+     *
+     * @param string $configFile the name of the configuration file of the entry
+     *                           point into var/config/
+     *
+     * @return string the full path of the cache
+     */
+    public static function getCacheFilename($configFile)
+    {
+        $filename = App::tempPath().str_replace('/','~',$configFile);
+        list($domain, $port) = Server::getDomainPortFromServer();
+        if ($domain) {
+            $filename .= '.'.$domain.'-'.$port;
+        }
+        if (BYTECODE_CACHE_EXISTS) {
+            $filename .= '.conf.php';
+        } else {
+            $filename .= '.resultini.php';
+        }
+
+        return $filename;
     }
 
     /**
@@ -50,12 +71,12 @@ class AppConfig
     public static function load($configFile)
     {
         $config = array();
-        $file = Compiler::getCacheFilename($configFile);
+        $file = self::getCacheFilename($configFile);
 
-        self::$fromCache = true;
+        $rebuildCache = false;
         if (!file_exists($file)) {
             // no cache, let's compile
-            self::$fromCache = false;
+            $rebuildCache = true;
         } else {
             $t = filemtime($file);
             $dc = App::mainConfigFile();
@@ -71,7 +92,7 @@ class AppConfig
                 || (file_exists($lvc) && filemtime($lvc) > $t)
             ) {
                 // one of the config files have been modified: let's compile
-                self::$fromCache = false;
+                $rebuildCache = true;
             } else {
                 // let's read the cache file
                 if (BYTECODE_CACHE_EXISTS) {
@@ -85,7 +106,7 @@ class AppConfig
                 if ($config->compilation['checkCacheFiletime']) {
                     foreach ($config->_allBasePath as $path) {
                         if (!file_exists($path) || filemtime($path) > $t) {
-                            self::$fromCache = false;
+                            $rebuildCache = true;
 
                             break;
                         }
@@ -93,10 +114,24 @@ class AppConfig
                 }
             }
         }
-        if (!self::$fromCache) {
+        if ($rebuildCache) {
             $compiler = new Compiler($configFile);
 
-            return $compiler->readAndCache();
+            $config = $compiler->read(false);
+            $tempPath = App::tempPath();
+            \jFile::createDir($tempPath, $config->chmodDir);
+
+            if (BYTECODE_CACHE_EXISTS) {
+                if ($f = @fopen($file, 'wb')) {
+                    fwrite($f, '<?php $config = '.var_export(get_object_vars($config), true).";\n?>");
+                    fclose($f);
+                    chmod($file, $config->chmodFile);
+                } else {
+                    throw new Exception('Error while writing configuration cache file -- '.$file);
+                }
+            } else {
+                IniFileMgr::write(get_object_vars($config), $file.'.resultini.php', ";<?php die('');?>\n", $config->chmodFile);
+            }
         }
 
         return $config;
