@@ -18,6 +18,7 @@
 namespace Jelix\DevHelper\Command;
 
 use Jelix\Core\App;
+use Jelix\Core\Framework;
 use Jelix\FileUtilities\Path;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -310,6 +311,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $this->createDir($varPath.'uploads/');
         $this->createDir($varPath.'sessions/');
         $this->createDir($varPath.'mails/');
+        $this->createDir($varPath.'build/');
 
         $this->createDir($appPath.'install/uninstall/');
         $this->createDir($appPath.'modules');
@@ -346,9 +348,8 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $param['php_rp_conf'] = $this->convertRp($param['rp_conf']);
         $param['php_rp_www'] = $this->convertRp($param['rp_www']);
 
-        $param['rp_vendor'] = '';
         $param['jelix_package_name'] = 'jelix';
-        $param['jelix_version'] = \jFramework::version();
+        $param['jelix_version'] = Framework::version();
 
         if ($this->composerMode == self::COMPJSON_NEW) {
             $param['rp_jelix'] = 'vendor/jelix/jelix/lib/jelix/';
@@ -386,6 +387,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $this->createFile(App::appPath().'app/overloads/.dummy', 'dummy.tpl', array());
         $this->createFile(App::appPath().'app/themes/default/.dummy', 'dummy.tpl', array());
         $this->createFile(App::varPath().'uploads/.dummy', 'dummy.tpl', array());
+        $this->createFile(App::varPath().'build/.dummy', 'dummy.tpl', array());
         $this->createFile($appPath.'plugins/.dummy', 'dummy.tpl', array());
         $this->createFile(App::tempBasePath().'.dummy', 'dummy.tpl', array());
 

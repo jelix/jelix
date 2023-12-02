@@ -19,7 +19,7 @@ namespace Jelix\Installer;
 class Migration
 {
     /**
-     * the object responsible of the results output.
+     * the object responsible on the results output.
      *
      * @var Reporter\ReporterInterface
      */

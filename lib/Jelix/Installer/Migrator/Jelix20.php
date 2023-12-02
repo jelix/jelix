@@ -12,8 +12,8 @@
 namespace Jelix\Installer\Migrator;
 
 use Jelix\Core\App;
+use Jelix\FileUtilities\Directory;
 use Jelix\IniFile\IniModifier;
-use Jelix\Installer\ModuleStatus;
 use Jelix\Routing\UrlMapping\XmlMapModifier;
 use Jelix\Routing\UrlMapping\XmlRedefinedMapModifier;
 
@@ -25,7 +25,7 @@ use Jelix\Routing\UrlMapping\XmlRedefinedMapModifier;
 class Jelix20
 {
     /**
-     * the object responsible of the results output.
+     * the object responsible on the results output.
      *
      * @var \Jelix\Installer\Reporter\ReporterInterface
      */
@@ -90,6 +90,10 @@ class Jelix20
         $localUrlMapModifier = $this->getLocalUrlMapModifier($urlMapModifier, $localConfigIni);
 
         $this->removeEntrypointsForScripts($localUrlMapModifier, false);
+
+        Directory::create(App::buildPath());
+        file_put_contents(App::buildPath('.dummy'), '');
+
         $this->reporter->message('Migration of local configuration to Jelix 2.0.0 is done', 'notice');
     }
 
