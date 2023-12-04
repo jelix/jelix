@@ -30,21 +30,18 @@ class unconfigureResolverTest extends \Jelix\UnitTests\UnitTestCase
             'testinstall1.enabled' => true,
             'testinstall1.version' => '1.0',
             'testinstall1.dbprofile' => '',
-            'testinstall1.localconf' => false,
         ], true);
         $modStatusTestinstall2 = new ModuleStatus('testinstall2', '/', [
             'testinstall2.installed' => true,
             'testinstall2.enabled' => true,
             'testinstall2.version' => '2.0',
             'testinstall2.dbprofile' => '',
-            'testinstall2.localconf' => false,
         ], true);
         $modStatusTestinstall3 = new ModuleStatus('testinstall3', '/', [
             'testinstall3.installed' => false,
             'testinstall3.enabled' => false,
             'testinstall3.version' => '3.0',
             'testinstall3.dbprofile' => '',
-            'testinstall3.localconf' => false,
         ], true);
 
         $modInfosTestinstall1 = ModuleInfos::load(__DIR__.'/../../../modules/testinstall1');

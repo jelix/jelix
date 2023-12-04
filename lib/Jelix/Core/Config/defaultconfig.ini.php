@@ -43,8 +43,8 @@ chmodDir=0775
 ; ---  don't set the following options to on, except if you know what you do
 
 [modules]
-jelix.enabled=off
-jelix.path="lib:jelix-legacy/core-modules/jelix"
+; filled by the configuration compiler. All values predefined in this
+; section are ignored.
 
 [coordplugins]
 

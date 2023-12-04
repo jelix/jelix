@@ -10,6 +10,8 @@
 
 namespace Jelix\Core;
 
+use Jelix\Core\Infos\FrameworkInfos;
+
 /**
  * Store some application parameter for the current application
  *
@@ -67,6 +69,11 @@ class AppInstance
     protected $_services;
 
     /**
+     * @var FrameworkInfos
+     */
+    protected $_framework;
+
+    /**
      * initialize the application paths.
      *
      * Warning: given paths should be ended by a directory separator.
@@ -88,6 +95,7 @@ class AppInstance
         $this->router = null;
         $this->config = null;
         $this->configAutoloader = null;
+        $this->_framework = null;
     }
 
     /**
@@ -149,6 +157,10 @@ class AppInstance
         if ($this->router) {
             $this->router = clone $this->router;
         }
+
+        if ($this->_framework) {
+            $this->_framework = clone $this->_framework;
+        }
     }
 
     public function setConfig($config)
@@ -162,6 +174,17 @@ class AppInstance
     public function onRestoringAsContext()
     {
         $this->registerAutoload();
+    }
+
+    /**
+     * @return FrameworkInfos
+     */
+    public function getFrameworkInfo()
+    {
+        if ($this->_framework === null) {
+            $this->_framework = FrameworkInfos::load();
+        }
+        return $this->_framework;
     }
 
     /**
@@ -231,6 +254,9 @@ class AppInstance
         }
     }
 
+    /**
+     * @return string[] list of path where to find modules.
+     */
     public function getDeclaredModulesDir()
     {
         return array_keys($this->_modulesDirPath);
@@ -255,6 +281,21 @@ class AppInstance
             $p = realpath($path);
             if ($p == '') {
                 throw new \Exception('Given module dir '.$path.'does not exists');
+            }
+            $this->_modulesPath[] = rtrim($p, '/');
+        }
+    }
+
+    protected function getModulesPathsFromFramework()
+    {
+        $frameworkInfo = $this->getFrameworkInfo();
+        foreach($frameworkInfo->getDeclaredModulePaths() as $name => $path) {
+            $p = \jFile::parseJelixPath($path);
+            if (!file_exists($p)) {
+                throw new \Exception('Error in the configuration file -- The module path, '.$path.', given in the configuration, doesn\'t exist', 10);
+            }
+            if (!is_dir($p)) {
+                throw new \Exception('Error in the configuration file -- The module path, '.$path.', given in the configuration, is not a directory', 10);
             }
             $this->_modulesPath[] = rtrim($p, '/');
         }
@@ -344,9 +385,7 @@ class AppInstance
             $this->_allModulesPath = array();
             $this->_allModulesPath['jelix'] = realpath(__DIR__.'/../../jelix-legacy/core-modules/jelix/').DIRECTORY_SEPARATOR;
 
-            if ($this->config) {
-                $this->declareModulesFromConfig($this->config);
-            }
+            $this->getModulesPathsFromFramework();
 
             foreach ($this->_modulesPath as $modulePath) {
                 $this->_allModulesPath[basename($modulePath)] = $modulePath.DIRECTORY_SEPARATOR;

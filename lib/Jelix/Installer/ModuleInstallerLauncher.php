@@ -9,6 +9,7 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\Version\VersionComparator;
 
 /**
@@ -222,16 +223,13 @@ class ModuleInstallerLauncher
      */
     public function saveModuleStatus()
     {
-        if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL
-            || $this->globalSetup->forLocalConfiguration()
-        ) {
-            $conf = $this->globalSetup->getSystemConfigIni(true);
-            $conf['local'] = $this->globalSetup->getLocalConfigIni();
-        } else {
-            $this->moduleStatus->clearInfos($this->globalSetup->getLocalConfigIni());
-            $conf = $this->globalSetup->getSystemConfigIni();
-        }
-        $this->moduleStatus->saveInfos($conf, ($this->moduleConfigurator ? $this->moduleConfigurator->getDefaultParameters() : array()));
+        $installParameters = ($this->moduleConfigurator ?
+            $this->moduleConfigurator->getDefaultParameters() :
+            array());
+
+        $this->moduleStatus->saveInfos(
+            $this->globalSetup->getFrameworkInfos(),
+            $installParameters);
     }
 
     /**

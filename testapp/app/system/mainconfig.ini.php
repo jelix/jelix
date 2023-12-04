@@ -9,30 +9,6 @@ timeZone="Europe/Paris"
 
 theme=default
 
-[modules]
-
-jelix_tests.enabled=on
-testapp.enabled=on
-testurls.enabled=on
-jsoap.enabled=on
-jacl2.enabled=on
-jacl2db.enabled=on
-jauthdb.enabled=on
-jauth.enabled=on
-jpref.enabled=on
-jminify.enabled=on
-jfeeds.enabled=on
-jsitemap.enabled=on
-news.enabled=on
-articles.enabled=on
-
-jelix.enabled=on
-
-jelix.installparam[wwwfiles]=vhost
-
-jacl2db.installparam[defaultgroups]=on
-jacl2db.installparam[defaultuser]=on
-
 [coordplugins]
 auth=auth.coord.ini.php
 

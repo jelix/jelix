@@ -18,6 +18,27 @@ class fakeConfig {
 
 class configTest extends \Jelix\UnitTests\UnitTestCase {
 
+    public function setUp() : void
+    {
+        jApp::saveContext();
+        jApp::initPaths(__DIR__.'/app/');
+        $tempPath = __DIR__.'/../../../temp/configapp';
+        if (!file_exists($tempPath)) {
+            mkdir($tempPath);
+        }
+        jApp::setTempBasePath(realpath($tempPath).'/');
+        jApp::clearModulesPluginsPath();
+        jApp::declareModulesDir(__DIR__.'/app/modules/');
+
+        //self::initClassicRequest(TESTAPP_URL.'index.php');
+        parent::setUp();
+    }
+
+    function tearDown() : void
+    {
+        jApp::restoreContext();
+    }
+
     /**
      */
     function testReadModuleInfoUnknowPath() {
@@ -86,7 +107,7 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
         $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(array('simple.installed' => 1), $installation['modules']);
         $this->assertEquals(array(
-                                'simple.enabled' => 1,
+                                'simple.enabled' => true,
                                 'simple.dbprofile' => 'default'
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
@@ -102,11 +123,12 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
                                     'simple.dataversion' => ''
                                   ), $installation['modules']);
         $this->assertEquals(array(
-                                'simple.enabled' => 1,
+                                'simple.enabled' => true,
                                 'simple.dbprofile' => 'default',
                                 'simple.version' => '',
                                 'simple.dataversion' => '',
-                                'simple.installed' => 1
+                                'simple.installed' => 1,
+                                'simple.installparam' => [ 'foo' => 'bar']
                                 ), $config->modules);
         $this->assertEquals(array('simple'=>$modulePath), $config->_allModulesPathList);
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -143,6 +165,19 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
     function testReadModuleInfoNewModuleActivatedInstalled() {
+
+        // in the framework.ini, thepackage is disabled. Let's enable it for
+        // this test.
+        $module = new \Jelix\Core\Infos\ModuleStatusDeclaration(
+            'thepackage',
+            array(
+                'enabled' => true
+            ),
+            true
+        );
+        $fmk = \Jelix\Core\App::getFrameworkInfo();
+        $fmk->updateModule($module);
+
         $config = new fakeConfig();
         $config->modules = array('thepackage.enabled'=>1);
         $modulePath = realpath(__DIR__.'/app/modules/package').'/';

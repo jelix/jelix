@@ -54,6 +54,8 @@ class FrameworkInfos
     protected $localModules = array();
 
 
+    protected $allDeclaredModulePaths = array();
+
     /**
      * FrameworkInfos constructor.
      *
@@ -88,14 +90,8 @@ class FrameworkInfos
                 $name = $m[1];
                 $values = $iniFile->getValues($section);
                 if ($values) {
-                    if ($isLocal) {
-                        $module = new ModuleStatusDeclaration($name, $values, false);
-                        $this->addLocalModule($module);
-                    }
-                    else {
-                        $module = new ModuleStatusDeclaration($name, $values);
-                        $this->addModule($module);
-                    }
+                    $module = new ModuleStatusDeclaration($name, $values, !$isLocal);
+                    $this->addModule($module);
                 }
                 continue;
             }
@@ -221,16 +217,74 @@ class FrameworkInfos
 
     public function addModule(ModuleStatusDeclaration $module)
     {
-        $this->modules[$module->name] = $module;
+        if ($module->isNative) {
+            $this->modules[$module->name] = $module;
+        }
+        else {
+            if (!$this->iniLocalFile) {
+                throw new \UnexpectedValueException('no local framework ini file has been given to FrameworkInfos.Cannot declare modules installed locally.');
+            }
+            $this->localModules[$module->name] = $module;
+        }
+        $path = $module->path;
+        if ($path != '') {
+            $this->allDeclaredModulePaths[$module->name] = $path;
+        }
     }
 
-    public function addLocalModule(ModuleStatusDeclaration $module)
+    public function updateModule(ModuleStatusDeclaration $module)
     {
-        if (!$this->iniLocalFile) {
-            throw new \UnexpectedValueException('no local framework ini file has been given to FrameworkInfos');
+        if ($module->isNative) {
+            $this->modules[$module->name] = $module;
+            unset($this->localModules[$module->name]);
         }
-        $this->localModules[$module->name] = $module;
+        else {
+            if (!$this->iniLocalFile) {
+                throw new \UnexpectedValueException('no local framework ini file has been given to FrameworkInfos.Cannot declare modules installed locally.');
+            }
+            $this->localModules[$module->name] = $module;
+        }
+        $path = $module->path;
+        if ($path != '') {
+            $this->allDeclaredModulePaths[$module->name] = $path;
+        }
+        else {
+            unset($this->allDeclaredModulePaths[$module->name]);
+        }
     }
+
+    /**
+     * @param string $name
+     *
+     * @return null|ModuleStatusDeclaration
+     */
+    public function getModule($name)
+    {
+        $nativeModule = null;
+        if (isset($this->modules[$name])) {
+            $nativeModule = $this->modules[$name];
+        }
+
+        if (isset($this->localModules[$name])) {
+            $localModule = $this->localModules[$name];
+            if (!$nativeModule) {
+                return $localModule;
+            }
+
+            $combinedValues = array_merge(
+                $nativeModule->getValuesForIni(),
+                $localModule->getValuesForIni()
+            );
+
+            return new ModuleStatusDeclaration(
+                $name,
+                $combinedValues,
+                $nativeModule->isEnabled
+            );
+        }
+        return null;
+    }
+
 
     public function removeModule($name)
     {
@@ -239,6 +293,7 @@ class FrameworkInfos
         if ($this->iniLocalFile) {
             $this->iniLocalFile->removeSection('module:'.$name);
         }
+        unset($this->allDeclaredModulePaths[$name]);
     }
 
     /**
@@ -247,6 +302,11 @@ class FrameworkInfos
     public function getModules()
     {
         return array_merge($this->modules, $this->localModules);
+    }
+
+    public function getDeclaredModulePaths()
+    {
+        return $this->allDeclaredModulePaths;
     }
 
     public function save()
@@ -319,22 +379,8 @@ class FrameworkInfos
     protected function updateModuleSection(IniModifier $ini, ModuleStatusDeclaration $module)
     {
         $sectionName = 'module:' . $module->name;
-        $values = array(
-            'enabled' => $module->isEnabled,
-        );
+        $values = $module->getValuesForIni();
         $previous = $ini->getValues($sectionName);
-
-        if ($module->parameters) {
-            $values['installparam'] = ModuleStatusDeclaration::serializeParametersAsArray($module->parameters);
-        }
-
-        if ($module->skipInstaller) {
-            $values['skipinstaller'] = true;
-        }
-
-        if ($module->configurationScope == ModuleStatusDeclaration::CONFIG_SCOPE_LOCAL) {
-            $values['localconf'] = true;
-        }
 
         // if the section is already there, we should not do a setValues, else
         // the file will be marked as "modified" and will be rewritten.

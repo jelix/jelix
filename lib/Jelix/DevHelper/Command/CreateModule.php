@@ -12,7 +12,8 @@
 
 namespace Jelix\DevHelper\Command;
 
-use Jelix\Core\App as App;
+use Jelix\Core\App;
+use Jelix\Core\Config\AppConfig;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -163,7 +164,9 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
             $this->createFile($path.'urls.xml', 'module/urls.xml.tpl', array());
         }
 
-        $iniDefault = new \Jelix\IniFile\MultiIniModifier(\Jelix\Core\Config\AppConfig::getDefaultConfigFile(), App::mainConfigFile());
+        $iniDefault = new \Jelix\IniFile\MultiIniModifier(
+            AppConfig::getDefaultConfigFile(),
+            App::mainConfigFile());
         $urlsFile = App::appSystemPath($iniDefault->getValue('significantFile', 'urlengine'));
         $xmlMap = new \Jelix\Routing\UrlMapping\XmlMapModifier($urlsFile, true);
 
@@ -189,7 +192,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
         // Configure the module. We don't launch the configurator,
         // as there is nothing to configure for the module.
         // just enabling it.
-        \Jelix\Installer\Configurator::setModuleAsConfigured($module, $iniDefault);
+        \Jelix\Installer\Configurator::setModuleAsConfigured($module);
         $iniDefault->save();
 
         // Install the module into the application instance

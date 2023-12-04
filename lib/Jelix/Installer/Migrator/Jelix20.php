@@ -72,9 +72,12 @@ class Jelix20
     {
         $this->reporter->message('Start migration to Jelix 2.0.0', 'notice');
         $mainConfigIni = new IniModifier(App::appSystemPath('mainconfig.ini.php'));
+        $frameworkIni = new IniModifier(App::appSystemPath('framework.ini.php'));
         $urlMapModifier = $this->getUrlMapModifier($mainConfigIni);
 
         $this->removeEntrypointsForScripts($urlMapModifier, true);
+
+        $this->moveModulesStatusToFrameworkIni($mainConfigIni, $frameworkIni);
 
         $this->reporter->message('Migration to Jelix 2.0.0 is done', 'notice');
 
@@ -85,11 +88,14 @@ class Jelix20
     {
         $localConfigIni = new IniModifier(App::varConfigPath('localconfig.ini.php'));
         $mainConfigIni = new IniModifier(App::appSystemPath('mainconfig.ini.php'));
+        $frameworkIni = new IniModifier(App::varConfigPath('localframework.ini.php'));
 
         $urlMapModifier = $this->getUrlMapModifier($mainConfigIni);
         $localUrlMapModifier = $this->getLocalUrlMapModifier($urlMapModifier, $localConfigIni);
 
         $this->removeEntrypointsForScripts($localUrlMapModifier, false);
+
+        $this->moveModulesStatusToFrameworkIni($localConfigIni, $frameworkIni);
 
         Directory::create(App::buildPath());
         file_put_contents(App::buildPath('.dummy'), '');
@@ -158,5 +164,24 @@ class Jelix20
         $frameworkInfos->save();
     }
 
+    public function moveModulesStatusToFrameworkIni(IniModifier $configIni, IniModifier $frameworkIni)
+    {
+        foreach($configIni->getValues('modules') as $key => $value)
+        {
+            if (!preg_match('/^([a-zA-Z_0-9]+)\\.(.*)$/', $key, $m)) {
+                continue;
+            }
+            $name = $m[1];
+            $key = $m[2];
 
+            if ($key == 'localconf') { // deprecated parameter
+                continue;
+            }
+            $frameworkIni->setValue($key, $value, 'module:'.$name);
+        }
+        $frameworkIni->save();
+
+        $configIni->removeSection('modules');
+        $configIni->save();
+    }
 }

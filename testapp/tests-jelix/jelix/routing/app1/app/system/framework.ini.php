@@ -6,3 +6,5 @@ config="index/config.ini.php"
 config="foo/config.ini.php"
 type=classic
 
+[module:aaa]
+enabled=on

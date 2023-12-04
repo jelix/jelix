@@ -1,9 +1,5 @@
 ;---
 
-[modules]
-jelix.enabled = on
-aaa.enabled = on
-
 [urlengine]
 multiview = off
 scriptNameServerVariable =

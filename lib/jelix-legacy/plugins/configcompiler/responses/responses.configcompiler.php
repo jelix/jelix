@@ -33,8 +33,8 @@ class responsesConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPlugin
     /**
      * get all physical paths of responses file.
      *
-     * @param mixed $config
-     * @param mixed $list
+     * @param object $config the configuration object
+     * @param string $list  name of the list to read into the configuration
      */
     protected function _initResponsesPath($config, $list)
     {

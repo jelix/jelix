@@ -14,14 +14,6 @@ theme = default
 ; Let it empty to use $_SERVER['SERVER_NAME'] value instead.
 domainName =
 
-
-[modules]
-jelix.enabled = on
-jacl2db.enabled = off
-jauth.enabled = off
-jauthdb.enabled = off
-
-
 [coordplugins]
 ;name = file_ini_name or var:file_ini_name or 1
 

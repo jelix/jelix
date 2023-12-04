@@ -332,8 +332,9 @@ class Compiler
             $installation['modules'] = array();
         }
 
-        App::declareModulesFromConfig($config);
-
+        // _allBasePath is used for:
+        // - check time of directories to check if the config cache should be rebuilt
+        // FIXME WARMUP: to remove?
         if ($config->compilation['checkCacheFiletime']) {
             $config->_allBasePath = App::getDeclaredModulesDir();
         } else {
@@ -342,6 +343,7 @@ class Compiler
 
         $modules = array();
         $list = App::getAllModulesPath();
+        $config->modules = [];
         foreach ($list as $k => $path) {
             $module = $this->_readModuleInfo($config, $installationMode, $path, $installation);
             if ($module !== null) {
@@ -366,6 +368,9 @@ class Compiler
         if (!$moduleInfo->exists()) {
             return null;
         }
+
+        $declaredModules = App::getFrameworkInfo()->getModules();
+
         $f = $moduleInfo->name;
         if (!isset($installation['modules'][$f.'.installed'])) {
             $installation['modules'][$f.'.installed'] = 0;
@@ -373,18 +378,21 @@ class Compiler
 
         if ($f == 'jelix') {
             $config->modules['jelix.enabled'] = true; // the jelix module should always be public
-        } else {
-            if (!isset($config->modules[$f.'.enabled'])) {
-                // no given access in defaultconfig and ep config
-                $config->modules[$f.'.enabled'] = 0;
-            } elseif (!$installation['modules'][$f.'.installed']) {
+            $moduleStatus = $declaredModules[$f] ?? null;
+        } else if (isset($declaredModules[$f])) {
+            $moduleStatus = $declaredModules[$f];
+            $config->modules[$f.'.enabled'] = $moduleStatus->isEnabled;
+            if (!$installation['modules'][$f.'.installed']) {
                 // module is not installed.
-                // outside installation mode, we force the access to 0
+                // outside installation context, we force the access to 0
                 // so the module is unusable until it is installed
                 if (!$installationMode) {
                     $config->modules[$f.'.enabled'] = false;
                 }
             }
+        }
+        else {
+            $config->modules[$f.'.enabled'] = false;
         }
 
         if (!$config->modules[$f.'.enabled']) {
@@ -414,12 +422,19 @@ class Compiler
             $config->modules[$f.'.dataversion'] = $installation['modules'][$f.'.dataversion'];
             $config->modules[$f.'.installed'] = $installation['modules'][$f.'.installed'];
 
+            if ($moduleStatus) {
+                if ($moduleStatus->parameters) {
+                    $config->modules[$f.'.installparam'] = $moduleStatus->parameters;
+                }
+                if ($moduleStatus->skipInstaller) {
+                    $config->modules[$f.'.skipinstaller'] = 'skip';
+                }
+            }
+
             $config->_allModulesPathList[$f] = $path;
         }
 
-        if ($config->modules[$f.'.enabled']) {
-            $config->_modulesPathList[$f] = $path;
-        }
+        $config->_modulesPathList[$f] = $path;
 
         return $moduleInfo;
     }

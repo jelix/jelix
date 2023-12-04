@@ -11,6 +11,7 @@
 namespace Jelix\Core;
 
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Infos\FrameworkInfos;
 
 /**
  * @method static void setConfig($config)
@@ -30,6 +31,7 @@ use Jelix\Core\Config\AppConfig;
  * @method static void pushCurrentModule($module)
  * @method static string popCurrentModule()
  * @method static string getCurrentModule()
+ * @method static FrameworkInfos getFrameworkInfo()
  * @method static \Jelix\Core\Services services()
  * @method static reloadServices()
  */
