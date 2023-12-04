@@ -11,7 +11,9 @@
 
 namespace Jelix\Installer\Migrator;
 
+use \jApp as App;
 use Jelix\Core\Config\AppConfig;
+use Jelix\IniFile\IniModifier;
 
 class Jelix19
 {
@@ -37,17 +39,87 @@ class Jelix19
     {
         $this->reporter->message('Start migration to Jelix 1.9.0', 'notice');
 
+        // migration of values of the 'modules' section to framework.ini.php and localframework.ini.php
+        $mainConfigIni = new IniModifier(App::appSystemPath('mainconfig.ini.php'));
+        $frameworkIni = new IniModifier(App::appSystemPath('framework.ini.php'));
+        $localFrameworkIni = new IniModifier(App::varConfigPath('localframework.ini.php'));
+        $this->moveModulesStatusToFrameworkIni($mainConfigIni, $frameworkIni, $localFrameworkIni);
+
         $this->reporter->message('Migration to Jelix 1.9.0 is done', 'notice');
     }
 
     public function localMigrate()
     {
-        \Jelix\FileUtilities\Directory::create(\jApp::varLibPath());
-        file_put_contents(\jApp::varLibPath('.dummy'), '');
+        $this->reporter->message('Start migration to Jelix 1.9.0', 'notice');
+        // create the var/lib/ directory
+        if (!file_exists(\jApp::varLibPath())) {
+            $this->reporter->message('Create new directory var/lib/', 'notice');
+            \Jelix\FileUtilities\Directory::create(\jApp::varLibPath());
+            file_put_contents(\jApp::varLibPath('.dummy'), '');
+        }
+
+        // migration of values of the 'modules' section to framework.ini.php and localframework.ini.php
+        $localConfigIni = new IniModifier(App::varConfigPath('localconfig.ini.php'));
+        $frameworkIni = new IniModifier(App::appSystemPath('framework.ini.php'));
+        $localFrameworkIni = new IniModifier(App::varConfigPath('localframework.ini.php'));
+
+        $this->moveModulesStatusToFrameworkIni($localConfigIni, $frameworkIni, $localFrameworkIni, true);
 
         $this->reporter->message('Migration of local configuration to Jelix 1.7.0 is done', 'notice');
     }
 
+
+    public function moveModulesStatusToFrameworkIni(
+        IniModifier $configIni,
+        IniModifier $frameworkIni,
+        IniModifier $localFrameworkIni,
+        $localMode = false
+    )
+    {
+        $modulesInfo = array();
+
+        foreach($configIni->getValues('modules') as $key => $value)
+        {
+            if (!preg_match('/^([a-zA-Z_0-9]+)\\.(.*)$/', $key, $m)) {
+                continue;
+            }
+            $name = $m[1];
+            if (!isset($modulesInfo[$name])) {
+                $modulesInfo[$name] = array();
+            }
+            $key = $m[2];
+            $modulesInfo[$name][$key] = $value;
+        }
+
+        foreach($modulesInfo as $module => $values) {
+            if (isset($values['localconf'])) {
+                $localConf = $values['localconf'];
+                unset($values['localconf']);
+                if ($localConf) {
+                    $this->reporter->message('Move declaration module of '.$module. ' to localframework.ini.php', 'notice');
+                    $localFrameworkIni->setValues($values, 'module:'.$module);
+                }
+                else {
+                    $this->reporter->message('Move declaration module of '.$module. ' to framework.ini.php', 'notice');
+                    $frameworkIni->setValues($values, 'module:'.$module);
+                }
+            }
+            else if ($localMode) {
+                $this->reporter->message('Move declaration module of '.$module. ' to localframework.ini.php', 'notice');
+                $localFrameworkIni->setValues($values, 'module:'.$module);
+            }
+            else {
+                $this->reporter->message('Move declaration module of '.$module. ' to framework.ini.php', 'notice');
+                $frameworkIni->setValues($values, 'module:'.$module);
+            }
+        }
+
+        $localFrameworkIni->save();
+        $frameworkIni->save();
+
+        $configIni->removeSection('modules');
+        $configIni->save();
+    }
 
     protected function error($msg)
     {

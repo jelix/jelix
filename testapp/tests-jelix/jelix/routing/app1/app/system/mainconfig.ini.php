@@ -3,10 +3,6 @@
 disableInstallers = on
 ;enableAllModules = on
 
-[modules]
-jelix.enabled = on
-aaa.enabled = on
-
 [urlengine]
 enableParser = on
 multiview = off

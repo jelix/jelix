@@ -36,6 +36,10 @@ New features
   You can set a directory without a namespace. This directory will be a root
   for namespaces that are not matched by other rules.
 
+- configuration parameters for modules (e.g. all parameters into th `[modules]` 
+  section like `<themodule>.enabled` and so on) are moved from the main 
+  configuration to framework.ini.php.
+
 **Templates**
 
 Castor syntax v2 is now supported in template files having the `ctpl` extension.

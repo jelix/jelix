@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2015-2025 Laurent Jouanneau
+ * @copyright  2015-2026 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -10,7 +10,11 @@
 use Jelix\Core\Infos\FrameworkInfos;
 use Jelix\Core\Config;
 
-
+/**
+ * Store some application parameter for the current application
+ *
+ * @internal
+ */
 class jAppInstance
 {
     public $tempBasePath = '';
@@ -97,8 +101,21 @@ class jAppInstance
         $this->coord = null;
         $this->config = null;
         $this->configAutoloader = null;
+        $this->_framework = null;
     }
 
+    /**
+     * initialize the application paths.
+     *
+     * Warning: given paths should be ended by a directory separator.
+     *
+     * @param string $appPath    application directory
+     * @param string $wwwPath    www directory
+     * @param string $varPath    var directory
+     * @param string $logPath    log directory
+     * @param string $configPath config directory
+     * @param string $scriptPath scripts directory
+     */
     public function setPaths(
         $appPath,
         $wwwPath = null,
@@ -115,6 +132,7 @@ class jAppInstance
         $this->scriptPath = (is_null($scriptPath) ? $appPath.'scripts/' : $scriptPath);
         $this->applicationInitFile = $appPath.'application.init.php';
         $this->varLibPath = $this->varPath.'lib/';
+        $this->_framework = null;
     }
 
     public function __destruct()
@@ -149,6 +167,10 @@ class jAppInstance
         }
         if ($this->coord) {
             $this->coord = clone $this->coord;
+        }
+
+        if ($this->_framework) {
+            $this->_framework = clone $this->_framework;
         }
     }
 
@@ -245,6 +267,9 @@ class jAppInstance
         }
     }
 
+    /**
+     * @return string[] list of path where to find modules.
+     */
     public function getDeclaredModulesDir()
     {
         return array_keys($this->_modulesDirPath);
@@ -275,29 +300,23 @@ class jAppInstance
     }
 
     /**
-     * Read all modules path declared into the configuration.
+     * Fills _modulesPath with the path of modules declared into the framework.ini.php file
      *
-     * Method reserved to the configuration compiler.
-     *
-     * @param object $config
+     * @return void
+     * @throws Exception
      */
-    public function declareModulesFromConfig($config)
+    protected function loadSpecifiedModulesPaths()
     {
-        // -- read all *.path into [modules]
-        if (property_exists($config, 'modules')) {
-            foreach ($config->modules as $key => $path) {
-                if (!preg_match('/^([a-zA-Z_0-9]+)\\.path$/', $key, $m) || $path == '') {
-                    continue;
-                }
-                $p = jFile::parseJelixPath($path);
-                if (!file_exists($p)) {
-                    throw new Exception('Error in the configuration file -- The path, '.$path.', given in the configuration, doesn\'t exist', 10);
-                }
-                if (!is_dir($p)) {
-                    throw new Exception('Error in the configuration file -- The path, '.$path.', given in the configuration, is not a directory', 10);
-                }
-                $this->_modulesPath[] = rtrim($p, '/');
+        $frameworkInfo = $this->getFrameworkInfo();
+        foreach($frameworkInfo->getSpecifiedModulePaths() as $module => $path) {
+            $p = \jFile::parseJelixPath($path);
+            if (!file_exists($p)) {
+                throw new \Exception('Error in the configuration file -- The module path, '.$path.', given in the configuration, doesn\'t exist', 10);
             }
+            if (!is_dir($p)) {
+                throw new \Exception('Error in the configuration file -- The module path, '.$path.', given in the configuration, is not a directory', 10);
+            }
+            $this->_modulesPath[] = rtrim($p, '/');
         }
     }
 
@@ -348,7 +367,7 @@ class jAppInstance
     }
 
     /**
-     * returns all modules path, even those are not used by the application.
+     * returns all module paths, even those are not used by the application.
      *
      * @return string[] keys are module name, values are paths
      */
@@ -356,10 +375,9 @@ class jAppInstance
     {
         if ($this->_allModulesPath === null) {
             $this->_allModulesPath = array();
+            $this->_allModulesPath['jelix'] = realpath(__DIR__.'/../core-modules/jelix/').DIRECTORY_SEPARATOR;
 
-            if ($this->config) {
-                $this->declareModulesFromConfig($this->config);
-            }
+            $this->loadSpecifiedModulesPaths();
 
             foreach ($this->_modulesPath as $modulePath) {
                 $this->_allModulesPath[basename($modulePath)] = $modulePath.DIRECTORY_SEPARATOR;

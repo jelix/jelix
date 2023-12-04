@@ -9,6 +9,7 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\Infos\FrameworkInfos;
 use Jelix\Core\Infos\ModuleInfos;
 use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\Dependencies\Item;
@@ -126,7 +127,28 @@ class ModuleStatus
         return $this->name;
     }
 
-    public function saveInfos(IniModifierInterface $configIni, $defaultParameters = array())
+    public function saveInfos(FrameworkInfos $fmkInfos, $defaultParameters = array())
+    {
+        $module = $fmkInfos->getModule($this->name);
+        $values = [
+            'enabled' => $this->isEnabled,
+            'dbprofile' => ($this->dbProfile != 'default' ? $this->dbProfile : ''),
+            'installparam' => ModuleStatusDeclaration::serializeParametersAsArray($this->parameters, $defaultParameters),
+            'skipinstaller' => ($this->skipInstaller ? 'skip' : ''),
+            'path' => ($module?$module->path:'')
+        ];
+
+        $isNativeModule = $this->configurationScope == self::CONFIG_SCOPE_APP;
+        $newModule = new ModuleStatusDeclaration($this->name, $values, $isNativeModule);
+        if ($module) {
+            $fmkInfos->updateModule($newModule);
+        }
+        else {
+            $fmkInfos->addModule($newModule);
+        }
+    }
+
+    public function registerToUninstall(IniModifierInterface $configIni)
     {
         $previous = $configIni->getValue($this->name.'.enabled', 'modules');
         if ($previous === null || $previous != $this->isEnabled) {
@@ -134,14 +156,8 @@ class ModuleStatus
         }
 
         $this->setConfigInfo($configIni, 'dbprofile', ($this->dbProfile != 'default' ? $this->dbProfile : ''), '');
-        $this->setConfigInfo($configIni, 'installparam', ModuleStatusDeclaration::serializeParametersAsArray($this->parameters, $defaultParameters), '');
+        $this->setConfigInfo($configIni, 'installparam', ModuleStatusDeclaration::serializeParametersAsArray($this->parameters), '');
         $this->setConfigInfo($configIni, 'skipinstaller', ($this->skipInstaller ? 'skip' : ''), '');
-        $this->setConfigInfo(
-            $configIni,
-            'localconf',
-            ($this->configurationScope == self::CONFIG_SCOPE_LOCAL ? self::CONFIG_SCOPE_LOCAL : 0),
-            self::CONFIG_SCOPE_APP
-        );
     }
 
     /**

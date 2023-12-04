@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2025 Laurent Jouanneau
+ * @copyright   2008-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -9,7 +9,9 @@
 
 namespace Jelix\Installer;
 
+use \jApp as App;
 use Jelix\Core\Config\Compiler;
+use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\Core\Profiles;
 use Jelix\Dependencies\ItemException;
 use Jelix\IniFile\IniModifierInterface;
@@ -134,7 +136,10 @@ class Configurator
 
     public static function setModuleAsConfigured($moduleName, IniModifierInterface $configIni)
     {
-        $configIni->setValue($moduleName.'.enabled', true, 'modules');
+        $module = new ModuleStatusDeclaration($moduleName, ['enabled' => true], true);
+        $framework = App::getFrameworkInfo();
+        $framework->addModule($module);
+        $framework->save();
     }
 
     /**
