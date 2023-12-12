@@ -1,7 +1,7 @@
 Changes into Jelix 1.8
 ======================
 
-Next
+1.8.5
 -----
 
 - jacl2db_admin: add links to each user profile into the users list
