@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jacl2@modules.jelix.org" name="jacl2" createdate="2012-09-18">
-        <version date="2023-11-23 16:01">1.8.5-pre</version>
+        <version date="2023-12-12 15:53">1.8.5</version>
         <label lang="en_US">jAcl2</label>
         <description lang="en_US">Main module for acl</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
@@ -10,7 +10,7 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="1.7.0-beta.4" maxversion="1.8.5"/>
+        <jelix minversion="1.7.0-beta.4" maxversion="1.8.6"/>
     </dependencies>
     <autoload>
         <class name="jAcl2" file="classes/jAcl2.class.php"/>
