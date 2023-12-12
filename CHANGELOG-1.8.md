@@ -7,7 +7,8 @@ Next
 - jacl2db_admin: add links to each user profile into the users list
 - The application version is available into `jApp::config()->appVersion`
   and is set by default to the version stored into the `project.xml` file.
-
+- new configuration parameter `sslmode` for Postgresql profiles. Possible
+  values are `disable`, `allow`, `prefer`, `require`.
 
 1.8.4
 -----
