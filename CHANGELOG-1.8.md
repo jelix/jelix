@@ -1,6 +1,14 @@
 Changes into Jelix 1.8
 ======================
 
+Next
+-----
+
+- jacl2db_admin: add links to each user profile into the users list
+- The application version is available into `jApp::config()->appVersion`
+  and is set by default to the version stored into the `project.xml` file.
+
+
 1.8.4
 -----
 
