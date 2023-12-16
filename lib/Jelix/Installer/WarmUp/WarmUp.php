@@ -12,9 +12,12 @@
 namespace Jelix\Installer\WarmUp;
 
 
-use Jelix\Installer\GlobalSetup;
+use Jelix\Core\AppInstance;
 use Jelix\Locale\LocaleWarmUp;
 
+/**
+ * @internal
+ */
 class WarmUp
 {
 
@@ -23,10 +26,13 @@ class WarmUp
      */
     protected $warmUpLaunchers = array();
 
-    public function __construct(GlobalSetup $globalSetup, $buildDirectory)
+    /**
+     * @param AppInstance $app
+     * @param $buildDirectory
+     */
+    public function __construct(AppInstance $app)
     {
-
-        $this->warmUpLaunchers[] = new LocaleWarmUp($globalSetup, $buildDirectory);
+        $this->warmUpLaunchers[] = new LocaleWarmUp($app);
     }
 
     public function launch()

@@ -129,7 +129,7 @@ class App
 
     public static function buildPath($file = '')
     {
-        return self::$_currentApp->varPath.'build/'.$file;
+        return self::$_currentApp->buildPath.$file;
     }
 
     public static function wwwPath($file = '')

@@ -163,7 +163,7 @@ class Installer
             Directory::create($buildPath);
         }
 
-        $warmUp = new WarmUp($this->globalSetup, $buildPath);
+        $warmUp = new WarmUp(App::app());
         $warmUp->launch();
 
         $this->endMessage();

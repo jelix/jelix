@@ -35,8 +35,6 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
     public $messageKey = '';
     public $locale = '';
 
-    protected $_where;
-
     public function __construct($sel, $locale = null)
     {
         if ($locale === null) {
@@ -46,14 +44,13 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
             $locale = Locale::langToLocale($locale);
         }
         $this->locale = $locale;
-        $this->_suffix = '.UTF-8.properties';
+        $this->_suffix = '.properties';
 
         if ($this->_scan_sel($sel)) {
             if ($this->module == '') {
                 $this->module = App::getCurrentModule();
             }
             $this->_createPath();
-            $this->_createCachePath();
         } else {
             throw new \Jelix\Core\Selector\Exception('jelix~errors.selector.invalid.syntax', array($sel, $this->type));
         }
@@ -87,21 +84,7 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
             throw new \Jelix\Core\Selector\Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
 
-        $this->_cacheSuffix = '.'.$this->locale.'.UTF-8.php';
-
-        $resolutionInCache = App::config()->compilation['sourceFileResolutionInCache'];
-
-        if ($resolutionInCache) {
-            $resolutionPath = App::tempPath('resolved/'.$this->module.'/locales/' . $this->locale.'/'.$this->resource.$this->_suffix);
-            $resolutionCachePath = 'resolved/';
-            if (file_exists($resolutionPath)) {
-                $this->_path = $resolutionPath;
-                $this->_where = $resolutionCachePath;
-
-                return;
-            }
-            \jFile::createDir(dirname($resolutionPath));
-        }
+        $this->_path = App::getModulePath($this->module).'locales/'.$this->locale.'/'.$this->resource.$this->_suffix;
 
         if (!$this->findPath($this->locale)) {
             $locales = Locale::getAlternativeLocales($this->locale, App::config());
@@ -118,77 +101,21 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
                 // try to retrieve the same message as the one we use for the exception below,
                 // and if it is this message, it means that the error message doesn't exist
                 // in the specific lang, so we retrieve it in en_US language
-                if ($this->toString() == 'jelix~errors.selector.invalid.target') {
-                    $l = 'en_US';
-                } else {
-                    $l = null;
-                }
-
-                throw new \jExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'locale'), 1, $l);
+                throw new Exception('(212)No locale file found for the given locale key "'.$this->toString()
+                    .'" in any languages', 212);
             }
-        }
-        if ($resolutionInCache) {
-            symlink($this->_path, $resolutionPath);
-            $this->_path = $resolutionPath;
-            $this->_where = $resolutionCachePath;
         }
     }
 
     protected function findPath($locale)
     {
-        // check if the locale has been overloaded in var/
-        $overloadedPath = App::varPath('overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
-        if (is_readable($overloadedPath)) {
-            $this->_path = $overloadedPath;
-            $this->_where = 'var/overloaded/';
-
-            return true;
-        }
-
-        // check if the locale is available in the locales directory in var/
-        $localesPath = App::varPath('locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
-        if (is_readable($localesPath)) {
-            $this->_path = $localesPath;
-            $this->_where = 'var/locales/';
-
-            return true;
-        }
-
-        // check if the locale has been overloaded in app/
-        $overloadedPath = App::appPath('app/overloads/'.$this->module.'/locales/'.$locale.'/'.$this->resource.$this->_suffix);
-        if (is_readable($overloadedPath)) {
-            $this->_path = $overloadedPath;
-            $this->_where = 'app/overloaded/';
-
-            return true;
-        }
-
-        // check if the locale is available in the locales directory in app/
-        $localesPath = App::appPath('app/locales/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix);
-        if (is_readable($localesPath)) {
-            $this->_path = $localesPath;
-            $this->_where = 'app/locales/';
-
-            return true;
-        }
-
-        // else check for the original locale file in the module
-        $path = App::getModulePath($this->module).'locales/'.$locale.'/'.$this->resource.$this->_suffix;
-        if (is_readable($path)) {
-            $this->_where = 'modules/';
-            $this->_path = $path;
-
-            return true;
-        }
-
-        return false;
+        $this->_cachePath = LocaleCompiler::getCacheFileName($this->module, $locale, $this->resource.$this->_suffix, App::buildPath());
+        return (is_readable($this->_cachePath));
     }
 
     protected function _createCachePath()
     {
-        // don't share the same cache for all the possible dirs
-        // in case of overload removal
-        $this->_cachePath = App::tempPath('compiled/locales/'.$this->_where.$this->module.'/'.$this->resource.$this->_cacheSuffix);
+        // nothing
     }
 
     public function toString($full = false)

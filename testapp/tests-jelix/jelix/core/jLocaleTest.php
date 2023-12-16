@@ -115,7 +115,7 @@ class jLocaleTest extends \Jelix\UnitTests\UnitTestCase {
         }catch(jException $e) {
             self::fail('wrong exception type');
         }catch(Exception $e) {
-            $this->assertEquals('(212)No locale file found for the given locale key "tests1.first.locale" in any other default languages', $e->getMessage());
+            $this->assertEquals('(212)No locale file found for the given locale key "jelix_tests~tests1.first.locale" in any languages', $e->getMessage());
         }
         jApp::config()->fallbackLocale = 'en_US';
     }
@@ -173,7 +173,7 @@ class jLocaleTest extends \Jelix\UnitTests\UnitTestCase {
         }catch(jException $e){
             self::fail('Bad exception when trying to get tests3.first.locale');
         }catch(Exception $e){
-            $this->assertEquals('(212)No locale file found for the given locale key "jelix_tests~tests3.first.locale" in any other default languages', $e->getMessage());
+            $this->assertEquals('(212)No locale file found for the given locale key "jelix_tests~tests3.first.locale" in any languages', $e->getMessage());
         }
     }
 

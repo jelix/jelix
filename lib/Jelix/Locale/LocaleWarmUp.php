@@ -9,30 +9,31 @@
 
 namespace Jelix\Locale;
 
-use Jelix\Installer\GlobalSetup;
+use Jelix\Core\AppInstance;
 use Jelix\Installer\WarmUp\WarmUpLauncherInterface;
 
 /**
- *
+ * @internal
  */
 class LocaleWarmUp implements WarmUpLauncherInterface
 {
-    protected $buildDirectory;
-    protected $globalSetup;
+    /**
+     * @var AppInstance
+     */
+    protected $app;
 
-    public function __construct(GlobalSetup $globalSetup, $buildDirectory)
+    public function __construct(AppInstance $app)
     {
-        $this->buildDirectory = $buildDirectory;
-        $this->globalSetup = $globalSetup;
+        $this->app = $app;
     }
 
     public function launch()
     {
-        $modules = $this->globalSetup->getMainEntryPoint()->getConfigObj()->_modulesPathList;
+        $modules = $this->app->config->_modulesPathList;
 
-        $compiler = new LocaleCompiler($this->buildDirectory);
+        $compiler = new LocaleCompiler($this->app->appPath, $this->app->varPath, $this->app->buildPath);
         foreach($modules as $name => $path) {
-            $compiler->compile($name, $path);
+            $compiler->compileModule($name, $path);
         }
     }
 }

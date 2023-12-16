@@ -1,5 +1,10 @@
 <?xml version="1.0"?>
-<phpunit bootstrap="bootstrap.php">
+<phpunit bootstrap="bootstrap.php" failOnWarning="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+>
   <testsuites>
     <testsuite name="Jelix Core">
       <directory>jelix/core/</directory>
