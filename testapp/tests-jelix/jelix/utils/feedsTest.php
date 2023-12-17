@@ -1,6 +1,6 @@
 <?php
 
-class feedReaderTest extends \Jelix\UnitTests\UnitTestCase
+class feedsTest extends \Jelix\UnitTests\UnitTestCase
 {
     public static function setUpBeforeClass() : void {
         self::initJelixConfig();

@@ -19,7 +19,7 @@ class testIFRForm extends jFormsBase {
     }
 }
 
-class jforms_init_from_request extends \PHPUnit\Framework\TestCase {
+class jforms_init_from_requestTest extends \PHPUnit\Framework\TestCase {
     protected $form;
     protected $container;
     function setUp() : void {

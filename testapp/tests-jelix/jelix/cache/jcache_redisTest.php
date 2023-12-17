@@ -19,7 +19,7 @@ require_once(__DIR__. '/../../../vendor/jelix/php-redis/lib/Redis.php');
 * @subpackage  jelix_tests module
 */
 
-class jCache_RedisTest extends jCacheAPITest {
+class jCache_RedisTest extends AbstractCacheAPI {
 
     protected $redis;
 

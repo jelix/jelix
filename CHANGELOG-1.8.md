@@ -4,9 +4,11 @@ Changes into Jelix 1.8
 1.8.6-pre
 ----------
 
+- Check compatibility with PHP 8.3: all seems ok
 - ldap driver for jAuth: remove deprecation notice with PHP 8.3, about parameters on ldap_connect
 - ldap driver for jAuth: support of TLS mode. Configuration parameter `tlsMode`, which can have values
   `""` (empty, no secured connection), `starttls` or `ldaps` (`ldaps` by default if port 636)
+- Tests: upgrade PHPUnit to 9.6 
 
 1.8.5
 -----

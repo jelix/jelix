@@ -19,7 +19,7 @@ class UTParseUrlsIncluder extends jIncluder {
 }
 
 
-class UTParseUrls extends \Jelix\UnitTests\UnitTestCase {
+class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
 
     function setUp()  : void {
         jApp::saveContext();
