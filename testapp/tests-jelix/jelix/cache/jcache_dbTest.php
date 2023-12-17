@@ -18,7 +18,7 @@ require_once(__DIR__.'/jcache.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class jCache_DbTest extends jCacheAPITest {
+class jCache_DbTest extends AbstractCacheAPI {
 
     public function setUp () : void {
         $this->profile = 'usingdb';

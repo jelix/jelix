@@ -18,7 +18,7 @@ class wwwCtrl extends jController
     {
         $module = $this->param('targetmodule');
 
-        if (!jApp::isModuleEnabled($module) || !jApp::config()->modules[$module.'.enabled']) {
+        if (!jApp::isModuleEnabled($module)) {
             throw new jException('jelix~errors.module.untrusted', $module);
         }
 

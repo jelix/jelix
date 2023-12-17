@@ -14,7 +14,7 @@
  * Tests on user and group management in jAcl
  * CAREFULL ! DON'T CHANGE THE ORDER OF METHODS
  */
-class UTjaclusergroup extends \Jelix\UnitTests\UnitTestCaseDb {
+class jacl_users_and_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     
     protected static $groups;
     protected static $defaultGroupId;

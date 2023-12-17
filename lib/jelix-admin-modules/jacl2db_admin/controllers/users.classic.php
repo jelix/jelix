@@ -120,7 +120,21 @@ class usersCtrl extends jController
             $usersList = $manager->getUsersList(jAcl2DbAdminUIManager::FILTER_BY_GROUP, $grpid, $stringToSearch, $offset, $length, $order);
         }
 
+        $authAdapter = jAcl2Authentication::getAdapter();
+        if (!($authAdapter instanceof jAcl2AuthAdapterInterface2)) {
+            $authAdapter = null;
+        }
         foreach ($usersList['results'] as $user) {
+
+            $links = [
+                'rights' => jUrl::get('jacl2db_admin~users:rights', array('user' => $user->login)),
+                'profile' => ''
+            ];
+
+            if ($authAdapter) {
+                $links['profile'] = $authAdapter->getUserAdminProfilUrl($user->login);
+            }
+
             $data[] = array(
                 "DT_RowId" => 'usr-' . $user->login,
                 "DT_RowData" => [
@@ -128,9 +142,7 @@ class usersCtrl extends jController
                 ],
                 'login' => $user->login,
                 'groups' => implode(', ', $user->groups),
-                'links' => [
-                    'rights' => jUrl::get('jacl2db_admin~users:rights', array('user' => $user->login))
-                ]
+                'links' => $links
             );
         }
 

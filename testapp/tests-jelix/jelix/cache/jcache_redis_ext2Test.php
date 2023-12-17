@@ -18,7 +18,7 @@ require_once(__DIR__.'/jcache.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class jCache_Redis_ext2Test extends jCacheAPITest {
+class jCache_Redis_ext2Test extends AbstractCacheAPI {
 
     protected $redis;
 

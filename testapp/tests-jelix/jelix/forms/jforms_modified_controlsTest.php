@@ -19,7 +19,7 @@ class tesMForm extends jFormsBase {
     }
 }
 
-class jforms_Modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
+class jforms_modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     protected $form;
     protected $container;
     function setUp() : void {

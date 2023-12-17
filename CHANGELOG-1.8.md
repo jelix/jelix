@@ -1,10 +1,33 @@
 Changes into Jelix 1.8
 ======================
 
-Next
-----
+1.8.6-pre
+----------
+
+- Check compatibility with PHP 8.3: all seems ok
+- ldap driver for jAuth: remove deprecation notice with PHP 8.3, about parameters on ldap_connect
+- ldap driver for jAuth: support of TLS mode. Configuration parameter `tlsMode`, which can have values
+  `""` (empty, no secured connection), `starttls` or `ldaps` (`ldaps` by default if port 636)
+- Tests: upgrade PHPUnit to 9.6 
+
+1.8.5
+-----
+
+- jacl2db_admin: add links to each user profile into the users list
+- The application version is available into `jApp::config()->appVersion`
+  and is set by default to the version stored into the `project.xml` file.
+- new configuration parameter `sslmode` for Postgresql profiles. Possible
+  values are `disable`, `allow`, `prefer`, `require`.
+
+1.8.4
+-----
 
 * Fix redirections when there is an error, into the rights management interface (jacl2db_admin)
+* new method `jResponseFormJQJson::setError()` to force to return an error message/url redirection to the form.
+* New: Support of favicons into WebAssets (ex: `mygroup.icon=favicon-32x32.png|sizes=32x32`).
+* new method `WebAssetsSelection::getIconLinks()`
+* Fix issue into the password editor: the new value of the password changed by the button to regenerate one,
+  was not taken account when submitted the form
 
 1.8.3
 -----

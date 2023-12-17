@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTjrooturl extends \Jelix\UnitTests\UnitTestCase {
+class jRootUrlTest extends \Jelix\UnitTests\UnitTestCase {
 
     function setUp() : void {
         self::initJelixConfig();

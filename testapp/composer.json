@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "phpunit/phpunit": "8.5.*",
+        "phpunit/phpunit": "9.6.*",
         "jelix/jelix-essential" : "@dev",
         "jelix/soap-server-module": "^1.7.9",
         "jelix/minify-module": "^1.7.4",

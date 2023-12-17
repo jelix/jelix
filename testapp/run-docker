@@ -16,7 +16,7 @@ if [ "$TESTAPP_WEB_PORT" == "" ]; then
 fi
 
 if [ "$PHP_VERSION" == "" ]; then
-  export PHP_VERSION=7.4
+  export PHP_VERSION=8.2
 fi
 
 if [ "$CMD" == "build" ]; then

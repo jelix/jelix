@@ -4,7 +4,7 @@
  * @subpackage  WebAssets
  *
  * @author      Laurent Jouanneau
- * @copyright   2019 Laurent Jouanneau
+ * @copyright   2019-2023 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -23,6 +23,7 @@ class WebAssetsSelection
 
     protected $cssAssets = array();
     protected $jsAssets = array();
+    protected $iconAssets = array();
 
     protected $variables;
     protected $urlBasePath;
@@ -33,6 +34,7 @@ class WebAssetsSelection
         $this->urlBasePath = $urlBasePath;
         $this->cssAssets = array();
         $this->jsAssets = array();
+        $this->iconAssets = array();
         if (!count($this->_assetsGroups)) {
             return;
         }
@@ -60,6 +62,10 @@ class WebAssetsSelection
                 $this->cssAssets,
                 $collectionAssets['webassets_'.$group.'.css']
             );
+            $this->iconAssets = array_merge(
+                $this->iconAssets,
+                $collectionAssets['webassets_'.$group.'.icon']
+            );
         }
         $me = $this;
         $this->jsAssets = array_map(function ($js) use ($me) {
@@ -68,10 +74,13 @@ class WebAssetsSelection
         $this->cssAssets = array_map(function ($css) use ($me) {
             return $me->parseAssetUrl($css);
         }, $this->cssAssets);
+        $this->iconAssets = array_map(function ($icon) use ($me) {
+            return $me->parseAssetUrl($icon);
+        }, $this->iconAssets);
     }
 
     /**
-     * List of url and corresponding attributes for the script element.
+     * List of urls and corresponding attributes for the script element.
      *
      * @return array[] list of array(url, attributes)
      */
@@ -81,13 +90,23 @@ class WebAssetsSelection
     }
 
     /**
-     * List of url and corresponding attributes for the link element.
+     * List of url and corresponding attributes for the link element for CSS style sheets.
      *
      * @return array[] list of array(url, attributes)
      */
     public function getCssLinks()
     {
         return $this->cssAssets;
+    }
+
+    /**
+     * List of url and corresponding attributes for the link element for favicons
+     *
+     * @return array[] list of array(url, attributes)
+     */
+    public function getIconLinks()
+    {
+        return $this->iconAssets;
     }
 
     protected function parseAssetUrl($asset)

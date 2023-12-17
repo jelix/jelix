@@ -4,7 +4,7 @@
 * @subpackage  jelix-tests
 * @author      Laurent
 * @contributor Christophe Thiriot
-* @copyright   2007-2019 Jouanneau laurent
+* @copyright   2007-2023 Jouanneau laurent
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -52,10 +52,10 @@ abstract class UnitTestCaseDb extends UnitTestCase {
      */
     public function assertTableIsEmpty($table, $message="%s"){
         $db = \jDb::getConnection($this->dbProfile);
-        $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
+        $rs = $db->query('SELECT count(*) as numb FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should be empty");
-            if($r->N == 0){
+            if($r->numb == 0){
                 $this->assertTrue(true, $message);
                 return true;
             }else{
@@ -73,10 +73,10 @@ abstract class UnitTestCaseDb extends UnitTestCase {
      */
     public function assertTableIsNotEmpty($table, $message="%s"){
         $db = \jDb::getConnection($this->dbProfile);
-        $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
+        $rs = $db->query('SELECT count(*) as numb FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table shouldn't be empty");
-            if($r->N > 0){
+            if($r->numb > 0){
                 $this->assertTrue(true, $message);
                 return true;
             }else{
@@ -94,10 +94,10 @@ abstract class UnitTestCaseDb extends UnitTestCase {
      */
     public function assertTableHasNRecords($table, $n, $message="%s"){
         $db = \jDb::getConnection($this->dbProfile);
-        $rs = $db->query('SELECT count(*) as N FROM '.$db->encloseName($table));
+        $rs = $db->query('SELECT count(*) as numb FROM '.$db->encloseName($table));
         if($r=$rs->fetch()){
             $message = sprintf( $message, $table. " table should contains ".$n." records");
-            if($r->N == $n){
+            if($r->numb == $n){
                 $this->assertTrue(true, $message);
                 return true;
             }else{

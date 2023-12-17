@@ -18,7 +18,7 @@ require_once(__DIR__.'/jcache.lib.php');
 * @subpackage  jelix_tests module
 */
 
-class jCache_MemcacheTest extends jCacheAPITest {
+class jCache_MemcacheTest extends AbstractCacheAPI {
     protected $mmhost;
     protected $mmport;
 

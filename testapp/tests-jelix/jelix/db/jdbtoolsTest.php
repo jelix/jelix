@@ -15,7 +15,7 @@ include_once (JELIX_LIB_PATH.'db/tools/jDbOciTools.php');
 include_once (JELIX_LIB_PATH.'db/tools/jDbSqliteTools.php');
 
 
-class jDbToolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
+class jdbToolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     public static function setUpBeforeClass() : void {
         self::initJelixConfig();

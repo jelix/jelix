@@ -137,8 +137,7 @@ class httpcacheTest extends \Jelix\UnitTests\UnitTestCase
         $this->assertTrue($method->invoke($rep));
 
         $_SERVER['REQUEST_METHOD'] = 'POST';
-        $this->expectWarning();
-        $method->invoke($rep);
+        $this->assertFalse($method->invoke($rep));
     }
     
 }

@@ -49,6 +49,7 @@ host=pgsql
 database=testapp
 user=test_user
 password=jelix
+sslmode=allow
 
 ; to run tests with sqlite
 [jdb:testapp_sqlite3]

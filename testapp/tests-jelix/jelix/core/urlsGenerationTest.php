@@ -9,7 +9,7 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-class UTCreateUrls extends \Jelix\UnitTests\UnitTestCase {
+class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
     protected $oldserver;
 
     function setUp() : void  {

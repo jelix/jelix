@@ -230,6 +230,14 @@ class jConfigCompiler
         if (!is_array($config->error_handling['sensitiveParameters'])) {
             $config->error_handling['sensitiveParameters'] = preg_split('/ *, */', $config->error_handling['sensitiveParameters']);
         }
+
+        if ($config->appVersion == '') {
+            $xmlPath = jApp::appPath('project.xml');
+            $xmlLoad = simplexml_load_file($xmlPath);
+            if (isset($xmlLoad->info->version)) {
+                $config->appVersion = (string) $xmlLoad->info->version;
+            }
+        }
     }
 
     protected static function checkCoordPluginsPath($config)
