@@ -213,7 +213,7 @@ class mysqliDbResultSet extends jDbResultSet
             throw new Exception('Not a prepared statement');
         }
 
-        return $this->_stmt->get_attr($attr);
+        return $this->_stmt->attr_get($attr);
     }
 
     public function setAttribute($attr, $value)
@@ -222,6 +222,6 @@ class mysqliDbResultSet extends jDbResultSet
             throw new Exception('Not a prepared statement');
         }
 
-        return $this->_stmt->set_attr($attr, $value);
+        return $this->_stmt->attr_set($attr, $value);
     }
 }
