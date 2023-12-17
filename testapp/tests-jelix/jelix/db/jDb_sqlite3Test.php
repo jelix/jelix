@@ -82,11 +82,13 @@ class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
         $this->assertNotEquals(false, $rec);
         $this->assertEquals(3, $rec->cnt);
         unset($rec);
+        $res->free();
         unset($res);
 
         $res = $db->query("SELECT id, name, price FROM products");
         $all = $res->fetchAll();
         $this->assertEquals(3, count($all));
+        $res->free();
         unset($res);
         
         $res = $db->query("SELECT id, name, price FROM products");
@@ -102,6 +104,7 @@ class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
         $this->assertFalse($last);
 
         $this->assertEquals(3, $res->rowCount());
+        $res->free();
         unset($res);
 
         $res = $db->query("SELECT id, name, price FROM products");
@@ -110,6 +113,7 @@ class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals(3, $res->rowCount());
         $all = $res->fetchAll();
         $this->assertEquals(2, count($all));
+        $res->free();
         unset($res);
     }
 

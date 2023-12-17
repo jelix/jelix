@@ -19,9 +19,18 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 
     public function setUp() : void
     {
-        $this->dbProfile = 'jacl2_profile';
-        self::initClassicRequest(TESTAPP_URL.'index.php');
+        $this->preSetUpAcl();
+        $this->setUpAcl();
+    }
 
+    protected function preSetUpAcl() : void
+    {
+        $this->dbProfile = 'jacl2_profile';
+        self::initClassicRequest(TESTAPP_URL . 'index.php');
+    }
+
+    protected function setUpAcl() : void
+    {
         jApp::config()->acl2['driver'] = self::$driver;
         jAcl2::unloadDriver();
         jAcl2::clearCache();
