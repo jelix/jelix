@@ -16,7 +16,7 @@
 * @subpackage  jelix_tests module
 */
 
-abstract class jCacheAPITest extends \Jelix\UnitTests\UnitTestCaseDb {
+abstract class AbstractCacheAPI extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected $profile = '';
     

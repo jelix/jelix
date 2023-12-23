@@ -11,6 +11,7 @@
 namespace Jelix\Core\Config;
 
 use Jelix\Core\App as App;
+use Jelix\Core\Infos\AppInfos;
 use Jelix\IniFile\Util as IniFileMgr;
 use Jelix\Core\Server;
 
@@ -210,6 +211,10 @@ class Compiler
         $config->chmodDir = octdec($config->chmodDir);
         if (!is_array($config->error_handling['sensitiveParameters'])) {
             $config->error_handling['sensitiveParameters'] = preg_split('/ *, */', $config->error_handling['sensitiveParameters']);
+        }
+
+        if ($config->appVersion == '') {
+            $config->appVersion = AppInfos::load()->version;
         }
     }
 

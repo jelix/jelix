@@ -72,7 +72,8 @@ class App
 
     /**
      * return the version of the application containing into a VERSION file
-     * It doesn't read the version from project.xml or jelix-app.json.
+     * or from `jApp::config()->appVersion` (project.xml or jelix-app.json).
+     * It doesn't read the version from composer.json.
      *
      * @return string
      */

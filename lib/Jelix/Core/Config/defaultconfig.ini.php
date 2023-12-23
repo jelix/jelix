@@ -1,6 +1,10 @@
 ;<?php exit(''); ?>
 ;for security reasons , don't remove or modify the first line
 
+; the version of the application. if it is empty, the value is set automatically
+; to the one coming from project.xml
+appVersion=
+
 ; the default locale used in the application
 locale=en_US
 

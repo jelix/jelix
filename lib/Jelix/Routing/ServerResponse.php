@@ -7,7 +7,7 @@
  * @contributor Julien Issler, Brice Tence
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright   2005-2014 Laurent Jouanneau
+ * @copyright   2005-2023 Laurent Jouanneau
  * @copyright   2010 Julien Issler, 2011 Brice Tence
  * @copyright   2011 Florian Lonqueu-Brochard
  *
@@ -235,8 +235,6 @@ abstract class ServerResponse
         if (in_array($_SERVER['REQUEST_METHOD'], $allowedTypes)) {
             return true;
         }
-
-        //trigger_error(\Jelix\Locale\Locale::get('jelix~errors.rep.bad.request.method'), E_USER_WARNING);
 
         return false;
     }

@@ -201,9 +201,9 @@ class AppInstance
 
     /**
      * return the version of the application containing into a VERSION file
-     * stored at the root of the application.
+     * stored at the root of the application or from `jApp::config()->appVersion` (project.xml).
      *
-     * It doesn't read the version from project.xml or composer.json.
+     * It doesn't read the version from composer.json.
      *
      * @return string
      */
@@ -216,6 +216,8 @@ class AppInstance
                     array('0', ''),
                     file_get_contents($this->appPath.'VERSION')
                 ));
+            } else if ($this->config && $this->config->appVersion) {
+                $this->_version = $this->config->appVersion;
             } else {
                 $this->_version = '0';
             }

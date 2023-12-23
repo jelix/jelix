@@ -7,7 +7,7 @@
  * @contributor Sylvain de Vathaire
  * @contributor Thibaud Fabre, Laurent Jouanneau
  *
- * @copyright  2009 Neov, 2010 Thibaud Fabre, 2011-2016 Laurent Jouanneau
+ * @copyright  2009 Neov, 2010 Thibaud Fabre, 2011-2023 Laurent Jouanneau
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -25,6 +25,8 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
      * @var array
      */
     protected $_default_attributes = array('cn', 'distinguishedName', 'name');
+
+    protected $uriConnect = '';
 
     public function __construct($params)
     {
@@ -44,6 +46,7 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
         // default ldap parameters
         $_default_params = array(
             'hostname' => 'localhost',
+            'tlsMode'       => '',
             'port' => 389,
             'ldapUser' => null,
             'ldapPassword' => null,
@@ -71,6 +74,38 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
             $this->_params['searchAttributes'] = $this->_default_attributes;
         } else {
             $this->_params['searchAttributes'] = explode(',', $this->_params['searchAttributes']);
+        }
+
+        $uri = $this->_params['hostname'];
+
+        if (preg_match('!^ldap(s?)://!', $uri, $m)) { // old way to specify ldaps protocol
+            $predefinedPort = '';
+            if (preg_match('!:(\d+)/?!', $uri, $mp)) {
+                $predefinedPort = $mp[1];
+            }
+            if (isset($m[1]) && $m[1] == 's') {
+                $this->_params['tlsMode'] = 'ldaps';
+            }
+            elseif ($this->_params['tlsMode'] == 'ldaps') {
+                $this->_params['tlsMode'] = 'starttls';
+            }
+            if ($predefinedPort == '') {
+                $uri .= ':'.$this->_params['port'];
+            }
+            else {
+                $this->_params['port'] = $predefinedPort;
+            }
+            $this->uriConnect = $uri;
+        }
+        else {
+            $uri .= ':'.$this->_params['port'];
+            if ($this->_params['tlsMode'] == 'ldaps' || $this->_params['port'] == 636 ) {
+                $this->uriConnect = 'ldaps://'.$uri;
+                $this->_params['tlsMode'] = 'ldaps';
+            }
+            else {
+                $this->uriConnect = 'ldap://'.$uri;
+            }
         }
     }
 
@@ -330,9 +365,16 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
 
     protected function _getLinkId()
     {
-        if ($connect = ldap_connect($this->_params['hostname'], $this->_params['port'])) {
+        if ($connect = ldap_connect($this->uriConnect)) {
             ldap_set_option($connect, LDAP_OPT_PROTOCOL_VERSION, $this->_params['protocolVersion']);
             ldap_set_option($connect, LDAP_OPT_REFERRALS, 0);
+
+            if ($this->_params['tlsMode'] == 'starttls') {
+                if (!@ldap_start_tls($connect)) {
+                    jLog::log('Ldap connection error: impossible to start TLS connection to '.$this->uriConnect);
+                    return false;
+                }
+            }
 
             return $connect;
         }
@@ -352,6 +394,11 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
             $bind = ldap_bind($connect, $this->_params['ldapUser'], $this->_params['ldapPassword']);
         }
         if (!$bind) {
+            if ($this->_params['ldapUser'] == '') {
+                jLog::log('ldap driver error: authenticating to the ldap with an anonymous user is not supported', 'auth');
+            } else {
+                jLog::log('ldap driver error: impossible to authenticate to ldap with the user '.$this->_params['ldapUser'], 'auth');
+            }
             ldap_close($connect);
 
             return false;

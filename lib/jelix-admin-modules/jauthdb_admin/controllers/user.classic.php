@@ -89,7 +89,7 @@ class userCtrl extends jController
 
         $rep = $this->getResponse('html');
 
-        // we're using a form to display a record, to have the portunity to have
+        // we're using a form to display a record, to have the opportunity to have
         // labels with each values.
         $form = jForms::create($this->form, $login);
         $form->initFromDao($daoUser, null, $this->dbProfile);

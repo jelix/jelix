@@ -78,7 +78,12 @@ const jFormsJQ = {
                         window.location.href = data.locationUrl;
                     }
                     else {
-                        frm.setErrors(data.errors);
+                        if ('errorMessage' in data) {
+                            frm.showSubmitError(data.errorMessage);
+                        }
+                        if ('errors' in data) {
+                            frm.setErrors(data.errors);
+                        }
                     }
                 }
             })

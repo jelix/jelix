@@ -682,6 +682,25 @@ class jResponseHtml extends jResponseBasicHtml
         echo '<link type="text/css" href="',htmlspecialchars($fileUrl),'" ',$params,$this->_endTag,"\n";
     }
 
+    protected function outputIconLinkTag($fileUrl, $iconParams)
+    {
+        $params = '';
+        foreach ($iconParams as $param_name => $param_value) {
+            if (is_bool($param_value)) {
+                if ($param_value === true) {
+                    $params .= $param_name.' ';
+                }
+            } else {
+                $params .= $param_name.'="'.htmlspecialchars($param_value).'" ';
+            }
+        }
+
+        if (!isset($iconParams['rel'])) {
+            $params .= 'rel="icon" ';
+        }
+        echo '<link href="',htmlspecialchars($fileUrl),'" ',$params,$this->_endTag,"\n";
+    }
+
     /**
      * @param string[] $params list of attributes to add to a meta element
      *
@@ -760,6 +779,10 @@ class jResponseHtml extends jResponseBasicHtml
             $fav = htmlspecialchars($this->favicon);
             echo '<link rel="icon" type="image/x-icon" href="',$fav,'" ',$this->_endTag;
             echo '<link rel="shortcut icon" type="image/x-icon" href="',$fav,'" ',$this->_endTag;
+        }
+
+        foreach ( $this->webAssetsSelection->getIconLinks() as $src => $params) {
+            $this->outputIconLinkTag($src, $params);
         }
 
         // others links

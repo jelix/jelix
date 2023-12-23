@@ -19,5 +19,6 @@
         <class name="jAcl2Authentication" file="classes/jAcl2Authentication.class.php"/>
         <class name="jAcl2JAuthAdapter" file="classes/jAcl2JAuthAdapter.class.php"/>
         <class name="jAcl2AuthAdapterInterface" file="classes/jAcl2AuthAdapterInterface.iface.php"/>
+        <class name="jAcl2AuthAdapterInterface2" file="classes/jAcl2AuthAdapterInterface2.iface.php"/>
     </autoload>
 </module>
