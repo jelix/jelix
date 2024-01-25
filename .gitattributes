@@ -1,6 +1,7 @@
 .gitattributes export-ignore
 .gitignore export-ignore
 .php_cs.dist export-ignore
+assets/* export-ignore
 testapp/* export-ignore
 build/* export-ignore
 Makefile export-ignore
