@@ -4,7 +4,9 @@ COMMAND="$1"
 shift
 
 if [ "$JLXBRANCH" == "" ]; then
-  export JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
+    JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
+    JLXBRANCH="${JLXBRANCH//.}"
+    export JLXBRANCH="${JLXBRANCH//-}"
 fi
 
 if [ "$COMMAND" == "" ]; then
