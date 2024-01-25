@@ -58,7 +58,6 @@ class jforms_NewHTMLBuilderTest extends jforms_HTMLBuilderTest {
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.$this->getJQuery().'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
 ';
             self::$jsHeader0 = $js0;
             self::$htmlJsHeader0 = '';
@@ -66,7 +65,6 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryPath:\''.jApp::config()->urlengine['jqueryPath'].'\',jqueryFile:\''.$this->getJQuery().'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtest1\',\'formtest\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
 ';
             self::$jsHeader = $js;
             self::$htmlJsHeader = '';

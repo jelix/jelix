@@ -1,6 +1,17 @@
 Changes into Jelix 1.8
 ======================
 
+1.8.7-pre
+---------
+
+- jForms: in javascript, the form is now declared after the setup of all controls,
+  not only after the setup of the jforms object. So the event `jformsready` is 
+  triggered and the callbacks declared with `onFormReady` are executed after the full initialization of the javascript
+  objects of jForms. If you want to keep the old behavior, you should indicate
+  the option `'deprecatedDeclareFormBeforeControls'=>true` to the form builder.
+
+
+
 1.8.6
 -----
 

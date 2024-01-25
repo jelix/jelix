@@ -118,7 +118,7 @@ const jFormsJQ = {
      *
      * The listener may be called immediately if the form is already ready.
      * The listener should be a function that accepts a jFormsJQForm as parameter.
-     * For example, the listener can register
+     * For example, the listener can register some listeners and so on..
      *
      * @param {String} formName  should be a name like `jforms_<module>_<name>`
      * @param {Function} callback
