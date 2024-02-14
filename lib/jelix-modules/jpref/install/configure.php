@@ -1,7 +1,7 @@
 <?php
 /**
- * @package     jelix-modules
- * @subpackage  jpref module
+ * @package     jelix
+ * @subpackage  jpref
  *
  * @author      Laurent Jouanneau
  * @copyright   2018 Laurent Jouanneau

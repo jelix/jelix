@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  jtpl_plugin
+ * @subpackage  jacl2_plugin
  *
  * @author      Laurent Jouanneau
  *
@@ -9,10 +9,6 @@
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
- *
- * @param mixed $compiler
- * @param mixed $begin
- * @param mixed $param
  */
 
 /**

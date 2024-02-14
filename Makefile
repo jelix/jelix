@@ -52,7 +52,7 @@ deploy_unstable:
 	jelix_upload_unstable_package.sh $(DISTPATH)/ "$(CI_DEPLOY_USER)@$(CI_DEPLOY_SERVER)" $(JELIX_BRANCH)
 
 phpdoc:
-	curl -o phpdoc --location https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.1.2/phpDocumentor.phar
+	curl -o phpdoc --location https://github.com/phpDocumentor/phpDocumentor/releases/download/v3.4.3/phpDocumentor.phar
 	chmod +x phpdoc
 
 docs: phpdoc

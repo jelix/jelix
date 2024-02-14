@@ -2,7 +2,7 @@
 
 /**
  * @package     jelix
- * @subpackage  jauth module
+ * @subpackage  jauth
  *
  * @author     Laurent Jouanneau
  * @copyright  2023 Laurent Jouanneau

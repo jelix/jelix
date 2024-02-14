@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jelix
- * @subpackage daobuilder_driver
+ * @subpackage dao_builderdriver
  *
  * @author     Laurent Jouanneau
  * @contributor Loic Mathaud <loic@mathaud.net>
@@ -15,9 +15,6 @@
 
 /**
  * driver for jDaoCompiler.
- *
- * @package    jelix
- * @subpackage daobuilder_driver
  */
 class sqliteDaoBuilder extends jDaoGenerator
 {

@@ -16,7 +16,7 @@
  * Utility class for all classes used for the db driver of jAcl2.
  *
  * @package     jelix
- * @subpackage  acl
+ * @subpackage  jacldb
  * @static
  */
 class jAcl2Db

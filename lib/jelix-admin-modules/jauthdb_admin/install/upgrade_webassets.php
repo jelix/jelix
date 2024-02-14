@@ -1,5 +1,8 @@
 <?php
 /**
+ * @package     jelix
+ * @subpackage  jauthdb_admin
+ * 
  * @author      Laurent Jouanneau
  * @copyright   2022 Laurent Jouanneau
  *

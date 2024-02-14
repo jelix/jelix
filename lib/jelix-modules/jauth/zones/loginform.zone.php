@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package    jelix-modules
+ * @package    jelix
  * @subpackage jauth
  *
  * @author     Laurent Jouanneau

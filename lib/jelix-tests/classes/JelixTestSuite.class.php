@@ -4,7 +4,7 @@ use PHPUnit\Framework\TestResult;
 
 /**
  * @package     jelix
- * @subpackage  jelix-tests
+ * @subpackage  tests
  * @author      Laurent Jouanneau
  * @copyright   2011-2023 Laurent Jouanneau
  * @link        http://www.jelix.org

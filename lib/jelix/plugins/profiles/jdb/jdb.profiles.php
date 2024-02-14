@@ -2,7 +2,7 @@
 
 /**
  * @package     jelix
- * @subpackage  profiles
+ * @subpackage  profiles_plugin
  *
  * @author      Laurent Jouanneau
  * @copyright   2015-2023 Laurent Jouanneau

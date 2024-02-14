@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jelix
- * @subpackage db
+ * @subpackage db_driver
  *
  * @author     Laurent Jouanneau
  * @copyright  2005-2017 Laurent Jouanneau

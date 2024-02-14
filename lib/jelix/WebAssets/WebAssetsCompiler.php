@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  WebAssets
- *
  * @author      Laurent Jouanneau
  * @copyright   2019-2023 Laurent Jouanneau
  *

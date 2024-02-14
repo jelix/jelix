@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  acl_driver
+ * @subpackage  jacl2db_plugin
  *
  * @author      Laurent Jouanneau
  * @copyright   2006-2024 Laurent Jouanneau
@@ -14,7 +14,7 @@
  * driver for jAcl2 based on a database, and using a cache.
  *
  * @package jelix
- * @subpackage acl_driver
+ * @subpackage jacl2db_driver
  */
 class dbcacheAcl2Driver implements jIAcl2Driver2
 {

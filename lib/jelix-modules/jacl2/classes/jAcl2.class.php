@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  acl2
+ * @subpackage  jacl2
  *
  * @author      Laurent Jouanneau
  * @copyright   2006-2020 Laurent Jouanneau
@@ -22,7 +22,7 @@ require __DIR__.'/jIAcl2Driver2.iface.php';
  * the current user have a right
  *
  * @package jelix
- * @subpackage acl
+ * @subpackage jacl2
  * @static
  */
 class jAcl2

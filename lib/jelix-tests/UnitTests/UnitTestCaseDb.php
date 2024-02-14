@@ -1,7 +1,5 @@
 <?php
 /**
-* @package     jelix
-* @subpackage  jelix-tests
 * @author      Laurent
 * @contributor Christophe Thiriot
 * @copyright   2007-2023 Jouanneau laurent

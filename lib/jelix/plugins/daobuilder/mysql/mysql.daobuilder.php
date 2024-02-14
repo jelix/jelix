@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jelix
- * @subpackage daobuilder_driver
+ * @subpackage dao_builderdriver
  *
  * @author     Laurent Jouanneau
  * @copyright  2007-2009 Laurent Jouanneau
@@ -12,9 +12,6 @@
 
 /**
  * driver for jDaoCompiler.
- *
- * @package    jelix
- * @subpackage daobuilder_driver
  */
 class mysqlDaoBuilder extends jDaoGenerator
 {

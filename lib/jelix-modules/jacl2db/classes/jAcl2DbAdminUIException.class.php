@@ -1,6 +1,6 @@
 <?php
 /**
- * @package     jelix_modules
+ * @package     jelix
  * @subpackage  jacl2db
  *
  * @author      Laurent Jouanneau

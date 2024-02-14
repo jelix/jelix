@@ -1,8 +1,6 @@
 <?php
 
 /**
- * @package     jelix-scripts
- *
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  * @contributor Gildas Givaja (bug #83)

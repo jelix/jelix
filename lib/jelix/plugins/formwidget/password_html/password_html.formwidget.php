@@ -1,5 +1,8 @@
 <?php
 /**
+ * @package     jelix
+ * @subpackage  forms_widget_plugin
+ *
  * @author       Laurent Jouanneau <laurent@jelix.org>
  * @copyright    2023 Laurent Jouanneau
  *

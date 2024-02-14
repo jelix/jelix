@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  acl_driver
+ * @subpackage  jacldb
  *
  * @author      Laurent Jouanneau
  * @copyright   2006-2009 Laurent Jouanneau
@@ -14,7 +14,7 @@
  * driver for jAcl based on a database.
  *
  * @package jelix
- * @subpackage acl_driver
+ * @subpackage jacldb_driver
  */
 class dbAclDriver implements jIAclDriver
 {

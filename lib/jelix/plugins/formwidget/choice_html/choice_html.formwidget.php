@@ -1,7 +1,6 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  forms
  * @subpackage  forms_widget_plugin
  *
  * @author      Claudio Bernardes

@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @package     jelix
+ * @subpackage  forms_widget_plugin
+ *
  * @author    Laurent Jouanneau
  * @copyright 2019-2020 Laurent Jouanneau
  *

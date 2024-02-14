@@ -5,7 +5,7 @@
  * This suppose that PHPUnit is installed and declared in include path
  *
  * @package     jelix
- * @subpackage  jelix-tests
+ * @subpackage  tests
  * @author Laurent Jouanneau
  * @contributor  Christophe Thiriot (for some code imported from his jphpunit module)
  */

@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  acl
+ * @subpackage  jacldb
  *
  * @author      Laurent Jouanneau
  * @copyright   2006-2007 Laurent Jouanneau
@@ -16,7 +16,7 @@
  * Utility class for all classes used for the db driver of jAcl.
  *
  * @package     jelix
- * @subpackage  acl
+ * @subpackage  jacldb
  * @static
  */
 class jAclDb

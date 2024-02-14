@@ -13,8 +13,6 @@ use Symfony\Component\Console\Application;
 
 /**
  * Launch commands from modules.
- *
- * @package Jelix\Scripts
  */
 class ModulesCommands
 {
