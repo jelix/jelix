@@ -64,12 +64,13 @@ class dbAcl2Driver implements jIAcl2Driver2
      */
     public function getRightByUser($login, $subject, $resource = '-')
     {
-        if (empty($resource)) {
-            $resource = '-';
-        }
 
         if ($login === '' || $login === null) {
             return $this->getAnonymousRight($subject, $resource);
+        }
+
+        if (empty($resource)) {
+            $resource = '-';
         }
 
         $groups = null;

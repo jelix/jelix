@@ -4,7 +4,7 @@
  * @subpackage  acl_driver
  *
  * @author      Laurent Jouanneau
- * @copyright   2006-2020 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -25,7 +25,7 @@ class dbcacheAcl2Driver implements jIAcl2Driver2
     protected $aclres = array();
     protected $acl = array();
     protected $anonaclres = array();
-    protected $anonacl = array();
+    protected $anonacl = null;
 
     /**
      * return the value of the right on the given subject for the current user(and on the optional resource).

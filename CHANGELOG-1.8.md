@@ -9,7 +9,8 @@ Changes into Jelix 1.8
   triggered and the callbacks declared with `onFormReady` are executed after the full initialization of the javascript
   objects of jForms. If you want to keep the old behavior, you should indicate
   the option `'deprecatedDeclareFormBeforeControls'=>true` to the form builder.
-
+- Fix dbcache driver of jAcl2: anonymous rights were not stored properly into
+  the cache, and so rights were not taken account.
 
 
 1.8.6
