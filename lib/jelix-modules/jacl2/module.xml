@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jacl2@modules.jelix.org" name="jacl2" createdate="2012-09-18">
-        <version date="2024-02-14 13:10">1.8.7</version>
+        <version date="2024-02-14 13:10">1.8.8-pre</version>
         <label lang="en_US">jAcl2</label>
         <description lang="en_US">Main module for acl</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
