@@ -1,8 +1,14 @@
 Changes into Jelix 1.8
 ======================
 
-1.8.7-pre
+1.8.8-pre
 ---------
+
+- Fix package and subpackage into doc comments
+
+
+1.8.7
+-----
 
 - jForms: in javascript, the form is now declared after the setup of all controls,
   not only after the setup of the jforms object. So the event `jformsready` is 
@@ -11,7 +17,7 @@ Changes into Jelix 1.8
   the option `'deprecatedDeclareFormBeforeControls'=>true` to the form builder.
 - Fix dbcache driver of jAcl2: anonymous rights were not stored properly into
   the cache, and so rights were not taken account.
-
+- Fix Composer package: remove the `assets/` directory, it is useless
 
 1.8.6
 -----
