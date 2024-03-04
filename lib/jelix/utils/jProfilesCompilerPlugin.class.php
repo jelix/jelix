@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @package     jelix
+ * @subpackage  profiles
+ *
  * @author      Laurent Jouanneau
  * @copyright   2015-2023 Laurent Jouanneau
  *

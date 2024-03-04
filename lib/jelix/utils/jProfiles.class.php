@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  utils
+ * @subpackage  profiles
  *
  * @author      Laurent Jouanneau
  * @contributor Yannick Le Guédart, Julien Issler

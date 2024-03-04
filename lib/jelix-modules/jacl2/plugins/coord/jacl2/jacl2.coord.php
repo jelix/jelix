@@ -1,7 +1,7 @@
 <?php
 /**
- * @package    jelix
- * @subpackage coord_plugin
+ * @package     jelix
+ * @subpackage  jacl2_plugin
  *
  * @author     Laurent Jouanneau
  * @copyright  2008 Laurent Jouanneau
@@ -11,8 +11,8 @@
  */
 
 /**
- * @package    jelix
- * @subpackage coord_plugin
+ * @package     jelix
+ * @subpackage  jacl2_plugin
  *
  * @since 1.1
  */

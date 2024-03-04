@@ -1,6 +1,7 @@
 <?php
 /**
- * @package     jelix-scripts
+ * @package     jelix
+ * @subpackage scripts
  *
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud

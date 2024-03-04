@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jelix
- * @subpackage db_driver
+ * @subpackage dao_builderdriver
  *
  * @author     Yann Lecommandoux
  * @contributor Laurent Jouanneau

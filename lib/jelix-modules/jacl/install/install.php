@@ -1,6 +1,7 @@
 <?php
 /**
- * @package     jacl
+ * @package     jelix
+ * @subpackage  jacl
  *
  * @author      Laurent Jouanneau
  * @contributor

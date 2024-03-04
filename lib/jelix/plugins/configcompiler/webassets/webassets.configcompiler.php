@@ -1,7 +1,7 @@
 <?php
 /**
  * @package      jelix
- * @subpackage   core
+ * @subpackage   core_config_plugin
  *
  * @author       Laurent Jouanneau
  * @copyright    2017 Laurent Jouanneau

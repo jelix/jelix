@@ -1,5 +1,8 @@
 <?php
 /**
+ * @package     jelix
+ * @subpackage  forms_widget_plugin
+ *
  * @author      Adrien Lagroy de Croutte
  * @contributor
  *

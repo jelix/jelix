@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  acl
+ * @subpackage  jacl
  *
  * @author      Laurent Jouanneau
  * @copyright   2006-2014 Laurent Jouanneau
@@ -16,7 +16,7 @@
  * interface for jAcl drivers.
  *
  * @package jelix
- * @subpackage acl
+ * @subpackage jacl
  */
 interface jIAclDriver
 {
@@ -43,7 +43,7 @@ interface jIAclDriver
  * the current user have a right
  *
  * @package jelix
- * @subpackage acl
+ * @subpackage jacl
  * @static
  */
 class jAcl

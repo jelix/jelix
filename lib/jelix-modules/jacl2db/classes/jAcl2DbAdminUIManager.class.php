@@ -1,5 +1,8 @@
 <?php
 /**
+ * @package     jelix
+ * @subpackage  jacl2db
+ *
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Olivier Demah, Adrien Lagroy de Croutte
  *

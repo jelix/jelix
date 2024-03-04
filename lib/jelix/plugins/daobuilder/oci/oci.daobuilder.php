@@ -1,7 +1,7 @@
 <?php
 /**
  * @package    jelix
- * @subpackage daobuilder_driver
+ * @subpackage dao_builderdriver
  *
  * @author     Laurent Jouanneau
  * @contributor Gwendal Jouannic
@@ -15,9 +15,6 @@
 
 /**
  * driver for jDaoCompiler.
- *
- * @package    jelix
- * @subpackage daobuilder_driver
  */
 class ociDaoBuilder extends jDaoGenerator
 {

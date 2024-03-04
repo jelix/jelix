@@ -1,13 +1,33 @@
 Changes into Jelix 1.8
 ======================
 
-1.8.6-pre
-----------
+1.8.8-pre
+---------
+
+- Fix package and subpackage into doc comments
+
+
+1.8.7
+-----
+
+- jForms: in javascript, the form is now declared after the setup of all controls,
+  not only after the setup of the jforms object. So the event `jformsready` is 
+  triggered and the callbacks declared with `onFormReady` are executed after the full initialization of the javascript
+  objects of jForms. If you want to keep the old behavior, you should indicate
+  the option `'deprecatedDeclareFormBeforeControls'=>true` to the form builder.
+- Fix dbcache driver of jAcl2: anonymous rights were not stored properly into
+  the cache, and so rights were not taken account.
+- Fix Composer package: remove the `assets/` directory, it is useless
+
+1.8.6
+-----
 
 - Check compatibility with PHP 8.3: all seems ok
 - ldap driver for jAuth: remove deprecation notice with PHP 8.3, about parameters on ldap_connect
 - ldap driver for jAuth: support of TLS mode. Configuration parameter `tlsMode`, which can have values
   `""` (empty, no secured connection), `starttls` or `ldaps` (`ldaps` by default if port 636)
+- jDb/mysqli: fix typo into getAttribute/setAttribute
+- Fix Jelix 1.7/1.8 migrator: changes on url map were not saved
 - Tests: upgrade PHPUnit to 9.6 
 
 1.8.5

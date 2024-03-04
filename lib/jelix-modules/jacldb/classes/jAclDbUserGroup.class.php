@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  acl
+ * @subpackage  jacldb
  *
  * @author      Laurent Jouanneau
  * @copyright   2006-2009 Laurent Jouanneau
@@ -17,7 +17,7 @@
  *  Works only with db driver of jAcl.
  *
  * @package     jelix
- * @subpackage  acl
+ * @subpackage  jacldb
  * @static
  */
 class jAclDbUserGroup

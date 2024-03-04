@@ -1,7 +1,5 @@
 <?php
 /**
- * @package     jelix-scripts
- *
  * @author      Bisse Romain
  * @contributor Laurent Jouanneau
  *

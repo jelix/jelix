@@ -1,6 +1,6 @@
 <?php
 /**
- * @package   jelix_admin_modules
+ * @package   jelix
  * @subpackage master_admin
  *
  * @author    Laurent Jouanneau

@@ -1,7 +1,7 @@
 <?php
 /**
- * @package     jelix_admin_modules
- * @subpackage  jacl2db_admin
+ * @package     jelix
+ * @subpackage  jauthdb_admin
  *
  * @author    Laurent Jouanneau
  * @copyright 2008-2012 Laurent Jouanneau

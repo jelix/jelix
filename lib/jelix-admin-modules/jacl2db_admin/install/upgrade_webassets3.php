@@ -1,5 +1,8 @@
 <?php
 /**
+ * @package     jelix
+ * @subpackage  jacl2db_admin
+ *
  * @author      Laurent Jouanneau
  * @copyright   2022-2023 Laurent Jouanneau
  *

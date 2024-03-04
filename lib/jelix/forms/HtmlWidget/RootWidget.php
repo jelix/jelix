@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  forms
- *
  * @author      Laurent Jouanneau
  * @copyright   2006-2018 Laurent Jouanneau
  *
@@ -53,7 +50,9 @@ class RootWidget implements ParentWidgetInterface
 
         $js = $jsVarName.'.tForm = new jFormsForm(\''.$builder->getName()."');\n";
         $js .= $jsVarName.'.tForm.setErrorDecorator(new '.$builder->getOption('errorDecorator')."())\n";
-        $js .= $jsVarName.".declareForm(jForms.tForm);\n";
+        if ($builder->getOption('deprecatedDeclareFormBeforeControls')) {
+            $js .= $jsVarName.".declareForm(jForms.tForm);\n";
+        }
         $this->addJs($js);
         $this->builder = $builder;
     }
@@ -63,7 +62,11 @@ class RootWidget implements ParentWidgetInterface
      */
     public function outputFooter($builder)
     {
-        $js = "(function(){var c, c2;\n".$this->js.$this->finalJs.'})();';
+        $js = "(function(){var c, c2;\n".$this->js.$this->finalJs;
+        if (!$builder->getOption('deprecatedDeclareFormBeforeControls')) {
+            $js .= $builder->getjFormsJsVarName().".declareForm(jForms.tForm);\n";
+        }
+        $js .= '})();';
         $container = $builder->getForm()->getContainer();
         $container->privateData['__jforms_js'] = $js;
         $formId = $container->formId;

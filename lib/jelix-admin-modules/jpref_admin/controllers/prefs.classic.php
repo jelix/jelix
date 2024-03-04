@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @package     jelix_admin_modules
+ * @package     jelix
  * @subpackage  jpref_admin
  *
  * @author    Florian Lonqueu-Brochard

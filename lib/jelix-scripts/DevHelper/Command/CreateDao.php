@@ -1,6 +1,5 @@
 <?php
 /**
- * @package     jelix-scripts
  *
  * @author      Laurent Jouanneau
  * @contributor Nicolas Jeudy (patch ticket #99)

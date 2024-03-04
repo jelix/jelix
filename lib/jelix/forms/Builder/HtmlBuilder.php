@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  forms
- *
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
  *

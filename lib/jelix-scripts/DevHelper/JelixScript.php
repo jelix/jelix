@@ -1,7 +1,5 @@
 <?php
 /**
- * @package    jelix-scripts
- *
  * @author     Laurent Jouanneau
  * @copyright  2011-2016 Laurent Jouanneau
  *
