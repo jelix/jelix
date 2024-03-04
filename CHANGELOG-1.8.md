@@ -5,7 +5,7 @@ Changes into Jelix 1.8
 ---------
 
 - Fix package and subpackage into doc comments
-
+- Fix jacl2db_admin: the module should use the jAcl2 authentication adapter to retrieve the authenticated user.
 
 1.8.7
 -----

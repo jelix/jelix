@@ -228,8 +228,12 @@ class usersCtrl extends jController
         }
 
         try {
+            $currentLogin = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
+            if ($currentLogin === null) {
+                throw new jAcl2DbAdminUIException("No authorized user", 1);
+            }
             $manager = new jAcl2DbAdminUIManager();
-            $manager->saveUserRights($login, $rights, jAuth::getUserSession()->login);
+            $manager->saveUserRights($login, $rights, $currentLogin);
             jMessage::add(jLocale::get('acl2.message.user.rights.ok'), 'ok');
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'saveuserrights');
@@ -308,8 +312,12 @@ class usersCtrl extends jController
         }
 
         try {
+            $currentLogin = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
+            if ($currentLogin === null) {
+                throw new jAcl2DbAdminUIException("No authorized user", 1);
+            }
             $manager = new jAcl2DbAdminUIManager();
-            $manager->removeUserFromGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
+            $manager->removeUserFromGroup($login, $this->param('grpid'), $currentLogin);
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'removeuserfromgroup');
         }
@@ -330,8 +338,12 @@ class usersCtrl extends jController
         }
 
         try {
+            $currentLogin = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
+            if ($currentLogin === null) {
+                throw new jAcl2DbAdminUIException("No authorized user", 1);
+            }
             $manager = new jAcl2DbAdminUIManager();
-            $manager->addUserToGroup($login, $this->param('grpid'), jAuth::getUserSession()->login);
+            $manager->addUserToGroup($login, $this->param('grpid'), $currentLogin);
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'addusertogroup');
         }

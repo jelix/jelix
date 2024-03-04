@@ -221,8 +221,12 @@ class groupsCtrl extends jController
         }
 
         try {
+            $login = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
+            if ($login === null) {
+                throw new jAcl2DbAdminUIException("No authorized user", 1);
+            }
             $manager = new jAcl2DbAdminUIManager();
-            $manager->setRightsOnGroup($rights, $grpId, jAuth::getUserSession()->login);
+            $manager->setRightsOnGroup($rights, $grpId, $login);
             jMessage::add(jLocale::get('acl2.message.group.rights.ok'), 'ok');
         } catch (jAcl2DbAdminUIException $e) {
             $this->checkException($e, 'savegrouprights');
@@ -437,8 +441,12 @@ class groupsCtrl extends jController
     {
         $rep = $this->getResponse('json');
         try {
+            $login = jAcl2Authentication::getAdapter()->getCurrentUserLogin();
+            if ($login === null) {
+                throw new jAcl2DbAdminUIException("No authorized user", 1);
+            }
             $manager = new jAcl2DbAdminUIManager();
-            $manager->removeGroup($this->param('group'), jAuth::getUserSession()->login);
+            $manager->removeGroup($this->param('group'), $login);
 
             $rep->data = [
                 'result' => 'ok',
