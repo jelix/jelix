@@ -139,8 +139,6 @@ class jIncluder
         // if it is existing. So we must invalidate the file.
         if (function_exists('opcache_invalidate')) {
             opcache_invalidate($cachefile, true);
-        } elseif (function_exists('apc_delete_file')) {
-            apc_delete_file($cachefile);
         }
 
         require $cachefile;
@@ -206,8 +204,6 @@ class jIncluder
                 // So we must invalidate the file.
                 if (function_exists('opcache_invalidate')) {
                     opcache_invalidate($cachefile, true);
-                } elseif (function_exists('apc_delete_file')) {
-                    apc_delete_file($cachefile);
                 }
 
                 $returnValue = require $cachefile;
@@ -225,8 +221,6 @@ class jIncluder
         foreach (self::$_includedFiles as $cachefile => $ok) {
             if (function_exists('opcache_invalidate')) {
                 opcache_invalidate($cachefile, true);
-            } elseif (function_exists('apc_delete_file')) {
-                apc_delete_file($cachefile);
             }
         }
         self::$_includedFiles = array();

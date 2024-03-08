@@ -138,6 +138,10 @@ class jConfigCompiler
         jFile::createDir(jApp::tempPath(), $config->chmodDir);
         $filename = self::getCacheFilename($configFile);
 
+        // if bytecode cache is enabled, it's better to store configuration
+        // as PHP code, reading performance are much better than reading
+        // an ini file (266 times less). However, if bytecode cache is disabled,
+        // reading performance are better with ini : 32% better. Json is only 22% better.
         if (BYTECODE_CACHE_EXISTS) {
             if ($f = @fopen($filename, 'wb')) {
                 fwrite($f, '<?php $config = '.var_export(get_object_vars($config), true).";\n?>");

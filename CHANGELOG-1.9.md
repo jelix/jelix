@@ -9,6 +9,8 @@ Features
 Removes
 -------
 
+*  remove support of bytecode cache other than opcache.
+
 Deprecated API and features
 ---------------------------
 
