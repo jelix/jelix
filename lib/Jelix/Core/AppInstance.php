@@ -95,7 +95,6 @@ class AppInstance
         $this->router = null;
         $this->config = null;
         $this->configAutoloader = null;
-        $this->_framework = null;
     }
 
     /**
@@ -122,6 +121,8 @@ class AppInstance
         $this->logPath = (is_null($logPath) ? $this->varPath.'log/' : $logPath);
         $this->configPath = (is_null($configPath) ? $this->varPath.'config/' : $configPath);
         $this->applicationInitFile = $appPath.'application.init.php';
+        // we unload current framework infos since the app path has been certainly changed.
+        $this->_framework = null;
     }
 
     public function __destruct()
