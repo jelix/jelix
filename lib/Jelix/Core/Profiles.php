@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Yannick Le Guédart, Julien Issler
  *
- * @copyright   2011-2014 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
+ * @copyright   2011-2024 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -28,12 +28,6 @@ class Profiles
      */
     protected static $_profiles;
 
-    /**
-     * @var \Jelix\Profiles\ReaderPlugin[]
-     */
-    protected static $_plugins = array();
-
-
     protected static function loadProfiles()
     {
         $file = App::varConfigPath('profiles.ini.php');
@@ -41,14 +35,11 @@ class Profiles
 
         $compiler = new ProfilesReader(function($name) {
 
-            if (!isset(self::$_plugins[$name])) {
-                $plugin = App::loadPlugin($name, 'profiles', '.profiles.php', $name.'ProfilesCompiler', $name);
-                if (!$plugin) {
-                    $plugin = new ReaderPlugin($name);
-                }
-                self::$_plugins[$name] = $plugin;
+            $plugin = App::loadPlugin($name, 'profiles', '.profiles.php', $name.'ProfilesCompiler', $name);
+            if (!$plugin) {
+                $plugin = new ReaderPlugin($name);
             }
-            return self::$_plugins[$name];
+            return $plugin;
         });
 
         self::$_profiles = $compiler->readFromFile($file, $tempFile);
