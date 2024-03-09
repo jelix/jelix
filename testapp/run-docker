@@ -33,7 +33,7 @@ fi
 
 if [ "$CMD" == "reset" ]; then
     # Stop/Remove containers
-    docker-compose -p jelix-${JLXBRANCH}-tests rm -sf || true
+    docker compose -p jelix-${JLXBRANCH}-tests rm -sf || true
     # Clean db volumes
     docker volume rm "jelix_${JLXBRANCH}_pg_data" || true
     docker volume rm "jelix_${JLXBRANCH}_mysql_data" || true
@@ -45,4 +45,4 @@ else
 fi
 
 
-docker-compose -p jelix-${JLXBRANCH}-tests $CMD
+docker compose -p jelix-${JLXBRANCH}-tests $CMD

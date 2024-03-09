@@ -22,8 +22,6 @@ class ModuleClass
 {
     protected static $_instances = array();
 
-    protected static $_bindings = array();
-
     private function __construct()
     {
     }

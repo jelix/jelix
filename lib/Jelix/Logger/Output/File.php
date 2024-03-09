@@ -54,7 +54,7 @@ class File implements \Jelix\Logger\OutputInterface
         try {
 
             if (!preg_match('/^([\\w\\.\\/]+)$/', $f, $m)) {
-                throw new \Exception("Invalid file name for file logger name ${f}");
+                throw new \Exception("Invalid file name for file logger name {$f}");
             }
             $file = \Jelix\Core\App::logPath($f);
             if ($message instanceof \Jelix\Logger\Message\Error) {

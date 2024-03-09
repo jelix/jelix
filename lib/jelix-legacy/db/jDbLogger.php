@@ -124,7 +124,7 @@ class jDbLogger implements \Psr\Log\LoggerInterface
      */
     public function debug($message, array $context = array())
     {
-        \jLog::log($message, 'sql');
+        \Jelix\Logger\Log::log($message, 'sql');
     }
 
     /**
