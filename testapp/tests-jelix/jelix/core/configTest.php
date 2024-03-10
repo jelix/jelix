@@ -11,6 +11,7 @@ class fakeConfig {
     public $modules = array();
     public $_allModulesPathList = array();
     public $_externalModulesPathList = array();
+    public $_modulesPathList = array();
     public $pluginsPath = '';
     public $modulesPath = '';
 }
