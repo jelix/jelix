@@ -2,6 +2,7 @@
 
 use Jelix\Core\App;
 use Jelix\Profiles\ReaderPlugin;
+use Jelix\Services\Database\DbProfilePlugin;
 
 /**
 * @package     testapp
@@ -52,7 +53,7 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
             'table_prefix' => '',
             'pdooptions' => '',
             'charset' => 'UTF-8',
-            'filePathParser' => 'jDb::parseSqlitePath'
+            'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath'
         );
 
         $this->assertEquals($expected, $p);
@@ -75,7 +76,7 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
             'table_prefix' => '',
             'pdooptions' => '',
             'charset' => 'UTF-8',
-            'filePathParser' => 'jDb::parseSqlitePath'
+            'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath'
         );
 
         $this->assertEquals($expected, $p);
@@ -114,7 +115,7 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
         $profile['table_prefix'] = '';
         $profile['pdooptions'] = '';
         $profile['charset'] = 'UTF-8';
-        $profile['filePathParser'] = 'jDb::parseSqlitePath';
+        $profile['filePathParser'] = '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath';
 
         $this->assertEquals($profile, $p);
     }
@@ -171,21 +172,21 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     )
                 )
                 )
@@ -213,28 +214,28 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                             'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                             'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                             'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                            'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                            'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                         ),
                         'foo' => array(
                             '_name' => 'default',
                             'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                             'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                             'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                            'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                            'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                         ),
                         'identical' => array(
                             '_name' => 'default',
                             'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                             'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                             'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                            'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                            'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                         ),
                         'maria' => array(
                             '_name' => 'maria',
                             'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                             'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                             'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                            'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                            'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                         )
                     )
                 )
@@ -262,28 +263,28 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     )
                 )
                 )
@@ -311,28 +312,28 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'identical' => array(
                         '_name' => 'identical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout' => 5, 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout' => 5, 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     )
                 )
                 )
@@ -360,28 +361,28 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'identical' => array(
                         '_name' => 'identical',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout' => 180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout' => 180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     )
                 )
                 )
@@ -419,42 +420,42 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'genius,public','charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'genius,public','charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'other' => array(
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                 )
                 )
@@ -497,49 +498,49 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'futchball' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'other' => array(
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                 )
                 )
@@ -553,49 +554,49 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:futchball' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:other' => array(
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                 ),
                 array('jdb'=> array(
@@ -604,49 +605,49 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'futchball' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'other' => array(
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                 )
                 )
@@ -709,49 +710,49 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'myvirtual' => array(
                         '_name' => 'myvirtual',
                         'driver' => 'pgsql', 'host' => 'otherhost', 'port' => 5432, 'user' => 'patrick', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'other' => array(
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                 )
                 )
@@ -815,49 +816,49 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'other' => array(
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'myvirtual' => array(
                         '_name' => 'myvirtual',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>181, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>181, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                 )
                 )
@@ -874,42 +875,42 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:other' => array(
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'jdb:myvirtual' => array(
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
@@ -922,49 +923,49 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'genius,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'default' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'foo' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'identical' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'maria' => array(
                         '_name' => 'maria',
                         'driver' => 'mysqli', 'host' => 'localhost', 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'mysql', 'phpext' => 'mysqli', 'pdoext' => 'pdo_mysql', 'pdodriver' => 'mysql', 'pdooptions' => '',
-                        'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'other' => array(
                         '_name' => 'other',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'gerard', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                     'myvirtual' => array(
                         '_name' => 'default',
                         'driver' => 'pgsql', 'host' => 'localhost', 'port' => 5432, 'user' => 'toto', 'password' => 'pass',
                         'usepdo' => false, 'persistent' => false, 'force_encoding' => false, 'table_prefix' => '',
                         'dbtype' => 'pgsql', 'phpext' => 'pgsql', 'pdoext' => 'pdo_pgsql', 'pdodriver' => 'pgsql', 'pdooptions' => '',
-                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => 'jDb::parseSqlitePath',
+                        'timeout'=>180, 'search_path' => 'bar,public', 'charset' => 'UTF-8', 'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath',
                     ),
                 )
                 )
@@ -981,11 +982,10 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
     function testDuplicateProfile($sourceProfiles, $expectedProfiles)
     {
         $compiler = new ProfilesReaderForTest(function($name) {
-            $plugin = App::loadPlugin($name, 'profiles', '.profiles.php', $name.'ProfilesCompiler', $name);
-            if (!$plugin) {
-                $plugin = new ReaderPlugin($name);
+            if ($name == 'jdb') {
+                return new DbProfilePlugin('jdb');
             }
-            return $plugin;
+            return new ReaderPlugin($name);
         });
 
         $profiles = $compiler->readFromTestArray($sourceProfiles);

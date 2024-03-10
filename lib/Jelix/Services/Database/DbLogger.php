@@ -1,16 +1,14 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  db
- *
  * @author      Laurent Jouanneau
- * @copyright   2011-2021 Laurent Jouanneau
+ * @copyright   2011-2024 Laurent Jouanneau
  *
  * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+namespace Jelix\Services\Database;
 
-class jDbLogger implements \Psr\Log\LoggerInterface
+class DbLogger implements \Psr\Log\LoggerInterface
 {
     /**
      * System is unusable.

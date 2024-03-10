@@ -101,7 +101,7 @@ class Locale
             }
 
             throw new Exception('(212)No locale file found for the given locale key "'.$key
-                            .'" in any other default languages');
+                            .'" in any other default languages', 212, $e);
         }
 
         $locale = $file->locale;

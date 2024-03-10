@@ -10,9 +10,6 @@
 */
 
 
-require_once(JELIX_LIB_PATH.'db/jDb.class.php');
-
-
 class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
 {
     public static function setUpBeforeClass() : void  {

@@ -31,6 +31,13 @@ class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
         parent::setUp();
     }
 
+    public function tearDown(): void
+    {
+        jDb::getConnection('testapp_sqlite3')->close();
+        jProfiles::clear();
+    }
+
+
     function testSelectRowCount(){
         $db = jDb::getConnection('testapp_sqlite3');
         
@@ -77,6 +84,7 @@ class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals(2, count($all));
         $res->free();
         unset($res);
+        $db->close();
     }
 
     /**
@@ -101,6 +109,7 @@ class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
         $stmt->execute();
 
         $stmt->execute(array('i'=>3, 'na'=>'verres', 'pr'=>2.43));
+        $stmt->free();
 
         $res = $cnx->query("SELECT count(*) as cnt FROM products");
         $rec = $res->fetch();

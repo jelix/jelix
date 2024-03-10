@@ -49,8 +49,9 @@ abstract class jacl2APITest extends \Jelix\UnitTests\UnitTestCaseDb {
         }
 
         $coord = jApp::coord();
-        if (isset($coord->plugins['auth']))
+        if (isset($coord->plugins['auth'])) {
             $this->oldAuthPlugin = $coord->plugins['auth'];
+        }
         $coord->plugins['auth'] = self::$coordAuthPlugin;
         $_SESSION[self::$coordAuthPlugin->config['session_name']] = new jAuthDummyUser();
         jAuth::login('laurent','foo', false);

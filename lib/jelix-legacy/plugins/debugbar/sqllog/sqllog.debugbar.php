@@ -4,7 +4,7 @@
  * @subpackage  debugbar_plugin
  *
  * @author      Laurent Jouanneau
- * @copyright   2011 Laurent Jouanneau
+ * @copyright   2011-2024 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -57,7 +57,7 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin
                 $sqlDetailsContent = '<ul id="jxdb-sqllog" class="jxdb-list">';
                 $totalTime = 0;
                 foreach ($messages as $msg) {
-                    if (get_class($msg) != 'jSQLLogMessage') {
+                    if (get_class($msg) != 'Jelix\Services\Database\SQLLogMessage') {
                         continue;
                     }
                     $dao = $msg->getDao();
@@ -74,8 +74,8 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin
                     <div>
                     <p>Time: '.$msgTime.'s</p>';
                     $sqlDetailsContent .= '<pre style="white-space:pre-wrap">'.htmlspecialchars($msg->getMessage()).'</pre>';
-                    if ($msg->getMessage() != $msg->originalQuery) {
-                        $sqlDetailsContent .= '<p>Original query: </p><pre style="white-space:pre-wrap">'.htmlspecialchars($msg->originalQuery).'</pre>';
+                    if ($msg->getMessage() != $msg->getOriginalQuery()) {
+                        $sqlDetailsContent .= '<p>Original query: </p><pre style="white-space:pre-wrap">'.htmlspecialchars($msg->getOriginalQuery()).'</pre>';
                     }
                     $sqlDetailsContent .= $debugbar->formatTrace($msg->getTrace());
                     $sqlDetailsContent .= '</div></li>';

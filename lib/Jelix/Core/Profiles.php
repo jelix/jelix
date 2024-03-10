@@ -14,6 +14,7 @@ namespace Jelix\Core;
 use Jelix\Profiles\ProfilesContainer;
 use Jelix\Profiles\ProfilesReader;
 use Jelix\Profiles\ReaderPlugin;
+use Jelix\Services\Database\DbProfilePlugin;
 
 
 /**
@@ -31,10 +32,13 @@ class Profiles
     protected static function loadProfiles()
     {
         $file = App::varConfigPath('profiles.ini.php');
-        $tempFile = App::tempPath('profiles.cache.php');
+        $tempFile = App::tempPath('profiles.cache.json');
 
         $compiler = new ProfilesReader(function($name) {
 
+            if ($name == 'jdb') {
+                return new DbProfilePlugin('jdb');
+            }
             $plugin = App::loadPlugin($name, 'profiles', '.profiles.php', $name.'ProfilesCompiler', $name);
             if (!$plugin) {
                 $plugin = new ReaderPlugin($name);
@@ -118,6 +122,7 @@ class Profiles
      * @param mixed        $nodefault
      *
      * @return null|object the stored object
+     * @deprecated
      */
     public static function getOrStoreInPool($category, $name, $function, $nodefault = false)
     {
@@ -126,6 +131,15 @@ class Profiles
         }
 
         return self::$_profiles->getOrStoreInPool($category, $name, $function, $nodefault);
+    }
+
+    public static function getConnector($category, $name, $nodefault = false)
+    {
+        if (self::$_profiles === null) {
+            self::loadProfiles();
+        }
+
+        return self::$_profiles->getConnector($category, $name, $nodefault);
     }
 
     /**
@@ -149,10 +163,13 @@ class Profiles
 
     /**
      * clear the loaded profiles to force to reload the profiles file.
-     * WARNING: it destroy all objects stored in the pool!
+     * WARNING: it destroys all objects stored in the pool!
      */
     public static function clear()
     {
-        self::$_profiles = null;
+        if (self::$_profiles !== null) {
+            self::$_profiles->clear();
+            self::$_profiles = null;
+        }
     }
 }
