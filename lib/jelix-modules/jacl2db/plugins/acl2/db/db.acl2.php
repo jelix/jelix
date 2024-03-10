@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  acl_driver
+ * @subpackage  jacl2db_plugin
  *
  * @author      Laurent Jouanneau
  * @copyright   2006-2011 Laurent Jouanneau
@@ -14,7 +14,7 @@
  * driver for jAcl2 based on a database.
  *
  * @package jelix
- * @subpackage acl_driver
+ * @subpackage jacl2db_driver
  */
 class dbAcl2Driver implements jIAcl2Driver2
 {
@@ -64,12 +64,13 @@ class dbAcl2Driver implements jIAcl2Driver2
      */
     public function getRightByUser($login, $subject, $resource = '-')
     {
-        if (empty($resource)) {
-            $resource = '-';
-        }
 
         if ($login === '' || $login === null) {
             return $this->getAnonymousRight($subject, $resource);
+        }
+
+        if (empty($resource)) {
+            $resource = '-';
         }
 
         $groups = null;

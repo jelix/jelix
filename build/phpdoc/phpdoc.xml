@@ -12,18 +12,21 @@
             <source dsn=".">
                 <path>lib/Jelix</path>
                 <path>lib/jelix-legacy/</path>
-                <path>lib/jelix-modules/jacl2/classes/</path>
-                <path>lib/jelix-modules/jacl2db/classes/</path>
-                <path>lib/jelix-modules/jpref/classes/</path>
+                <path>lib/jelix-admin-modules/</path>
+                <path>lib/jelix-modules/</path>
+                <path>lib/jelix-plugins/</path>
+                <path>lib/jelix-scripts/</path>
+                <path>lib/jelix-tests/</path>
                 <path>vendor/jelix/castor/lib/</path>
                 <path>vendor/jelix/feeds-module/jfeeds/</path>
                 <path>vendor/jelix/file-utilities/lib/</path>
                 <path>vendor/jelix/inifile/lib/</path>
+                <path>vendor/jelix/properties-file/src/</path>
                 <path>vendor/jelix/simplelocalization/lib/</path>
                 <path>vendor/jelix/soap-server-module/jsoap/</path>
                 <path>vendor/jelix/version/</path>
-                <path>vendor/jelix/webservice-helper/</path>
-                <path>vendor/phpmailer/phpmailer/class.*</path>
+                <path>vendor/jelix/webservice-helper/lib/</path>
+                <path>vendor/phpmailer/phpmailer/src</path>
             </source>
             <ignore hidden="true" symlinks="true">
                 <path>*.ini.php</path>

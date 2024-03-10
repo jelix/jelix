@@ -18,8 +18,6 @@ define('JELIX_SCRIPTS_PATH', __DIR__.'/');
 
 /**
  * Class JelixCommands.
- *
- * @package Jelix\DevHelper
  */
 class JelixCommands
 {

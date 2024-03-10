@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  jauthdb module
+ * @subpackage  jauthdb
  *
  * @author      Laurent Jouanneau
  * @contributor

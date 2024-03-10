@@ -531,8 +531,8 @@ class Jelix17
             } else {
                 $upgraderUrl->upgrade();
             }
-
             $ep['config']->save();
+            $urlMapModifier->save();
         }
 
         UrlEngineUpgrader::cleanConfig($mainConfigIni);

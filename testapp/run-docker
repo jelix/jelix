@@ -8,7 +8,9 @@ export JELIX_GROUP_ID=${JELIX_GROUP_ID:-$(id -g)}
 CMD=$1
 
 if [ "$JLXBRANCH" == "" ]; then
-  export JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
+  JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
+  JLXBRANCH="${JLXBRANCH//.}"
+  export JLXBRANCH="${JLXBRANCH//-}"
 fi
 
 if [ "$TESTAPP_WEB_PORT" == "" ]; then

@@ -492,7 +492,6 @@ ch.activate(\'closed\');})(c);
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryFile:\''.$this->getJQuery().'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
 ', $this->builder->getJsContent());
 
         $this->builder->setAction('http://www.jelix.org/dummy.php',array('foo'=>'bar'));
@@ -510,7 +509,6 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryFile:\''.$this->getJQuery().'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder1\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
 ', $this->builder->getJsContent());
 
         $this->builder->setAction('https://www.jelix.org/dummy.php',array());
@@ -527,7 +525,6 @@ jFormsJQ.declareForm(jFormsJQ.tForm);
 jFormsJQ.config = {locale:\''.jApp::config()->locale.'\',basePath:\''.jApp::urlBasePath().'\',jqueryFile:\''.$this->getJQuery().'\',jelixWWWPath:\''.jApp::config()->urlengine['jelixWWWPath'].'\'};
 jFormsJQ.tForm = new jFormsJQForm(\'jforms_formtesthtmlbuilder2\',\'formtesthtmlbuilder\',\'0\');
 jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
-jFormsJQ.declareForm(jFormsJQ.tForm);
 ', $this->builder->getJsContent());
 
     }

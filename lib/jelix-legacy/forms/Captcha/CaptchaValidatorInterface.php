@@ -1,8 +1,5 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  forms
- *
  * @author      Laurent Jouanneau
  * @copyright   2017 Laurent Jouanneau
  *

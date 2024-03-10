@@ -11,8 +11,6 @@ namespace Jelix\Scripts;
 
 /**
  * Launch commands from modules.
- *
- * @package Jelix\Scripts
  */
 class Configure
 {

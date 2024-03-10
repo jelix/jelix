@@ -1,7 +1,7 @@
 <?php
 /**
  * @package     jelix
- * @subpackage  acl
+ * @subpackage  jacl2db
  *
  * @author      Laurent Jouanneau
  * @contributor Adrien Lagroy de Croutte
@@ -18,7 +18,7 @@
  * Allow to verify admin rights when a change occurs in the authorizations.
  *
  * @package     jelix
- * @subpackage  acl
+ * @subpackage  jacldb
  */
 class jAcl2DbAdminCheckAuthorizations
 {

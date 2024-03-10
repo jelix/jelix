@@ -3,6 +3,9 @@
  * @package     jelix
  * @subpackage  forms_widget_plugin
  *
+ * @package     jelix
+ * @subpackage  forms_widget_plugin
+ *
  * @author      Claudio Bernardes
  * @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
  *

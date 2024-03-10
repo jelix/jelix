@@ -1,6 +1,7 @@
 <?php
 /**
- * @package     jacl2
+ * @package     jelix
+ * @subpackage  jacl2
  *
  * @author      Laurent Jouanneau
  * @copyright   2020 Laurent Jouanneau
@@ -15,7 +16,7 @@
  * interface for jAcl2 drivers.
  *
  * @package jelix
- * @subpackage acl
+ * @subpackage jacl2
  *
  * @since 1.6.29
  */

@@ -87,8 +87,6 @@ class Includer
         // if it is existing. So we must invalidate the file.
         if (function_exists('opcache_invalidate')) {
             opcache_invalidate($cachefile, true);
-        } elseif (function_exists('apc_delete_file')) {
-            apc_delete_file($cachefile);
         }
 
         require $cachefile;
@@ -157,8 +155,6 @@ class Includer
                 // So we must invalidate the file.
                 if (function_exists('opcache_invalidate')) {
                     opcache_invalidate($cachefile, true);
-                } elseif (function_exists('apc_delete_file')) {
-                    apc_delete_file($cachefile);
                 }
                 $returnedValue = require $cachefile;
                 self::$_includedFiles[$cachefile] = true;
@@ -176,8 +172,6 @@ class Includer
         foreach (self::$_includedFiles as $cachefile => $ok) {
             if (function_exists('opcache_invalidate')) {
                 opcache_invalidate($cachefile, true);
-            } elseif (function_exists('apc_delete_file')) {
-                apc_delete_file($cachefile);
             }
         }
         self::$_includedFiles = array();

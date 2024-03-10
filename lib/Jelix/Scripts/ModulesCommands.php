@@ -17,8 +17,6 @@ use Jelix\Core\Config\Compiler;
 
 /**
  * Launch commands from modules.
- *
- * @package Jelix\Scripts
  */
 class ModulesCommands
 {

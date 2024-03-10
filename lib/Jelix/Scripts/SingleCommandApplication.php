@@ -1,4 +1,11 @@
 <?php
+/**
+ * @author      Laurent Jouanneau
+ * @copyright   2018 Laurent Jouanneau
+ *
+ * @see        http://www.jelix.org
+ * @licence     MIT
+ */
 
 namespace Jelix\Scripts;
 

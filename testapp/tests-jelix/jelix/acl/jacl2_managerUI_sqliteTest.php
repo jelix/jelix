@@ -27,9 +27,11 @@ class jacl2_managerUI_sqliteTest extends jacl2_managerUITest
         $this->setUpAcl();
     }
 
-    public function tearDown() : void {
-        parent::tearDown();
+    public function tearDown() : void
+    {
+        $this->teardownAcl();
         jDao::releaseAll();
+        jDb::getConnection('testapp_sqlite3')->close();
         jProfiles::clear();
         jAcl2DbUserGroup::clearCache();
     }

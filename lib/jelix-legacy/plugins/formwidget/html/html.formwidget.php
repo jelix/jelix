@@ -58,13 +58,19 @@ class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget
             }
         }
 
-        $js .= "jFormsJQ.declareForm(jFormsJQ.tForm);\n";
+        if ($builder->getOption('deprecatedDeclareFormBeforeControls')) {
+            $js .= "jFormsJQ.declareForm(jFormsJQ.tForm);\n";
+        }
         $this->addJs($js);
     }
 
     public function outputFooter($builder)
     {
-        $js = "jQuery(document).ready(function() { var c, c2;\n".$this->js.$this->finalJs.'});';
+        $js = "jQuery(document).ready(function() { var c, c2;\n".$this->js.$this->finalJs;
+        if (!$builder->getOption('deprecatedDeclareFormBeforeControls')) {
+            $js .= "jFormsJQ.declareForm(jFormsJQ.tForm);\n";
+        }
+        $js .= '});';
         $container = $builder->getForm()->getContainer();
         $container->privateData['__jforms_js'] = $js;
         $formId = $container->formId;

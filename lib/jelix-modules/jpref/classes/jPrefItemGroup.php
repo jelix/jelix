@@ -1,6 +1,9 @@
 <?php
 
 /**
+ * @package     jelix
+ * @subpackage  jpref
+ *
  * @author    Florian Lonqueu-Brochard
  * @contributor Laurent Jouanneau
  *
