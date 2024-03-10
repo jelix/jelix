@@ -4,8 +4,8 @@
  * @subpackage  db
  *
  * @author      Laurent Jouanneau
- * @contributor Yannick Le Guédart, Laurent Raufaste, Julien Issler
- * @contributor Christophe Thiriot
+ * @contributor Laurent Raufaste
+ * @contributor Julien Issler
  *
  * @copyright   2005-2018 Laurent Jouanneau, 2008 Laurent Raufaste
  * @copyright   2011 Julien Issler

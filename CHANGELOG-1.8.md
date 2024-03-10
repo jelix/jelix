@@ -6,6 +6,7 @@ Changes into Jelix 1.8
 
 - Fix package and subpackage into doc comments
 - Fix jacl2db_admin: the module should use the jAcl2 authentication adapter to retrieve the authenticated user.
+- Fix Sqlite3 jDb driver: it must not free results if connection is already closed
 
 1.8.7
 -----

@@ -19,6 +19,8 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 
     public function setUp() : void
     {
+        jDao::releaseAll();
+        jProfiles::clear();
         $this->preSetUpAcl();
         $this->setUpAcl();
     }
@@ -125,13 +127,22 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
         jAcl2DbUserGroup::clearCache();
     }
 
-    public function tearDown() : void
+    protected function teardownAcl()
     {
         if ($this->oldAuthPlugin) {
             jApp::coord()->plugins['auth'] = $this->oldAuthPlugin;
         } else {
             unset(jApp::coord()->plugins['auth'], $_SESSION[self::$coordAuthPlugin->config['session_name']]);
         }
+    }
+
+    public function tearDown() : void
+    {
+        $this->teardownAcl();
+        jDao::releaseAll();
+        jProfiles::clear();
+        jAcl2DbUserGroup::clearCache();
+
     }
 
     public static function tearDownAfterClass() : void
