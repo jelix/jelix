@@ -8,7 +8,7 @@
  * @contributor Sylvain de Vathaire, Julien Issler
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright  2001-2005 CopixTeam, 2005-2012 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau
  * @copyright  2009 Julien Issler
  * @copyright  2012 Florian Lonqueu-Brochard
  *
@@ -24,7 +24,6 @@ require_once __DIR__.'/mysqli.dbresultset.php';
 class mysqliDbConnection extends jDbConnection
 {
     protected $_charsets = array('UTF-8' => 'utf8', 'ISO-8859-1' => 'latin1');
-    private $_usesMysqlnd;
 
     public function __construct($profile)
     {

@@ -27,8 +27,9 @@ class jacl2_managerUI_pgsqlTest extends jacl2_managerUITest
         $this->setUpAcl();
     }
 
-    public function tearDown() : void {
-        parent::tearDown();
+    public function tearDown() : void
+    {
+        $this->teardownAcl();
         jDao::releaseAll();
         jDb::getConnection('testapp_pgsql')->close();
         jProfiles::clear();

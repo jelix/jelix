@@ -6,7 +6,7 @@
  * @author     Loic Mathaud
  * @contributor Laurent Jouanneau
  *
- * @copyright  2006 Loic Mathaud, 2007-2015 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2007-2024 Laurent Jouanneau
  *
  * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -59,7 +59,7 @@ class sqlite3DbConnection extends jDbConnection
     {
         $res = $this->_connection->prepare($query);
         if ($res) {
-            $rs = new sqlite3DbResultSet(null, $res);
+            $rs = new sqlite3DbResultSet(null, $res, $this);
         } else {
             throw new jException('jelix~db.error.query.bad', $this->_connection->error.'('.$query.')');
         }
@@ -127,7 +127,7 @@ class sqlite3DbConnection extends jDbConnection
     protected function _doQuery($query)
     {
         if ($qI = $this->_connection->query($query)) {
-            return new sqlite3DbResultSet($qI);
+            return new sqlite3DbResultSet($qI, null, $this);
         }
 
         throw new jException('jelix~db.error.query.bad', $this->_connection->lastErrorMsg().' ('.$query.')');
@@ -135,7 +135,7 @@ class sqlite3DbConnection extends jDbConnection
 
     protected function _doExec($query)
     {
-        if ($qI = $this->_connection->exec($query)) {
+        if ($this->_connection->exec($query)) {
             return $this->_connection->changes();
         }
 

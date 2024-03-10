@@ -38,16 +38,26 @@ class sqlite3DbResultSet extends jDbResultSet
      */
     protected $buffer = array();
 
+    /**
+     * @var SQLite3Stmt|null
+     */
     protected $_stmt;
 
     /**
-     * @param SQLite3Result $result
-     * @param SQLite3Stmt   $stmt
+     * @var sqlite3DbConnection
      */
-    public function __construct($result, $stmt = null)
+    protected $_conn;
+
+    /**
+     * @param SQLite3Result|null $result
+     * @param SQLite3Stmt|null   $stmt
+     * @param sqlite3DbConnection $conn
+     */
+    public function __construct($result, $stmt, $conn)
     {
         parent::__construct($result);
         $this->_stmt = $stmt;
+        $this->_conn = $conn;
     }
 
     protected function _fetch()
@@ -93,7 +103,12 @@ class sqlite3DbResultSet extends jDbResultSet
         $this->numRows = 0;
         $this->buffer = array();
         $this->ended = false;
-        $this->_idResult->finalize();
+        // finalize may lead to an error if connection has been closed before
+        // the resultset object destruction.
+        if ($this->_conn && !$this->_conn->isClosed()) {
+            $this->_idResult->finalize();
+        }
+        $this->_conn = null;
     }
 
     protected function _rewind()
