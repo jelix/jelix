@@ -4,66 +4,17 @@ cd lib/jelix-modules
   CREDITS
 
 cd lib/jelix-modules/jacl2
-  module.xml
-cd lib/jelix-modules/jacl2/classes
-  __ALL__
-cd lib/jelix-modules/jacl2/locales/
-   __ALL_RECURSIVELY__
-cd lib/jelix-modules/jacl2/install
-  __ALL__
-cd lib/jelix-modules/jacl2/plugins/
   __ALL_RECURSIVELY__
 
 cd lib/jelix-modules/jacl2db
-  __ALL__
-cd lib/jelix-modules/jacl2db/classes
-  __ALL__
-cd lib/jelix-modules/jacl2db/Command
-  __ALL_RECURSIVELY__
-cd lib/jelix-modules/jacl2db/daos
-  __ALL__
-cd lib/jelix-modules/jacl2db/install
-  __ALL_RECURSIVELY__
-cd lib/jelix-modules/jacl2db/Command
-  __ALL_RECURSIVELY__
-cd lib/jelix-modules/jacl2db/locales/
-   __ALL_RECURSIVELY__
-
-cd lib/jelix-modules/jacl2db/plugins/
   __ALL_RECURSIVELY__
 
 cd lib/jelix-modules/jauthdb
-  module.xml
-cd lib/jelix-modules/jauthdb/daos
-  __ALL__
-cd lib/jelix-modules/jauthdb/install/
-  __ALL__
-
-cd lib/jelix-modules/jauth
-  __ALL__
-cd lib/jelix-modules/jauth/classes
-  __ALL__
-cd lib/jelix-modules/jauth/controllers
-  __ALL__
-cd lib/jelix-modules/jauth/install/
   __ALL_RECURSIVELY__
 
-cd lib/jelix-modules/jauth/locales/
-   __ALL_RECURSIVELY__
-cd lib/jelix-modules/jauth/templates
-  __ALL__
-cd lib/jelix-modules/jauth/zones
-  __ALL__
+cd lib/jelix-modules/jauth
+  __ALL_RECURSIVELY__
 
 cd lib/jelix-modules/jpref
-  __ALL__
-cd lib/jelix-modules/jpref/classes/
-  __ALL__
-cd lib/jelix-modules/jpref/install/
-  __ALL__
-cd lib/jelix-modules/jpref/locales/
    __ALL_RECURSIVELY__
 
-cd lib/jelix-plugins
-  INSTALL
-  LICENCE

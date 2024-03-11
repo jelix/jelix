@@ -2,60 +2,14 @@ cd lib/jelix-admin-modules/
    CREDITS
 
 cd lib/jelix-admin-modules/master_admin/
-   module.xml
-cd lib/jelix-admin-modules/master_admin/classes
-   __ALL__
-cd lib/jelix-admin-modules/master_admin/controllers
-   __ALL__
-cd lib/jelix-admin-modules/master_admin/install
-   __ALL__
-cd lib/jelix-admin-modules/master_admin/locales/
    __ALL_RECURSIVELY__
-cd lib/jelix-admin-modules/master_admin/templates/
-  __ALL__
-cd lib/jelix-admin-modules/master_admin/zones/
-  __ALL__
 
 cd lib/jelix-admin-modules/jacl2db_admin
-  __ALL__
-cd lib/jelix-admin-modules/jacl2db_admin/classes/
-  __ALL__
-cd lib/jelix-admin-modules/jacl2db_admin/locales/
   __ALL_RECURSIVELY__
-cd lib/jelix-admin-modules/jacl2db_admin/controllers
-  __ALL__
-cd lib/jelix-admin-modules/jacl2db_admin/install
-  __ALL__
-cd lib/jelix-admin-modules/jacl2db_admin/templates
-  __ALL__
 
 cd lib/jelix-admin-modules/jauthdb_admin
-  __ALL__
-cd lib/jelix-admin-modules/jauthdb_admin/classes/
-  __ALL__
-cd lib/jelix-admin-modules/jauthdb_admin/controllers
-  __ALL__
-cd lib/jelix-admin-modules/jauthdb_admin/forms
-  __ALL__
-cd lib/jelix-admin-modules/jauthdb_admin/install
-  __ALL__
-cd lib/jelix-admin-modules/jauthdb_admin/locales/
-   __ALL_RECURSIVELY__
-cd lib/jelix-admin-modules/jauthdb_admin/templates
-  __ALL__
+  __ALL_RECURSIVELY__
   
 cd lib/jelix-admin-modules/jpref_admin
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/classes/
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/controllers
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/forms
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/install
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/locales/
-   __ALL_RECURSIVELY__
-cd lib/jelix-admin-modules/jpref_admin/templates
-  __ALL__
+  __ALL_RECURSIVELY__
 

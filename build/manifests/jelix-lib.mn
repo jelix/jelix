@@ -32,7 +32,7 @@ cd lib/Jelix/Dependencies
   Resolver.php
 
 cd lib/Jelix/DevHelper
-  __ALL__
+  __ALL_RECURSIVELY__
 
 cd lib/Jelix/Event
   __ALL__
@@ -48,8 +48,9 @@ cd lib/Jelix/Legacy/
 cd lib/Jelix/Legacy/core
    __ALL_RECURSIVELY__
 
-  jServer.php
-  jSession.php
+cd lib/Jelix/Legacy/db
+  __ALL__
+
 cd lib/Jelix/Legacy/events
   __ALL__
 
@@ -78,6 +79,9 @@ cd lib/Jelix/Routing
 cd lib/Jelix/Scripts
   __ALL__
 
+cd lib/Jelix/Services
+  __ALL_RECURSIVELY__
+
 cd lib/Jelix/Template
   __ALL__
 
@@ -101,17 +105,7 @@ cd lib/jelix-legacy/controllers
   __ALL__
 
 cd lib/jelix-legacy/core
-  __ALL__
-
-cd lib/jelix-legacy/core/request
-  __ALL__
-
-cd lib/jelix-legacy/core/response
-  __ALL__
-
-cd lib/jelix-legacy/core/selector
-  __ALL__
-
+  __ALL_RECURSIVELY__
 
 cd lib/jelix-legacy/core-modules/jelix
    __ALL__
@@ -139,10 +133,6 @@ cd lib/jelix-legacy/core-modules/jelix/zones
 cd lib/jelix-legacy/dao
   __ALL__
 
-cd lib/jelix-legacy/db
-  __ALL__
-
-
 #if ENABLE_DEVELOPER
 cd lib/jelix-legacy/docs
   workflow_action.sxd
@@ -163,6 +153,9 @@ cd lib/jelix-legacy/plugins/
 cd lib/jelix-legacy/utils/
   __ALL__
 
+cd lib/jelix-plugins
+  INSTALL
+  LICENCE
 
 cd lib/jelix-plugins/cache/
   __ALL_RECURSIVELY__

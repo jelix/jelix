@@ -1,25 +1,8 @@
 
 cd lib/jelix-www/design
-  __ALL__
-cd lib/jelix-www/design/jforms/
-  __ALL__
-cd lib/jelix-www/design/icons
-  __ALL__
-cd lib/jelix-www/design/icons8
-  __ALL__
-cd lib/jelix-www/design/images
-  __ALL__
+  __ALL_RECURSIVELY__
 cd lib/jelix-www/js
-  __ALL__
-cd lib/jelix-www/js/jforms/
-  __ALL__
-cd lib/jelix-www/js/jforms/datepickers/default
-  __ALL__
-cd lib/jelix-www/js/jforms/datetimepickers/default
-  __ALL__
-cd lib/jelix-www/js/jforms/htmleditors/
-  __ALL__
-
+  __ALL_RECURSIVELY__
 cd lib/jelix-www/ckeditor5
   __ALL_RECURSIVELY__
 
