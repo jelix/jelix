@@ -1,6 +1,14 @@
 Changes into Jelix 1.8
 ======================
 
+1.8.9-pre
+---------
+
+- Fix installer: installation parameter into mainconfig may not be taken account.
+  In some cases, default values of installation parameter may be unexpectedly 
+  written into localconfig.ini.php during the configuration, so
+  installation parameters may not be taken account.
+
 1.8.8
 -----
 
