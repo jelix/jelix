@@ -1,13 +1,18 @@
 Changes into Jelix 1.8
 ======================
 
-1.8.9-pre
----------
+1.8.9
+-----
 
 - Fix installer: installation parameter into mainconfig may not be taken account.
   In some cases, default values of installation parameter may be unexpectedly 
   written into localconfig.ini.php during the configuration, so
   installation parameters may not be taken account.
+- jResponseHtmlFragment: remove the final attribut from output methods
+- Fix jDbSchema: reload list of tables in some case
+- Configurator: show warning when a bad path is given to getFilesToCopy
+- fix pgsql drive: execute should return the status of pg_execute
+- fix jacl2db_adminListener: url missing when only acl.user.view rights
 
 1.8.8
 -----
