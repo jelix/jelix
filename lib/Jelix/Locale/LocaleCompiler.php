@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2023 Laurent Jouanneau
+ * @copyright  2023-2024 Laurent Jouanneau
  *
  * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -9,6 +9,8 @@
 
 namespace Jelix\Locale;
 
+use Jelix\Installer\WarmUp\FilePlace;
+use Jelix\Installer\WarmUp\FilePlaceEnum;
 use Jelix\PropertiesFile\Parser;
 use Jelix\PropertiesFile\Properties;
 
@@ -111,6 +113,14 @@ class LocaleCompiler
         }
     }
 
+    /**
+     * Compile properties files from a single directory, corresponding to a specific lang and a specific module
+     *
+     * @param string $module
+     * @param string $lang
+     * @param string $dirPath full path of the directory
+     * @return void
+     */
     public function compileLang($module, $lang, $dirPath)
     {
         if (!file_exists($dirPath)) {
@@ -138,11 +148,20 @@ class LocaleCompiler
                 }
                 $this->compiledLangFiles[$key] = true;
 
-                $this->compileSingleFile($module, $lang, $fileinfo);
+                $this->compileFile($module, $lang, $fileinfo);
             }
         }
     }
 
+    /**
+     * Gives the path of the file that is the result of the compilation of a properties file.
+     *
+     * @param string $module
+     * @param string $lang
+     * @param string $fileName the file name (not the path)
+     * @param string $buildPath the main build directory where compiled files are stored.
+     * @return string the full path of the compiled file.
+     */
     public static function getCacheFileName($module, $lang, $fileName, $buildPath)
     {
         if (preg_match('/^(.+)\\.([a-zA-Z0-9_\\-]+)\\.properties$/', $fileName, $m)) {
@@ -152,22 +171,31 @@ class LocaleCompiler
         return $buildPath.'locales/'.$module.'/'.$lang.'/'.$fileName.'.php';
     }
 
-    protected function getCachePath($module, $lang, \SplFileInfo $file)
+    protected function getCachePath($module, $lang, $fileName)
     {
-        $cachePath = self::getCacheFileName($module, $lang, $file->getFilename(), $this->buildPath);
+        $cachePath = self::getCacheFileName($module, $lang, $fileName, $this->buildPath);
         \jFile::createDir(dirname($cachePath));
         return $cachePath;
     }
 
-    protected function compileSingleFile($module, $lang, \SplFileInfo $file)
+    /**
+     * Compile one properties file and store the result into the build directory
+     *
+     * @param string $module
+     * @param string $lang
+     * @param \SplFileInfo $file
+     * @return void
+     * @throws \Exception
+     */
+    protected function compileFile($module, $lang, \SplFileInfo $file)
     {
-        $cachePath = $this->getCachePath($module, $lang, $file);
+        $cachePath = $this->getCachePath($module, $lang, $file->getFilename());
         $sourcePath = $file->getPathname();
         $properties = new Properties();
         $reader = new Parser();
         $reader->parseFromFile($sourcePath, $properties);
-        $this->_strings = $properties->getAllProperties();
-        $content = '<?php return '.var_export($this->_strings, true).";\n";
+        $strings = $properties->getAllProperties();
+        $content = '<?php return '.var_export($strings, true).";\n";
 
         \jFile::write($cachePath, $content);
     }
@@ -187,55 +215,104 @@ class LocaleCompiler
      *  - app/locales
      *  - locales/ into the original module directory (lowest priority)
      *
-     * @param $module
-     * @param $lang
-     * @param \SplFileInfo $file
+     * @param FilePlace $filename
      * @return void
      * @throws \Exception
      */
-    public function compileFile($module, $lang, \SplFileInfo $file) 
+    public function compileSingleFile(FilePlace $file)
     {
-        $sourcePath = $this->findPath($module, $lang, $file);
-        $cachePath = $this->getCachePath($module, $lang, $file);
+        $moduleLocale = $this->findPriorityPath($file);
+        if ($moduleLocale === false) {
+            return;
+        }
+        list($module, $locale, $filename) = $moduleLocale;;
+        $cachePath = $this->getCachePath($module, $locale, $filename);
 
         $properties = new Properties();
         $reader = new Parser();
-        $reader->parseFromFile($sourcePath, $properties);
-        $this->_strings = $properties->getAllProperties();
-        $content = '<?php return '.var_export($this->_strings, true).";\n";
+        $reader->parseFromFile($file->filePath, $properties);
+        $strings = $properties->getAllProperties();
+        $content = '<?php return '.var_export($strings, true).";\n";
         \jFile::write($cachePath, $content);
     }
 
 
-    protected function findPath($module, $locale, \SplFileInfo $file)
+    /**
+     * @param FilePlace $file
+     * @return array|false  [module, locale, filename]
+     */
+    protected function getModuleAndLocale(FilePlace $file)
     {
-        $fileName = $file->getFilename();
-        // check if the locale has been overloaded in var/
-        $overloadedPath = $this->varPath.'overloads/'.$module.'/locales/'.$locale.'/'.$fileName;
-        if (is_readable($overloadedPath)) {
-            return $overloadedPath;
+        if ($file->place == FilePlaceEnum::VarOverloads ||
+            $file->place == FilePlaceEnum::AppOverloads ||
+            $file->place == FilePlaceEnum::Module
+        ) {
+            if (preg_match('!^locales/([^/]+)/(.+)!', $file->subPath, $m)) {
+                return [$file->module, $m[1], $m[2]];
+            }
+            return false;
         }
 
-        // check if the locale is available in the locales directory in var/
-        $localesPath = $this->varPath.'locales/'.$locale.'/'.$module.'/locales/'.$fileName;
-        if (is_readable($localesPath)) {
-            return $localesPath;
+        if ($file->place == FilePlaceEnum::Var || $file->place == FilePlaceEnum::App) {
+            if (preg_match('!^locales/([^/]+)/([^/]+)/locales/(.+)!', $file->subPath, $m)) {
+                return [$m[2], $m[1], $m[3]];
+            }
+            return false;
         }
 
-        // check if the locale has been overloaded in app/
-        $overloadedPath = $this->appPath.'app/overloads/'.$module.'/locales/'.$locale.'/'.$fileName;
-        if (is_readable($overloadedPath)) {
-            return $overloadedPath;
-        }
-
-        // check if the locale is available in the locales directory in app/
-        $localesPath =$this->appPath.'app/locales/'.$locale.'/'.$module.'/locales/'.$fileName;
-        if (is_readable($localesPath)) {
-            return $localesPath;
-        }
-
-        return $file->getPathname();
+        return false;
     }
-    
-    
+
+    /**
+     * @param string $module
+     * @param string $locale
+     * @param FilePlace $file
+     * @return array|null  [module, locale, filename]
+     */
+    protected function findPriorityPath(FilePlace $file)
+    {
+        $moduleLocale = $this->getModuleAndLocale($file);
+        if ($moduleLocale === false) {
+            return null;
+        }
+        if ($file->place == FilePlaceEnum::VarOverloads) {
+           return $moduleLocale;
+        }
+
+        list($module, $locale, $filename) = $moduleLocale;
+
+        if (file_exists($this->varPath.'overloads/'.$module.'/locales/'.$locale.'/'.$filename)) {
+            return null;
+        }
+
+        if ($file->place == FilePlaceEnum::Var) {
+            return $moduleLocale;
+        }
+
+        if (file_exists($this->varPath.'locales/'.$locale.'/'.$module.'/locales/'.$filename)) {
+            return null;
+        }
+
+        if ($file->place == FilePlaceEnum::AppOverloads) {
+            return $moduleLocale;
+        }
+
+        if (file_exists($this->appPath.'overloads/'.$module.'/locales/'.$locale.'/'.$filename)) {
+            return null;
+        }
+
+        if ($file->place == FilePlaceEnum::App) {
+            return $moduleLocale;
+        }
+
+        if (file_exists($this->appPath.'locales/'.$locale.'/'.$module.'/locales/'.$filename)) {
+            return null;
+        }
+
+        if ($file->place == FilePlaceEnum::Module) {
+            return $moduleLocale;
+        }
+
+        return null;
+    }
 }

@@ -1,9 +1,9 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2011-2016 Laurent Jouanneau
+ * @copyright  2011-2024 Laurent Jouanneau
  *
- * @see       http://jelix.org
+ * @see        https://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -47,6 +47,7 @@ class JelixCommands
         $application->add(new Command\CreateZone($jelixScriptConfig));
         $application->add(new Command\IniChange($jelixScriptConfig));
         $application->add(new Command\IniMerge($jelixScriptConfig));
+        $application->add(new Command\Compile($jelixScriptConfig));
 
         return $application;
     }
