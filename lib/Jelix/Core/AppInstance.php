@@ -31,6 +31,8 @@ class AppInstance
 
     public $wwwPath = '';
 
+    public $buildPath = '';
+
     public $env = 'www/';
 
     public $configAutoloader;
@@ -121,6 +123,8 @@ class AppInstance
         $this->logPath = (is_null($logPath) ? $this->varPath.'log/' : $logPath);
         $this->configPath = (is_null($configPath) ? $this->varPath.'config/' : $configPath);
         $this->applicationInitFile = $appPath.'application.init.php';
+        $this->buildPath = $this->varPath.'build/';
+
         // we unload current framework infos since the app path has been certainly changed.
         $this->_framework = null;
     }

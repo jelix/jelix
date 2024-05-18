@@ -2,7 +2,7 @@
 /**
  * @author     Laurent Jouanneau
  * @author     Gerald Croes
- * @copyright  2001-2005 CopixTeam, 2005-2016 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
  * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
  * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
  * initial authors : Gerald Croes, Laurent Jouanneau.

@@ -2,7 +2,7 @@
 /**
  * @author     Laurent Jouanneau
  * @author     Gerald Croes
- * @copyright  2001-2005 CopixTeam, 2005-2018 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -53,7 +53,8 @@ class Bundle
     public function get($key)
     {
         if ($this->_strings === null) {
-            $this->_loadLocales();
+            $cache = $this->_file->getCompiledFilePath();
+            $this->_strings = include $cache;
         }
 
         if (isset($this->_strings[$key])) {
@@ -61,43 +62,5 @@ class Bundle
         }
 
         return null;
-    }
-
-    /**
-     * Loads the resources for a given locale
-     */
-    protected function _loadLocales()
-    {
-        $source = $this->_file->getPath();
-        $cache = $this->_file->getCompiledFilePath();
-
-        // check if we have a compiled version of the ressources
-
-        if (is_readable($cache)) {
-            $okcompile = true;
-
-            if (App::config()->compilation['force']) {
-                $okcompile = false;
-            } else {
-                if (App::config()->compilation['checkCacheFiletime']) {
-                    if (is_readable($source) && filemtime($source) > filemtime($cache)) {
-                        $okcompile = false;
-                    }
-                }
-            }
-
-            if ($okcompile) {
-                $this->_strings = include $cache;
-
-                return;
-            }
-        }
-
-        $properties = new Properties();
-        $reader = new Parser();
-        $reader->parseFromFile($source, $properties);
-        $this->_strings = $properties->getAllProperties();
-        $content = '<?php return '.var_export($this->_strings, true).";\n";
-        \jFile::write($cache, $content);
     }
 }

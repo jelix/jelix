@@ -1,12 +1,18 @@
 #!/usr/bin/env bash
 
+basedir=$(dirname "$0")
+rootdir=$(realpath $basedir/../)
 COMMAND="$1"
 shift
 
-if [ "$JLXBRANCH" == "" ]; then
-    JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
-    JLXBRANCH="${JLXBRANCH//.}"
-    export JLXBRANCH="${JLXBRANCH//-}"
+if [ -f $basedir/.env ]; then
+  source $basedir/.env
+fi
+
+if [ "$JLX_BRANCH" == "" ]; then
+    JLX_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    JLX_BRANCH="${JLX_BRANCH//.}"
+    export JLX_BRANCH="${JLX_BRANCH//-}"
 fi
 
 if [ "$COMMAND" == "" ]; then
@@ -23,40 +29,45 @@ fi
 
 case $COMMAND in
     clean-temp)
-        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh clean_tmp;;
+        docker exec -t -i jelix_${JLX_BRANCH}_test_php appctl.sh clean_tmp;;
     reset)
-        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh reset;;
+        docker exec -t -i jelix_${JLX_BRANCH}_test_php appctl.sh reset;;
     install)
-        docker exec -t -i  --user userphp  jelix_${JLXBRANCH}_test_php appctl.sh install;;
+        docker exec -t -i jelix_${JLX_BRANCH}_test_php appctl.sh install;;
     rights)
-        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh rights;;
+        docker exec -t -i jelix_${JLX_BRANCH}_test_php appctl.sh rights;;
     composer-install)
-        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh composer_install;;
+        docker exec -t -i jelix_${JLX_BRANCH}_test_php appctl.sh composer_install;;
     composer-update)
-        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh composer_update;;
+        docker exec -t -i jelix_${JLX_BRANCH}_test_php appctl.sh composer_update;;
     unit-tests)
-        docker exec -t -i jelix_${JLXBRANCH}_test_php appctl.sh unit-tests $@;;
+        docker exec -t -i jelix_${JLX_BRANCH}_test_php appctl.sh unit-tests $@;;
+    jlxcompile)
+       pathInDocker=$(echo $1 | sed "s!$rootdir!/jelixapp!g")
+       #docker exec -t --user userphp -e XDEBUG_SESSION=1 jelix_${JLX_BRANCH}_test_php php /jelixapp/testapp/dev.php compile $pathInDocker
+       docker exec -t --user userphp jelix_${JLX_BRANCH}_test_php php /jelixapp/testapp/dev.php compile $pathInDocker
+       ;;
     shell)
-       docker exec -it --user userphp jelix_${JLXBRANCH}_test_php  /bin/bash -l;;
+       docker exec -it --user userphp jelix_${JLX_BRANCH}_test_php  /bin/bash -l;;
     shell-root)
-       docker exec -it jelix_${JLXBRANCH}_test_php  /bin/bash  -l;;
+       docker exec -it jelix_${JLX_BRANCH}_test_php  /bin/bash  -l;;
     ldap-reset)
-      docker exec -it jelix_${JLXBRANCH}_test_ldap /bin/ctl.sh reset
+      docker exec -it jelix_${JLX_BRANCH}_test_ldap /bin/ctl.sh reset
       ;;
     ldap-users)
-       docker exec -it jelix_${JLXBRANCH}_test_ldap /bin/ctl.sh showusers
+       docker exec -it jelix_${JLX_BRANCH}_test_ldap /bin/ctl.sh showusers
        ;;
     pgsql)
-       docker exec -it --user postgres -e PGPASSWORD="jelix" jelix_${JLXBRANCH}_test_pgsql psql --username=test_user testapp
+       docker exec -it --user postgres -e PGPASSWORD="jelix" jelix_${JLX_BRANCH}_test_pgsql psql --username=test_user testapp
        ;;
     redis)
-      docker exec -it jelix_${JLXBRANCH}_test_redis redis-cli
+      docker exec -it jelix_${JLX_BRANCH}_test_redis redis-cli
       ;;
     mysql)
-      docker exec -it jelix_${JLXBRANCH}_test_mysql mysql -u test_user -pjelix testapp
+      docker exec -it jelix_${JLX_BRANCH}_test_mysql mysql -u test_user -pjelix testapp
       ;;
     mysql-root)
-      docker exec -it jelix_${JLXBRANCH}_test_mysql /bin/bash  -l
+      docker exec -it jelix_${JLX_BRANCH}_test_mysql /bin/bash  -l
       ;;
     *)
         echo "wrong command"

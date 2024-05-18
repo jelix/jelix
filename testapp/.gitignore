@@ -1,5 +1,6 @@
 .DS_Store
 Thumbs.db
+.env
 app/system/auth_ldap.coord.ini.php
 var/config/installer.ini.php
 var/config/profiles.ini.php
@@ -20,6 +21,8 @@ var/build/*
 composer.lock
 temp/*
 !temp/.dummy
+tests-jelix/jelix/routing/app1/var/build/*
+!tests-jelix/jelix/routing/app1/var/build/.dummy
 tests-jelix/jelix/installer/app1/var/config/installer.ini.php
 tests-jelix/jelix/installer/app1/var/config/installer.bak.ini.php
 tests-jelix/jelix/installer/app1/var/config/liveconfig.ini.php

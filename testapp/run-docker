@@ -1,24 +1,38 @@
 #!/usr/bin/env bash
 
+basedir=$(dirname "$0")
 set -e
-
-export JELIX_USER_ID=${JELIX_USER_ID:-$(id -u)}
-export JELIX_GROUP_ID=${JELIX_GROUP_ID:-$(id -g)}
 
 CMD=$1
 
-if [ "$JLXBRANCH" == "" ]; then
-  JLXBRANCH=$(git rev-parse --abbrev-ref HEAD)
-  JLXBRANCH="${JLXBRANCH//.}"
-  export JLXBRANCH="${JLXBRANCH//-}"
-fi
+if [ ! -f $basedir/.env ]; then
 
-if [ "$TESTAPP_WEB_PORT" == "" ]; then
-  export TESTAPP_WEB_PORT=8820
-fi
+  JELIX_USER_ID=${JELIX_USER_ID:-$(id -u)}
+  JELIX_GROUP_ID=${JELIX_GROUP_ID:-$(id -g)}
 
-if [ "$PHP_VERSION" == "" ]; then
-  export PHP_VERSION=8.3
+  if [ "$JLX_BRANCH" == "" ]; then
+    JLX_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    JLX_BRANCH="${JLX_BRANCH//.}"
+    JLX_BRANCH="${JLX_BRANCH//-}"
+  fi
+
+  if [ "$TESTAPP_WEB_PORT" == "" ]; then
+    TESTAPP_WEB_PORT=8820
+  fi
+
+  if [ "$PHP_VERSION" == "" ]; then
+    PHP_VERSION=8.3
+  fi
+
+  cat <<-EOF > $basedir/.env
+JELIX_USER_ID=$JELIX_USER_ID
+JELIX_GROUP_ID=$JELIX_GROUP_ID
+JLX_BRANCH=$JLX_BRANCH
+TESTAPP_WEB_PORT=$TESTAPP_WEB_PORT
+PHP_VERSION=$PHP_VERSION
+EOF
+else
+  source $basedir/.env
 fi
 
 if [ "$CMD" == "build" ]; then
@@ -35,10 +49,10 @@ fi
 
 if [ "$CMD" == "reset" ]; then
     # Stop/Remove containers
-    docker compose -p jelix-${JLXBRANCH}-tests rm -sf || true
+    docker compose rm -sf || true
     # Clean db volumes
-    docker volume rm "jelix_${JLXBRANCH}_pg_data" || true
-    docker volume rm "jelix_${JLXBRANCH}_mysql_data" || true
+    docker volume rm "jelix_${JLX_BRANCH}_pg_data" || true
+    docker volume rm "jelix_${JLX_BRANCH}_mysql_data" || true
     exit 0
 elif [ -z "$CMD" ]; then
     CMD="up"
@@ -46,5 +60,4 @@ else
     shift
 fi
 
-
-docker compose -p jelix-${JLXBRANCH}-tests $CMD
+docker compose $CMD

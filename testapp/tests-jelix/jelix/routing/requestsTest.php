@@ -4,10 +4,11 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007-2013 Laurent Jouanneau
+* @copyright   2007-2023 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
 use \Jelix\Core\App;
 
 class requestsTest extends \Jelix\UnitTests\UnitTestCase {
@@ -36,7 +37,8 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         App::restoreContext();
     }
 
-    protected function initRequest($url, $server, $scriptPath = '/foo/index.php', $scriptNameServerVariable = '') {
+    protected function initRequest($url, $server, $scriptPath = '/foo/index.php', $scriptNameServerVariable = '')
+    {
         $this->fServer = $server;
         $this->fServer->setHttpRequest($url);
 
@@ -44,8 +46,13 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         if ($scriptNameServerVariable) {
             $config->urlengine['scriptNameServerVariable'] = $scriptNameServerVariable;
         }
+
         $coord = new \Jelix\UnitTests\CoordinatorForTest($config, false);
         App::setRouter($coord);
+
+        $warmUp = new Jelix\Installer\WarmUp\WarmUp(App::app());
+        $warmUp->launch();
+
         $request = new jClassicRequest();
         $coord->testSetRequest($request);
         return $request;

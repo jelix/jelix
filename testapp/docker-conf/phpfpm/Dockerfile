@@ -14,6 +14,7 @@ RUN set -e; apt-get update; \
     apt-utils \
     ldap-utils \
     openssl \
+    vim \
     postgresql-client \
     mariadb-client \
     ; if [ "$PHP_VERSION" != "8.0" -a "$PHP_VERSION" != "8.1" ]; then \
@@ -28,7 +29,8 @@ RUN set -eux; \
     mkdir -p /etc/openldap/ /etc/ssl/ldap/; \
     chmod 755 /etc/openldap/ /etc/ssl/ldap/;
 
-
+COPY xdebug.ini  /etc/php/${PHP_VERSION}/cli/conf.d/90-xdebug.ini
+COPY xdebug.ini  /etc/php/${PHP_VERSION}/fpm/conf.d/90-xdebug.ini
 COPY profile.start /etc/profile.d/start
 COPY ldap.conf /etc/openldap/ldap.conf
 COPY jelix_entrypoint.sh /bin/entrypoint.d/
