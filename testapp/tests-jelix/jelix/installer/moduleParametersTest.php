@@ -299,69 +299,69 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
                 array(),
             ),
             array(
-                array(),
                 array('foo'=>true),
-                array('foo'=>true),
-            ),
-            array(
                 array(),
-                array('foo'=>false),
                 array(),
             ),
             array(
                 array('foo'=>false),
+                array(),
+                array(),
+            ),
+            array(
+                array('foo'=>false),
                 array('foo'=>false),
                 array(),
             ),
             array(
-                array('foo'=>true),
                 array(),
+                array('foo'=>true),
                 array('foo'=>true),
             ),
             array(
                 array('foo'=>true),
+                array('foo'=>true),
+                array(),
+            ),
+            array(
+                array('foo'=>false),
                 array('foo'=>true),
                 array('foo'=>true),
             ),
             array(
                 array('foo'=>true),
                 array('foo'=>false),
-                array('foo'=>true),
-            ),
-            array(
                 array('foo'=>false),
-                array('foo'=>true),
-                array(),
             ),
             array(
-                array('foo'=>''),
                 array('foo'=>'bar'),
                 array('foo'=>''),
+                array('foo'=>''),
             ),
             array(
-                array(),
                 array('foo'=>'bar'),
                 array(),
+                array(),
             ),
             array(
-                array(),
                 array('foo'=>''),
                 array(),
+                array(),
             ),
             array(
                 array('foo'=>true, 'bar'=>true),
                 array('foo'=>true, 'bar'=>true),
-                array('foo'=>true, 'bar'=>true),
+                array(),
             ),
             array(
+                array('foo'=>true, 'bar'=>true),
                 array('foo'=>false, 'bar'=>true),
-                array('foo'=>true, 'bar'=>true),
-                array('bar'=>true),
+                array('foo'=>false),
             ),
             array(
-                array('foo'=>true, 'bar'=>'true'),
                 array(),
                 array('foo'=>true, 'bar'=>'true'),
+                array('foo'=>true, 'bar'=>'true'),
             ),
             array(
                 array('foo'=>'abc'),
@@ -369,18 +369,27 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
                 array(),
             ),
             array(
-                array('foo'=>'cba'),
                 array('foo'=>'abc'),
                 array('foo'=>'cba'),
+                array('foo'=>'cba'),
             ),
+            array(
+                array('defaultgroups' => true,
+                    'defaultuser' => false,
+                ),
+                array('defaultgroups' => true,
+                    'defaultuser' => false,
+                ),
+                array(),
 
+            )
         );
     }
 
     /**
      * @dataProvider getUnserializedToSerializedAsArrayWithDefParam
      */
-    function testSerializeAsArrayWithDefParam($data, $defaultParam, $expectedSerialized) {
+    function testSerializeAsArrayWithDefParam($defaultParam, $data, $expectedSerialized) {
         $this->assertEquals(
             $expectedSerialized,
             ModuleStatusDeclaration::serializeParametersAsArray($data, $defaultParam)

@@ -68,7 +68,7 @@ class jResponseHtmlFragment extends jResponse
      *
      * @return bool true if it's ok
      */
-    final public function output()
+    public function output()
     {
         if ($this->_outputOnlyHeaders) {
             $this->sendHttpHeaders();
@@ -121,7 +121,7 @@ class jResponseHtmlFragment extends jResponse
     /**
      * output errors.
      */
-    final public function outputErrors()
+    public function outputErrors()
     {
         $this->clearHttpHeaders();
         $this->_httpStatusCode = '500';

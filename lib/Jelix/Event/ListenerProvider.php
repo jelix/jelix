@@ -75,10 +75,11 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
      */
     protected function loadListenersFor($eventName)
     {
+
         if ($this->listenersList === null) {
             $compilerData = $this->compilerData;
             $compilerData[3] = $this->config->urlengine['urlScriptId'] . '.' . $compilerData[3];
-            $this->listenersList = Includer::incAll($compilerData, true, $this->config);
+            $this->listenersList = Includer::incAll($compilerData, false, $this->config);
             if ($this->listenersList === null) {
                 trigger_error('Compilation of event listeners list failed?', E_USER_WARNING);
                 return;

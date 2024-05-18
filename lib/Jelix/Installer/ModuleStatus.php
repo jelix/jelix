@@ -228,7 +228,9 @@ class ModuleStatus
     /**
      * Serialize parameters to be stores into an ini file.
      *
-     * The result is an array with serialized value.
+     * The result is an array with serialized values. It does not contain
+     * parameters that have same value in both given parameters and default parameters
+     * or parameters that are only into default parameters.
      *
      * @param array $parameters
      * @param array $defaultParameters

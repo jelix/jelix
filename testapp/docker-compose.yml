@@ -1,4 +1,5 @@
 name: jelix-${JLX_BRANCH}-tests
+
 services:
   pgsql:
     image: postgres:11

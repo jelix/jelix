@@ -54,7 +54,7 @@ class UrlActionMapper
     {
         $this->config = $config;
         $this->xmlfileSelector = new SelectorUrlXmlMap($config->mapFile, $config->localMapFile);
-        \Jelix\Core\Includer\Includer::inc($this->xmlfileSelector, true);
+        \Jelix\Core\Includer\Includer::inc($this->xmlfileSelector);
         $this->dataCreateUrl = &$GLOBALS['SIGNIFICANT_CREATEURL'];
     }
 

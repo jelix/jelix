@@ -103,22 +103,22 @@ class Includer
      *                     'foo.xml', // file name to compile (in each modules)
      *                     'foo.php',  //cache filename
      *                     );
-     * @param mixed $force  force to launch the compilation even if the cache file is ok
+     * @param mixed $forceReloadCache force to reload the cache file
      *
      * @return mixed the value returned by the cache file (returned value of the 'require')
      *               or null the compilation has not been done or the cache file already included
      */
-    public static function incAll($aType, $force = false, $config = null)
+    public static function incAll($aType, $forceReloadCache = false, $config = null)
     {
         $cachefile = App::tempPath('compiled/'.$aType[3]);
-        if (isset(self::$_includedFiles[$cachefile]) && !$force) {
-            return null;
+        if (isset(self::$_includedFiles[$cachefile]) && !$forceReloadCache) {
+            return self::$_includedFiles[$cachefile];
         }
 
         if (!$config) {
             $config = App::config();
         }
-        $mustCompile = $force || $config->compilation['force'] || !file_exists($cachefile);
+        $mustCompile = $config->compilation['force'] || !file_exists($cachefile);
 
         if (!$mustCompile && $config->compilation['checkCacheFiletime']) {
             $compiledate = filemtime($cachefile);
@@ -157,11 +157,11 @@ class Includer
                     opcache_invalidate($cachefile, true);
                 }
                 $returnedValue = require $cachefile;
-                self::$_includedFiles[$cachefile] = true;
+                self::$_includedFiles[$cachefile] = $returnedValue;
             }
         } else {
             $returnedValue = require $cachefile;
-            self::$_includedFiles[$cachefile] = true;
+            self::$_includedFiles[$cachefile] = $returnedValue;
         }
 
         return $returnedValue;
