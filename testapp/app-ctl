@@ -42,6 +42,11 @@ case $COMMAND in
         docker exec -t -i jelix_${JLX_BRANCH}_test_php appctl.sh composer_update;;
     unit-tests)
         docker exec -t -i jelix_${JLX_BRANCH}_test_php appctl.sh unit-tests $@;;
+    jlxcompile)
+       pathInDocker=$(echo $1 | sed "s!$rootdir!/jelixapp!g")
+       #docker exec -t --user userphp -e XDEBUG_SESSION=1 jelix_${JLX_BRANCH}_test_php php /jelixapp/testapp/dev.php compile $pathInDocker
+       docker exec -t --user userphp jelix_${JLX_BRANCH}_test_php php /jelixapp/testapp/dev.php compile $pathInDocker
+       ;;
     shell)
        docker exec -it --user userphp jelix_${JLX_BRANCH}_test_php  /bin/bash -l;;
     shell-root)
