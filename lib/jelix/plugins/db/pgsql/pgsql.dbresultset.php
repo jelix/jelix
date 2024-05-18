@@ -162,7 +162,7 @@ class pgsqlDbResultSet extends jDbResultSet
 
         $this->_idResult = pg_execute($this->_cnt, $this->_stmtId, $params);
 
-        return true;
+        return ($this->_idResult !== false);
     }
 
     public function unescapeBin($text)

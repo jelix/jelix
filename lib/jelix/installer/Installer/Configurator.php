@@ -508,6 +508,9 @@ class Configurator
             } elseif (is_file($prefix.$source)) {
                 $configHelpers->copyFile($source, $target, $overwrite);
             }
+            else {
+                $this->consoleOutput->writeln('[<fg=yellow>Warning</>] File to copy: source file does not exist: '.$source);
+            }
         }
     }
 

@@ -272,7 +272,9 @@ class ModuleStatus
     /**
      * Serialize parameters to be stores into an ini file.
      *
-     * The result is an array with serialized value.
+     * The result is an array with serialized values. It does not contain
+     * parameters that have same value in both given parameters and default parameters
+     * or parameters that are only into default parameters.
      *
      * @param array $parameters
      * @param array $defaultParameters
@@ -289,31 +291,12 @@ class ModuleStatus
                 }
                 $v = '['.implode(',', $v).']';
             }
-            if (isset($defaultParameters[$name]) && $defaultParameters[$name] === $v && $v !== true) {
-                // don't write values that equals to default ones except for
-                // true values else we could not know into the installer if
-                // the absence of the parameter means the default value or
-                // it if means false
+            if (isset($defaultParameters[$name]) && $defaultParameters[$name] === $v) {
+                // don't write values that equals to default ones
                 continue;
             }
-            if ($v === true) {
-                $p[$name] = true;
-            } elseif ($v === false) {
-                if (isset($defaultParameters[$name]) && is_bool($defaultParameters[$name])) {
-                    continue;
-                }
-                $p[$name] = false;
-            } else {
-                $p[$name] = $v;
-            }
+            $p[$name] = $v;
         }
-
-        foreach ($defaultParameters as $name => $v) {
-            if ($v === true && !isset($parameters[$name])) {
-                $p[$name] = true;
-            }
-        }
-
         return $p;
     }
 

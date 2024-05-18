@@ -51,7 +51,7 @@ class UrlActionMapper
     {
         $this->config = $config;
         $this->xmlfileSelector = new SelectorUrlXmlMap($config->mapFile, $config->localMapFile);
-        \jIncluder::inc($this->xmlfileSelector, true);
+        \jIncluder::inc($this->xmlfileSelector);
         $this->dataCreateUrl = &$GLOBALS['SIGNIFICANT_CREATEURL'];
     }
 

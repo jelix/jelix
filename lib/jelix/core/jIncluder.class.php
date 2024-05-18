@@ -155,22 +155,22 @@ class jIncluder
      *                     'foo.xml', // file name to compile (in each modules)
      *                     'foo.php',  //cache filename
      *                     );
-     * @param mixed $force  force to launch the compilation even if the cache file is ok
+     * @param mixed $forceReloadCache force to reload the cache file
      *
      * @return mixed the value returned by the cache file (returned value of the 'require')
      *               or null the compilation has not been done or the cache file already included
      */
-    public static function incAll($aType, $force = false, $config = null)
+    public static function incAll($aType, $forceReloadCache = false, $config = null)
     {
         $cachefile = jApp::tempPath('compiled/'.$aType[3]);
-        if (isset(jIncluder::$_includedFiles[$cachefile]) && !$force) {
-            return null;
+        if (isset(jIncluder::$_includedFiles[$cachefile]) && !$forceReloadCache) {
+            return jIncluder::$_includedFiles[$cachefile];
         }
 
         if (!$config) {
             $config = jApp::config();
         }
-        $mustCompile = $force || $config->compilation['force'] || !file_exists($cachefile);
+        $mustCompile = $config->compilation['force'] || !file_exists($cachefile);
 
         if (!$mustCompile && $config->compilation['checkCacheFiletime']) {
             $compiledate = filemtime($cachefile);
@@ -207,11 +207,11 @@ class jIncluder
                 }
 
                 $returnValue = require $cachefile;
-                jIncluder::$_includedFiles[$cachefile] = true;
+                jIncluder::$_includedFiles[$cachefile] = $returnValue;
             }
         } else {
             $returnValue = require $cachefile;
-            jIncluder::$_includedFiles[$cachefile] = true;
+            jIncluder::$_includedFiles[$cachefile] = $returnValue;
         }
         return $returnValue;
     }

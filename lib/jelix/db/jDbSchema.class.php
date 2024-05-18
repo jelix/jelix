@@ -48,9 +48,8 @@ abstract class jDbSchema
     public function createTable($name, $columns, $primaryKey, $attributes = array())
     {
         $prefixedName = $this->conn->prefixTable($name);
-        if ($this->tables === null) {
-            $this->tables = $this->_getTables();
-        }
+        // be sure list of table is updated
+        $this->tables = $this->_getTables();
 
         if (isset($this->tables[$name])) {
             return null;
@@ -91,9 +90,8 @@ abstract class jDbSchema
      */
     public function getTables()
     {
-        if ($this->tables === null) {
-            $this->tables = $this->_getTables();
-        }
+        // be sure list of table is updated
+        $this->tables = $this->_getTables();
 
         return $this->tables;
     }
@@ -103,9 +101,9 @@ abstract class jDbSchema
      */
     public function dropTable($table)
     {
-        if ($this->tables === null) {
-            $this->tables = $this->_getTables();
-        }
+        // be sure list of table is updated
+        $this->tables = $this->_getTables();
+
         if (is_string($table)) {
             $name = $this->conn->prefixTable($table);
             $unprefixedName = $table;

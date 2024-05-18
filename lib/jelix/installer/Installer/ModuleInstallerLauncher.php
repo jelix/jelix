@@ -225,13 +225,19 @@ class ModuleInstallerLauncher
         if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL
             || $this->globalSetup->forLocalConfiguration()
         ) {
+            $defaultParameters = ($this->moduleConfigurator ? $this->moduleConfigurator->getDefaultParameters() : array());
             $conf = $this->globalSetup->getSystemConfigIni(true);
+            $mainParameters = $conf->getValue($this->name.'.installparam', 'modules');
+            if ($mainParameters) {
+                $defaultParameters = array_merge($defaultParameters, ModuleStatus::unserializeParameters($mainParameters));
+            }
             $conf['local'] = $this->globalSetup->getLocalConfigIni();
         } else {
             $this->moduleStatus->clearInfos($this->globalSetup->getLocalConfigIni());
             $conf = $this->globalSetup->getSystemConfigIni();
+            $defaultParameters = ($this->moduleConfigurator ? $this->moduleConfigurator->getDefaultParameters() : array());
         }
-        $this->moduleStatus->saveInfos($conf, ($this->moduleConfigurator ? $this->moduleConfigurator->getDefaultParameters() : array()));
+        $this->moduleStatus->saveInfos($conf, $defaultParameters);
     }
 
     /**

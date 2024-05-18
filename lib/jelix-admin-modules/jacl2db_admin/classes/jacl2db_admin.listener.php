@@ -21,7 +21,7 @@ class jacl2db_adminListener extends jEventListener
             $url = jUrl::get('jacl2db_admin~groups:index');
         }
         else if (jAcl2::check('acl.user.view')) {
-            jUrl::get('jacl2db_admin~users:index');
+            $url = jUrl::get('jacl2db_admin~users:index');
         }
 
         if ($url) {

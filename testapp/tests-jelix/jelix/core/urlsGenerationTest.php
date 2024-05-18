@@ -17,6 +17,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         jApp::saveContext();
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
+        jIncluder::clear();
         parent::setUp();
     }
     
