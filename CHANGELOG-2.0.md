@@ -18,6 +18,7 @@
   that will call `php dev.php compile $FULLPATH_OF_FILE`, to compile a single
   file without calling the installer before each test into your browser.
   Files that are compiled during installers:
+  - configuration files
   - locales files (properties files)
 
 

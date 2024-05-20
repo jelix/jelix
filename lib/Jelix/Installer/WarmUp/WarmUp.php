@@ -11,6 +11,7 @@ namespace Jelix\Installer\WarmUp;
 
 
 use Jelix\Core\AppInstance;
+use Jelix\Core\Config\ConfigurationWarmUp;
 use Jelix\FileUtilities\Directory;
 use Jelix\Locale\LocaleWarmUp;
 
@@ -36,12 +37,15 @@ class WarmUp
     public function __construct(AppInstance $app)
     {
         $this->app = $app;
-        $this->warmUpLaunchers[] = new LocaleWarmUp($app);
 
         $buildPath = $app->buildPath;
         if (!file_exists($buildPath)) {
             Directory::create($buildPath);
         }
+
+        $this->warmUpLaunchers[] = new ConfigurationWarmUp($app);
+        $this->warmUpLaunchers[] = new LocaleWarmUp($app);
+
     }
 
     /**
