@@ -3,10 +3,10 @@
  * @author      Laurent Jouanneau
  * @contributor Thibault Piront (nuKs)
  *
- * @copyright   2005-2016 Laurent Jouanneau
+ * @copyright   2005-2024 Laurent Jouanneau
  * @copyright   2007 Thibault Piront
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -17,7 +17,7 @@ use Jelix\Core\App;
 /**
  * Compiler for the url engine. It can parse urls.xml files.
  */
-class XmlMapParser implements \jISimpleCompiler
+class XmlMapParser
 {
     protected $parseInfos;
     protected $createUrlInfos = array();
@@ -159,8 +159,7 @@ class XmlMapParser implements \jISimpleCompiler
         */
 
         $this->createUrlInfos = array();
-        $this->createUrlContent = "<?php \nif (\\Jelix\\Core\\App::config()->compilation['checkCacheFiletime'] &&( \n";
-        $this->createUrlContent .= "filemtime('".$sourceFile.'\') > '.filemtime($sourceFile);
+        $this->createUrlContent = "<?php \n";
         $this->createUrlContentInc = '';
         $this->modulesPath = App::getAllModulesPath();
         $this->defaultEntrypointsByType = array();
@@ -175,7 +174,6 @@ class XmlMapParser implements \jISimpleCompiler
 
         if ($sourceLocalFile) {
             $this->xmlfile = $aSelector->localFile;
-            $this->createUrlContent .= "|| filemtime('".$sourceLocalFile.'\') > '.filemtime($sourceLocalFile);
             $xml = simplexml_load_file($sourceLocalFile);
             if (!$xml) {
                 return false;
@@ -193,18 +191,15 @@ class XmlMapParser implements \jISimpleCompiler
         foreach ($this->entrypoints as $epName => $epInfos) {
             list($urlModel, $parseInfos, $createUrlInfosDedicatedModules) = $epInfos;
             $parseContent = "<?php \n";
-            $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.rawurlencode($urlModel->entryPoint).'\'] = '
-                            .var_export($parseInfos, true).";\n?>";
-
-            \jFile::write(App::tempPath('compiled/urlsig/'.$aSelector->file.'.'.rawurlencode($urlModel->entryPoint).'.entrypoint.php'), $parseContent);
+            $parseContent .= '$GLOBALS[\'SIGNIFICANT_PARSEURL\'][\''.$urlModel->entryPoint.'\'] = '
+                            .var_export($parseInfos, true).";\n";
+            \jFile::write($aSelector->getCompiledEntrypointFilePath($urlModel->entryPoint), $parseContent);
         }
 
         // write cache file containing url creation informations
-        $this->createUrlContent .= ")) { return false; } else {\n";
         $this->createUrlContent .= $this->createUrlContentInc;
-        $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\nreturn true;";
-        $this->createUrlContent .= "\n}\n";
-        \jFile::write(App::tempPath('compiled/urlsig/'.$aSelector->file.'.creationinfos_15.php'), $this->createUrlContent);
+        $this->createUrlContent .= '$GLOBALS[\'SIGNIFICANT_CREATEURL\'] ='.var_export($this->createUrlInfos, true).";\n";
+        \jFile::write($aSelector->getCompiledFilePath(), $this->createUrlContent);
 
         return true;
     }
@@ -893,9 +888,6 @@ class XmlMapParser implements \jISimpleCompiler
         if (!file_exists($path.$file)) {
             throw new MapParserException($this->getErrorMsg($url, 'include file '.$file.' of the module '.$uInfo->module.' does not exist'));
         }
-
-        $this->createUrlContent .= " || filemtime('".$path.$file.'\') > '.
-                                 filemtime($path.$file)."\n";
 
         $xml = simplexml_load_file($path.$file);
         if (!$xml) {

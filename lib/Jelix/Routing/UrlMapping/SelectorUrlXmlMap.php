@@ -9,6 +9,8 @@
 
 namespace Jelix\Routing\UrlMapping;
 
+use Jelix\Core\App;
+
 /**
  * a specific selector for the xml files which contains the configuration of the UrlMapper.
  */
@@ -32,8 +34,8 @@ class SelectorUrlXmlMap extends \jSelectorSimpleFile
      */
     public function __construct($selInApp, $selInVar = '')
     {
-        $this->_basePath = \Jelix\Core\App::appSystemPath();
-        $this->_localBasePath = \Jelix\Core\App::varConfigPath();
+        $this->_basePath = App::appSystemPath();
+        $this->_localBasePath = App::varConfigPath();
 
         parent::__construct($selInApp);
 
@@ -48,14 +50,14 @@ class SelectorUrlXmlMap extends \jSelectorSimpleFile
         }
     }
 
-    public function getCompiler()
-    {
-        return new XmlMapParser();
-    }
-
     public function getCompiledFilePath()
     {
-        return \Jelix\Core\App::tempPath('compiled/urlsig/'.$this->file.'.creationinfos_15.php');
+        return App::buildPath('router/'.$this->file.'.creationinfos_20.php');
+    }
+
+    public function getCompiledEntrypointFilePath($entryPointName)
+    {
+        return App::buildPath('router/'.$this->file.'.'.rawurlencode($entryPointName).'.entrypoint.php');
     }
 
     public function getLocalPath()

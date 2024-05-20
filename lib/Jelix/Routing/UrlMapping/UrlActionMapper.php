@@ -54,7 +54,8 @@ class UrlActionMapper
     {
         $this->config = $config;
         $this->xmlfileSelector = new SelectorUrlXmlMap($config->mapFile, $config->localMapFile);
-        \Jelix\Core\Includer\Includer::inc($this->xmlfileSelector);
+        require $this->xmlfileSelector->getCompiledFilePath();
+
         $this->dataCreateUrl = &$GLOBALS['SIGNIFICANT_CREATEURL'];
     }
 
@@ -82,7 +83,7 @@ class UrlActionMapper
      */
     public function parseFromRequest(\jRequest $request, $params)
     {
-        $file = App::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$this->config->entryPointName.'.entrypoint.php');
+        $file = $this->xmlfileSelector->getCompiledEntrypointFilePath($this->config->entryPointName);
         if (file_exists($file)) {
             require $file;
             $this->dataParseUrl = &$GLOBALS['SIGNIFICANT_PARSEURL'][$this->config->entryPointName];
@@ -113,8 +114,7 @@ class UrlActionMapper
         if ($pos !== false) {
             $snp = substr($snp, 0, $pos);
         }
-        $snp = rawurlencode($snp);
-        $file = App::tempPath('compiled/urlsig/'.$this->xmlfileSelector->file.'.'.$snp.'.entrypoint.php');
+        $file = $this->xmlfileSelector->getCompiledEntrypointFilePath($snp);
         if (file_exists($file)) {
             require $file;
             $this->dataParseUrl = &$GLOBALS['SIGNIFICANT_PARSEURL'][$snp];

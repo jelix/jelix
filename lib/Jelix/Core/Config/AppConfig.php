@@ -138,6 +138,28 @@ class AppConfig
         return $config;
     }
 
+    public static function loadStaticConfiguration($configFile)
+    {
+        $config = array();
+        $cacheFile = self::getCacheFilename($configFile);
+
+        $staticConfigFile = App::buildPath(self::getStaticBuildFilename($configFile));
+
+        if (!file_exists($staticConfigFile)) {
+            $compiler = new Compiler($configFile);
+            $config = $compiler->readStaticConfiguration();
+        }
+        else {
+            if (BYTECODE_CACHE_EXISTS) {
+                $config = include $staticConfigFile;
+                $config = (object) $config;
+            } else {
+                $config = \Jelix\IniFile\Util::read($staticConfigFile, true);
+            }
+        }
+        return $config;
+    }
+
     /**
      * Loads the configuration by optimizing it and hardening values, without using a cache.
      *

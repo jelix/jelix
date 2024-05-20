@@ -4,10 +4,15 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2006-2016 Laurent Jouanneau
-* @link        http://www.jelix.org
+* @copyright   2006-2024 Laurent Jouanneau
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
+use Jelix\Core\App;
+use Jelix\Routing\UrlMapping\MapperConfig;
+use Jelix\Routing\UrlMapping\SelectorUrlXmlMap;
+use Jelix\Routing\UrlMapping\XmlMapParser;
 
 class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
     protected $oldserver;
@@ -67,13 +72,22 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         }
     }
 
+    protected function reloadEngine($config)
+    {
+        $mapperConfig = new MapperConfig($config->urlengine);
+        $xmlfileSelector = new SelectorUrlXmlMap($mapperConfig->mapFile, $mapperConfig->localMapFile);
+        $compiler = new XmlMapParser();
+        $compiler->compile($xmlfileSelector);
+        jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+    }
+
     function testSignificantEngine() {
 
-       $req = jApp::coord()->request;
+       $req = App::router()->request;
        $req->urlScriptPath = '/';
        $req->params = array();
 
-       $conf = jApp::config();
+       $conf = App::config();
        $conf->domainName = 'testapp.local';
        $conf->forceHTTPPort = true;
        $conf->forceHTTPSPort = true;
@@ -90,7 +104,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
       $conf->_modulesPathList['news']='/';
       $conf->_modulesPathList['articles']='/';
 
-      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+      $this->reloadEngine($conf);
 
       $urlList=array();
       $urlList[]= array('urlsig:url1', array('mois'=>'10',  'annee'=>'2005', 'id'=>'01', 'p'=>null));
@@ -191,7 +205,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
 
 
       $conf->urlengine['multiview']=true;
-      jUrl::getEngine(true);
+      $this->reloadEngine($conf);
 
       $trueResult=array(
           "/index/test/news/2005/10/01",
@@ -263,7 +277,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $conf->_modulesPathList['news']='/';
         $conf->_modulesPathList['articles']='/';
         //$conf->availableLocales = array('fr_FR', 'en_US');
-        jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+        $this->reloadEngine($conf);
 
         $urlList = array();
         $urlList[] = array('fr_FR', 'jelix_tests~urlsig:lang1', array('p1'=>'foo',  'lang'=>'fr'));
@@ -321,7 +335,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $this->_doCompareUrlLang("multiview = false", $urlList, $trueResult);
 
         $conf->urlengine['multiview']=true;
-        jUrl::getEngine(true);
+        $this->reloadEngine($conf);
 
         $trueResult=array(
             "/index/url-with-lang/test1/fr/foo",
@@ -390,7 +404,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $conf->_modulesPathList['news']='/';
         $conf->_modulesPathList['articles']='/';
 
-        jUrl::getEngine(true);
+        $this->reloadEngine($conf);
 
         $urlList = array();
         $urlList[]= array('testapp~default:index', array());
@@ -439,9 +453,9 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
          'forceProxyProtocol' =>''
        );
 
-      $conf->_modulesPathList['news']='/';
+       $conf->_modulesPathList['news']='/';
 
-      jUrl::getEngine(true); // on recharge le nouveau moteur d'url
+        $this->reloadEngine($conf);
 
       $urlList=array();
       $urlList[]= array('foo~bar@xmlrpc', array('aaa'=>'bbb'));
@@ -496,7 +510,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
 
         // without given domain name, without domain name in config, without https
         $conf->domainName = '';
-        jUrl::getEngine(true);
+        $this->reloadEngine($conf);
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
         $this->assertEquals('http://'.TESTAPP_URL_HOST_PORT.'/index.php/jelix_tests/urlsig/url1', $url);
 
@@ -512,7 +526,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
 
         // without given domain name, with domain name in config, without https
         $conf->domainName = 'configdomain.local';
-        jUrl::getEngine(true);
+        $this->reloadEngine($conf);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
         $this->assertEquals('http://configdomain.local'.(TESTAPP_PORT?':'.TESTAPP_PORT:'').'/index.php/jelix_tests/urlsig/url1', $url);
@@ -536,7 +550,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals(array(TESTAPP_HOST, 443), jServer::getDomainPortFromServer(false));
         // without given domain name, without domain name in config, with https
         $conf->domainName = '';
-        jUrl::getEngine(true);
+        $this->reloadEngine($conf);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
         $this->assertEquals('https://'.TESTAPP_HOST.'/index.php/jelix_tests/urlsig/url1', $url);
@@ -553,7 +567,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
 
         // without given domain name, with domain name in config, with https
         $conf->domainName = 'configdomain.local';
-        jUrl::getEngine(true);
+        $this->reloadEngine($conf);
 
         $url = jUrl::getFull('jelix_tests~urlsig:url1',array(),0,null);
         $this->assertEquals('https://configdomain.local/index.php/jelix_tests/urlsig/url1', $url);
@@ -607,7 +621,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
           'forceProxyProtocol' =>''
         );
 
-        jUrl::getEngine(true);
+        $this->reloadEngine($conf);
 
         $req = jApp::coord()->request = new jClassicRequest();
         $req->init(jApp::coord()->getUrlActionMapper());
@@ -640,7 +654,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
           'jelixWWWPath' =>$conf->urlengine['jelixWWWPath'],
           'forceProxyProtocol' =>''
         );
-        jUrl::getEngine(true);
+        $this->reloadEngine($conf);
 
         $req = jApp::coord()->request = new jClassicRequest();
         $req->init(jApp::coord()->getUrlActionMapper());
@@ -679,7 +693,7 @@ class urlsGenerationTest extends \Jelix\UnitTests\UnitTestCase {
         $conf->_modulesPathList['news']='/';
         $conf->_modulesPathList['articles']='/';
 
-        jUrl::getEngine(true);
+        $this->reloadEngine($conf);
 
         $urlList = array();
         $urlList[]= array('testapp~main:index', array());

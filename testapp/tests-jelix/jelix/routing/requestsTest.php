@@ -48,11 +48,13 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
             $config->urlengine['scriptNameServerVariable'] = $scriptNameServerVariable;
         }
 
-        $coord = new \Jelix\UnitTests\CoordinatorForTest($config, false);
-        App::setRouter($coord);
+        App::setConfig($config);
 
         $warmUp = new Jelix\Installer\WarmUp\WarmUp(App::app());
         $warmUp->launch(App::getEnabledModulesPaths(), WarmUpLauncherInterface::STEP_ALL);
+
+        $coord = new \Jelix\UnitTests\CoordinatorForTest($config, false);
+        App::setRouter($coord);
 
         $request = new jClassicRequest();
         $coord->testSetRequest($request);
