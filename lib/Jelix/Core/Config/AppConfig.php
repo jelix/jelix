@@ -1,9 +1,9 @@
 <?php
 /**
  * @author   Laurent Jouanneau
- * @copyright 2005-2023 Laurent Jouanneau
+ * @copyright 2005-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see      https://www.jelix.org
  * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -58,6 +58,15 @@ class AppConfig
         return $filename;
     }
 
+
+    public static function getStaticBuildFilename($configFile)
+    {
+        $filename = 'config/static_'.str_replace('/', '~', $configFile);
+
+        return $filename;
+    }
+
+
     /**
      * Loads the configuration by optimizing it and hardening values, and use a cache to avoid reading all
      * configuration files at each call.
@@ -71,71 +80,59 @@ class AppConfig
     public static function load($configFile)
     {
         $config = array();
-        $file = self::getCacheFilename($configFile);
+        $cacheFile = self::getCacheFilename($configFile);
 
-        $rebuildCache = false;
-        if (!file_exists($file)) {
-            // no cache, let's compile
-            $rebuildCache = true;
-        } else {
-            $t = filemtime($file);
-            $dc = App::mainConfigFile();
-            $lc = App::varConfigPath('localconfig.ini.php');
+        $staticConfigFile = App::buildPath(self::getStaticBuildFilename($configFile));
+
+        if (!file_exists($staticConfigFile)) {
+            throw new Exception('Error while reading configuration file: static cache is missing -- run the installer to create it '.$staticConfigFile);
+        }
+
+        if (file_exists($cacheFile)) {
+            $t = filemtime($cacheFile);
             $lvc = App::varConfigPath('liveconfig.ini.php');
-            $appEpConfig = App::appSystemPath($configFile);
-            $varEpConfig = App::varConfigPath($configFile);
-
-            if ((file_exists($dc) && filemtime($dc) > $t)
-                || (file_exists($appEpConfig) && filemtime($appEpConfig) > $t)
-                || (file_exists($varEpConfig) && filemtime($varEpConfig) > $t)
-                || (file_exists($lc) && filemtime($lc) > $t)
-                || (file_exists($lvc) && filemtime($lvc) > $t)
+            if ( filemtime($staticConfigFile) < $t
+                && (file_exists($lvc) && filemtime($lvc) < $t)
             ) {
-                // one of the config files have been modified: let's compile
-                $rebuildCache = true;
-            } else {
                 // let's read the cache file
                 if (BYTECODE_CACHE_EXISTS) {
-                    include $file;
+                    $config = include $cacheFile;
                     $config = (object) $config;
                 } else {
-                    $config = \Jelix\IniFile\Util::read($file, true);
+                    $config = \Jelix\IniFile\Util::read($cacheFile, true);
                 }
-
-                // we check all directories to see if it has been modified
-                if ($config->compilation['checkCacheFiletime']) {
-                    foreach ($config->_allBasePath as $path) {
-                        if (!file_exists($path) || filemtime($path) > $t) {
-                            $rebuildCache = true;
-
-                            break;
-                        }
-                    }
-                }
+                return $config;
             }
         }
-        if ($rebuildCache) {
-            $compiler = new Compiler($configFile);
 
-            $config = $compiler->read(false);
-            $tempPath = App::tempPath();
-            \jFile::createDir($tempPath, $config->chmodDir);
+        self::checkEnvironment();
 
-            // if bytecode cache is enabled, it's better to store configuration
-            // as PHP code, reading performance are much better than reading
-            // an ini file (266 times less). However, if bytecode cache is disabled,
-            // reading performance are better with ini : 32% better. Json is only 22% better.
-            if (BYTECODE_CACHE_EXISTS) {
-                if ($f = @fopen($file, 'wb')) {
-                    fwrite($f, '<?php $config = '.var_export(get_object_vars($config), true).";\n?>");
-                    fclose($f);
-                    chmod($file, $config->chmodFile);
-                } else {
-                    throw new Exception('Error while writing configuration cache file -- '.$file);
-                }
+        if (BYTECODE_CACHE_EXISTS) {
+            $config = include $staticConfigFile;
+            $config = (object) $config;
+        } else {
+            $config = \Jelix\IniFile\Util::read($staticConfigFile, true);
+        }
+
+        $compiler = new Compiler($configFile);
+
+        $config = $compiler->readLiveConfiguration($config);
+        \jFile::createDir(App::tempPath(), $config->chmodDir);
+
+        // if bytecode cache is enabled, it's better to store configuration
+        // as PHP code, reading performance are much better than reading
+        // an ini file (266 times less). However, if bytecode cache is disabled,
+        // reading performance are better with ini : 32% better. Json is only 22% better.
+        if (BYTECODE_CACHE_EXISTS) {
+            if ($f = @fopen($cacheFile, 'wb')) {
+                fwrite($f, '<?php return '.var_export(get_object_vars($config), true).";\n?>");
+                fclose($f);
+                chmod($cacheFile, $config->chmodFile);
             } else {
-                IniFileMgr::write(get_object_vars($config), $file.'.resultini.php', ";<?php die('');?>\n", $config->chmodFile);
+                throw new Exception('Error while writing configuration cache file -- '.$cacheFile);
             }
+        } else {
+            IniFileMgr::write(get_object_vars($config), $cacheFile.'.resultini.php', ";<?php die('');?>\n", $config->chmodFile);
         }
 
         return $config;
@@ -153,7 +150,7 @@ class AppConfig
      */
     public static function loadWithoutCache($configFile, $scriptName = '')
     {
-        $compiler = new \Jelix\Core\Config\Compiler($configFile, $scriptName);
+        $compiler = new Compiler($configFile, $scriptName);
         return $compiler->read(false);
     }
 
@@ -171,10 +168,28 @@ class AppConfig
      */
     public static function loadForInstaller($configFile, $scriptName = '')
     {
-        $compiler = new \Jelix\Core\Config\Compiler($configFile, $scriptName);
+        $compiler = new Compiler($configFile, $scriptName);
         return $compiler->read(true);
     }
 
+    public static function checkEnvironment()
+    {
+        $tempPath = App::tempBasePath();
+
+        if ($tempPath == '/') {
+            // if it equals to '/', this is because realpath has returned false in the application.init.php
+            // so this is because the path doesn't exist.
+            throw new Exception('Application temp directory doesn\'t exist !', 3);
+        }
+
+        if (!is_writable($tempPath)) {
+            throw new Exception('Application temp base directory is not writable -- ('.$tempPath.')', 4);
+        }
+
+        if (!is_writable(App::logPath())) {
+            throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
+        }
+    }
 
     public static function getDefaultConfigFile()
     {

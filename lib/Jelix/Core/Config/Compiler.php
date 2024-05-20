@@ -2,9 +2,9 @@
 /**
  * @author       Laurent Jouanneau
  *
- * @copyright    2006-2023 Laurent Jouanneau
+ * @copyright    2006-2024 Laurent Jouanneau
  *
- * @see         http://www.jelix.org
+ * @see          https://www.jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -65,7 +65,6 @@ class Compiler
      * - app/system/$configFile
      * - var/config/localconfig.ini.php
      * - var/config/$configFile
-     * - var/config/liveconfig.ini.php
      *
      * @param string $configFile
      *
@@ -73,7 +72,7 @@ class Compiler
      *
      * @return object the object containing content of all configuration files
      */
-    protected function readConfigFiles($configFile)
+    protected function readStaticConfigFiles($configFile)
     {
         $appSystemPath = App::appSystemPath();
         $varConfigPath = App::varConfigPath();
@@ -116,45 +115,59 @@ class Compiler
             }
         }
 
-        if (file_exists($varConfigPath.'liveconfig.ini.php')) {
-            IniFileMgr::readAndMergeObject($varConfigPath.'liveconfig.ini.php', $config);
-        }
-
         return $config;
     }
 
     /**
-     * read the ini file given to the constructor. It Merges it with the content of
-     * mainconfig.ini.php. It also calculates some options.
+     * Read the ini file given to the constructor. It Merges it with the content of
+     * mainconfig.ini.php and other configuration files. It also calculates some options.
      *
-
      *
      * @param bool $installationMode must be true for the installer, which needs extra information
      *                                and need config values as they are into the files.
      *                                It must be false for runtime to harden some configuration values.
      *
      * @return \StdClass an object which contains configuration values
-     *@throws Exception
+     * @throws Exception
      *
      */
     public function read($installationMode = false)
     {
-        $tempPath = App::tempBasePath();
+        $this->readStaticConfiguration($installationMode);
 
-        if ($tempPath == '/') {
-            // if it equals to '/', this is because realpath has returned false in the application.init.php
-            // so this is because the path doesn't exist.
-            throw new Exception('Application temp directory doesn\'t exist !', 3);
-        }
+        return $this->readLiveConfiguration($this->config);
+    }
 
-        if (!is_writable($tempPath)) {
-            throw new Exception('Application temp base directory is not writable -- ('.$tempPath.')', 4);
+    /**
+     * Read the liveconfig.ini php file and merge it with the given configuration object
+     *
+     * @param object $config
+     * @return \StdClass
+     */
+    public function readLiveConfiguration(object $config)
+    {
+        $varConfigPath = App::varConfigPath();
+        if (file_exists($varConfigPath.'liveconfig.ini.php')) {
+            IniFileMgr::readAndMergeObject($varConfigPath.'liveconfig.ini.php', $config);
         }
+        $this->prepareLiveConfig($config);
+        return $config;
+    }
 
-        if (!is_writable(App::logPath())) {
-            throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
-        }
-        $this->config = $this->readConfigFiles($this->configFileName);
+    /**
+     * Read all configuration files except the liveconfig.ini.php, and merge them
+     *
+     * It also calculates some options.
+     *
+     * Used to create a cache file, to be merged with liveconfig at runtime.
+     *
+     * @param $installationMode
+     * @return \StdClass
+     * @throws Exception
+     */
+    public function readStaticConfiguration($installationMode = false)
+    {
+        $this->config = $this->readStaticConfigFiles($this->configFileName);
         $this->prepareConfig($installationMode);
 
         return $this->config;
@@ -166,7 +179,7 @@ class Compiler
     }
 
     /**
-     * fill some config properties with calculated values.
+     * fill some static config properties with calculated values.
      *
      * @param bool $installationMode must be true for the installer, which needs extra information
      *                               and need config values as they are into the files.
@@ -175,17 +188,21 @@ class Compiler
     protected function prepareConfig($installationMode)
     {
         $this->checkMiscParameters($this->config);
-        $this->getPaths($this->config->urlengine, $this->pseudoScriptName);
         $this->modulesInfos = $this->_loadModulesInfo($this->config, $installationMode);
         $this->_loadPluginsPathList($this->config);
         $this->checkCoordPluginsPath($this->config);
         $this->runConfigCompilerPlugins($this->config, $this->modulesInfos);
     }
 
-    protected function checkMiscParameters($config)
+    /**
+     * fill some config properties with calculated values available only in a web context.
+     *
+     * @param object $config
+     * @return void
+     * @throws Exception
+     */
+    protected function prepareLiveConfig($config)
     {
-        $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
-
         if ($config->domainName == '') {
             // as each compiled config is stored in a file based on the domain
             // name/port, we can store the guessed domain name into the configuration
@@ -200,6 +217,13 @@ class Compiler
                 }
             }
         }
+
+        $this->getPaths($config->urlengine, $this->pseudoScriptName);
+    }
+
+    protected function checkMiscParameters($config)
+    {
+        $config->isWindows = (DIRECTORY_SEPARATOR === '\\');
 
         if (!is_string($config->chmodFile)) {
             $config->chmodFile = (string) $config->chmodFile;
@@ -337,15 +361,6 @@ class Compiler
             $installation['modules'] = array();
         }
 
-        // _allBasePath is used for:
-        // - check time of directories to check if the config cache should be rebuilt
-        // FIXME WARMUP: to remove?
-        if ($config->compilation['checkCacheFiletime']) {
-            $config->_allBasePath = App::getDeclaredModulesDir();
-        } else {
-            $config->_allBasePath = array();
-        }
-
         $modules = array();
         $list = App::getAllModulesPath();
         $config->modules = [];
@@ -457,9 +472,6 @@ class Compiler
                 while (($f = readdir($handle)) !== false) {
                     if ($f[0] != '.' && is_dir($p.$f)) {
                         if ($subdir = opendir($p.$f)) {
-                            if ($k != 0 && $config->compilation['checkCacheFiletime']) {
-                                $config->_allBasePath[] = $p.$f.'/';
-                            }
                             while (($subf = readdir($subdir)) !== false) {
                                 if ($subf[0] != '.' && is_dir($p.$f.'/'.$subf)) {
                                     if ($f == 'tpl') {

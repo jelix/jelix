@@ -2,20 +2,22 @@
 /**
 * @package  jelix
 * @subpackage testapp
-* @author   Laurent Jouanneau
-* @contributor
-* @copyright 2005-2012  Laurent Jouanneau
-* @link        http://www.jelix.org
-* @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+* @author    Laurent Jouanneau
+* @copyright 2005-2024 Laurent Jouanneau
+* @link      https://www.jelix.org
+* @licence   http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
+
+use Jelix\Core\App;
+use Jelix\Routing\Router;
 
 require ('../application.init.php');
 require (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
 
-checkAppOpened();
+\Jelix\Core\AppManager::errorIfAppClosed();
 
-jApp::loadConfig('index/config.ini.php');
+App::loadConfig('index/config.ini.php');
 
-jApp::setCoord(new jCoordinator());
-jApp::coord()->process(new jClassicRequest());
+App::setRouter(new Router());
+App::router()->process(new jClassicRequest());
 
