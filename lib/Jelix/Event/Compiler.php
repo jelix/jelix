@@ -1,17 +1,15 @@
 <?php
 /**
- * @author      Laurent Jouanneau
- * @copyright 2005-2022 Laurent Jouanneau
+ * @author    Laurent Jouanneau
+ * @copyright 2005-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
- * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
+ * @see       https://www.jelix.org
+ * @licence   http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 namespace Jelix\Event;
 
-use Jelix\Core\App;
-
-class Compiler implements \Jelix\Core\Includer\MultiFileCompilerInterface
+class Compiler
 {
     /**
      * list of listeners for each event.
@@ -26,12 +24,12 @@ class Compiler implements \Jelix\Core\Includer\MultiFileCompilerInterface
         $this->eventList = array();
     }
 
-    public function compileItem($sourceFile, $module)
+    public function compileListenersFile($sourceFile, $module)
     {
         if (is_readable($sourceFile)) {
             $xml = simplexml_load_file($sourceFile);
 
-            $config = App::config()->disabledListeners;
+
             if (isset($xml->listener)) {
                 foreach ($xml->listener as $listener) {
                     $listenerName = (string) $listener['name'];
@@ -47,17 +45,9 @@ class Compiler implements \Jelix\Core\Includer\MultiFileCompilerInterface
                     }
                     foreach ($listener->event as $eventListened) {
                         $name = (string) $eventListened['name'];
-                        if (isset($config[$name])) {
-                            if (is_array($config[$name])) {
-                                if (in_array($selector, $config[$name])) {
-                                    continue;
-                                }
-                            } elseif ($config[$name] == $selector) {
-                                continue;
-                            }
-                        }
+
                         // key = event name ,  value = list of file listener
-                        $this->eventList[$name][] = array($module, $listenerClass, $oldListenerName);
+                        $this->eventList[$name][] = array($module, $listenerClass, $oldListenerName, $selector);
                     }
                 }
             }
@@ -66,7 +56,7 @@ class Compiler implements \Jelix\Core\Includer\MultiFileCompilerInterface
         return true;
     }
 
-    public function endCompile($cachefile)
+    public function save($cachefile)
     {
         $content = '<?php return '.var_export($this->eventList, true).";\n?>";
         \jFile::write($cachefile, $content);

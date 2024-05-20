@@ -12,6 +12,7 @@ namespace Jelix\Installer\WarmUp;
 
 use Jelix\Core\AppInstance;
 use Jelix\Core\Config\ConfigurationWarmUp;
+use Jelix\Event\EventWarmup;
 use Jelix\FileUtilities\Directory;
 use Jelix\Locale\LocaleWarmUp;
 
@@ -45,6 +46,7 @@ class WarmUp
 
         $this->warmUpLaunchers[] = new ConfigurationWarmUp($app);
         $this->warmUpLaunchers[] = new LocaleWarmUp($app);
+        $this->warmUpLaunchers[] = new EventWarmup($app);
 
     }
 

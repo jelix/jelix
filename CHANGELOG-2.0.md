@@ -20,6 +20,7 @@
   Files that are compiled during installers:
   - configuration files
   - locales files (properties files)
+  - events files (events.xml)
 
 
 - configuration parameter to activate modules are moved from the main 
@@ -128,7 +129,7 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 - `jFormsBuilderBase`, `jFormsBuilderHtml`, `htmlJformsBuilder`, `htmllightJformsBuilder`
 - `jClassBinding`, `jClasses::createBinded()`, `jClasses::getBindedService()`, `jClasses::bind()`, `jClasses::resetBindings()`  
 - remove parameter `$installWholeApp` from the `Jelix\Installer\Module\InstallerAbstract` constructor.
-
+- `jEventCompiler`
 
 From the command line scripts system of Jelix <=1.6:
 

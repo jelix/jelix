@@ -14,7 +14,6 @@
     "jDbUtils": "db/jDbUtils.php",
     "jDbWidget": "db/jDbWidget.php",
     "jEvent": "events/jEvent.php",
-    "jEventCompiler": "events/jEventCompiler.php",
     "jEventListener": "events/jEventListener.php",
     "jExceptionSelector": "core/jExceptionSelector.php",
     "jFileLogger": "core/log/jFileLogger.php",

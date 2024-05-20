@@ -2,7 +2,7 @@
 /**
  * @author   Gérald Croes, Patrice Ferlet, Laurent Jouanneau, Dominique Papin, Steven Jehannet
  *
- * @copyright 2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2009 Dominique Papin
+ * @copyright 2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau, 2009 Dominique Papin
  *
  * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -10,6 +10,7 @@
 namespace Jelix\Event;
 
 
+use Jelix\Core\App;
 use Jelix\Core\Includer\Includer;
 
 class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
@@ -54,13 +55,6 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
         return $this->hashListened[$eventName];
     }
 
-    protected $compilerData = array(
-        '\\Jelix\\Event\\Compiler',
-        null,
-        'events.xml',
-        'events.php',
-    );
-
     /**
      * List of listeners for each event
      *  key = event name, value = array('moduleName', 'listener class name', 'listener name if class not autoloadable')
@@ -77,24 +71,41 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
     {
 
         if ($this->listenersList === null) {
-            $compilerData = $this->compilerData;
-            $compilerData[3] = $this->config->urlengine['urlScriptId'] . '.' . $compilerData[3];
-            $this->listenersList = Includer::incAll($compilerData, false, $this->config);
-            if ($this->listenersList === null) {
+
+            $compiledFile = App::buildPath('listeners.php');
+            if (!file_exists($compiledFile)) {
                 trigger_error('Compilation of event listeners list failed?', E_USER_WARNING);
                 return;
             }
+
+            $this->listenersList = include ($compiledFile);
         }
 
         $this->hashListened[$eventName] = array();
         if (isset($this->listenersList[$eventName])) {
+
+            $disabledListeners = [];
+            $allDisabledListeners = App::config()->disabledListeners;
+            if (isset($allDisabledListeners[$eventName]) && !empty($allDisabledListeners[$eventName])) {
+                $disabledListeners = $allDisabledListeners[$eventName];
+
+                if (!is_array($disabledListeners)) {
+                    $disabledListeners = array($disabledListeners);
+                }
+            }
+
             $modules = & $this->config->_modulesPathList;
             $me = $this;
             foreach ($this->listenersList[$eventName] as $listener) {
-                list($module, $listenerClass, $oldListenerName) = $listener;
+                list($module, $listenerClass, $oldListenerName, $selector) = $listener;
                 if (!isset($modules[$module])) {  // some modules could be unused
                     continue;
                 }
+
+                if (in_array($selector, $disabledListeners)) {
+                    continue;
+                }
+
                 if (!isset($this->listenersSingleton[$module][$listenerClass])) {
                     if ($oldListenerName) {
                         require_once $modules[$module] . 'classes/' . $oldListenerName . '.listener.php';

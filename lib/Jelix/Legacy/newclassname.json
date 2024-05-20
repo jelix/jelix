@@ -14,7 +14,6 @@
     "jDbUtils": "\\Jelix\\Database\\Connection",
     "jDbWidget": "\\Jelix\\Database\\Helpers",
     "jEvent": "\\Jelix\\Event\\Event",
-    "jEventCompiler": "\\Jelix\\Event\\Compiler",
     "jEventListener": "\\Jelix\\Event\\EventListener",
     "jExceptionSelector": "\\Jelix\\Core\\Selector\\Exception",
     "jFileLogger": "\\Jelix\\Logger\\Output\\File",
