@@ -2,9 +2,9 @@
 /**
  * @author       Laurent Jouanneau
  *
- * @copyright    2006-2023 Laurent Jouanneau
+ * @copyright    2006-2024 Laurent Jouanneau
  *
- * @see         http://www.jelix.org
+ * @see          https://www.jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -134,26 +134,12 @@ class Compiler
      *                                It must be false for runtime to harden some configuration values.
      *
      * @return \StdClass an object which contains configuration values
-     *@throws Exception
+     * @throws Exception
      *
      */
     public function read($installationMode = false)
     {
-        $tempPath = App::tempBasePath();
 
-        if ($tempPath == '/') {
-            // if it equals to '/', this is because realpath has returned false in the application.init.php
-            // so this is because the path doesn't exist.
-            throw new Exception('Application temp directory doesn\'t exist !', 3);
-        }
-
-        if (!is_writable($tempPath)) {
-            throw new Exception('Application temp base directory is not writable -- ('.$tempPath.')', 4);
-        }
-
-        if (!is_writable(App::logPath())) {
-            throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
-        }
         $this->config = $this->readConfigFiles($this->configFileName);
         $this->prepareConfig($installationMode);
 

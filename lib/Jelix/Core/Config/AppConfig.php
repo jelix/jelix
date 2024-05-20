@@ -1,9 +1,9 @@
 <?php
 /**
  * @author   Laurent Jouanneau
- * @copyright 2005-2023 Laurent Jouanneau
+ * @copyright 2005-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see      https://www.jelix.org
  * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -115,6 +115,9 @@ class AppConfig
             }
         }
         if ($rebuildCache) {
+
+            self::checkEnvironment();
+
             $compiler = new Compiler($configFile);
 
             $config = $compiler->read(false);
@@ -153,7 +156,7 @@ class AppConfig
      */
     public static function loadWithoutCache($configFile, $scriptName = '')
     {
-        $compiler = new \Jelix\Core\Config\Compiler($configFile, $scriptName);
+        $compiler = new Compiler($configFile, $scriptName);
         return $compiler->read(false);
     }
 
@@ -171,10 +174,28 @@ class AppConfig
      */
     public static function loadForInstaller($configFile, $scriptName = '')
     {
-        $compiler = new \Jelix\Core\Config\Compiler($configFile, $scriptName);
+        $compiler = new Compiler($configFile, $scriptName);
         return $compiler->read(true);
     }
 
+    public static function checkEnvironment()
+    {
+        $tempPath = App::tempBasePath();
+
+        if ($tempPath == '/') {
+            // if it equals to '/', this is because realpath has returned false in the application.init.php
+            // so this is because the path doesn't exist.
+            throw new Exception('Application temp directory doesn\'t exist !', 3);
+        }
+
+        if (!is_writable($tempPath)) {
+            throw new Exception('Application temp base directory is not writable -- ('.$tempPath.')', 4);
+        }
+
+        if (!is_writable(App::logPath())) {
+            throw new Exception('Application log directory is not writable -- ('.App::logPath().')', 4);
+        }
+    }
 
     public static function getDefaultConfigFile()
     {
