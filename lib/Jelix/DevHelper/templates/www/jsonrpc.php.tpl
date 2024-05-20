@@ -7,16 +7,18 @@
 * @link      %%default_website%%
 * @license   %%default_license_url%% %%default_license%%
 */
+use Jelix\Core\App;
+use Jelix\Routing\Router;
 
 require ('%%rp_app%%application.init.php');
 require (JELIX_LIB_CORE_PATH.'request/jJsonRpcRequest.class.php');
 
-checkAppOpened();
+\Jelix\Core\AppManager::errorIfAppClosed();
 
-\Jelix\Core\App::loadConfig('%%config_file%%');
+App::loadConfig('%%config_file%%');
 
-\Jelix\Core\App::setCoord(new jCoordinator());
-\Jelix\Core\App::coord()->process(new jJsonRpcRequest());
+App::setRouter(new Router());
+App::router()->process(new jJsonRpcRequest());
 
 
 
