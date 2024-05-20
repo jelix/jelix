@@ -11,6 +11,7 @@ namespace Jelix\Installer\WarmUp;
 
 
 use Jelix\Core\AppInstance;
+use Jelix\FileUtilities\Directory;
 use Jelix\Locale\LocaleWarmUp;
 
 /**
@@ -36,12 +37,26 @@ class WarmUp
     {
         $this->app = $app;
         $this->warmUpLaunchers[] = new LocaleWarmUp($app);
+
+        $buildPath = $app->buildPath;
+        if (!file_exists($buildPath)) {
+            Directory::create($buildPath);
+        }
     }
 
-    public function launch()
+    /**
+     * Launch warmup component that are belongs to the corresponding step.
+     *
+     * @param array $modulesList list of modules to process.
+     * @param int $step one of WarmUpLauncherInterface::STEP_ const
+     * @return void
+     */
+    public function launch(array $modulesList, int $step)
     {
-        foreach($this->warmUpLaunchers as $warmUpLauncher){
-            $warmUpLauncher->launch();
+        foreach($this->warmUpLaunchers as $warmUpLauncher) {
+            if ($warmUpLauncher->getLaunchSteps() & $step) {
+                $warmUpLauncher->launch($modulesList, $step);
+            }
         }
     }
 

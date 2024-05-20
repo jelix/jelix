@@ -10,32 +10,75 @@
 namespace Jelix\Installer\WarmUp;
 
 /**
- * Interface for components that need to do processing at the end of the
+ * Interface for components that need to do processing during the
  * installation of an application.
  *
- * The component can compile and/or generate some files for example
+ * These kind of components can compile and/or generate some files for example
  */
 interface WarmUpLauncherInterface
 {
+    /**
+     * @var int the launch() method is called after all pre-installation
+     */
+    const STEP_PREINSTALL = 1;
 
     /**
-     * Launch processing
-     * @return mixed
+     * @var int the launch() method is called after each module installation
      */
-    public function launch();
+    const STEP_MODULE_INSTALL = 2;
+
+    /**
+     * @var int the launch() method is called after each module installation
+     */
+    const STEP_MODULE_UNINSTALL = 4;
+
+    /**
+     * @var int the launch() method is called after all module installations
+     */
+    const STEP_INSTALL = 8;
+
+    /**
+     * @var int the launch() method is called after all post-installation
+     */
+    const STEP_POSTINSTALL = 16;
+
+    const STEP_ALL = 1 | 2 | 4 | 8 | 16;
+
+    /**
+     * @return int a combination of STEP_* const
+     */
+    public function getLaunchSteps();
+
+    /**
+     * Launch processing.
+     *
+     * It may be called during one or more steps of the installation, according
+     * to what it is returned by getLaunchStepsList().
+     *
+     * @param $modulesList array list of modules. Key=module name, value=module path
+     * @param $step int one of STEP_* const.
+     * @return void
+     */
+    public function launch(array $modulesList, int $step) : void;
 
     /**
      * Check if the given file is supported by the warmup component.
      *
-     * Useful when a file is changed during development, and generated files
+     * Useful when a file is changed during development, and when generated files
      * should be regenerated
      *
      * @param FilePlace $filename the full path of the file
-     * @return boolean
+     * @return boolean true if the given fill is supported by the component
      */
-    public function doesItSupportFile(FilePlace $file);
+    public function doesItSupportFile(FilePlace $file) : bool;
 
-
-    public function launchOnFile(FilePlace $file);
+    /**
+     * Launch processing on a single file.
+     *
+     * Called by file watcher, after calling doesItSupportFile().
+     *
+     * @param FilePlace $file
+     */
+    public function launchOnFile(FilePlace $file): void;
 
 }

@@ -4,12 +4,13 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007-2023 Laurent Jouanneau
-* @link        http://www.jelix.org
+* @copyright   2007-2024 Laurent Jouanneau
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 use \Jelix\Core\App;
+use Jelix\Installer\WarmUp\WarmUpLauncherInterface;
 
 class requestsTest extends \Jelix\UnitTests\UnitTestCase {
 
@@ -51,7 +52,7 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         App::setRouter($coord);
 
         $warmUp = new Jelix\Installer\WarmUp\WarmUp(App::app());
-        $warmUp->launch();
+        $warmUp->launch(App::getEnabledModulesPaths(), WarmUpLauncherInterface::STEP_ALL);
 
         $request = new jClassicRequest();
         $coord->testSetRequest($request);

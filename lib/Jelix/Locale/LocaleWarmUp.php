@@ -28,22 +28,25 @@ class LocaleWarmUp implements WarmUpLauncherInterface
         $this->app = $app;
     }
 
-    public function launch()
+    public function getLaunchSteps()
     {
-        $modules = $this->app->config->_modulesPathList;
+        return WarmUpLauncherInterface::STEP_PREINSTALL;
+    }
 
+    public function launch(array $modulesList, int $step): void
+    {
         $compiler = new LocaleCompiler($this->app->appPath, $this->app->varPath, $this->app->buildPath);
-        foreach($modules as $name => $path) {
+        foreach($modulesList as $name => $path) {
             $compiler->compileModule($name, $path);
         }
     }
 
-    public function doesItSupportFile(FilePlace $file)
+    public function doesItSupportFile(FilePlace $file) : bool
     {
         return str_ends_with($file->filePath, '.properties');
     }
 
-    public function launchOnFile(FilePlace $file)
+    public function launchOnFile(FilePlace $file) : void
     {
         $compiler = new LocaleCompiler($this->app->appPath, $this->app->varPath, $this->app->buildPath);
         $compiler->compileSingleFile($file);
