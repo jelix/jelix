@@ -150,6 +150,7 @@ From the command line scripts system of Jelix <=1.6:
 
 - `lib/jelix-scripts`. Its DevHelper classes and templates have been moved to `lib/Jelix`
 - `lib/jelix-scripts/includes/cmd.inc.php` and `lib/jelix-scripts/includes/scripts.inc.php`
+- `lib/jelix/forms/jFormsDatasource.class.php`
 _ `j_jquerypath` variable in templates
 - parameter indicating the component to load into the template meta tag `{meta_html jquery_ui}` 
 
