@@ -4,9 +4,9 @@
  * @subpackage  forms
  *
  * @author      Laurent Jouanneau
- * @copyright   2016 Laurent Jouanneau
+ * @copyright   2016-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -117,6 +117,25 @@ class jFormsSession
         $fid = is_array($formId) ? serialize($formId) : $formId;
 
         return array($sel, $formId, $sel->module.':'.$sel->resource.':'.session_id().':'.sha1($fid));
+    }
+
+
+    public function getFormInstance($formSel, $formId)
+    {
+        list($container, $sel) = $this->getContainer($formSel, $formId, false);
+        if (!$container) {
+            return null;
+        }
+        $c = $sel->getClass();
+        return new $c($container->formSelector, $container, false);
+    }
+
+    public function createFormInstance($formSel, $formId)
+    {
+        list($container, $sel) = $this->getContainer($formSel, $formId, true);
+
+        $c = $sel->getClass();
+        return new $c($container->formSelector, $container, true);
     }
 
     public function getContainer($formSel, $formId, $createIfNeeded)

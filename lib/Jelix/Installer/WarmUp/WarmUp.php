@@ -14,6 +14,7 @@ use Jelix\Core\AppInstance;
 use Jelix\Core\Config\ConfigurationWarmUp;
 use Jelix\Event\EventWarmup;
 use Jelix\FileUtilities\Directory;
+use Jelix\Forms\Compiler\FormsWarmup;
 use Jelix\Locale\LocaleWarmUp;
 use Jelix\Routing\UrlMapping\UrlMapWarmup;
 
@@ -49,7 +50,7 @@ class WarmUp
         $this->warmUpLaunchers[] = new LocaleWarmUp($app);
         $this->warmUpLaunchers[] = new EventWarmup($app);
         $this->warmUpLaunchers[] = new UrlMapWarmup($app);
-
+        $this->warmUpLaunchers[] = new FormsWarmup($app);
     }
 
     /**

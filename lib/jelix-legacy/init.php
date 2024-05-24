@@ -8,10 +8,10 @@
  * @author   Laurent Jouanneau
  * @contributor Loic Mathaud, Julien Issler
  *
- * @copyright 2005-2023 Laurent Jouanneau
+ * @copyright 2005-2024 Laurent Jouanneau
  * @copyright 2007 Julien Issler
  *
- * @see     http://www.jelix.org
+ * @see      https://www.jelix.org
  * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -57,7 +57,7 @@ class LegacyJelixAutoloader
                 array('jelix-legacy', DIRECTORY_SEPARATOR),
                 $class);
             if (strpos($class, '/Forms/') !== false) {
-                $f = LIB_PATH.str_replace( 'Forms', 'forms', $class).'.php';
+                $f = LIB_PATH.str_replace( '/Forms/', '/forms/', $class).'.php';
             }
             else if (strpos($class, '/Core/') !== false) {
                 $f = LIB_PATH.str_replace( 'Core', 'core', $class).'.php';

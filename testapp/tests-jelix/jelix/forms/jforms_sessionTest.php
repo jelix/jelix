@@ -4,8 +4,8 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009 Laurent Jouanneau
-* @link        http://www.jelix.org
+* @copyright   2009-2024 Laurent Jouanneau
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
@@ -37,7 +37,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         $this->form1Descriptor = '
-<object class="cForm_jelix_tests_Jx_product">
+<object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
     <object method="getContainer()" class="jFormsDataContainer">
         <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
         <string property="formSelector" value="jelix_tests~product" />
@@ -72,7 +72,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
 
 
         $this->form2Descriptor ='
-<object class="cForm_jelix_tests_Jx_product">
+<object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
     <object method="getContainer()" class="jFormsDataContainer">
         <string property="formId" value="akey" />
         <string property="formSelector" value="jelix_tests~product" />
@@ -107,7 +107,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
 </object>';
 
         $this->formLabelDescriptor = '
-<object class="cForm_jelix_tests_Jx_label">
+<object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Label">
     <object method="getContainer()" class="jFormsDataContainer">
         <array property="formId">[1,"fr"]</array>
         <string property="formSelector" value="jelix_tests~label" />
@@ -301,7 +301,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
 
         $form = jForms::fill('product');
         $verif = '
-<object class="cForm_jelix_tests_Jx_product">
+<object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
     <object method="getContainer()" class="jFormsDataContainer">
         <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
         <string property="formSelector" value="jelix_tests~product" />
@@ -343,7 +343,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $req->params['price'] = '23';
         $form = jForms::fill('product', 'akey');
         $verif = '
-<object class="cForm_jelix_tests_Jx_product">
+<object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
     <object method="getContainer()" class="jFormsDataContainer">
         <integer property="formId" value="akey" />
         <string property="formSelector" value="jelix_tests~product" />

@@ -115,7 +115,6 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 - `jJsonRpc`
 - `JelixTestSuite`, `junittestcase`, `junittestcasedb`
 - `jAuth::reloadUser()`
-- `jIUrlSignificantHandler`
 - `App::appConfigPath()`, `App::configPath()`
 - `jHttpResponseException`
 - `jResponseHtml::$_CSSIELink` `jResponseHtml::$_JSIELink` `jResponseHtml::getJSIELinks` `jResponseHtml::setJSIELinks` `jResponseHtml::getCSSIELinks` `jResponseHtml::setCSSIELinks`
@@ -126,10 +125,18 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 - `Jelix\Forms\HtmlWidget\RootWidget::$builder`
 - `jFile::getMimeType()`, `jFile::shortestPath()`, `jFile::normalizePath()`
 - `jIniFile`, `jIniFileModifier`, `jIniMultiFilesModifier`
-- `jFormsBuilderBase`, `jFormsBuilderHtml`, `htmlJformsBuilder`, `htmllightJformsBuilder`
 - `jClassBinding`, `jClasses::createBinded()`, `jClasses::getBindedService()`, `jClasses::bind()`, `jClasses::resetBindings()`  
-- remove parameter `$installWholeApp` from the `Jelix\Installer\Module\InstallerAbstract` constructor.
+
+Internal classes and methods, you did not supposed to use, except for complex plugins:
+
+- `jIUrlSignificantHandler`
 - `jEventCompiler`
+- `jFormsCompiler`, `jFormsCompiler_jf_1_1`, `jFormsCompiler_jf_1_0`
+- `jFormsBuilderBase`, `jFormsBuilderHtml`, `htmlJformsBuilder`, `htmllightJformsBuilder`
+- remove parameter `$installWholeApp` from the `Jelix\Installer\Module\InstallerAbstract` constructor.
+
+
+
 
 From the command line scripts system of Jelix <=1.6:
 

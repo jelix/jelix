@@ -4,9 +4,9 @@
  * @subpackage  forms
  *
  * @author      Laurent Jouanneau
- * @copyright   2006-2009 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 require_once JELIX_LIB_PATH.'forms/jFormsBase.class.php';
@@ -71,11 +71,7 @@ class jForms
     public static function create($formSel, $formId = null)
     {
         $session = self::getSession();
-        list($container, $sel) = $session->getContainer($formSel, $formId, true);
-        jIncluder::inc($sel);
-        $c = $sel->getClass();
-
-        return new $c($container->formSelector, $container, true);
+        return $session->createFormInstance($formSel, $formId);
     }
 
     /**
@@ -91,14 +87,7 @@ class jForms
     public static function get($formSel, $formId = null)
     {
         $session = self::getSession();
-        list($container, $sel) = $session->getContainer($formSel, $formId, false);
-        if (!$container) {
-            return null;
-        }
-        jIncluder::inc($sel);
-        $c = $sel->getClass();
-
-        return new $c($container->formSelector, $container, false);
+        return $session->getFormInstance($formSel, $formId);
     }
 
     /**

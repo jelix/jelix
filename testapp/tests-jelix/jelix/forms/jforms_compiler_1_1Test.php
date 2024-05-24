@@ -4,14 +4,15 @@
 * @subpackage  unittest module
 * @author      Laurent Jouanneau
 * @contributor Loic Mathaud, Dominique Papin, Julien Issler
-* @copyright   2007-2009 Laurent Jouanneau
+* @copyright   2007-2024 Laurent Jouanneau
 * @copyright   2007 Loic Mathaud, 2008 Dominique Papin
 * @copyright   2008-2015 Julien Issler
-* @link        http://www.jelix.org
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Forms\Compiler\XmlCompiler11;
 
-class testJFormsCompiler11 extends jFormsCompiler_jf_1_1 {
+class testJFormsCompiler11 extends XmlCompiler11 {
 
     public function __construct() {
         parent::__construct('myfile');
@@ -19,7 +20,7 @@ class testJFormsCompiler11 extends jFormsCompiler_jf_1_1 {
 
     public function testPhpForm($doc){
         $dummysrc = array();
-        return $this->compile($doc, $dummysrc);
+        $this->compile($doc, $dummysrc);
     }
 
     public function testPhpControl($controltype, $control){
@@ -438,240 +439,240 @@ class jforms_compiler_1_1Test extends \Jelix\UnitTests\UnitTestCase {
     );
 
     protected $_PhpControls = array(
-0=>'$ctrl= new jFormsControlInput(\'nom\');
+0=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-1=>'$ctrl= new jFormsControlInput(\'nom\');
+1=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->initialReadOnly=true;
 $this->addControl($ctrl);',
-2=>'$ctrl= new jFormsControlInput(\'nom\');
+2=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->required=true;
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-3=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->label=jLocale::get(\'foo~bar\');
+3=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->label=\\jLocale::get(\'foo~bar\');
 $this->addControl($ctrl);',
-4=>'$ctrl= new jFormsControlTextarea(\'nom\');
+4=>'$ctrl= new \\jFormsControlTextarea(\'nom\');
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-5=>'$ctrl= new jFormsControlSecret(\'nom\');
+5=>'$ctrl= new \\jFormsControlSecret(\'nom\');
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-6=>'$ctrl= new jFormsControlOutput(\'nom\');
+6=>'$ctrl= new \\jFormsControlOutput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-7=>'$ctrl= new jFormsControlUpload(\'nom\');
+7=>'$ctrl= new \\jFormsControlUpload(\'nom\');
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-8=>'$ctrl= new jFormsControlSubmit(\'nom\');
+8=>'$ctrl= new \\jFormsControlSubmit(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource= new \\jFormsStaticDatasource();
 $this->addControl($ctrl);',
-9=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->label=\'Votre nom\';
-$this->addControl($ctrl);',
-10=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypeboolean();
+9=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-11=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypedecimal();
+10=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypeboolean();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-12=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypeinteger();
+11=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypedecimal();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-13=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypehexadecimal();
+12=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypeinteger();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-14=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypedatetime();
+13=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypehexadecimal();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-15=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypedate();
+14=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypedatetime();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-16=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypetime();
+15=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypedate();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-17=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypelocaledatetime();
+16=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypetime();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-18=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypelocaledate();
+17=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypelocaledatetime();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-19=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypelocaletime();
+18=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypelocaledate();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-20=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypeurl();
+19=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypelocaletime();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-21=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypeemail();
+20=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypeurl();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-22=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypeipv4();
+21=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypeemail();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-23=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypeipv6();
+22=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypeipv4();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-24=>'$ctrl= new jFormsControlCheckbox(\'nom\');
+23=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypeipv6();
+$ctrl->label=\'Votre nom\';
+$this->addControl($ctrl);',
+24=>'$ctrl= new \\jFormsControlCheckbox(\'nom\');
 $ctrl->label=\'Avez-vous un nom ?\';
 $this->addControl($ctrl);',
-25=>'$ctrl= new jFormsControlCheckboxes(\'nom\');
+25=>'$ctrl= new \\jFormsControlCheckboxes(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
-26=>'$ctrl= new jFormsControlRadiobuttons(\'nom\');
+26=>'$ctrl= new \\jFormsControlRadiobuttons(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
-27=>'$ctrl= new jFormsControlListbox(\'nom\');
+27=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->size=8;
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
-28=>'$ctrl= new jFormsControlMenulist(\'nom\');
+28=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
-29=>'$ctrl= new jFormsControlListbox(\'nom\');
+29=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
-30=>'$ctrl= new jFormsControlInput(\'nom\');
+30=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->defaultValue=\'toto\';
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-31=>'$ctrl= new jFormsControlListbox(\'nom\');
+31=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->defaultValue=array (
   0 => \'aaa\',
 );
 $this->addControl($ctrl);',
-32=>'$ctrl= new jFormsControlListbox(\'nom\');
+32=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->defaultValue=array (
   0 => \'aaa\',
   1 => \'ccc\',
 );
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-33=>'$ctrl= new jFormsControlListbox(\'nom\');
+33=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue=array(\'aaa\');
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-34=>'$ctrl= new jFormsControlListbox(\'nom\');
+34=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue= array(\'bbb\',\'aaa\',);
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-35=>'$ctrl= new jFormsControlInput(\'nom\');
+35=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->help=\'vous devez indiquer votre nom\';
 $this->addControl($ctrl);',
-36=>'$ctrl= new jFormsControlInput(\'nom\');
+36=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->hint=\'vous devez indiquer votre nom\';
 $this->addControl($ctrl);',
-37=>'$ctrl= new jFormsControlInput(\'nom\');
+37=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->alertInvalid=\'Le nom est invalide\';
 $this->addControl($ctrl);',
-38=>'$ctrl= new jFormsControlInput(\'nom\');
+38=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->alertInvalid=\'Le nom est invalide\';
 $this->addControl($ctrl);',
-39=>'$ctrl= new jFormsControlInput(\'nom\');
+39=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->alertRequired=\'vous avez oublié le nom\';
 $this->addControl($ctrl);',
-40=>'$ctrl= new jFormsControlInput(\'nom\');
+40=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->alertInvalid=jLocale::get(\'error.alert.invalid.nom\');
+$ctrl->alertInvalid=\\jLocale::get(\'error.alert.invalid.nom\');
 $this->addControl($ctrl);',
-41=>'$ctrl= new jFormsControlInput(\'nom\');
+41=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->alertRequired=jLocale::get(\'error.alert.invalid.nom\');
+$ctrl->alertRequired=\\jLocale::get(\'error.alert.invalid.nom\');
 $ctrl->alertInvalid=\'Le nom est invalide\';
 $this->addControl($ctrl);',
-42=>'$ctrl= new jFormsControlCheckbox(\'nom\');
+42=>'$ctrl= new \\jFormsControlCheckbox(\'nom\');
 $ctrl->label=\'Avez-vous un nom ?\';
 $ctrl->valueOnCheck=\'oui\';
 $ctrl->valueOnUncheck=\'non\';
 $this->addControl($ctrl);',
-43=>'$ctrl= new jFormsControlSecret(\'pwd\');
+43=>'$ctrl= new \\jFormsControlSecret(\'pwd\');
 $ctrl->label=\'Votre mot de passe\';
-$ctrl2 = new jFormsControlSecretConfirm(\'pwd_confirm\');
+$ctrl2 = new \\jFormsControlSecretConfirm(\'pwd_confirm\');
 $ctrl2->primarySecret = \'pwd\';
 $ctrl2->label=\'confirmez\';
 $ctrl2->required = $ctrl->required;
 $this->addControl($ctrl);
 $this->addControl($ctrl2);',
-44=>'$ctrl= new jFormsControlSecret(\'pwd\');
+44=>'$ctrl= new \\jFormsControlSecret(\'pwd\');
 $ctrl->label=\'Votre mot de passe\';
-$ctrl2 = new jFormsControlSecretConfirm(\'pwd_confirm\');
+$ctrl2 = new \\jFormsControlSecretConfirm(\'pwd_confirm\');
 $ctrl2->primarySecret = \'pwd\';
-$ctrl2->label=jLocale::get(\'password.confirm\');
+$ctrl2->label=\\jLocale::get(\'password.confirm\');
 $ctrl2->required = $ctrl->required;
 $this->addControl($ctrl);
 $this->addControl($ctrl2);',
-45=>'$ctrl= new jFormsControlSubmit(\'validation\');
+45=>'$ctrl= new \\jFormsControlSubmit(\'validation\');
 $ctrl->label=\'Type de validation\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
 $ctrl->standalone=false;
 $this->addControl($ctrl);',
-46=>'$ctrl= new jFormsControlSubmit(\'validation\');
+46=>'$ctrl= new \\jFormsControlSubmit(\'validation\');
 $ctrl->label=\'Type de validation\';
-$ctrl->datasource= new jFormsStaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->standalone=false;
 $this->addControl($ctrl);',
-47=>'$ctrl= new jFormsControlUpload(\'nom\');
+47=>'$ctrl= new \\jFormsControlUpload(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->maxsize=22356;
 $this->addControl($ctrl);',
-48=>'$ctrl= new jFormsControlUpload(\'nom\');
+48=>'$ctrl= new \\jFormsControlUpload(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->maxsize=22356;
 $ctrl->mimetype=array (
   0 => \'image/gif\',
 );
 $this->addControl($ctrl);',
-49=>'$ctrl= new jFormsControlUpload(\'nom\');
+49=>'$ctrl= new \\jFormsControlUpload(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->maxsize=22356;
 $ctrl->mimetype=array (
   0 => \'image/gif\',
 );
 $this->addControl($ctrl);',
-50=>'$ctrl= new jFormsControlUpload(\'nom\');
+50=>'$ctrl= new \\jFormsControlUpload(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->maxsize=22356;
 $ctrl->mimetype=array (
@@ -679,130 +680,130 @@ $ctrl->mimetype=array (
   1 => \'image/png\',
 );
 $this->addControl($ctrl);',
-51=>'$ctrl= new jFormsControlUpload(\'nom\');
+51=>'$ctrl= new \\jFormsControlUpload(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->mimetype=array (
   0 => \'image/gif\',
   2 => \'image/png\',
 );
 $this->addControl($ctrl);',
-52=>'$ctrl= new jFormsControlInput(\'nom\');
+52=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->size=20;
 $this->addControl($ctrl);',
-53=>'$ctrl= new jFormsControlSecret(\'pwd\');
+53=>'$ctrl= new \\jFormsControlSecret(\'pwd\');
 $ctrl->label=\'Votre mot de passe\';
 $ctrl->size=10;
 $this->addControl($ctrl);',
-54=>'$ctrl= new jFormsControlSecret(\'pwd\');
+54=>'$ctrl= new \\jFormsControlSecret(\'pwd\');
 $ctrl->label=\'Votre mot de passe\';
 $ctrl->size=10;
-$ctrl2 = new jFormsControlSecretConfirm(\'pwd_confirm\');
+$ctrl2 = new \\jFormsControlSecretConfirm(\'pwd_confirm\');
 $ctrl2->primarySecret = \'pwd\';
 $ctrl2->label=\'confirmez\';
 $ctrl2->required = $ctrl->required;
 $ctrl2->size=$ctrl->size;
 $this->addControl($ctrl);
 $this->addControl($ctrl2);',
-55=>'$ctrl= new jFormsControlTextarea(\'nom\');
+55=>'$ctrl= new \\jFormsControlTextarea(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->cols=15;
 $this->addControl($ctrl);',
-56=>'$ctrl= new jFormsControlTextarea(\'nom\');
+56=>'$ctrl= new \\jFormsControlTextarea(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->rows=15;
 $this->addControl($ctrl);',
-57=>'$ctrl= new jFormsControlTextarea(\'nom\');
+57=>'$ctrl= new \\jFormsControlTextarea(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->rows=15;
 $ctrl->cols=20;
 $this->addControl($ctrl);',
-58=>'$ctrl= new jFormsControlInput(\'nom\');
+58=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->datatype->addFacet(\'maxLength\',3);
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-59=>'$ctrl= new jFormsControlInput(\'nom\');
+59=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->datatype->addFacet(\'minLength\',3);
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-60=>'$ctrl= new jFormsControlReset(\'annulation\');
+60=>'$ctrl= new \\jFormsControlReset(\'annulation\');
 $ctrl->label=\'type annulation\';
 $this->addControl($ctrl);',
-61=>'$ctrl= new jFormsControlHidden(\'nom\');
+61=>'$ctrl= new \\jFormsControlHidden(\'nom\');
 $this->addControl($ctrl);',
-62=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypehtml();
+62=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypehtml();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-63=>'$ctrl= new jFormsControlTextarea(\'nom\');
-$ctrl->datatype= new jDatatypeHtml();
+63=>'$ctrl= new \\jFormsControlTextarea(\'nom\');
+$ctrl->datatype= new \\jDatatypeHtml();
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-64=>'$ctrl= new jFormsControlCaptcha(\'cap\');
+64=>'$ctrl= new \\jFormsControlCaptcha(\'cap\');
 $ctrl->label=\'captcha\';
 $this->addControl($ctrl);',
-65=>'$ctrl= new jFormsControlHtmlEditor(\'contenu\');
+65=>'$ctrl= new \\jFormsControlHtmlEditor(\'contenu\');
 $ctrl->label=\'Texte\';
 $this->addControl($ctrl);',
-66=>'$ctrl= new jFormsControlHtmlEditor(\'contenu\');
+66=>'$ctrl= new \\jFormsControlHtmlEditor(\'contenu\');
 $ctrl->label=\'Texte\';
 $ctrl->config=\'simple\';
 $this->addControl($ctrl);',
-67=>'$ctrl= new jFormsControlCheckboxes(\'nom\');
+67=>'$ctrl= new \\jFormsControlCheckboxes(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
 $this->addControl($ctrl);',
-68=>'$ctrl= new jFormsControlRadiobuttons(\'nom\');
+68=>'$ctrl= new \\jFormsControlRadiobuttons(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
 $this->addControl($ctrl);',
-69=>'$ctrl= new jFormsControlListbox(\'nom\');
+69=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
 $this->addControl($ctrl);',
-70=>'$ctrl= new jFormsControlMenulist(\'nom\');
+70=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
 $this->addControl($ctrl);',
-71=>'$ctrl= new jFormsControlListbox(\'nom\');
+71=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-72=>'$ctrl= new jFormsControlListbox(\'nom\');
+72=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',\'toto\',null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',\'toto\',null);
 $this->addControl($ctrl);',
-73=>'$ctrl= new jFormsControlListbox(\'nom\');
+73=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'youp\',\'toto\',null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'youp\',\'toto\',null);
 $this->addControl($ctrl);',
-74=>'$ctrl= new jFormsControlListbox(\'nom\');
+74=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,\'prenom\');
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,\'prenom\');
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-75=>'$ctrl= new jFormsControlMenulist(\'nom\');
+75=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-jClasses::inc(\'jelix_tests~mydatasource\');
-$datasource = new mydatasource($this->id());
-if ($datasource instanceof jIFormsDatasource){$ctrl->datasource=$datasource;
+\\jClasses::inc(\'jelix_tests~mydatasource\');
+$datasource = new \\mydatasource($this->id());
+if ($datasource instanceof \\jIFormsDatasource){$ctrl->datasource=$datasource;
 }
-else{$ctrl->datasource=new jFormsStaticDatasource();}
+else{$ctrl->datasource=new \\jFormsStaticDatasource();}
 $this->addControl($ctrl);',
-76=>'$ctrl= new jFormsControlGroup(\'agroup\');
+76=>'$ctrl= new \\jFormsControlGroup(\'agroup\');
 $ctrl->label=\'the group\';
 $topctrl = $ctrl;
-$ctrl= new jFormsControlInput(\'nom\');
+$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $topctrl->addChildControl($ctrl);
-$ctrl= new jFormsControlListbox(\'list\');
+$ctrl= new \\jFormsControlListbox(\'list\');
 $ctrl->label=\'a list\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
 $topctrl->addChildControl($ctrl);
 $ctrl = $topctrl;
 $this->addControl($ctrl);',
-77=>'$ctrl= new jFormsControlChoice(\'achoice\');
+77=>'$ctrl= new \\jFormsControlChoice(\'achoice\');
 $ctrl->label=\'the choice\';
 $choicectrl = $ctrl;
 $choicectrl->createItem(\'choix1\', \'Choix 1\');
@@ -810,94 +811,94 @@ $choicectrl->createItem(\'choix2\', \'Choix 2\');
 $choicectrl->defaultValue=\'\';
 $ctrl = $choicectrl;
 $this->addControl($ctrl);',
-78=>'$ctrl= new jFormsControlChoice(\'achoice\');
+78=>'$ctrl= new \\jFormsControlChoice(\'achoice\');
 $ctrl->label=\'the choice\';
 $choicectrl = $ctrl;
 $choicectrl->createItem(\'choix1\', \'Choix 1\');
-$ctrl= new jFormsControlInput(\'nom\');
+$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->alertInvalid=\'Le nom est invalide\';
 $choicectrl->addChildControl($ctrl,\'choix1\');
 $choicectrl->createItem(\'choix2\', \'Choix 2\');
-$ctrl= new jFormsControlListbox(\'list\');
+$ctrl= new \\jFormsControlListbox(\'list\');
 $ctrl->label=\'a list\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,null);
 $choicectrl->addChildControl($ctrl,\'choix2\');
-$ctrl= new jFormsControlSecret(\'pwd\');
+$ctrl= new \\jFormsControlSecret(\'pwd\');
 $ctrl->label=\'Votre mot de passe\';
 $ctrl->size=10;
 $choicectrl->addChildControl($ctrl,\'choix2\');
 $choicectrl->defaultValue=\'\';
 $ctrl = $choicectrl;
 $this->addControl($ctrl);',
-79=>'$ctrl= new jFormsControlMenulist(\'nom\');
+79=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'youp\',null,\'prenom\');
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'youp\',null,\'prenom\');
 $this->addControl($ctrl);',
-80=>'$ctrl= new jFormsControlMenulist(\'nom\');
+80=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz,biz\',\'plop\',\'\',\'joe,dumb\',null);
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz,biz\',\'plop\',\'\',\'joe,dumb\',null);
 $this->addControl($ctrl);',
-81=>'$ctrl= new jFormsControlMenulist(\'nom\');
+81=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz,biz\',\'plop\',\'\',null,\'prenom,nom\');
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz,biz\',\'plop\',\'\',null,\'prenom,nom\');
 $this->addControl($ctrl);',
-82=>'$ctrl= new jFormsControlMenulist(\'nom\');
+82=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz,biz\',\'plop\',\'\',null,\'prenom,nom\',\' - \');
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz,biz\',\'plop\',\'\',null,\'prenom,nom\',\' - \');
 $this->addControl($ctrl);',
-83=>'$ctrl= new jFormsControlSecret(\'pwd\');
+83=>'$ctrl= new \\jFormsControlSecret(\'pwd\');
 $ctrl->datatype->addFacet(\'minLength\',5);
 $ctrl->datatype->addFacet(\'maxLength\',10);
 $ctrl->label=\'Votre mot de passe\';
-$ctrl2 = new jFormsControlSecretConfirm(\'pwd_confirm\');
+$ctrl2 = new \\jFormsControlSecretConfirm(\'pwd_confirm\');
 $ctrl2->primarySecret = \'pwd\';
 $ctrl2->label=\'confirmez\';
 $ctrl2->required = $ctrl->required;
 $this->addControl($ctrl);
 $this->addControl($ctrl2);',
-84=>'$ctrl= new jFormsControlInput(\'nom\');
-$ctrl->datatype= new jDatatypeHtml(true);
+84=>'$ctrl= new \\jFormsControlInput(\'nom\');
+$ctrl->datatype= new \\jDatatypeHtml(true);
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-85=>'$ctrl= new jFormsControlTextarea(\'nom\');
-$ctrl->datatype= new jDatatypeHtml(true);
+85=>'$ctrl= new \\jFormsControlTextarea(\'nom\');
+$ctrl->datatype= new \\jDatatypeHtml(true);
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-86=>'$ctrl= new jFormsControlHtmlEditor(\'contenu\');
-$ctrl->datatype= new jDatatypeHtml(true, true);
+86=>'$ctrl= new \\jFormsControlHtmlEditor(\'contenu\');
+$ctrl->datatype= new \\jDatatypeHtml(true, true);
 $ctrl->label=\'Texte\';
 $this->addControl($ctrl);',
-87=>'$ctrl= new jFormsControlListbox(\'nom\');
+87=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->size=8;
-$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource= new \\jFormsStaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $this->addControl($ctrl);',
-88=>'$ctrl= new jFormsControlMenulist(\'nom\');
+88=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource= new \\jFormsStaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $this->addControl($ctrl);',
-89=>'$ctrl= new jFormsControlListbox(\'nom\');
+89=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource= new \\jFormsStaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $ctrl->defaultValue=array (
   0 => \'bbb\',
 );
 $this->addControl($ctrl);',
-90=>'$ctrl= new jFormsControlListbox(\'nom\');
+90=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource= new \\jFormsStaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $ctrl->defaultValue=array (
   0 => \'aaa\',
@@ -905,27 +906,27 @@ $ctrl->defaultValue=array (
 );
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-91=>'$ctrl= new jFormsControlListbox(\'nom\');
+91=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue= array(\'bbb\',\'aaa\',);
-$ctrl->datasource= new jFormsStaticDatasource();
+$ctrl->datasource= new \\jFormsStaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-92=>'$ctrl= new jFormsControlListbox(\'nom\');
+92=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,\'prenom\');
+$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\',\'\',null,\'prenom\');
 $ctrl->datasource->setGroupBy(\'category\');
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
-93=>'$ctrl= new jFormsControlInput(\'nom\');
+93=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->datatype->addFacet(\'pattern\',\'/^[0-9]+$/\');
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
-94=>'$ctrl= new jFormsControlColor(\'couleur\');
-$ctrl->datatype= new jDatatypeColor();
+94=>'$ctrl= new \\jFormsControlColor(\'couleur\');
+$ctrl->datatype= new \\jDatatypeColor();
 $ctrl->label=\'Couleur\';
 $this->addControl($ctrl);',
 );
@@ -1174,8 +1175,7 @@ array( 'reset','myfile')
                 $this->fail("Can't load bad xml test content ($k)");
             }else{
                 try {
-                    // getName() in simplexml doesn't exists in prior version of php 5.1.3, so we use a DOM
-                    $ct = $jfc->testPhpForm($dom);
+                    $jfc->testPhpForm($dom);
                     $this->fail("no exception during bad xml test content $k");
                 }catch(jException $e){
                     $this->assertEquals($form[1], $e->getLocaleKey());
