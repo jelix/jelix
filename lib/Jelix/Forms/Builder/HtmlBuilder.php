@@ -73,7 +73,7 @@ class HtmlBuilder extends BuilderBase
     protected $htmlWidgetsAttributes = array();
 
     /**
-     * @var \jelix\forms\HtmlWidget\RootWidget
+     * @var \Jelix\Forms\HtmlWidget\RootWidget
      */
     protected $rootWidget;
 

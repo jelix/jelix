@@ -813,9 +813,9 @@ abstract class jFormsBase
     /**
      * @param string $buildertype the type name of a form builder.
      *
+     * @return \Jelix\Forms\Builder\BuilderBase
      * @throws jExceptionForms
      *
-     * @return \jelix\forms\Builder\BuilderBase
      */
     public function getBuilder($buildertype)
     {
@@ -829,7 +829,7 @@ abstract class jFormsBase
             return $this->builders[$buildertype];
         }
 
-        /** @var \jelix\forms\Builder\BuilderBase $o */
+        /** @var \Jelix\Forms\Builder\BuilderBase $o */
         $o = jApp::loadPlugin($plugintype, 'formbuilder', '.formbuilder.php', $plugintype.'FormBuilder', $this);
 
         if ($o) {

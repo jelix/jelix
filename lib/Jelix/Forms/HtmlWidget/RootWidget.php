@@ -35,7 +35,7 @@ class RootWidget implements ParentWidgetInterface
     //------ Other methods
 
     /**
-     * @param \jelix\forms\Builder\HtmlBuilder $builder
+     * @param \Jelix\Forms\Builder\HtmlBuilder $builder
      */
     public function outputHeader($builder)
     {
@@ -50,7 +50,7 @@ class RootWidget implements ParentWidgetInterface
     }
 
     /**
-     * @param \jelix\forms\Builder\HtmlBuilder $builder
+     * @param \Jelix\Forms\Builder\HtmlBuilder $builder
      */
     public function outputFooter($builder)
     {

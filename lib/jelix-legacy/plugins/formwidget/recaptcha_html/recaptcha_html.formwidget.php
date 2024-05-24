@@ -51,7 +51,7 @@
  * @package     jelix
  * @subpackage  forms_widget_plugin
  */
-class recaptcha_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class recaptcha_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {

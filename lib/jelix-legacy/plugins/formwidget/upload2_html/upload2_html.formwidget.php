@@ -23,7 +23,7 @@
  * From a base URI : a baseURI attribute should be given, with the URL on which
  * the filename will be append.
  */
-class upload2_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements \jelix\forms\HtmlWidget\ParentWidgetInterface
+class upload2_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase implements \Jelix\Forms\HtmlWidget\ParentWidgetInterface
 {
     /**
      * @var string the jUrl action selector used to get the URL of the image

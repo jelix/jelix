@@ -21,7 +21,7 @@
  *
  * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
-class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class checkboxes_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     protected function outputJs($refName)
     {

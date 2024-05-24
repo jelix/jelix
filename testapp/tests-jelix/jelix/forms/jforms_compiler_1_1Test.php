@@ -10,6 +10,7 @@
 * @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
 use Jelix\Forms\Compiler\XmlCompiler11;
 
 class testJFormsCompiler11 extends XmlCompiler11 {
