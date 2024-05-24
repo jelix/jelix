@@ -11,6 +11,8 @@
 */
 
 
+use Jelix\Forms\Datasource\StaticDatasource;
+
 require_once(JELIX_LIB_PATH.'plugins/formbuilder/html/html.formbuilder.php');
 require_once(JELIX_LIB_PATH.'plugins/formwidget/html/html.formwidget.php');
 
@@ -95,7 +97,7 @@ class jforms_HTMLBuilder2Test extends \Jelix\UnitTests\UnitTestCaseDb {
         $ctrl->required=true;
         $ctrl->label='Vous êtes ';
         $ctrl->alertRequired='Vous devez indiquer le sexe, même si vous ne savez pas :-)';
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->data = array(
         'h'=>'un homme',
         'f'=>'une femme',
@@ -236,7 +238,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrlreason->required=true;
         $ctrlreason->label='Reason ';
         $ctrlreason->alertRequired='Hey, specify a reason !';
-        $ctrlreason->datasource= new jFormsStaticDatasource();
+        $ctrlreason->datasource= new StaticDatasource();
         $ctrlreason->datasource->data = array(
             'aa'=>'fixed',
             'bb'=>'won t fixed',
@@ -551,7 +553,7 @@ jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
         $ctrl->required=true;
         $ctrl->label='Vous êtes ';
         $ctrl->alertRequired='Vous devez indiquer le sexe, même si vous ne savez pas :-)';
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->data = array(
             'h'=>'un homme',
             'f'=>'une femme',

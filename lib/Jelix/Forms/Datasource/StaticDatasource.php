@@ -1,24 +1,20 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  forms
- *
  * @author      Laurent Jouanneau
  *
- * @copyright   2006-2022 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
+namespace Jelix\Forms\Datasource;
 
 
 /**
  * A datasource which is based on static values.
- *
- * @package     jelix
- * @subpackage  forms
  */
-class jFormsStaticDatasource implements jIFormsDatasource2
+class StaticDatasource implements jIFormsDatasource2
 {
     /**
      * associative array which contains keys and labels.

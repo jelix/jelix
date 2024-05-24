@@ -19,12 +19,12 @@
  * autocomplete plugin.
  *
  * You should use a menulist control, and a datasource, inheriting from
- * jFormsDaoDatasource or jFormsDynamicDatasource, and having a getData() method
+ * \Jelix\Forms\Datasource\DaoDatasource or \Jelix\Forms\Datasource\DynamicDatasource, and having a getData() method
  * returning an empty list.
  *
  * The widget accepts a specific attribute, 'attr-autocomplete', an array
  * which should contains at least an item 'source' indicating the url of the search
- * engine. The array may contains other attributes for the input element used to
+ * engine. The array may contain other attributes for the input element used to
  * type the search term (class, style..).
  *
  * example of use:
@@ -37,7 +37,7 @@
  * ```
  * The datasource:
  * ```
- * class mydatasource extends jFormsDaoDatasource {
+ * class mydatasource extends \Jelix\Forms\Datasource\DaoDatasource {
  *    function __construct($formId) {
  *       parent::__construct ("mymodule~myDao" , "findAll" , "label", 'id');
  *    }

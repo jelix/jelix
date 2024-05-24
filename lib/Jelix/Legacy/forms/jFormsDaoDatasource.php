@@ -1,25 +1,21 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  forms
- *
  * @author      Laurent Jouanneau
  * @contributor Dominique Papin, Julien Issler
  *
- * @copyright   2006-2023 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  * @copyright   2008 Dominique Papin
  * @copyright   2010-2015 Julien Issler
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-
 /**
- * A datasource which is based on a dao.
+ * dummy class for compatibility.
  *
- * @package     jelix
- * @subpackage  forms
+ * @see \Jelix\Forms\Datasource\DaoDatasource
+ * @deprecated
  */
 class jFormsDaoDatasource extends jFormsDynamicDatasource
 {
@@ -152,5 +148,14 @@ class jFormsDaoDatasource extends jFormsDynamicDatasource
         }
 
         return $label;
+    }
+
+    /**
+     * @deprecated
+     * @see jFormsDaoDatasource::getCriteriaControls()
+     */
+    public function getDependentControls()
+    {
+        return $this->getCriteriaControls();
     }
 }

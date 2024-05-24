@@ -310,7 +310,7 @@ $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 10=>'$ctrl= new \\jFormsControlSubmit(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $this->addControl($ctrl);',
 11=>'$ctrl= new \\jFormsControlInput(\'nom\');
 $ctrl->label=\'Votre nom\';
@@ -376,11 +376,11 @@ $ctrl->label=\'Avez-vous un nom ?\';
 $this->addControl($ctrl);',
 27=>'$ctrl= new \\jFormsControlCheckboxes(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new \\Jelix\\Forms\\Datasource\\DaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 28=>'$ctrl= new \\jFormsControlCheckboxes(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),
@@ -389,11 +389,11 @@ $ctrl->datasource->data = array(
 $this->addControl($ctrl);',
 29=>'$ctrl= new \\jFormsControlRadiobuttons(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new \\Jelix\\Forms\\Datasource\\DaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 30=>'$ctrl= new \\jFormsControlRadiobuttons(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),
@@ -402,12 +402,12 @@ $ctrl->datasource->data = array(
 $this->addControl($ctrl);',
 31=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new \\Jelix\\Forms\\Datasource\\DaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 32=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->size=8;
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),
@@ -416,11 +416,11 @@ $ctrl->datasource->data = array(
 $this->addControl($ctrl);',
 33=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new \\Jelix\\Forms\\Datasource\\DaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $this->addControl($ctrl);',
 34=>'$ctrl= new \\jFormsControlMenulist(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),
@@ -429,12 +429,12 @@ $ctrl->datasource->data = array(
 $this->addControl($ctrl);',
 35=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new \\Jelix\\Forms\\Datasource\\DaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 36=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),
@@ -447,7 +447,7 @@ $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 38=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),
@@ -459,7 +459,7 @@ $ctrl->defaultValue=array (
 $this->addControl($ctrl);',
 39=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),
@@ -474,7 +474,7 @@ $this->addControl($ctrl);',
 40=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue=array(\'aaa\');
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),
@@ -485,7 +485,7 @@ $this->addControl($ctrl);',
 41=>'$ctrl= new \\jFormsControlListbox(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue= array(\'bbb\',\'aaa\',);
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),
@@ -545,13 +545,13 @@ $this->addControl($ctrl);
 $this->addControl($ctrl2);',
 52=>'$ctrl= new \\jFormsControlSubmit(\'validation\');
 $ctrl->label=\'Type de validation\';
-$ctrl->datasource = new \\jFormsDaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
+$ctrl->datasource = new \\Jelix\\Forms\\Datasource\\DaoDatasource(\'foo\',\'bar\',\'baz\',\'plop\');
 $ctrl->standalone=false;
 $this->addControl($ctrl);',
 53=>'$ctrl= new \\jFormsControlSubmit(\'validation\');
 $ctrl->label=\'Type de validation\';
 $ctrl->standalone=false;
-$ctrl->datasource= new \\jFormsStaticDatasource();
+$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data = array(
 \'aaa\'=>\'1aa\',
 \'bbb\'=>\\jLocale::get(\'locb\'),

@@ -1,24 +1,20 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  forms
- *
  * @author      Julien Issler
  * @contributor Laurent Jouanneau
  *
  * @copyright   2015 Julien Issler
- * @copyright   2015-2022 Laurent Jouanneau
+ * @copyright   2015-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 /**
- * Base class for a datasource which is based on a class and can be used for dynamic
- * listboxes or menulists.
+ * dummy class for compatibility.
  *
- * @package     jelix
- * @subpackage  forms
+ * @see \Jelix\Forms\Datasource\DynamicDatasource
+ * @deprecated
  */
 abstract class jFormsDynamicDatasource implements jIFormsDynamicDatasource
 {
@@ -57,4 +53,5 @@ abstract class jFormsDynamicDatasource implements jIFormsDynamicDatasource
     {
         $this->criteriaFrom = $criteriaFrom;
     }
+
 }

@@ -1,4 +1,7 @@
 <?php
+
+use Jelix\Forms\Datasource\StaticDatasource;
+
 /**
 * @package     testapp
 * @subpackage  unittest module
@@ -61,7 +64,7 @@ class jforms_modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $ctrl= new jFormsControlListbox('list');
         $ctrl->multiple=true;
-        $ctrl->datasource = new jFormsStaticDatasource();
+        $ctrl->datasource = new StaticDatasource();
         $ctrl->datasource->data = array('a'=>'aaa', 'b'=>'bbb', 'c'=>'123', 'd'=>'456');
         $this->form->addControl($ctrl);
         $this->form->setData('list', array('bbb','123'));

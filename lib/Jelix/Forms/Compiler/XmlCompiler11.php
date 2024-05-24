@@ -544,7 +544,7 @@ class XmlCompiler11 extends XmlCompiler10
                     $labelSeparator = '';
                 }
 
-                $source[] = '$ctrl->datasource = new \\jFormsDaoDatasource(\'' . $attrs['dao'] . '\',\'' .
+                $source[] = '$ctrl->datasource = new \\Jelix\\Forms\\Datasource\\DaoDatasource(\'' . $attrs['dao'] . '\',\'' .
                     $attrs['method'] . '\',\'' . $attrs['labelproperty'] . '\',\'' . $daovalue . '\'' . $profile . $criteria . $labelSeparator . ');';
                 if (isset($attrs['labelmethod'])) {
                     $source[] = '$ctrl->datasource->labelMethod=\'' . $attrs['labelmethod'] . '\';';
@@ -565,7 +565,7 @@ class XmlCompiler11 extends XmlCompiler10
                     $source[] = 'if($datasource instanceof \\jIFormsDynamicDatasource) $datasource->setCriteriaControls(array(\'' . join('\',\'', preg_split('/[\s,]+/', $attrs['criteriafrom'])) . '\'));';
                 }
                 $source[] = '}';
-                $source[] = 'else{$ctrl->datasource=new \\jFormsStaticDatasource();}';
+                $source[] = 'else{$ctrl->datasource=new \\Jelix\\Forms\\Datasource\\StaticDatasource();}';
                 if ($controltype == 'submit') {
                     $source[] = '$ctrl->standalone=false;';
                 }
@@ -577,7 +577,7 @@ class XmlCompiler11 extends XmlCompiler10
             }
         } else {
             // get all <items> and their label|labellocale attributes + their values
-            $source[] = '$ctrl->datasource= new \\jFormsStaticDatasource();';
+            $source[] = '$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();';
             //$source[]='$ctrl->datasource->data = ';
             $nogroup = '';
             $groups = array();

@@ -94,6 +94,16 @@ Plugins for jDaoCompiler (type 'daobuilder'), are not supported anymore.
 
 All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~dao.*` locales.
 
+
+## Changes in jForms
+
+jForms classes are all renamed, into the `\Jelix\Forms` namespace, except
+for `jForms` is still the main class to use to load and use forms.
+
+- `jFormsDaoDatasource` is deprecated you should use `\Jelix\Forms\Datasource\DaoDatasource`
+- `jFormsDynamicDatasource` is deprecated you should use `\Jelix\Forms\Datasource\DynamicDatasource`
+- `jFormsStaticDatasource` is deprecated you should use `\Jelix\Forms\Datasource\StaticDatasource`
+
 ## test environment
 
 - upgrade PHPUnit to 8.5.0

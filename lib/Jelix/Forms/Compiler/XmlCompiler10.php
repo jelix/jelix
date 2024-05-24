@@ -597,7 +597,7 @@ class XmlCompiler10
             } else {
                 $daovalue = '';
             }
-            $source[] = '$ctrl->datasource = new \\jFormsDaoDatasource(\'' . $attributes['dao'] . '\',\'' .
+            $source[] = '$ctrl->datasource = new \\Jelix\\Forms\\Datasource\\DaoDatasource(\'' . $attributes['dao'] . '\',\'' .
                 $attributes['daomethod'] . '\',\'' . $attributes['daolabelproperty'] . '\',\'' . $daovalue . '\');';
             unset($attributes['dao'], $attributes['daomethod'], $attributes['daolabelproperty']);
 
@@ -611,7 +611,7 @@ class XmlCompiler10
             $source[] = '\\jClasses::inc(\'' . $dsclass . '\');';
             $source[] = '$datasource = new ' . ($class->className[0] == '\\'? '':'\\').$class->className . '($this->id());';
             $source[] = 'if ($datasource instanceof \\jIFormsDatasource){$ctrl->datasource=$datasource;}';
-            $source[] = 'else{$ctrl->datasource=new \\jFormsStaticDatasource();}';
+            $source[] = 'else{$ctrl->datasource=new \\Jelix\\Forms\\Datasource\\StaticDatasource();}';
             if ($controltype == 'submit') {
                 $source[] = '$ctrl->standalone=false;';
             }
@@ -620,7 +620,7 @@ class XmlCompiler10
             if ($controltype == 'submit') {
                 $source[] = '$ctrl->standalone=false;';
             }
-            $source[] = '$ctrl->datasource= new \\jFormsStaticDatasource();';
+            $source[] = '$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();';
             $source[] = '$ctrl->datasource->data = array(';
             $selectedvalues = array();
             foreach ($control->item as $item) {
@@ -652,7 +652,7 @@ class XmlCompiler10
                 $source[] = '$ctrl->defaultValue=' . var_export($selectedvalues, true) . ';';
             }
         } else {
-            $source[] = '$ctrl->datasource= new \\jFormsStaticDatasource();';
+            $source[] = '$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();';
         }
     }
 }

@@ -11,6 +11,9 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+use Jelix\Forms\Datasource\DaoDatasource;
+use Jelix\Forms\Datasource\StaticDatasource;
+
 require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 require_once(JELIX_LIB_PATH.'plugins/formbuilder/html/html.formbuilder.php');
 require_once(JELIX_LIB_PATH.'plugins/formwidget/html/html.formwidget.php');
@@ -456,7 +459,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl= new jFormsControlCheckboxes('choixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
         self::$form->addControl($ctrl);
 
         $records = array(
@@ -500,7 +503,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
 
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->setGroupBy(true);
         $ctrl->datasource->data = array(
             ''=>array('10'=>'foo'),
@@ -526,7 +529,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl= new jFormsControlCheckboxes('choixmultiple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
@@ -613,7 +616,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl= new jFormsControlRadiobuttons('rbchoixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
         self::$form->addControl($ctrl);
 
         ob_start();
@@ -651,7 +654,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
 
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
@@ -709,7 +712,7 @@ jFormsJQ.tForm.addControl(c);
 
         self::$builder->clearJs();
 
-        $ctrl->datasource = new jFormsStaticDatasource();
+        $ctrl->datasource = new StaticDatasource();
         $ctrl->datasource->data = array('1'=>'Yes','0'=>'No');
         self::$form->setReadOnly('rbchoixsimple', false);
         self::$form->setData('rbchoixsimple', null);
@@ -739,7 +742,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl= new jFormsControlMenulist('menulist1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
         self::$form->addControl($ctrl);
 
         ob_start();
@@ -799,7 +802,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
         $ctrl->emptyItemLabel = null;
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
@@ -952,7 +955,7 @@ jFormsJQ.tForm.addControl(c);
 
         $ctrl->setReadOnly(false);
         $ctrl->hint='';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findOrderPrice', 'name', 'id');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findOrderPrice', 'name', 'id');
         $ctrl->datasource->setGroupBy('price');
         ob_start();
         self::$builder->outputControl($ctrl);
@@ -983,7 +986,7 @@ jFormsJQ.tForm.addControl(c);
 
         $ctrl->setReadOnly(false);
         $ctrl->hint='';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findByMaxId', 'name', 'id', '', '15');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findByMaxId', 'name', 'id', '', '15');
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -1000,7 +1003,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
 
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findByMaxId', 'name', 'id', '', '11');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findByMaxId', 'name', 'id', '', '11');
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -1036,7 +1039,7 @@ jFormsJQ.tForm.addControl(c);
 
         self::$form->addControl(new jFormsControlHidden('hidden1'));
         self::$form->setData('hidden1', "25");
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findByMaxId', 'name', 'id', '', null, 'hidden1');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findByMaxId', 'name', 'id', '', null, 'hidden1');
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -1083,7 +1086,7 @@ jFormsJQ.tForm.addControl(c);
         $this->assertEquals($result, $out);
 
         self::$form->setData('menulist1', "");
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findByMaxId', 'name,price', 'id', '', '25', null);
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findByMaxId', 'name,price', 'id', '', '25', null);
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -1095,7 +1098,7 @@ jFormsJQ.tForm.addControl(c);
         $result.='</select>'."\n";
         $this->assertEquals($result, $out);
 
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findByMaxId', 'name,price', 'id', '', '25', null, ' - ');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findByMaxId', 'name,price', 'id', '', '25', null, ' - ');
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -1107,7 +1110,7 @@ jFormsJQ.tForm.addControl(c);
         $result.='</select>'."\n";
         $this->assertEquals($result, $out);
 
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findBetweenId', 'name,price', 'id', '', '9,25', null, ' - ');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findBetweenId', 'name,price', 'id', '', '9,25', null, ' - ');
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -1119,7 +1122,7 @@ jFormsJQ.tForm.addControl(c);
         $result.='</select>'."\n";
         $this->assertEquals($result, $out);
 
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findBetweenId', 'name,price', 'id', '', '10,25', null, ' - ');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findBetweenId', 'name,price', 'id', '', '10,25', null, ' - ');
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -1133,7 +1136,7 @@ jFormsJQ.tForm.addControl(c);
         self::$form->addControl(new jFormsControlHidden('hidden2'));
         self::$form->setData('hidden1', "9");
         self::$form->setData('hidden2', "25");
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findBetweenId', 'name,price', 'id', '', null, 'hidden1,hidden2', ' - ');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findBetweenId', 'name,price', 'id', '', null, 'hidden1,hidden2', ' - ');
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -1147,7 +1150,7 @@ jFormsJQ.tForm.addControl(c);
 
         self::$form->setData('hidden1', "10");
         self::$form->setData('hidden2', "25");
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findBetweenId', 'name,price', 'id', '', null, 'hidden1,hidden2', ' - ');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findBetweenId', 'name,price', 'id', '', null, 'hidden1,hidden2', ' - ');
         ob_start();
         self::$builder->outputControl($ctrl);
         $out = ob_get_clean();
@@ -1171,7 +1174,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl= new jFormsControlListbox('listbox1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
         self::$form->addControl($ctrl);
 
         ob_start();
@@ -1229,7 +1232,7 @@ c.errInvalid=\'"Votre choix" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->data = array(
             '10'=>'foo',
             '11'=>'bar',
@@ -1279,7 +1282,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl= new jFormsControlListbox('lbchoixmultiple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
         $ctrl->multiple=true;
         $ctrl->hint='ceci est un tooltip';
         self::$form->addControl($ctrl);
@@ -1327,7 +1330,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl= new jFormsControlListbox('listbox2');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
         $ctrl->defaultValue=array('10');
         self::$form->addControl($ctrl);
 
@@ -1355,7 +1358,7 @@ jFormsJQ.tForm.addControl(c);
         $ctrl= new jFormsControlListbox('lbchoixmultiple2');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
-        $ctrl->datasource = new jFormsDaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
+        $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
         $ctrl->multiple=true;
         $ctrl->size=8;
         $ctrl->defaultValue=array('11','23');
@@ -1812,7 +1815,7 @@ jFormsJQ.tForm.addControl(c);
 
 
         $ctrl->standalone=false;
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->data = array('svg'=>'Sauvegarde','prev'=>'Preview');
 
         ob_start();
