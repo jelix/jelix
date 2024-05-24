@@ -654,7 +654,7 @@ class jControllerDaoCrud extends jController
 
         try {
             $rec = $form->initFromDao($this->dao, $id, $this->dbProfile);
-        } catch (jExceptionForms $e) {
+        } catch (\Jelix\Forms\FormException $e) {
             if ($this->viewErrorTemplate) {
                 $rep->body->assign($this->templateAssign, $tpl->fetch($this->viewErrorTemplate));
                 $rep->setHttpStatus('404', 'Not Found');

@@ -16,6 +16,7 @@
     "jEvent": "\\Jelix\\Event\\Event",
     "jEventListener": "\\Jelix\\Event\\EventListener",
     "jExceptionSelector": "\\Jelix\\Core\\Selector\\Exception",
+    "jExceptionForms": "\\Jelix\\Forms\\FormException",
     "jFileLogger": "\\Jelix\\Logger\\Output\\File",
     "jFramework": "\\Jelix\\Core\\Framework",
     "jHttp401UnauthorizedException": "\\Jelix\\Routing\\Http401UnauthorizedException",

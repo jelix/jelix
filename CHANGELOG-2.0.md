@@ -111,6 +111,10 @@ new interface `\Jelix\Forms\Datasource\DatasourceInterface`, having no more
 - `jFormsDynamicDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\DynamicDatasource` instead
 - `jFormsStaticDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\StaticDatasource` instead
 
+And also:
+
+- `jExceptionForms` is deprecated, you should catch `\Jelix\Forms\FormException` instead
+
 
 ## test environment
 

@@ -15,6 +15,7 @@
     "jDbWidget": "db/jDbWidget.php",
     "jEvent": "events/jEvent.php",
     "jEventListener": "events/jEventListener.php",
+    "jExceptionForms": "forms/jExceptionForms.php",
     "jExceptionSelector": "core/jExceptionSelector.php",
     "jFileLogger": "core/log/jFileLogger.php",
     "jFormsDaoDatasource": "forms/jFormsDaoDatasource.php",
