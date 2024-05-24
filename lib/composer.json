@@ -28,6 +28,7 @@
             "Jelix\\": "Jelix/",
             "jelix\\": "jelix-legacy/"
         },
+        "classmap": [ "Jelix/components-proxies" ],
         "files": [
             "Jelix/Legacy/init.php",
             "jelix-legacy/init.php"

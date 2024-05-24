@@ -39,11 +39,11 @@ class ReCaptchaValidator implements CaptchaValidatorInterface
         if (!isset($config['secret']) || $config['secret'] == '') {
             \jLog::log('secret for recaptcha is missing from the configuration', 'warning');
 
-            return \jForms::ERRDATA_INVALID;
+            return proxies\jForms::ERRDATA_INVALID;
         }
 
         if (!isset($_POST['g-recaptcha-response'])) {
-            return \jForms::ERRDATA_REQUIRED;
+            return proxies\jForms::ERRDATA_REQUIRED;
         }
 
         $recaptcha = new \ReCaptcha\ReCaptcha($config['secret']);
@@ -60,6 +60,6 @@ class ReCaptchaValidator implements CaptchaValidatorInterface
             }
         }
 
-        return \jForms::ERRDATA_INVALID;
+        return proxies\jForms::ERRDATA_INVALID;
     }
 }

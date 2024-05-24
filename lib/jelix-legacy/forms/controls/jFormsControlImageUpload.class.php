@@ -45,7 +45,7 @@ class jFormsControlImageUpload extends jFormsControlUpload2
             $this->fileInfo = array('name' => '', 'type' => '', 'size' => 0,
                 'tmp_name' => '', 'error' => UPLOAD_ERR_NO_FILE, );
             if ($this->required) {
-                $this->error = \jForms::ERRDATA_REQUIRED;
+                $this->error = proxies\jForms::ERRDATA_REQUIRED;
             }
 
             return null;
@@ -60,13 +60,13 @@ class jFormsControlImageUpload extends jFormsControlUpload2
         if ($content != '') {
             $content = @base64_decode($content, true);
             if ($content === false) {
-                $this->error = \jForms::ERRDATA_INVALID;
+                $this->error = proxies\jForms::ERRDATA_INVALID;
 
                 return null;
             }
         } else {
             if ($this->required) {
-                $this->error = \jForms::ERRDATA_REQUIRED;
+                $this->error = proxies\jForms::ERRDATA_REQUIRED;
             }
 
             return null;
@@ -76,13 +76,13 @@ class jFormsControlImageUpload extends jFormsControlUpload2
         $size = file_put_contents($filePath, $content);
 
         if ($size === false) {
-            $this->error = \jForms::ERRDATA_FILE_UPLOAD_ERROR;
+            $this->error = proxies\jForms::ERRDATA_FILE_UPLOAD_ERROR;
 
             return null;
         }
 
         if ($this->maxsize && $size > $this->maxsize) {
-            $this->error = \jForms::ERRDATA_INVALID_FILE_SIZE;
+            $this->error = proxies\jForms::ERRDATA_INVALID_FILE_SIZE;
             unlink($filePath);
 
             return null;
@@ -96,7 +96,7 @@ class jFormsControlImageUpload extends jFormsControlUpload2
             }
 
             if (!in_array($this->fileInfo['type'], $this->mimetype)) {
-                $this->error = \jForms::ERRDATA_INVALID_FILE_TYPE;
+                $this->error = proxies\jForms::ERRDATA_INVALID_FILE_TYPE;
                 unlink($filePath);
 
                 return null;

@@ -9,9 +9,6 @@
  * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-require_once JELIX_LIB_PATH.'forms/jFormsBase.class.php';
-
-require_once JELIX_LIB_PATH.'forms/jFormsSession.class.php';
 
 /**
  * static class to manage and call a form.
@@ -64,7 +61,7 @@ class jForms
      * If a form with same id exists, data are erased.
      *
      * @param string $formSel the selector of the xml jform file
-     * @param string $formId  the id of the new instance (an id of a record for example)
+     * @param string $formId the id of the new instance (an id of a record for example)
      *
      * @return jFormsBase the object representing the form
      */
@@ -80,7 +77,7 @@ class jForms
      * In your controller, call it before to re-display a form with existing data.
      *
      * @param string $formSel the selector of the xml jform file
-     * @param string $formId  the id of the form (if you use multiple instance of a form)
+     * @param string $formId the id of the form (if you use multiple instance of a form)
      *
      * @return jFormsBase|null the object representing the form. Return null if there isn't an existing form
      */
@@ -96,7 +93,7 @@ class jForms
      * use it in the action called to submit a webform.
      *
      * @param string $formSel the selector of the xml jform file
-     * @param string $formId  the id of the form (if you use multiple instance of a form)
+     * @param string $formId the id of the form (if you use multiple instance of a form)
      *
      * @return jFormsBase|null the object representing the form. Return null if there isn't an existing form
      */
@@ -116,7 +113,7 @@ class jForms
      * use it after saving data of a form, and if you don't want to re-display the form.
      *
      * @param string $formSel the selector of the xml jform file
-     * @param string $formId  the id of the form (if you use multiple instance of a form)
+     * @param string $formId the id of the form (if you use multiple instance of a form)
      */
     public static function destroy($formSel, $formId = null)
     {
