@@ -128,7 +128,7 @@ class Autoloader
     /**
      * @param mixed $className
      *
-     * @return string the full path of the file declaring the given class
+     * @return string|array the full path of the file declaring the given class
      */
     protected function getPath($className)
     {

@@ -9,6 +9,9 @@
 
 namespace Jelix\Event;
 
+/**
+ * @internal
+ */
 class Compiler
 {
     /**
