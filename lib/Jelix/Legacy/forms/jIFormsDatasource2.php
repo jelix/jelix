@@ -17,6 +17,8 @@
  *
  * @package     jelix
  * @subpackage  forms
+ * @deprecated
+ * @see Jelix\Forms\Datasource\DatasourceInterface
  */
 interface jIFormsDatasource2 extends jIFormsDatasource
 {
@@ -40,7 +42,7 @@ interface jIFormsDatasource2 extends jIFormsDatasource
      * Return the label corresponding to the given key.
      * It replaces `getLabel()` so it should be called instead of `getLabel()`.
      *
-     * @param string     $key  the key
+     * @param string $key the key
      * @param jFormsBase $form the form
      *
      * @return string the label

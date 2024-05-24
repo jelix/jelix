@@ -1,27 +1,21 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  forms
- *
  * @author      Julien Issler
  * @contributor Laurent Jouanneau
  *
  * @copyright   2015 Julien Issler
- * @copyright   2015-2022 Laurent Jouanneau
+ * @copyright   2015-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-
+namespace Jelix\Forms\Datasource;
 
 /**
  * Interface for objects which provides a source of data to fill some controls in a form,
  * like menulist, listbox etc...
- *
- * @package     jelix
- * @subpackage  forms
  */
-interface jIFormsDynamicDatasource extends jIFormsDatasource2
+interface DynamicDatasourceInterface extends DatasourceInterface
 {
     /**
      * Return the list of controls name that provide criterion values.

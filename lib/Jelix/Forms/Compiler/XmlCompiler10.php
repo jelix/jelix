@@ -610,7 +610,7 @@ class XmlCompiler10
             $class = new \jSelectorClass($dsclass);
             $source[] = '\\jClasses::inc(\'' . $dsclass . '\');';
             $source[] = '$datasource = new ' . ($class->className[0] == '\\'? '':'\\').$class->className . '($this->id());';
-            $source[] = 'if ($datasource instanceof \\jIFormsDatasource){$ctrl->datasource=$datasource;}';
+            $source[] = 'if ($datasource instanceof \\Jelix\\Forms\\Datasource\\DatasourceInterface || $datasource instanceof \\jIFormsDatasource){$ctrl->datasource=$datasource;}';
             $source[] = 'else{$ctrl->datasource=new \\Jelix\\Forms\\Datasource\\StaticDatasource();}';
             if ($controltype == 'submit') {
                 $source[] = '$ctrl->standalone=false;';

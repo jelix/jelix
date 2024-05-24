@@ -70,7 +70,9 @@ class jformsCtrl extends jController
             return $rep;
         }
 
-        if (!($control->datasource instanceof jIFormsDynamicDatasource)) {
+        if (!($control->datasource instanceof \Jelix\Forms\Datasource\DynamicDatasource
+            || $control->datasource instanceof jIFormsDynamicDatasource)
+        ) {
             $rep = $this->getResponse('text', true);
             $rep->setHttpStatus('422', 'Unprocessable entity');
             $rep->content = 'not supported datasource type';

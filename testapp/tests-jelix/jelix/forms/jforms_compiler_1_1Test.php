@@ -788,7 +788,7 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 \\jClasses::inc(\'jelix_tests~mydatasource\');
 $datasource = new \\mydatasource($this->id());
-if ($datasource instanceof \\jIFormsDatasource){$ctrl->datasource=$datasource;
+if ($datasource instanceof \\Jelix\\Forms\\Datasource\\DatasourceInterface || $datasource instanceof \\jIFormsDatasource){$ctrl->datasource=$datasource;
 }
 else{$ctrl->datasource=new \\Jelix\\Forms\\Datasource\\StaticDatasource();}
 $this->addControl($ctrl);',

@@ -57,15 +57,15 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ds = new DaoDatasource('jelix_tests~labels1' , "findAll" , 'label', 'key', '');
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr', '4'=>'dd-en', '5'=>'ee-en'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
-        $this->assertEquals('ee-en', $ds->getLabel2('5', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('1', $form));
+        $this->assertEquals('ee-en', $ds->getLabel('5', $form));
 
         // ---- retrieve data with multiple label
         $ds = new DaoDatasource('jelix_tests~labels1' , "findAll" , 'lang,label', 'key', '', null, null, '#');
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'fr#aa-fr', '2'=>'fr#bb-fr', '3'=>'fr#cc-fr', '4'=>'en#dd-en', '5'=>'en#ee-en'), $data);
-        $this->assertEquals('fr#aa-fr', $ds->getLabel2('1', $form));
-        $this->assertEquals('en#ee-en', $ds->getLabel2('5', $form));
+        $this->assertEquals('fr#aa-fr', $ds->getLabel('1', $form));
+        $this->assertEquals('en#ee-en', $ds->getLabel('5', $form));
     }
 
     function testValueIsPkSimpleTableStaticCriteria() {
@@ -75,10 +75,10 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ds = new DaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'key', '', "fr");
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('1', $form));
         // even if this record doesn't correspond to the criteria, we don't have choice
         // because the PK is a single field. And for some case, it could make sens
-        $this->assertEquals('ee-en', $ds->getLabel2('5', $form));
+        $this->assertEquals('ee-en', $ds->getLabel('5', $form));
     }
 
     function testValueIsPkSimpleTableDynamicCriteria() {
@@ -90,16 +90,16 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form->setData('name', 'fr');
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('1', $form));
         // even if this record doesn't correspond to the criteria, we don't have choice
         // because the PK is a single field. And for some case, it could make sens
-        $this->assertEquals('ee-en', $ds->getLabel2('5', $form));
+        $this->assertEquals('ee-en', $ds->getLabel('5', $form));
 
         $form->setData('name', 'en');
         $data = $ds->getData($form);
         $this->assertEquals(array('4'=>'dd-en', '5'=>'ee-en'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
-        $this->assertEquals('ee-en', $ds->getLabel2('5', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('1', $form));
+        $this->assertEquals('ee-en', $ds->getLabel('5', $form));
     }
 
     function testValueNotPkSimpleTable() {
@@ -110,16 +110,16 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ds = new DaoDatasource('jelix_tests~labels1' , "findAll" , 'label', 'keyalias', '');
         $data = $ds->getData($form);
         $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr', 'dd'=>'dd-en', 'ee'=>'ee-en'), $data);
-        $this->assertNull($ds->getLabel2('aa', $form));
-        $this->assertNull($ds->getLabel2('ee', $form));
+        $this->assertNull($ds->getLabel('aa', $form));
+        $this->assertNull($ds->getLabel('ee', $form));
 
             // method for the label is given
         $ds = new DaoDatasource('jelix_tests~labels1' , "findAll" , 'label', 'keyalias', '', null, null);
         $ds->labelMethod = 'getByAlias';
         $data = $ds->getData($form);
         $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr', 'dd'=>'dd-en', 'ee'=>'ee-en'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('aa', $form));
-        $this->assertEquals('ee-en', $ds->getLabel2('ee', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('aa', $form));
+        $this->assertEquals('ee-en', $ds->getLabel('ee', $form));
 
     }
 
@@ -131,16 +131,16 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ds = new DaoDatasource('jelix_tests~labels1' , "findAll" , 'lang,label', 'keyalias', '', null, null, '#');
         $data = $ds->getData($form);
         $this->assertEquals(array('aa'=>'fr#aa-fr', 'bb'=>'fr#bb-fr', 'cc'=>'fr#cc-fr', 'dd'=>'en#dd-en', 'ee'=>'en#ee-en'), $data);
-        $this->assertNull($ds->getLabel2('aa', $form));
-        $this->assertNull($ds->getLabel2('ee', $form));
+        $this->assertNull($ds->getLabel('aa', $form));
+        $this->assertNull($ds->getLabel('ee', $form));
 
                 // method for the label is given
         $ds = new DaoDatasource('jelix_tests~labels1' , "findAll" , 'lang,label', 'keyalias', '', null, null, '#');
         $ds->labelMethod = 'getByAlias';
         $data = $ds->getData($form);
         $this->assertEquals(array('aa'=>'fr#aa-fr', 'bb'=>'fr#bb-fr', 'cc'=>'fr#cc-fr', 'dd'=>'en#dd-en', 'ee'=>'en#ee-en'), $data);
-        $this->assertEquals('fr#aa-fr', $ds->getLabel2('aa', $form));
-        $this->assertEquals('en#ee-en', $ds->getLabel2('ee', $form));
+        $this->assertEquals('fr#aa-fr', $ds->getLabel('aa', $form));
+        $this->assertEquals('en#ee-en', $ds->getLabel('ee', $form));
     }
 
     function testValueNotPkSimpleTableStaticCriteria() {
@@ -151,16 +151,16 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ds = new DaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'keyalias', '', "fr");
         $data = $ds->getData($form);
         $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
-        $this->assertNull($ds->getLabel2('aa', $form));
-        $this->assertNull($ds->getLabel2('ee', $form));
+        $this->assertNull($ds->getLabel('aa', $form));
+        $this->assertNull($ds->getLabel('ee', $form));
 
                 // method for the label is not given
         $ds = new DaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'keyalias', '', "fr");
         $ds->labelMethod = 'getByAliasAndCriteria';
         $data = $ds->getData($form);
         $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('aa', $form));
-        $this->assertEquals('ee-en', $ds->getLabel2('ee', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('aa', $form));
+        $this->assertEquals('ee-en', $ds->getLabel('ee', $form));
     }
 
     function testValueNotPkSimpleTableDynamicCriteriaWithoutMethod() {
@@ -173,16 +173,16 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form->setData('name', 'fr');
         $data = $ds->getData($form);
         $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
-        $this->assertNull($ds->getLabel2('aa', $form));
-        $this->assertNull($ds->getLabel2('ee', $form));
+        $this->assertNull($ds->getLabel('aa', $form));
+        $this->assertNull($ds->getLabel('ee', $form));
 
                 // method for the label is given
         $form->setData('name', 'fr');
         $ds->labelMethod = 'getByAliasAndCriteria';
         $data = $ds->getData($form);
         $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('aa', $form));
-        $this->assertEquals('dd-en', $ds->getLabel2('dd', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('aa', $form));
+        $this->assertEquals('dd-en', $ds->getLabel('dd', $form));
     }
 
     function testValueNotPkSimpleTableDynamicCriteriaWithMethod() {
@@ -195,16 +195,16 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form->setData('name', 'en');
         $data = $ds->getData($form);
         $this->assertEquals(array('dd'=>'dd-en', 'ee'=>'ee-en'), $data);
-        $this->assertNull($ds->getLabel2('aa', $form));
-        $this->assertNull($ds->getLabel2('ee', $form));
+        $this->assertNull($ds->getLabel('aa', $form));
+        $this->assertNull($ds->getLabel('ee', $form));
 
             // method for the label is given
         $form->setData('name', 'en');
         $ds->labelMethod = 'getByAliasAndCriteria';
         $data = $ds->getData($form);
         $this->assertEquals(array('dd'=>'dd-en', 'ee'=>'ee-en'), $data);
-        $this->assertEquals('bb-fr', $ds->getLabel2('bb', $form));
-        $this->assertEquals('ee-en', $ds->getLabel2('ee', $form));
+        $this->assertEquals('bb-fr', $ds->getLabel('bb', $form));
+        $this->assertEquals('ee-en', $ds->getLabel('ee', $form));
     }
 
     function testValueIsPkMultiKeyTable() {
@@ -215,7 +215,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'dd-en', '2'=>'ee-en', '3'=>'cc-fr'), $data);
         try {
-            $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
+            $this->assertEquals('aa-fr', $ds->getLabel('1', $form));
             $this->fail('An exception should be thrown since the primary key is not a unique field');
         }
         catch(Exception $e) {
@@ -234,8 +234,8 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ds = new DaoDatasource('jelix_tests~labels' , "findByLang" , 'label', 'key', '', "fr");
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
-        $this->assertNull($ds->getLabel2('5', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('1', $form));
+        $this->assertNull($ds->getLabel('5', $form));
     }
 
     function testValueIsPkMultiKeyTableMutlipleStaticCriteria(){
@@ -251,8 +251,8 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ds->labelMethod = 'getByLang2';
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'dd-en', '2'=>'ee-en', '3'=>'cc-fr'), $data);
-        $this->assertEquals('dd-en', $ds->getLabel2('1', $form));
-        $this->assertNull($ds->getLabel2('5', $form));
+        $this->assertEquals('dd-en', $ds->getLabel('1', $form));
+        $this->assertNull($ds->getLabel('5', $form));
 
 
     }
@@ -265,14 +265,14 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form->setData('name', 'fr');
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
-        $this->assertNull($ds->getLabel2('5', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('1', $form));
+        $this->assertNull($ds->getLabel('5', $form));
 
         $form->setData('name', 'en');
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'dd-en', '2'=>'ee-en'), $data);
-        $this->assertEquals('dd-en', $ds->getLabel2('1', $form));
-        $this->assertNull($ds->getLabel2('5', $form));
+        $this->assertEquals('dd-en', $ds->getLabel('1', $form));
+        $this->assertNull($ds->getLabel('5', $form));
 
     }
 
@@ -282,8 +282,8 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form->setData('price', '5');
         $data = $ds->getData($form);
         $this->assertEquals(array(), $data);
-        $this->assertNull($ds->getLabel2('1', $form));
-        $this->assertNull($ds->getLabel2('5', $form));
+        $this->assertNull($ds->getLabel('1', $form));
+        $this->assertNull($ds->getLabel('5', $form));
         
         $ds = new DaoDatasource('jelix_tests~labels' , "findAllFr" , 'label', 'key', '', null, 'price');
         // ok here, implementation of findAllFr doesn't take care about the price parameter, but well...
@@ -291,8 +291,8 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form->setData('price', '5');
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('1', $form));
-        $this->assertNull($ds->getLabel2('5', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('1', $form));
+        $this->assertNull($ds->getLabel('5', $form));
     }
 
     function testValueIsPkMultiKeyTableMultipleDynamicCriteria(){
@@ -304,8 +304,8 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form->setData('price', '5');
         $data = $ds->getData($form);
         $this->assertEquals(array('1'=>'aa-fr', '2'=>'bb-fr', '3'=>'cc-fr'), $data);
-        $this->assertEquals('aa-fr',$ds->getLabel2('1', $form));
-        $this->assertNull($ds->getLabel2('5', $form));
+        $this->assertEquals('aa-fr',$ds->getLabel('1', $form));
+        $this->assertNull($ds->getLabel('5', $form));
     }
     
     function testValueNotPkMultiKeyTable(){
@@ -323,8 +323,8 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ds->labelMethod = 'getByAliasLang';
         $data = $ds->getData($form);
         $this->assertEquals(array('aa'=>'aa-fr', 'bb'=>'bb-fr', 'cc'=>'cc-fr'), $data);
-        $this->assertEquals('aa-fr', $ds->getLabel2('aa', $form));
-        $this->assertNull($ds->getLabel2('dd', $form));
+        $this->assertEquals('aa-fr', $ds->getLabel('aa', $form));
+        $this->assertNull($ds->getLabel('dd', $form));
 
     }
 }

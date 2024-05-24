@@ -1,6 +1,6 @@
 <?php
 
-class regions implements jIFormsDatasource
+class regions implements \Jelix\Forms\Datasource\DatasourceInterface
 {
   protected $formId = 0;
 
@@ -20,7 +20,7 @@ class regions implements jIFormsDatasource
     return ($this->data);
   }
 
-  public function getLabel($key)
+  public function getLabel($key, $form)
   {
     if(isset($this->data[$key]))
       return $this->data[$key];
@@ -28,4 +28,13 @@ class regions implements jIFormsDatasource
       return null;
   }
 
+    public function hasGroupedData()
+    {
+        return false;
+    }
+
+    public function setGroupBy($group)
+    {
+        // nothing
+    }
 }

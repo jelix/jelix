@@ -89,7 +89,7 @@ class DaoDatasource extends DynamicDatasource
         return $result;
     }
 
-    public function getLabel2($key, $form)
+    public function getLabel($key, $form)
     {
         if ($key === null || $key == '') {
             return null;

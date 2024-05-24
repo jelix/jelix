@@ -560,9 +560,9 @@ class XmlCompiler11 extends XmlCompiler10
                 $class = new \jSelectorClass($attrs['class']);
                 $source[] = '\\jClasses::inc(\'' . $attrs['class'] . '\');';
                 $source[] = '$datasource = new ' . ($class->className[0] == '\\'? '':'\\').$class->className . '($this->id());';
-                $source[] = 'if ($datasource instanceof \\jIFormsDatasource){$ctrl->datasource=$datasource;';
+                $source[] = 'if ($datasource instanceof \\Jelix\\Forms\\Datasource\\DatasourceInterface || $datasource instanceof \\jIFormsDatasource){$ctrl->datasource=$datasource;';
                 if (isset($attrs['criteriafrom'])) {
-                    $source[] = 'if($datasource instanceof \\jIFormsDynamicDatasource) $datasource->setCriteriaControls(array(\'' . join('\',\'', preg_split('/[\s,]+/', $attrs['criteriafrom'])) . '\'));';
+                    $source[] = 'if($datasource instanceof \\Jelix\\Forms\\Datasource\\DynamicDatasourceInterface || $datasource instanceof \\jIFormsDynamicDatasource) $datasource->setCriteriaControls(array(\'' . join('\',\'', preg_split('/[\s,]+/', $attrs['criteriafrom'])) . '\'));';
                 }
                 $source[] = '}';
                 $source[] = 'else{$ctrl->datasource=new \\Jelix\\Forms\\Datasource\\StaticDatasource();}';

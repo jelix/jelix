@@ -29,8 +29,11 @@ class menulist_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
         $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
-        if ($ctrl instanceof jFormsControlDatasource
-            && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
+        if ( ($ctrl instanceof jFormsControlDatasource
+                && $ctrl->datasource instanceof \Jelix\Forms\Datasource\DynamicDatasourceInterface)
+            || ($ctrl instanceof jFormsControlDatasource
+                && $ctrl->datasource instanceof jIFormsDynamicDatasource)
+        ) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->parentWidget->addJs("c.dependencies = ['".implode("','", $dependentControls)."'];\n");

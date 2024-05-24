@@ -14,7 +14,7 @@ namespace Jelix\Forms\Datasource;
 /**
  * A datasource which is based on static values.
  */
-class StaticDatasource implements jIFormsDatasource2
+class StaticDatasource implements DatasourceInterface
 {
     /**
      * associative array which contains keys and labels.
@@ -30,12 +30,7 @@ class StaticDatasource implements jIFormsDatasource2
         return $this->data;
     }
 
-    public function getLabel2($key, $form)
-    {
-        return $this->getLabel($key);
-    }
-
-    public function getLabel($key)
+    public function getLabel($key, $form)
     {
         if ($this->grouped) {
             foreach ($this->data as $group => $data) {

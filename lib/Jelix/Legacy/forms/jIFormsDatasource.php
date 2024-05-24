@@ -19,6 +19,8 @@
  *
  * @package     jelix
  * @subpackage  forms
+ * @deprecated
+ * @see Jelix\Forms\Datasource\DatasourceInterface
  */
 interface jIFormsDatasource
 {

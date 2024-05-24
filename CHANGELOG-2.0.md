@@ -100,9 +100,17 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 jForms classes are all renamed, into the `\Jelix\Forms` namespace, except
 for `jForms` is still the main class to use to load and use forms.
 
-- `jFormsDaoDatasource` is deprecated you should use `\Jelix\Forms\Datasource\DaoDatasource`
-- `jFormsDynamicDatasource` is deprecated you should use `\Jelix\Forms\Datasource\DynamicDatasource`
-- `jFormsStaticDatasource` is deprecated you should use `\Jelix\Forms\Datasource\StaticDatasource`
+Interfaces `jIFormsDatasource` and `jIFormsDatasource2` have been merged into a
+new interface `\Jelix\Forms\Datasource\DatasourceInterface`, having no more
+`getLabel2()` method, and a `getLabel()` changed method. So:
+
+- `jIFormsDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\DatasourceInterface` instead
+- `jIFormsDatasource2` is deprecated, you should use `\Jelix\Forms\Datasource\DatasourceInterface` instead
+- `jIFormsDynamicDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\DynamicDatasourceInterface` instead
+- `jFormsDaoDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\DaoDatasource` instead
+- `jFormsDynamicDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\DynamicDatasource` instead
+- `jFormsStaticDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\StaticDatasource` instead
+
 
 ## test environment
 

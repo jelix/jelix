@@ -36,8 +36,11 @@ class listbox_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
             $js .= 'c = new '.$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         }
         $this->parentWidget->addJs($js);
-        if ($ctrl instanceof jFormsControlDatasource
-            && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
+        if ( ($ctrl instanceof jFormsControlDatasource
+                && $ctrl->datasource instanceof \Jelix\Forms\Datasource\DynamicDatasourceInterface)
+            || ($ctrl instanceof jFormsControlDatasource
+                && $ctrl->datasource instanceof jIFormsDynamicDatasource)
+        ) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->parentWidget->addJs("c.dependencies = ['".implode("','", $dependentControls)."'];\n");

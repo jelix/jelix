@@ -21,7 +21,7 @@ abstract class jFormsControlDatasource extends jFormsControl
     public $type = 'datasource';
 
     /**
-     * @var jIFormsDatasource
+     * @var jIFormsDatasource|Jelix\Forms\Datasource\DatasourceInterface
      */
     public $datasource;
     public $defaultValue = array();
@@ -50,10 +50,13 @@ abstract class jFormsControlDatasource extends jFormsControl
 
     protected function _getLabel($value)
     {
+        if ($this->datasource instanceof \Jelix\Forms\Datasource\DatasourceInterface) {
+            return $this->datasource->getLabel($value, $this->form);
+        }
         if ($this->datasource instanceof jIFormsDatasource2) {
             return $this->datasource->getLabel2($value, $this->form);
         }
-
+        // deprecated
         return $this->datasource->getLabel($value);
     }
 }

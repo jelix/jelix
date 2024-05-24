@@ -16,7 +16,7 @@ namespace Jelix\Forms\Datasource;
  * Base class for a datasource which is based on a class and can be used for dynamic
  * listboxes or menulists.
  */
-abstract class DynamicDatasource implements jIFormsDynamicDatasource
+abstract class DynamicDatasource implements DynamicDatasourceInterface
 {
     protected $criteriaFrom;
     protected $groupeBy = '';
@@ -27,12 +27,7 @@ abstract class DynamicDatasource implements jIFormsDynamicDatasource
 
     abstract public function getData($form);
 
-    abstract public function getLabel2($key, $form);
-
-    public function getLabel($key)
-    {
-        throw new \Exception('should not be called');
-    }
+    abstract public function getLabel($key, $form);
 
     public function hasGroupedData()
     {
