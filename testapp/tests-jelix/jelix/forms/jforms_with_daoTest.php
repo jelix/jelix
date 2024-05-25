@@ -4,8 +4,8 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
-* @link        http://www.jelix.org
+* @copyright   2007-2024 Laurent Jouanneau
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
@@ -182,7 +182,7 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form = jForms::create('product', self::$id);
 
         $verif='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.self::$id.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -198,7 +198,7 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form->initFromDao('products');
 
         $verif='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.self::$id.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -213,7 +213,7 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $form->initControlFromDao('tag', 'product_tags');
         $verif='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.self::$id.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">

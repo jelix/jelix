@@ -9,6 +9,7 @@
  * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+use \Jelix\Forms\FormDataContainer;
 
 /**
  * This class acts as a cache proxy during a request processing, for jForms
@@ -92,7 +93,7 @@ class jFormsSession
     }
 
     /**
-     * @var jFormsDataContainer[] keys are cache keys
+     * @var \Jelix\Forms\FormDataContainer[] keys are cache keys
      */
     protected $containers = array();
 
@@ -153,7 +154,7 @@ class jFormsSession
         $container = jCache::get($key, 'jforms');
         if ($container === false) {
             if ($createIfNeeded) {
-                $container = new jFormsDataContainer($selector->toString(), $formId);
+                $container = new FormDataContainer($selector->toString(), $formId);
             } else {
                 return array(null, $selector);
             }

@@ -57,7 +57,7 @@ class jForms
      * Create a new form with empty data.
      *
      * Call it to create a new form, before to display it.
-     * Data of the form are stored in the php session in a jFormsDataContainer object.
+     * Data of the form are stored in the php session in a FormDataContainer object.
      * If a form with same id exists, data are erased.
      *
      * @param string $formSel the selector of the xml jform file

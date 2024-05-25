@@ -67,7 +67,7 @@ unset($t->_privateVars[\'__formTplController\']);';
         $options = 'array()';
     }
 
-    $content = ' $t->_privateVars[\'__formTplController\'] = new \\jelix\\forms\\HtmlWidget\\TemplateController('.$param[0].','.$builder.','.$options.','.$param[1].','.$param[2].');';
+    $content = ' $t->_privateVars[\'__formTplController\'] = new \\Jelix\\Forms\\HtmlWidget\\TemplateController('.$param[0].','.$builder.','.$options.','.$param[1].','.$param[2].');';
     $content .= '$t->_privateVars[\'__formTplController\']->startForm();';
 
     $metacontent = 'if(isset('.$param[0].')) { $builder = '.$param[0].'->getBuilder('.$builder.');

@@ -61,7 +61,7 @@ abstract class AbstractControl
     /** @var \jFormsBase the form object */
     protected $form;
 
-    /** @var \jFormsDataContainer content all values of the form */
+    /** @var \Jelix\Forms\FormDataContainer content all values of the form */
     protected $container;
 
     /** @var array miscellaneous values attached to the control */

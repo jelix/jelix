@@ -71,7 +71,7 @@ class jforms_HTMLBuilder2Test extends \Jelix\UnitTests\UnitTestCaseDb {
             unset($_SESSION['JFORMS_SESSION']);
         };
         jFile::removeDir(__DIR__.'/../../../temp/jelixtests/jforms');
-        $this->container = new jFormsDataContainer('formtesthtmlbuilder','0');
+        $this->container = new \Jelix\Forms\FormDataContainer('formtesthtmlbuilder','0');
         $this->form = new testHMLForm2('formtesthtmlbuilder', $this->container, true );
         $this->builder = new testHtmlFormsBuilder2($this->form);
     }

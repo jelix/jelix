@@ -27,7 +27,7 @@ class jforms_init_from_requestTest extends \PHPUnit\Framework\TestCase {
     protected $form;
     protected $container;
     function setUp() : void {
-        $this->container = new jFormsDataContainer('','');
+        $this->container = new \Jelix\Forms\FormDataContainer('','');
         $this->form = new testIFRForm('bar',$this->container, true);
         $this->form->securityLevel = 0 ; // by default, we don't want to deal with a token in our test
 

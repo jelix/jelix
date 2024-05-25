@@ -68,7 +68,7 @@ class jforms_uploadTest extends \Jelix\UnitTests\UnitTestCase {
     protected $container;
     function setUp() :void
     {
-        $this->container = new jFormsDataContainer('', '');
+        $this->container = new \Jelix\Forms\FormDataContainer('', '');
         $this->form = new tesMFormUpload('foo', $this->container);
 
         $this->uploadCtrl = new testUploadCtrl('uploadctrl');

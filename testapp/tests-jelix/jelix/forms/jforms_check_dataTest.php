@@ -27,7 +27,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
     protected $container;
     function setUp() : void {
         self::initJelixConfig();
-        $this->container = new jFormsDataContainer('','');
+        $this->container = new \Jelix\Forms\FormDataContainer('','');
         $this->form = new testCDForm('foo',$this->container);
     }
 

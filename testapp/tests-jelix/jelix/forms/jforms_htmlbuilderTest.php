@@ -15,7 +15,6 @@ use Jelix\Forms\Datasource\DaoDatasource;
 use Jelix\Forms\Datasource\StaticDatasource;
 use Jelix\Forms\Controls as Ctl;
 
-require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 require_once(JELIX_LIB_PATH.'plugins/formbuilder/html/html.formbuilder.php');
 require_once(JELIX_LIB_PATH.'plugins/formwidget/html/html.formwidget.php');
 
@@ -78,7 +77,7 @@ class jforms_HTMLBuilderTest extends \Jelix\UnitTests\UnitTestCaseDb
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
         if (!self::$builder) {
-            self::$container = new jFormsDataContainer('formtest','0');
+            self::$container = new \Jelix\Forms\FormDataContainer('formtest','0');
             self::$form = new testHMLForm('formtest', self::$container, true );
             self::$form->securityLevel = 0;
             self::$builder = new testHtmlFormsBuilder(self::$form);

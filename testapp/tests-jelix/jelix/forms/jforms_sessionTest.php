@@ -37,7 +37,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         jApp::pushCurrentModule('jelix_tests');
         $this->form1Descriptor = '
 <object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
-    <object method="getContainer()" class="jFormsDataContainer">
+    <object method="getContainer()" class="\\Jelix\\Forms\\FormDataContainer">
         <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
         <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
@@ -72,7 +72,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
 
         $this->form2Descriptor ='
 <object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
-    <object method="getContainer()" class="jFormsDataContainer">
+    <object method="getContainer()" class="\\Jelix\\Forms\\FormDataContainer">
         <string property="formId" value="akey" />
         <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
@@ -107,7 +107,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
 
         $this->formLabelDescriptor = '
 <object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Label">
-    <object method="getContainer()" class="jFormsDataContainer">
+    <object method="getContainer()" class="\\Jelix\\Forms\\FormDataContainer">
         <array property="formId">[1,"fr"]</array>
         <string property="formSelector" value="jelix_tests~label" />
         <array property="data">
@@ -150,7 +150,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertFalse(jCache::get($key1, 'jforms'));
 
         $verifContainer1='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.jFormsSession::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -175,7 +175,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertFalse(jCache::get($key2, 'jforms'));
 
         $verifContainer2='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -197,7 +197,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertFalse(jCache::get($key3, 'jforms'));
 
         $verifContainer3='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -218,9 +218,9 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue($container !== false);
         $this->assertTrue(is_string($container));
         $container = unserialize($container);
-        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
         $verifContainer1='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.jFormsSession::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -236,9 +236,9 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue($container !== false);
         $this->assertTrue(is_string($container));
         $container = unserialize($container);
-        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
         $verifContainer2='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -253,10 +253,10 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue($container !== false);
         $this->assertTrue(is_string($container));
         $container = unserialize($container);
-        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
 
         $verifContainer3='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -301,7 +301,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $form = jForms::fill('product');
         $verif = '
 <object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
-    <object method="getContainer()" class="jFormsDataContainer">
+    <object method="getContainer()" class="\\Jelix\\Forms\\FormDataContainer">
         <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
         <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
@@ -343,7 +343,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $form = jForms::fill('product', 'akey');
         $verif = '
 <object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
-    <object method="getContainer()" class="jFormsDataContainer">
+    <object method="getContainer()" class="\\Jelix\\Forms\\FormDataContainer">
         <integer property="formId" value="akey" />
         <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
@@ -388,9 +388,9 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue($container !== false);
         $this->assertTrue(is_string($container));
         $container = unserialize($container);
-        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
         $verifContainer1='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.jFormsSession::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -407,9 +407,9 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue($container !== false);
         $this->assertTrue(is_string($container));
         $container = unserialize($container);
-        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
         $verifContainer2='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -426,10 +426,10 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue($container !== false);
         $this->assertTrue(is_string($container));
         $container = unserialize($container);
-        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
 
         $verifContainer3='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -452,7 +452,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         jForms::destroy('product');
 
         $verifProduct0='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">[]</array>
@@ -463,7 +463,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($container, $verifProduct0);
 
         $verifProduct1='
-        <object key="akey" class="jFormsDataContainer">
+        <object key="akey" class="\\Jelix\\Forms\\FormDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -477,7 +477,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($container, $verifProduct1);
 
         $verifProduct2='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -495,7 +495,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertNull($container);
         
         $verifProduct1='
-        <object key="akey" class="jFormsDataContainer">
+        <object key="akey" class="\\Jelix\\Forms\\FormDataContainer">
             <string property="formId" value="akey" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -509,7 +509,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($container, $verifProduct1);
 
         $verifProduct2='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -528,7 +528,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertNull($container);
 
         $verifProduct2='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -558,10 +558,10 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue($container !== false);
         $this->assertTrue(is_string($container));
         $container = unserialize($container);
-        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
 
         $verifContainer3='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">
@@ -583,7 +583,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $f->addControl($ctrl);
         
         $verif='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -601,7 +601,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $f->setData('instock', true);
 
         $verif='
-        <object  class="jFormsDataContainer">
+        <object  class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -644,10 +644,10 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertTrue($container !== false);
         $this->assertTrue(is_string($container));
         $container = unserialize($container);
-        $this->assertInstanceOf('jFormsDataContainer', $container);
+        $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
 
         $verifContainer3='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <array property="formId">[1,"fr"]</array>
             <string property="formSelector" value="jelix_tests~label" />
             <array property="data">

@@ -57,7 +57,7 @@ function jtpl_cfunction_html_formfull($compiler, $params = array())
         $options = 'array()';
     }
 
-    $content = ' $formTplController = new \\jelix\\forms\\HtmlWidget\\TemplateController('.$params[0].','.$builder.','.$options.','.$params[1].','.$params[2].');';
+    $content = ' $formTplController = new \\Jelix\\Forms\\HtmlWidget\\TemplateController('.$params[0].','.$builder.','.$options.','.$params[1].','.$params[2].');';
     $content .= '$formTplController->startForm();';
     $content .= '$formTplController->outputAllControls();';
     $content .= '$formTplController->endForm();';

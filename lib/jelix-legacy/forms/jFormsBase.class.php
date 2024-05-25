@@ -94,7 +94,7 @@ abstract class jFormsBase
     /**
      * the data container.
      *
-     * @var jFormsDataContainer
+     * @var \Jelix\Forms\FormDataContainer
      */
     protected $container;
 
@@ -114,7 +114,7 @@ abstract class jFormsBase
 
     /**
      * @param string              $sel       the form selector
-     * @param jFormsDataContainer $container the data container
+     * @param \Jelix\Forms\FormDataContainer $container the data container
      * @param bool                $reset     says if the data should be reset
      */
     public function __construct($sel, $container, $reset = false)
@@ -653,7 +653,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsDataContainer
+     * @return \Jelix\Forms\FormDataContainer
      */
     public function getContainer()
     {

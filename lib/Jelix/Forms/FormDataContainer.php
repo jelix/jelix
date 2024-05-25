@@ -1,22 +1,17 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  forms
- *
  * @author      Laurent Jouanneau
- * @copyright   2006-2008 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+namespace Jelix\Forms;
 
 /**
  * this object is a container for form data.
- *
- * @package     jelix
- * @subpackage  forms
  */
-class jFormsDataContainer
+class FormDataContainer
 {
     /**
      * contains data provided by the user in each controls.
@@ -30,8 +25,8 @@ class jFormsDataContainer
      *
      * @var array
      *
-     * @see jFormsBase::getModifiedControls()
-     * @see jFormsBase::initModifiedControlsList()
+     * @see \jFormsBase::getModifiedControls()
+     * @see \jFormsBase::initModifiedControlsList()
      */
     public $originalData = array();
 
@@ -51,7 +46,7 @@ class jFormsDataContainer
     /**
      * the selector of the xml file of the form.
      *
-     * @var jSelectorForm
+     * @var \jSelectorForm
      */
     public $formSelector;
 
@@ -84,7 +79,7 @@ class jFormsDataContainer
     protected $deactivated = array();
 
     /**
-     * @param jSelectorForm $formSelector
+     * @param \jSelectorForm $formSelector
      * @param string        $formId
      */
     public function __construct($formSelector, $formId)

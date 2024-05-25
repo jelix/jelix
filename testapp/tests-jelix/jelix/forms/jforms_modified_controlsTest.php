@@ -27,7 +27,7 @@ class jforms_modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     protected $form;
     protected $container;
     function setUp() : void {
-        $this->container = new jFormsDataContainer('','');
+        $this->container = new \Jelix\Forms\FormDataContainer('','');
         $this->form = new tesMForm('foo', $this->container);
 
         $ctrl = new InputControl('inputctrl');

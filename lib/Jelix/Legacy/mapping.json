@@ -50,6 +50,7 @@
     "jFormsControlUpload2": "forms/controls/jFormsControlUpload2.php",
     "jFormsControlWikiEditor": "forms/controls/jFormsControlWikiEditor.php",
     "jFormsDaoDatasource": "forms/jFormsDaoDatasource.php",
+    "jFormsDataContainer": "forms/jFormsDataContainer.php",
     "jFormsDynamicDatasource": "forms/jFormsDynamicDatasource.php",
     "jFormsStaticDatasource": "forms/jFormsStaticDatasource.php",
     "jFramework": "core/jFramework.php",
