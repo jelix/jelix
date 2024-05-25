@@ -26,7 +26,7 @@ class WikiEditorControl extends AbstractControl
 
     public function __construct($ref)
     {
-        $this->ref = $ref;
+        parent::__construct($ref);
         $this->datatype = new \jDatatypeString();
     }
 

@@ -24,7 +24,7 @@ abstract class AbstractControl
     public $type;
 
     /** @var string the identifiant of the control */
-    public $ref = '';
+    public readonly string $ref;
 
     /** @var \jDatatype the object that manage constraints on the value */
     public $datatype;

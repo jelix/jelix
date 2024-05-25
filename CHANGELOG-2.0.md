@@ -108,7 +108,7 @@ new interface `\Jelix\Forms\Datasource\DatasourceInterface`, having no more
 Also :
 
 - `jExceptionForms` is deprecated, you should catch `\Jelix\Forms\FormException` instead
-
+- the ref attribute on control objects is now readonly
 
 ## test environment
 
