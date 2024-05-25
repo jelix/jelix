@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020 Laurent Jouanneau
+ * @copyright   2020-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -27,7 +27,7 @@ class TemplateController {
     protected $currentCtrlRef = null;
 
     /**
-     * @var \jFormsControl|null
+     * @var \Jelix\Forms\Controls\AbstractControl|null
      */
     protected $currentCtrl = null;
 
@@ -37,7 +37,7 @@ class TemplateController {
     protected $currentSubmitRef = null;
 
     /**
-     * @var \jFormsControl|null
+     * @var \Jelix\Forms\Controls\AbstractControl|null
      */
     protected $currentSubmitCtrl = null;
 

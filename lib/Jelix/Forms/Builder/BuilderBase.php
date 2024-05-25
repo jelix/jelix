@@ -3,10 +3,10 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud, Dominique Papin, Claudio Bernardes
  *
- * @copyright   2006-2007 Laurent Jouanneau, 2007 Dominique Papin
+ * @copyright   2006-2024 Laurent Jouanneau, 2007 Dominique Papin
  * @copyright   2007 Loic Mathaud, 2012 Claudio Bernardes
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -154,7 +154,7 @@ abstract class BuilderBase
     /**
      * displays the content corresponding of the given control.
      *
-     * @param \jFormsControl $ctrl       the control to display
+     * @param \Jelix\Forms\Controls\AbstractControl $ctrl       the control to display
      * @param array          $attributes attribute to add on the generated code (html attributes for example)
      */
     abstract public function outputControl($ctrl, $attributes = array());
@@ -162,7 +162,7 @@ abstract class BuilderBase
     /**
      * displays the label corresponding of the given control.
      *
-     * @param \jFormsControl $ctrl     the control to display
+     * @param \Jelix\Forms\Controls\AbstractControl $ctrl     the control to display
      * @param mixed          $format
      * @param mixed          $editMode
      */
@@ -171,7 +171,7 @@ abstract class BuilderBase
     /**
      * displays the value of the control (without the control).
      *
-     * @param \jFormsControl $ctrl       the control to display
+     * @param \Jelix\Forms\Controls\AbstractControl $ctrl       the control to display
      * @param array          $attributes attribute to add on the generated code (html attributes for example)
      */
     abstract public function outputControlValue($ctrl, $attributes = array());
@@ -179,7 +179,7 @@ abstract class BuilderBase
     /**
      * displays the raw value of the control (without the control).
      *
-     * @param \jFormsControl $ctrl       the control to display
+     * @param \Jelix\Forms\Controls\AbstractControl $ctrl       the control to display
      * @param array          $attributes attribute to add on the generated code (html attributes for example)
      */
     abstract public function outputControlRawValue($ctrl, $attributes = array());

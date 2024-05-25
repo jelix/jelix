@@ -157,6 +157,7 @@ class FormCompiler
         $source[] = "<?php \n";
 
         $source[] = 'namespace Jelix\\BuiltComponents\\Forms\\' . ucfirst($module) . ';';
+        $source[] = 'use \\Jelix\\Forms\\Controls as Ctl;';
         $source[] = 'class ' . ucfirst(str_replace('.form.xml', '', $sourceFileName)) . ' extends \\jFormsBase {';
 
         $source[] = ' public function __construct($sel, &$container, $reset = false){';

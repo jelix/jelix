@@ -3,9 +3,9 @@
  * @package     jelix
  *
  * @author      Laurent Jouanneau
- * @copyright   2023 Laurent Jouanneau
+ * @copyright   2023-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -79,6 +79,8 @@ class Jelix20
 
         $this->moveModulesStatusToFrameworkIni($mainConfigIni, $frameworkIni);
 
+        $this->modifyConfigurationsFile($mainConfigIni, true);
+
         $this->reporter->message('Migration to Jelix 2.0.0 is done', 'notice');
 
     }
@@ -96,6 +98,8 @@ class Jelix20
         $this->removeEntrypointsForScripts($localUrlMapModifier, false);
 
         $this->moveModulesStatusToFrameworkIni($localConfigIni, $frameworkIni);
+
+        $this->modifyConfigurationsFile($localConfigIni, false);
 
         Directory::create(App::buildPath());
         file_put_contents(App::buildPath('.dummy'), '');
@@ -183,5 +187,46 @@ class Jelix20
 
         $configIni->removeSection('modules');
         $configIni->save();
+    }
+
+    public function modifyConfigurationsFile(IniModifier $mainIni, $onlyApp)
+    {
+        $this->modifyConfiguration($mainIni);
+        $frameworkFileName = App::appSystemPath('framework.ini.php');
+        if ($onlyApp) {
+            $frameworkInfos = new \Jelix\Core\Infos\FrameworkInfos($frameworkFileName);
+        }
+        else {
+            $localFrameworkFileName = App::varConfigPath('localframework.ini.php');
+            $frameworkInfos = new \Jelix\Core\Infos\FrameworkInfos($frameworkFileName, $localFrameworkFileName);
+        }
+
+        foreach($frameworkInfos->getEntryPoints() as $ep) {
+            if ($onlyApp) {
+                $conf = App::appSystemPath($ep->getConfigFile());
+            }
+            else {
+                $conf = App::varConfigPath($ep->getConfigFile());
+            }
+            if (file_exists($conf)) {
+                $ini = new IniModifier($conf);
+                $this->modifyConfiguration($ini);
+            }
+        }
+
+    }
+
+    public function modifyConfiguration(IniModifier $ini)
+    {
+        $val = $ini->getValue('captcha.simple.validator', 'forms');
+        if ($val !== null && str_starts_with($val, '\\jelix\\forms\\')) {
+            $ini->setValue('captcha.simple.validator', str_replace('\\jelix\\forms\\', '\\Jelix\\Forms\\', $val), 'forms');
+        }
+
+        $val = $ini->getValue('captcha.recaptcha.validator', 'forms');
+        if ($val !== null && str_starts_with($val, '\\jelix\\forms\\')) {
+            $ini->setValue('captcha.recaptcha.validator', str_replace('\\jelix\\forms\\', '\\Jelix\\Forms\\', $val), 'forms');
+        }
+        $ini->save();
     }
 }

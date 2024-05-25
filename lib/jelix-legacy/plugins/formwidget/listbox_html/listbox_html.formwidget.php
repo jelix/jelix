@@ -7,7 +7,7 @@
  * @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
  *
  * @copyright   2012 Claudio Bernardes
- * @copyright   2006-2015 Laurent Jouanneau, 2008-2015 Julien Issler, 2008 Dominique Papin
+ * @copyright   2006-2024 Laurent Jouanneau, 2008-2015 Julien Issler, 2008 Dominique Papin
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -36,7 +36,7 @@ class listbox_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
             $js .= 'c = new '.$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n";
         }
         $this->parentWidget->addJs($js);
-        if ( ($ctrl instanceof jFormsControlDatasource
+        if ( ($ctrl instanceof \Jelix\Forms\Controls\AbstractDatasourceControl
                 && $ctrl->datasource instanceof \Jelix\Forms\Datasource\DynamicDatasourceInterface)
             || ($ctrl instanceof jFormsControlDatasource
                 && $ctrl->datasource instanceof jIFormsDynamicDatasource)

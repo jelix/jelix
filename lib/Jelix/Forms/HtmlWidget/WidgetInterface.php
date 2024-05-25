@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2012 Laurent Jouanneau
+ * @copyright   2012-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -16,9 +16,9 @@ interface WidgetInterface
 {
     /*
      * @param array $args array containing:
-     *    jFormsControl,
-     *    \jelix\forms\Builder\HtmlBuilder,
-     *    \jelix\forms\HtmlWidget\ParentWidgetInterface,
+     *    \Jelix\Forms\Controls\AbstractControl,
+     *    \Jelix\Forms\Builder\HtmlBuilder,
+     *    \Jelix\Forms\HtmlWidget\ParentWidgetInterface,
      */
     public function __construct($args);
 

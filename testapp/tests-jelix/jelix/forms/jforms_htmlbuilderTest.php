@@ -4,15 +4,16 @@
 * @subpackage  unittest module
 * @author      Laurent Jouanneau
 * @contributor Dominique Papin, Julien Issler
-* @copyright   2007-2023 Laurent Jouanneau
+* @copyright   2007-2024 Laurent Jouanneau
 * @copyright   2008 Dominique Papin
 * @copyright   2008-2010 Julien Issler
-* @link        http://www.jelix.org
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 use Jelix\Forms\Datasource\DaoDatasource;
 use Jelix\Forms\Datasource\StaticDatasource;
+use Jelix\Forms\Controls as Ctl;
 
 require_once(JELIX_LIB_PATH.'forms/jFormsDataContainer.class.php');
 require_once(JELIX_LIB_PATH.'plugins/formbuilder/html/html.formbuilder.php');
@@ -162,7 +163,7 @@ jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
      */
     public function testOutputInput()
     {
-        $ctrl= new jFormsControlInput('input1');
+        $ctrl= new Ctl\InputControl('input1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre nom';
         self::$form->addControl($ctrl);
@@ -330,7 +331,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputCheckbox()
     {
-        $ctrl= new jFormsControlCheckbox('chk1');
+        $ctrl= new Ctl\CheckboxControl('chk1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Une option';
         self::$form->addControl($ctrl);
@@ -362,7 +363,7 @@ c.errInvalid=\'"Une option" field is invalid\';
 jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
-        $ctrl= new jFormsControlCheckbox('chk2');
+        $ctrl= new Ctl\CheckboxControl('chk2');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Une option';
         self::$form->addControl($ctrl);
@@ -456,7 +457,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputCheckboxes()
     {
-        $ctrl= new jFormsControlCheckboxes('choixsimple');
+        $ctrl= new Ctl\CheckboxesControl('choixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
         $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -526,7 +527,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
 
-        $ctrl= new jFormsControlCheckboxes('choixmultiple');
+        $ctrl= new Ctl\CheckboxesControl('choixmultiple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Vos choix';
         $ctrl->datasource= new StaticDatasource();
@@ -613,7 +614,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputRadiobuttons()
     {
-        $ctrl= new jFormsControlRadiobuttons('rbchoixsimple');
+        $ctrl= new Ctl\RadiobuttonsControl('rbchoixsimple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -739,7 +740,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputMenulist()
     {
-        $ctrl= new jFormsControlMenulist('menulist1');
+        $ctrl= new Ctl\MenulistControl('menulist1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -1037,7 +1038,7 @@ jFormsJQ.tForm.addControl(c);
 
         self::$form->setData('menulist1', "");
 
-        self::$form->addControl(new jFormsControlHidden('hidden1'));
+        self::$form->addControl(new Ctl\HiddenControl('hidden1'));
         self::$form->setData('hidden1', "25");
         $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findByMaxId', 'name', 'id', '', null, 'hidden1');
         ob_start();
@@ -1133,7 +1134,7 @@ jFormsJQ.tForm.addControl(c);
         $result.='</select>'."\n";
         $this->assertEquals($result, $out);
 
-        self::$form->addControl(new jFormsControlHidden('hidden2'));
+        self::$form->addControl(new Ctl\HiddenControl('hidden2'));
         self::$form->setData('hidden1', "9");
         self::$form->setData('hidden2', "25");
         $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findBetweenId', 'name,price', 'id', '', null, 'hidden1,hidden2', ' - ');
@@ -1171,7 +1172,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputListbox()
     {
-        $ctrl= new jFormsControlListbox('listbox1');
+        $ctrl= new Ctl\ListboxControl('listbox1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -1279,7 +1280,7 @@ jFormsJQ.tForm.addControl(c);
 
 
 
-        $ctrl= new jFormsControlListbox('lbchoixmultiple');
+        $ctrl= new Ctl\ListboxControl('lbchoixmultiple');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -1327,7 +1328,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
 
-        $ctrl= new jFormsControlListbox('listbox2');
+        $ctrl= new Ctl\ListboxControl('listbox2');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -1355,7 +1356,7 @@ jFormsJQ.tForm.addControl(c);
 ', self::$builder->getJsContent());
 
 
-        $ctrl= new jFormsControlListbox('lbchoixmultiple2');
+        $ctrl= new Ctl\ListboxControl('lbchoixmultiple2');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         $ctrl->datasource = new DaoDatasource('jelix_tests~products', 'findAll', 'name', 'id');
@@ -1391,7 +1392,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputListboxClassDatasource()
     {
-        $ctrl= new jFormsControlListbox('listboxclass');
+        $ctrl= new Ctl\ListboxControl('listboxclass');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre choix';
         jClasses::inc('mydatasource');
@@ -1421,7 +1422,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputTextarea()
     {
-        $ctrl= new jFormsControlTextarea('textarea1');
+        $ctrl= new Ctl\TextareaControl('textarea1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre nom';
         self::$form->addControl($ctrl);
@@ -1515,7 +1516,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputSecret()
     {
-        $ctrl= new jFormsControlSecret('passwd');
+        $ctrl= new Ctl\SecretControl('passwd');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='mot de passe';
         self::$form->addControl($ctrl);
@@ -1594,7 +1595,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputSecretConfirm()
     {
-        $ctrl= new jFormsControlSecretConfirm('passwd_confirm');
+        $ctrl= new Ctl\SecretConfirmControl('passwd_confirm');
         $ctrl->label='confirmation mot de passe';
         self::$form->addControl($ctrl);
 
@@ -1662,7 +1663,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputOutput()
     {
-        $ctrl= new jFormsControlOutput('output1');
+        $ctrl= new Ctl\OutputControl('output1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre nom';
         self::$form->addControl($ctrl);
@@ -1713,7 +1714,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputUpload()
     {
-        $ctrl= new jFormsControlUpload('upload1');
+        $ctrl= new Ctl\UploadControl('upload1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Votre nom';
         self::$form->addControl($ctrl);
@@ -1781,7 +1782,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputSubmit()
     {
-        $ctrl= new jFormsControlSubmit('submit1');
+        $ctrl= new Ctl\SubmitControl('submit1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Ok';
         self::$form->addControl($ctrl);
@@ -1831,7 +1832,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputReset()
     {
-        $ctrl= new jFormsControlReset('reset1');
+        $ctrl= new Ctl\ResetControl('reset1');
         $ctrl->datatype= new jDatatypeString();
         $ctrl->label='Effacer';
         self::$form->addControl($ctrl);
@@ -1867,7 +1868,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputHidden()
     {
-        $ctrl= new jFormsControlHidden('hidden2');
+        $ctrl= new Ctl\HiddenControl('hidden2');
         self::$form->addControl($ctrl);
 
         ob_start();
@@ -1915,7 +1916,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputCaptcha()
     {
-        $ctrl= new jFormsControlCaptcha('cap');
+        $ctrl= new Ctl\CaptchaControl('cap');
         $ctrl->label='captcha for security';
         self::$form->addControl($ctrl);
 
@@ -2001,7 +2002,7 @@ jFormsJQ.tForm.addControl(c);
      */
     public function testOutputHtmleditor()
     {
-        $ctrl= new jFormsControlHtmlEditor('contenu');
+        $ctrl= new Ctl\HtmlEditorControl('contenu');
         $ctrl->label='Texte';
         self::$form->addControl($ctrl);
 
@@ -2099,7 +2100,7 @@ jelix_ckeditor_default("jforms_formtest1_contenu","jforms_formtest1","default",j
 
     public function testOutputDate()
     {
-        $ctrl = new jFormsControlDate('date1');
+        $ctrl = new Ctl\DateControl('date1');
         $ctrl->datatype = new jDatatypeDate();
         $ctrl->label = 'mydate';
         self::$form->addControl($ctrl);
@@ -2283,7 +2284,7 @@ jelix_datepicker_default(c, jFormsJQ.config);
 
     public function testOutputDateTime()
     {
-        $ctrl = new jFormsControlDatetime('date2');
+        $ctrl = new Ctl\DatetimeControl('date2');
         $ctrl->datatype = new jDatatypeDateTime();
         $ctrl->label = 'mydate';
         self::$form->addControl($ctrl);
@@ -2689,7 +2690,7 @@ jelix_datetimepicker_default(c, jFormsJQ.config);
 
     public function testOutputTime()
     {
-        $ctrl = new jFormsControlTime('time1');
+        $ctrl = new Ctl\TimeControl('time1');
         $ctrl->datatype = new jDatatypeTime();
         $ctrl->label = 'mytime';
         self::$form->addControl($ctrl);

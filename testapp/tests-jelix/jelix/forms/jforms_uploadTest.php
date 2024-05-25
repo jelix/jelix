@@ -4,8 +4,8 @@
  * @subpackage  jelix_tests module
  * @author      Laurent Jouanneau
  * @contributor
- * @copyright   2019 Laurent Jouanneau
- * @link        http://www.jelix.org
+ * @copyright   2019-2024 Laurent Jouanneau
+ * @link        https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -20,7 +20,7 @@ class tesMFormUpload extends jFormsBase {
     }
 }
 
-class testUploadCtrl extends jFormsControlUpload2 {
+class testUploadCtrl extends \Jelix\Forms\Controls\Upload2Control {
 
     function testProcessUpload($action, $fileInfo)
     {
@@ -77,7 +77,7 @@ class jforms_uploadTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
     function testUniqueName() {
-        $ctrl = new jFormsControlUpload2('up');
+        $ctrl = new \Jelix\Forms\Controls\Upload2Control('up');
         $dir = __DIR__.'/';
         $this->assertEquals('foo.test',
             $ctrl->getUniqueFileName(__DIR__, 'foo.test')

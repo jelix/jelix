@@ -422,10 +422,10 @@ timepicker=
 ; default captcha type
 captcha = simple
 
-captcha.simple.validator=\jelix\forms\Captcha\SimpleCaptchaValidator
+captcha.simple.validator=\Jelix\Forms\Captcha\SimpleCaptchaValidator
 captcha.simple.widgettype=captcha
 
-captcha.recaptcha.validator=\jelix\forms\Captcha\ReCaptchaValidator
+captcha.recaptcha.validator=\Jelix\Forms\Captcha\ReCaptchaValidator
 captcha.recaptcha.widgettype=recaptcha
 
 ; deprecated

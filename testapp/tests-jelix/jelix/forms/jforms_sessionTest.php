@@ -16,7 +16,6 @@ class UTjformsDummyObject {
     public $instock = true;
 }
 
-require_once(JELIX_LIB_PATH.'forms/jForms.class.php');
 
 class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
 
@@ -53,14 +52,14 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
     </array>
     <integer method="id()" value="'.jForms::DEFAULT_ID.'" />
     <array method="getControls()">
-        <object key="name" class="jFormsControlInput">
+        <object key="name" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="name"/>
             <boolean property="required" value="true"/>
             <boolean method="isReadOnly()" value="false"/>
             <string property="label" value="product name"/>
             <string property="defaultValue" value=""/>
         </object>
-        <object key="price" class="jFormsControlInput">
+        <object key="price" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="price"/>
             <boolean property="required" value="false"/>
             <boolean method="isReadOnly()" value="false"/>
@@ -89,14 +88,14 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
     </array>
     <string method="id()" value="akey" />
     <array method="getControls()">
-        <object key="name" class="jFormsControlInput">
+        <object key="name" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="name"/>
             <boolean property="required" value="true"/>
             <boolean method="isReadOnly()" value="false"/>
             <string property="label" value="product name"/>
             <string property="defaultValue" value=""/>
         </object>
-        <object key="price" class="jFormsControlInput">
+        <object key="price" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="price"/>
             <boolean property="required" value="false"/>
             <boolean method="isReadOnly()" value="false"/>
@@ -122,7 +121,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
     </array>
     <array method="id()">[1,"fr"]</array>
     <array method="getControls()">
-        <object key="label" class="jFormsControlInput">
+        <object key="label" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="label"/>
             <boolean property="required" value="true"/>
             <boolean method="isReadOnly()" value="false"/>
@@ -318,14 +317,14 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
     </array>
     <integer method="id()" value="'.jForms::DEFAULT_ID.'" />
     <array method="getControls()">
-        <object key="name" class="jFormsControlInput">
+        <object key="name" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="name"/>
             <boolean property="required" value="true"/>
             <boolean method="isReadOnly()" value="false"/>
             <string property="label" value="product name"/>
             <string property="defaultValue" value=""/>
         </object>
-        <object key="price" class="jFormsControlInput">
+        <object key="price" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="price"/>
             <boolean property="required" value="false"/>
             <boolean method="isReadOnly()" value="false"/>
@@ -360,14 +359,14 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
     </array>
     <integer method="id()" value="akey" />
     <array method="getControls()">
-        <object key="name" class="jFormsControlInput">
+        <object key="name" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="name"/>
             <boolean property="required" value="true"/>
             <boolean method="isReadOnly()" value="false"/>
             <string property="label" value="product name"/>
             <string property="defaultValue" value=""/>
         </object>
-        <object key="price" class="jFormsControlInput">
+        <object key="price" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="price"/>
             <boolean property="required" value="false"/>
             <boolean method="isReadOnly()" value="false"/>
@@ -579,7 +578,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
      */
     function testPrepareObjectFromControls() {
         $f = jForms::create('product');
-        $ctrl= new jFormsControlCheckbox('instock');
+        $ctrl= new \Jelix\Forms\Controls\CheckboxControl('instock');
         $ctrl->label='En stock?';
         $f->addControl($ctrl);
         

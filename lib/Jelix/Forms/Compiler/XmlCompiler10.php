@@ -68,18 +68,18 @@ class XmlCompiler10
     }
 
     protected static $controlClasses = array(
-        'htmleditor' => 'jFormsControlHtmlEditor',
-        'wikieditor' => 'jFormsControlWikiEditor',
-        'secretconfirm' => 'jFormsControlSecretConfirm',
-        'image' => 'jFormsControlImageUpload',
+        'htmleditor' => 'Ctl\\HtmlEditorControl',
+        'wikieditor' => 'Ctl\\WikiEditorControl',
+        'secretconfirm' => 'Ctl\\SecretConfirmControl',
+        'image' => 'Ctl\\ImageUploadControl',
     );
 
     protected function _generatePHPControl(&$source, $controltype, $control)
     {
         if (isset(self::$controlClasses[$controltype])) {
-            $class = '\\'.self::$controlClasses[$controltype];
+            $class = self::$controlClasses[$controltype];
         } else {
-            $class = '\\jFormsControl' . ucfirst($controltype);
+            $class = 'Ctl\\' . ucfirst($controltype). 'Control';
         }
 
         $attributes = array();
@@ -93,6 +93,10 @@ class XmlCompiler10
                 if ($class[0] != '\\') {
                     $class = '\\'.$class;
                 }
+                if (!class_exists($class, true)) {
+                    throw new jException('jelix~formserr.unknown.control.class', array($class, $controltype, $this->sourceFile));
+                }
+
             }
             unset($attributes['controlclass']);
         }
@@ -106,9 +110,6 @@ class XmlCompiler10
             throw new jException('jelix~formserr.attribute.missing', array('ref', $controltype, $this->sourceFile));
         }
 
-        if (!class_exists($class, true)) {
-            throw new jException('jelix~formserr.unknown.control.class', array($class, $controltype, $this->sourceFile));
-        }
 
         // instancie the class
         $source[] = '$ctrl= new ' . $class . '(\'' . $attributes['ref'] . '\');';
@@ -352,7 +353,7 @@ class XmlCompiler10
             } else {
                 throw new jException('jelix~formserr.content.missing', array('confirm', $this->sourceFile));
             }
-            $source[] = '$ctrl2 = new \\jFormsControlSecretConfirm(\'' . (string)$control['ref'] . '_confirm\');';
+            $source[] = '$ctrl2 = new Ctl\\SecretConfirmControl(\'' . (string)$control['ref'] . '_confirm\');';
             $source[] = '$ctrl2->primarySecret = \'' . (string)$control['ref'] . '\';';
             $source[] = '$ctrl2->label=' . $label;
             $source[] = '$ctrl2->required = $ctrl->required;';

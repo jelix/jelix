@@ -44,13 +44,13 @@ class SimpleCaptchaValidator implements CaptchaValidatorInterface
     public function validate($value, $internalData)
     {
         if (trim($value) == '') {
-            return proxies\jForms::ERRDATA_REQUIRED;
+            return \jForms::ERRDATA_REQUIRED;
         }
         if (!$internalData
                 || !is_array($internalData)
                 || !isset($internalData['expectedresponse'])
                 || $value != $internalData['expectedresponse']) {
-            return proxies\jForms::ERRDATA_INVALID;
+            return \jForms::ERRDATA_INVALID;
         }
 
         return null;

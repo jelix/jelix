@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor Julien Issler
  *
- * @copyright  2010-2020 Laurent Jouanneau
+ * @copyright  2010-2024 Laurent Jouanneau
  * @copyright  2015 Julien Issler
  * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
  */
@@ -62,7 +62,7 @@ class jformsCtrl extends jController
 
         // retrieve the control to fill
         $control = $form->getControl($this->param('__ref'));
-        if (!$control || !($control instanceof jFormsControlDatasource)) {
+        if (!$control || (!($control instanceof \Jelix\Forms\Controls\AbstractDatasourceControl) && !($control instanceof jFormsControlDatasource))) {
             $rep = $this->getResponse('text', true);
             $rep->setHttpStatus('422', 'Unprocessable entity');
             $rep->content = 'bad control';

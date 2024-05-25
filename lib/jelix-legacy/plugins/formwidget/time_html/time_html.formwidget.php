@@ -4,9 +4,9 @@
  * @subpackage  forms_widget_plugin
  *
  * @author      Adrien Lagroy de Croutte
- * @contributor
+ * @contributor Laurent Jouanneau
  *
- * @copyright   2020 Adrien Lagroy de Croutte
+ * @copyright   2020 Adrien Lagroy de Croutte, 2020-2024 Laurent Jouanneau
  *
  * @see         https://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -53,7 +53,11 @@ class time_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
         $this->parentWidget->addJs($js);
         $this->commonJs();
 
-        if ($ctrl instanceof jFormsControlTime || get_class($ctrl->datatype) == 'jDatatypeTime' || get_class($ctrl->datatype) == 'jDatatypeLocaleTime') {
+        if (
+            $ctrl instanceof \Jelix\Forms\Controls\TimeControl
+            || $ctrl instanceof jFormsControlTime
+            || get_class($ctrl->datatype) == 'jDatatypeTime'
+            || get_class($ctrl->datatype) == 'jDatatypeLocaleTime') {
             $config = $ctrl->timepickerConfig != '' ? $ctrl->timepickerConfig : jApp::config()->forms['timepicker'];
             if ($config) {
                 $this->parentWidget->addJs('jelix_timepicker_'.$config."(c, jFormsJQ.config);\n");

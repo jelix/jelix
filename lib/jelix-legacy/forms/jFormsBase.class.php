@@ -8,10 +8,10 @@
  * @contributor Bastien Jaillot, Steven Jehannet
  * @contributor Christophe Thiriot, Julien Issler, Olivier Demah
  *
- * @copyright   2006-2023 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
+ * @copyright   2006-2024 Laurent Jouanneau, 2007 Dominique Papin, 2008 Bastien Jaillot
  * @copyright   2008-2015 Julien Issler, 2009 Olivier Demah, 2010 Steven Jehannet
  *
- * @see         http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -34,28 +34,28 @@ abstract class jFormsBase
     /**
      * List of all form controls.
      *
-     * @var jFormsControl[]
+     * @var \Jelix\Forms\Controls\AbstractControl[]
      */
     protected $controls = array();
 
     /**
      * List of top controls.
      *
-     * @var jFormsControl[]
+     * @var \Jelix\Forms\Controls\AbstractControl[]
      */
     protected $rootControls = array();
 
     /**
      * List of submit buttons.
      *
-     * @var jFormsControlSubmit[]
+     * @var \Jelix\Forms\Controls\SubmitControl[]
      */
     protected $submits = array();
 
     /**
      * Reset button.
      *
-     * @var jFormsControlReset
+     * @var \Jelix\Forms\Controls\ResetControl
      *
      * @since 1.0
      */
@@ -64,28 +64,28 @@ abstract class jFormsBase
     /**
      * List of uploads controls.
      *
-     * @var jFormsControlUpload2[]|jFormsControlUpload[]
+     * @var \Jelix\Forms\Controls\Upload2Control[]|\Jelix\Forms\Controls\UploadControl[]
      */
     protected $uploads = array();
 
     /**
      * List of hidden controls.
      *
-     * @var jFormsControlHidden[]
+     * @var \Jelix\Forms\Controls\HiddenControl[]
      */
     protected $hiddens = array();
 
     /**
      * List of htmleditorcontrols.
      *
-     * @var jFormsControlHtmlEditor[]
+     * @var \Jelix\Forms\Controls\HtmlEditorControl[]
      */
     protected $htmleditors = array();
 
     /**
      * List of wikieditorcontrols.
      *
-     * @var jFormsControlWikiEditor[]
+     * @var \Jelix\Forms\Controls\WikiEditorControl[]
      *
      * @since 1.2
      */
@@ -148,7 +148,12 @@ abstract class jFormsBase
         }
 
         foreach ($this->rootControls as $name => $ctrl) {
-            if ($ctrl instanceof jFormsControlSecret || $ctrl instanceof jFormsControlSecretConfirm) {
+            if (
+                $ctrl instanceof \Jelix\Forms\Controls\SecretControl
+                || $ctrl instanceof \Jelix\Forms\Controls\SecretConfirmControl
+                || $ctrl instanceof jFormsControlSecret
+                || $ctrl instanceof jFormsControlSecretConfirm
+            ) {
                 jApp::config()->error_handling['sensitiveParameters'][] = $ctrl->ref;
             }
             if (!$this->container->isActivated($name) || $this->container->isReadOnly($name)) {
@@ -656,7 +661,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControl[]
+     * @return \Jelix\Forms\Controls\AbstractControl[]
      */
     public function getRootControls()
     {
@@ -664,7 +669,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControl[]
+     * @return \Jelix\Forms\Controls\AbstractControl[]
      */
     public function getControls()
     {
@@ -674,7 +679,7 @@ abstract class jFormsBase
     /**
      * @param string $name the control name you want to get
      *
-     * @return jFormsControl
+     * @return \Jelix\Forms\Controls\AbstractControl
      *
      * @since 1.0
      */
@@ -688,7 +693,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControlSubmit[]
+     * @return \Jelix\Forms\Controls\SubmitControl[]
      */
     public function getSubmits()
     {
@@ -696,7 +701,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControlHidden[]
+     * @return \Jelix\Forms\Controls\HiddenControl[]
      *
      * @since 1.1
      */
@@ -706,7 +711,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControlHtmlEditor[]
+     * @return \Jelix\Forms\Controls\HtmlEditorControl[]
      *
      * @since 1.1
      */
@@ -716,7 +721,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControlWikiEditor[]
+     * @return \Jelix\Forms\Controls\WikiEditorControl[]
      *
      * @since 1.2
      */
@@ -726,7 +731,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControlUpload2[]|jFormsControlUpload[]
+     * @return \Jelix\Forms\Controls\Upload2Control[]|\Jelix\Forms\Controls\UploadControl[]
      *
      * @since 1.2
      */
@@ -778,7 +783,7 @@ abstract class jFormsBase
     }
 
     /**
-     * @return jFormsControlReset the reset object
+     * @return \Jelix\Forms\Controls\ResetControl the reset object
      */
     public function getReset()
     {
@@ -889,7 +894,7 @@ abstract class jFormsBase
     /**
      * add a control to the form.
      *
-     * @param jFormsControl $control the control to add
+     * @param \Jelix\Forms\Controls\AbstractControl $control the control to add
      */
     public function addControl($control)
     {
@@ -900,7 +905,7 @@ abstract class jFormsBase
     /**
      * add a control to the form, before the specified control.
      *
-     * @param jFormsControl $control the control to add
+     * @param \Jelix\Forms\Controls\AbstractControl $control the control to add
      * @param string        $ref     The ref of the control the new control should be inserted before
      *
      * @since 1.1
@@ -936,7 +941,7 @@ abstract class jFormsBase
     /**
      * declare a child control to the form. The given control should be a child of an other control.
      *
-     * @param jFormsControl $control
+     * @param \Jelix\Forms\Controls\AbstractControl $control
      */
     public function addChildControl($control)
     {
@@ -985,7 +990,7 @@ abstract class jFormsBase
             }
         }
 
-        if ($control instanceof jFormsControlGroups) {
+        if ($control instanceof  \Jelix\Forms\Controls\AbstractGroupsControl ||$control instanceof \jFormsControlGroups) {
             foreach ($control->getChildControls() as $ctrl) {
                 $this->addChildControl($ctrl);
             }

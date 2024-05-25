@@ -3,11 +3,11 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
  *
- * @copyright   2006-2020 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  * @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
  * @copyright   2012 Claudio Bernardes
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -32,7 +32,7 @@ abstract class WidgetBase implements WidgetInterface
     /**
      * The control.
      *
-     * @var \jFormsControl
+     * @var \Jelix\Forms\Controls\AbstractControl
      */
     protected $ctrl;
 

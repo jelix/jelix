@@ -5,7 +5,7 @@
  * @subpackage  forms_widget_plugin
  *
  * @author    Laurent Jouanneau
- * @copyright 2019 Laurent Jouanneau
+ * @copyright 2019-2024 Laurent Jouanneau
  *
  * @see      https://jelix.org
  *
@@ -58,7 +58,7 @@ class autocomplete_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
         $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
-        if ( ($ctrl instanceof jFormsControlDatasource
+        if ( ($ctrl instanceof \Jelix\Forms\Controls\AbstractDatasourceControl
             && $ctrl->datasource instanceof \Jelix\Forms\Datasource\DynamicDatasourceInterface)
             || ($ctrl instanceof jFormsControlDatasource
             && $ctrl->datasource instanceof jIFormsDynamicDatasource)
