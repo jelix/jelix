@@ -18,6 +18,7 @@
     "jExceptionForms": "forms/jExceptionForms.php",
     "jExceptionSelector": "core/jExceptionSelector.php",
     "jFileLogger": "core/log/jFileLogger.php",
+    "jFormsBase": "forms/jFormsBase.php",
     "jFormsControl": "forms/controls/jFormsControl.php",
     "jFormsControlButton": "forms/controls/jFormsControlButton.php",
     "jFormsControlCaptcha": "forms/controls/jFormsControlCaptcha.php",

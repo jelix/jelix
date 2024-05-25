@@ -85,7 +85,7 @@ class formsCtrl extends jController {
             $tpl = new jTpl();
             $tpl->assign('form', $form->getContainer());
             $tpl->assign('id', $form->id());
-            if ($form->securityLevel != jFormsBase::SECURITY_LOW)
+            if ($form->securityLevel != \Jelix\Forms\FormInstance::SECURITY_LOW)
               $tpl->assign('token', $form->createNewToken());
             else
               $tpl->assign('token','');

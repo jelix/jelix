@@ -12,7 +12,7 @@
 
 use Jelix\Forms\Controls\InputControl;
 
-class testCDForm extends jFormsBase {
+class testCDForm extends \Jelix\Forms\FormInstance {
     function addCtrl($control, $reset=true){
         if($reset){
             $this->controls = array();

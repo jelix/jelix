@@ -17,14 +17,14 @@
  *
  * usage : {formcontrols} here content to display one control {/formcontrols}
  * It accept also some parameters
- * 1) an optional jFormsBase object if the {formcontrols} is outside a {form} block
+ * 1) an optional FormInstance object if the {formcontrols} is outside a {form} block
  * 2) an optional array of control names : only these controls will be displayed
  *
  * @param jTplCompiler $compiler the template compiler
  * @param bool         $begin    true if it is the begin of block, else false
  * @param array        $param    empty array
- *                               or 0=>jFormsBase object
- *                               or 0=>jFormsBase object, 1=>array of control names
+ *                               or 0=>FormInstance object
+ *                               or 0=>FormInstance object, 1=>array of control names
  *                               or 0=>array of control names
  *
  * @return string the php code corresponding to the begin or end of the block

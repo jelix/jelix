@@ -9,6 +9,8 @@
 
 namespace Jelix\Forms\HtmlWidget;
 
+use Jelix\Forms\FormInstance;
+
 class TemplateController {
 
     protected $form;
@@ -41,7 +43,7 @@ class TemplateController {
      */
     protected $currentSubmitCtrl = null;
 
-    function __construct(\jFormsBase $form, $builderName, $builderOptions=array(), $submitActionSelector='', $submitActionParameters=[])
+    function __construct(FormInstance $form, $builderName, $builderOptions=array(), $submitActionSelector='', $submitActionParameters=[])
     {
         $this->form = $form;
         $this->builder = $form->getBuilder($builderName);

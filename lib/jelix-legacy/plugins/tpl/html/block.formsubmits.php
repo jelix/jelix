@@ -17,14 +17,14 @@
  *
  * usage : {formsubmits} here content to display one submit {/formsubmits}
  * It accept also some parameters
- * 1) an optional jFormsBase object if the {formsubmits} is outside a {form} block
+ * 1) an optional FormInstance object if the {formsubmits} is outside a {form} block
  * 2) an optional array of submit control names : only these controls will be displayed
  *
  * @param jTplCompiler $compiler the template compiler
  * @param bool         $begin    true if it is the begin of block, else false
  * @param array        $param    empty array
- *                               or 0=>jFormsBase object
- *                               or 0=>jFormsBase object, 1=>array of submit names
+ *                               or 0=>FormInstance object
+ *                               or 0=>FormInstance object, 1=>array of submit names
  *                               or 0=>array of submit names
  *
  * @return string the php code corresponding to the begin or end of the block

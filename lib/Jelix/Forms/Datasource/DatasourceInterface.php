@@ -11,6 +11,8 @@
  */
 namespace Jelix\Forms\Datasource;
 
+use Jelix\Forms\FormInstance;
+
 /**
  * Interface for objects which provides a source of data to fill some controls in a form,
  * like menulist, listbox etc...
@@ -21,7 +23,7 @@ interface DatasourceInterface
      * load and returns data to fill a control. The returned array should be
      * an associative array  key => label.
      *
-     * @param \jFormsBase $form the form
+     * @param FormInstance $form the form
      *
      * @return array the data
      */
@@ -31,7 +33,7 @@ interface DatasourceInterface
      * Return the label corresponding to the given key
      *
      * @param string $key the key
-     * @param \jFormsBase $form the form
+     * @param FormInstance $form the form
      *
      * @return string the label
      */

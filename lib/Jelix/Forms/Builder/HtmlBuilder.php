@@ -12,6 +12,7 @@
 
 namespace Jelix\Forms\Builder;
 
+use Jelix\Forms\FormInstance;
 use Jelix\Forms\HtmlWidget\ParentWidgetInterface;
 use Jelix\Forms\HtmlWidget\WidgetBase;
 use Jelix\Forms\HtmlWidget\WidgetInterface;
@@ -80,7 +81,7 @@ class HtmlBuilder extends BuilderBase
     /**
      * HtmlBuilder constructor.
      *
-     * @param \jFormsBase $form
+     * @param FormInstance $form
      *
      * @throws \Exception
      */

@@ -11,6 +11,7 @@
  */
 namespace Jelix\Forms\Controls;
 
+use Jelix\Forms\FormInstance;
 use Jelix\Routing\ClientRequest;
 
 /**
@@ -58,7 +59,7 @@ abstract class AbstractControl
     /** @var string label displayed when only values are displayed, and when there is no value */
     public $emptyValueLabel;
 
-    /** @var \jFormsBase the form object */
+    /** @var FormInstance the form object */
     protected $form;
 
     /** @var \Jelix\Forms\FormDataContainer content all values of the form */
@@ -87,7 +88,7 @@ abstract class AbstractControl
     }
 
     /**
-     * @param \jFormsBase $form
+     * @param FormInstance $form
      */
     public function setForm($form)
     {

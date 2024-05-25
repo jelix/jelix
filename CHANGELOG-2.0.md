@@ -97,28 +97,22 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 
 ## Changes in jForms
 
-jForms classes are all renamed, into the `\Jelix\Forms` namespace, except
-for `jForms` is still the main class to use to load and use forms.
+All `jForms*` classes and `jIForms*` interfaces are deprecated, and you should
+use corresponding classes and interfaces from the `\Jelix\Forms\` namespace,
+except  for `jForms` which is still the main class to use to load and use forms.
 
 Interfaces `jIFormsDatasource` and `jIFormsDatasource2` have been merged into a
 new interface `\Jelix\Forms\Datasource\DatasourceInterface`, having no more
-`getLabel2()` method, and a `getLabel()` changed method. So:
+`getLabel2()` method, and a `getLabel()` changed method.
 
-- `jIFormsDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\DatasourceInterface` instead
-- `jIFormsDatasource2` is deprecated, you should use `\Jelix\Forms\Datasource\DatasourceInterface` instead
-- `jIFormsDynamicDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\DynamicDatasourceInterface` instead
-- `jFormsDaoDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\DaoDatasource` instead
-- `jFormsDynamicDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\DynamicDatasource` instead
-- `jFormsStaticDatasource` is deprecated, you should use `\Jelix\Forms\Datasource\StaticDatasource` instead
-
-And also:
+Also :
 
 - `jExceptionForms` is deprecated, you should catch `\Jelix\Forms\FormException` instead
 
 
 ## test environment
 
-- upgrade PHPUnit to 8.5.0
+- upgrade PHPUnit to 10.4.0
 
 
 ## internal

@@ -17,7 +17,7 @@ use Jelix\Forms\Datasource\StaticDatasource;
 require_once(JELIX_LIB_PATH.'plugins/formbuilder/html/html.formbuilder.php');
 require_once(JELIX_LIB_PATH.'plugins/formwidget/html/html.formwidget.php');
 
-class testHMLForm2 extends jFormsBase {
+class testHMLForm2 extends \Jelix\Forms\FormInstance {
 }
 
 class testHtmlRootWidget2 extends htmlFormWidget {

@@ -18,6 +18,7 @@
     "jExceptionForms": "\\Jelix\\Forms\\FormException",
     "jExceptionSelector": "\\Jelix\\Core\\Selector\\Exception",
     "jFileLogger": "\\Jelix\\Logger\\Output\\File",
+    "jFormsBase": "\\Jelix\\Forms\\FormInstance",
     "jFormsControl": "\\Jelix\\Forms\\Controls\\AbstractControl",
     "jFormsControlButton": "\\Jelix\\Forms\\Controls\\ButtonControl",
     "jFormsControlCaptcha": "\\Jelix\\Forms\\Controls\\CaptchaControl",

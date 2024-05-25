@@ -19,7 +19,7 @@
  * Display all data of a form without the use of other plugins.
  *
  * @param jTpl       $tpl  template engine
- * @param jFormsBase $form the form to display
+ * @param \Jelix\Forms\FormInstance $form the form to display
  */
 function jtpl_function_text_formdatafull($tpl, $form)
 {

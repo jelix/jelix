@@ -13,7 +13,7 @@ use Jelix\Forms\Controls\InputControl;
 use Jelix\Forms\Controls\CheckboxControl;
 use Jelix\Forms\Controls\ListboxControl;
 
-class tesMForm extends jFormsBase {
+class tesMForm extends \Jelix\Forms\FormInstance {
     function addCtrl($control, $reset=true){
         if($reset){
             $this->controls = array();

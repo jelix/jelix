@@ -46,7 +46,7 @@ class jformsCtrl extends jController
         }
 
         // check CSRF
-        if ($form->securityLevel == jFormsBase::SECURITY_CSRF) {
+        if ($form->securityLevel == \Jelix\Forms\FormInstance::SECURITY_CSRF) {
             if (!$form->isValidToken($this->param('__JFORMS_TOKEN__'))) {
                 $rep = $this->getResponse('text', true);
                 $rep->setHttpStatus('422', 'Unprocessable entity');

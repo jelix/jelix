@@ -13,7 +13,7 @@ use Jelix\Forms\Controls\ChoiceControl;
 use Jelix\Forms\Controls\CheckboxesControl;
 use Jelix\Forms\Controls\GroupControl;
 
-class testIFRForm extends jFormsBase {
+class testIFRForm extends \Jelix\Forms\FormInstance {
     function addCtrl($control, $reset=true){
         if($reset){
             $this->controls = array();

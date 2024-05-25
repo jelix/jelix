@@ -28,7 +28,7 @@ interface jIFormsDatasource
      * load and returns data to fill a control. The returned array should be
      * an associative array  key => label.
      *
-     * @param jFormsBase $form the form
+     * @param \Jelix\Forms\FormInstance $form the form
      *
      * @return array the data
      */

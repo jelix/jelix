@@ -10,7 +10,7 @@
  */
 
 
-class tesMFormUpload extends jFormsBase {
+class tesMFormUpload extends \Jelix\Forms\FormInstance {
     function addCtrl($control, $reset=true){
         if($reset){
             $this->controls = array();

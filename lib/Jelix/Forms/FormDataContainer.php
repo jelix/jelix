@@ -25,8 +25,8 @@ class FormDataContainer
      *
      * @var array
      *
-     * @see \jFormsBase::getModifiedControls()
-     * @see \jFormsBase::initModifiedControlsList()
+     * @see FormInstance::getModifiedControls()
+     * @see FormInstance::initModifiedControlsList()
      */
     public $originalData = array();
 
