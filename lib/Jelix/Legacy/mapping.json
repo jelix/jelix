@@ -52,6 +52,7 @@
     "jFormsDaoDatasource": "forms/jFormsDaoDatasource.php",
     "jFormsDataContainer": "forms/jFormsDataContainer.php",
     "jFormsDynamicDatasource": "forms/jFormsDynamicDatasource.php",
+    "jFormsSession": "forms/jFormsSession.php",
     "jFormsStaticDatasource": "forms/jFormsStaticDatasource.php",
     "jFramework": "core/jFramework.php",
     "jHttp401UnauthorizedException": "core/jHttp401UnauthorizedException.php",

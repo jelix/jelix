@@ -9,7 +9,10 @@
  * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-use \Jelix\Forms\FormDataContainer;
+namespace Jelix\Forms;
+
+use Jelix\Core\App;
+use Jelix\Core\Profiles;
 
 /**
  * This class acts as a cache proxy during a request processing, for jForms
@@ -24,7 +27,7 @@ use \Jelix\Forms\FormDataContainer;
  * is a good time to save containers data used during the HTTP request, because we know that at this
  * moment we don't need anymore of the containers data.
  *
- * This is why jFormsSession instances are stored into PHP Sessions anyway, but without containers data.
+ * This is why FormsSession instances are stored into PHP Sessions anyway, but without containers data.
  * Its `__sleep()` methods forbid the PHP session manager to save containers data. Instead, the `__sleep()`
  * saves itself these data with jCache.
  *
@@ -32,7 +35,7 @@ use \Jelix\Forms\FormDataContainer;
  * so you can choose where jforms data are stored. A virtual profile is used
  * if no one is defined, and use files for the cache.
  */
-class jFormsSession
+class FormsSession
 {
     const DEFAULT_ID = 0;
 
@@ -43,18 +46,16 @@ class jFormsSession
 
     /**
      * Check or create if needed, that there is a profile for jCache.
-     *
-     * @throws jException
      */
     protected function loadProfile()
     {
         // be sure we have a profile for jCache.
         try {
-            jProfiles::get('jcache', 'jforms', true);
-        } catch (Exception $e) {
+            Profiles::get('jcache', 'jforms', true);
+        } catch (\Exception $e) {
             // no profile, let's create a default profile
-            $cacheDir = jApp::tempPath('jforms');
-            jFile::createDir($cacheDir);
+            $cacheDir = App::tempPath('jforms');
+            \jFile::createDir($cacheDir);
             $params = array(
                 'enabled' => 1,
                 'driver' => 'file',
@@ -63,7 +64,7 @@ class jFormsSession
                 'cache_dir' => $cacheDir,
                 'directory_level' => 3,
             );
-            jProfiles::createVirtualProfile('jcache', 'jforms', $params);
+            Profiles::createVirtualProfile('jcache', 'jforms', $params);
         }
     }
 
@@ -83,17 +84,17 @@ class jFormsSession
     /**
      * Saves containers data that have been created or loaded.
      *
-     * @throws jException when the cache backend fails
+     * @throws \jException when the cache backend fails
      */
     public function save()
     {
         foreach ($this->containers as $key => $container) {
-            jCache::set($key, serialize($container), null, 'jforms');
+            \jCache::set($key, serialize($container), null, 'jforms');
         }
     }
 
     /**
-     * @var \Jelix\Forms\FormDataContainer[] keys are cache keys
+     * @var FormDataContainer[] keys are cache keys
      */
     protected $containers = array();
 
@@ -109,7 +110,7 @@ class jFormsSession
      */
     public function getCacheKey($formSel, $formId)
     {
-        $sel = new \Jelix\Forms\FormSelector($formSel);
+        $sel = new FormSelector($formSel);
         // normalize the form id
         if ($formId === null || $formId === '') {
             $formId = self::DEFAULT_ID;
@@ -151,7 +152,7 @@ class jFormsSession
             return array($this->containers[$key], $selector);
         }
 
-        $container = jCache::get($key, 'jforms');
+        $container = \jCache::get($key, 'jforms');
         if ($container === false) {
             if ($createIfNeeded) {
                 $container = new FormDataContainer($selector->toString(), $formId);
@@ -177,7 +178,7 @@ class jFormsSession
         if (isset($this->containers[$key])) {
             $container = $this->containers[$key];
         } else {
-            $container = jCache::get($key, 'jforms');
+            $container = \jCache::get($key, 'jforms');
             if (!$container) {
                 return;
             }
@@ -191,15 +192,15 @@ class jFormsSession
                 return;
             }
         }
-        jCache::delete($key, 'jforms');
+        \jCache::delete($key, 'jforms');
         unset($this->containers[$key]);
     }
 
     public function garbage()
     {
-        jCache::garbage('jforms');
+        \jCache::garbage('jforms');
         foreach ($this->containers as $key => $container) {
-            if (!jCache::get($key, 'jforms')) {
+            if (!\jCache::get($key, 'jforms')) {
                 unset($this->containers[$key]);
             }
         }
@@ -207,7 +208,7 @@ class jFormsSession
 
     public function flushAll()
     {
-        jCache::flush('jforms');
+        \jCache::flush('jforms');
         $this->containers = array();
     }
 }

@@ -142,7 +142,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($form1, $this->form1Descriptor);
 
         $this->assertTrue(isset($_SESSION['JFORMS_SESSION']));
-        $this->assertInstanceOf('jFormsSession',$_SESSION['JFORMS_SESSION']);
+        $this->assertInstanceOf('\\Jelix\\Forms\\FormsSession',$_SESSION['JFORMS_SESSION']);
 
         list($selector, $formId, $key1) = $_SESSION['JFORMS_SESSION']->getCacheKey('product', null);
         $this->assertEquals('jelix_tests~product', $selector->toString());
@@ -151,7 +151,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
 
         $verifContainer1='
         <object class="\\Jelix\\Forms\\FormDataContainer">
-            <integer property="formId" value="'.jFormsSession::DEFAULT_ID.'" />
+            <integer property="formId" value="'.\Jelix\Forms\FormsSession::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
@@ -221,7 +221,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
         $verifContainer1='
         <object class="\\Jelix\\Forms\\FormDataContainer">
-            <integer property="formId" value="'.jFormsSession::DEFAULT_ID.'" />
+            <integer property="formId" value="'.\Jelix\Forms\FormsSession::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
@@ -391,7 +391,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertInstanceOf('\\Jelix\\Forms\\FormDataContainer', $container);
         $verifContainer1='
         <object class="\\Jelix\\Forms\\FormDataContainer">
-            <integer property="formId" value="'.jFormsSession::DEFAULT_ID.'" />
+            <integer property="formId" value="'.\Jelix\Forms\FormsSession::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="phone" />

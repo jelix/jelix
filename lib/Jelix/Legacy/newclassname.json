@@ -50,6 +50,7 @@
     "jFormsControlUpload2": "\\Jelix\\Forms\\Controls\\Upload2Control",
     "jFormsControlWikiEditor": "\\Jelix\\Forms\\Controls\\WikiEditorControl",
     "jFormsDataContainer": "\\Jelix\\Forms\\FormDataContainer",
+    "jFormsSession": "\\Jelix\\Forms\\FormsSession",
     "jFramework": "\\Jelix\\Core\\Framework",
     "jHttp401UnauthorizedException": "\\Jelix\\Routing\\Http401UnauthorizedException",
     "jHttp403ForbiddenException": "\\Jelix\\Routing\\Http403ForbiddenException",
