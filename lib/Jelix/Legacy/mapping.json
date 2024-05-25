@@ -83,6 +83,7 @@
     "jSelectorCfg": "core/selector/jSelectorCfg.php",
     "jSelectorClass": "core/selector/jSelectorClass.php",
     "jSelectorFactory": "core/jSelectorFactory.php",
+    "jSelectorForm": "core/selector/jSelectorForm.php",
     "jSelectorIface": "core/selector/jSelectorIface.php",
     "jSelectorLib": "core/selector/jSelectorLib.php",
     "jSelectorLoc": "core/selector/jSelectorLoc.php",

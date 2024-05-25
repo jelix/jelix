@@ -76,6 +76,7 @@
     "jSelectorActFast": "\\Jelix\\Routing\\FastActionSelector",
     "jSelectorClass": "\\Jelix\\Core\\selector\\ClassSelector",
     "jSelectorFactory": "\\Jelix\\Core\\Selector\\Factory",
+    "jSelectorForm": "\\Jelix\\Forms\\FormSelector",
     "jSelectorIface": "\\Jelix\\Core\\selector\\InterfaceSelector",
     "jSelectorLoc": "\\Jelix\\Locale\\LocaleSelector",
     "jSelectorModule": "\\Jelix\\Core\\selector\\ModuleSelector",

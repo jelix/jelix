@@ -46,7 +46,7 @@ class FormDataContainer
     /**
      * the selector of the xml file of the form.
      *
-     * @var \jSelectorForm
+     * @var FormSelector
      */
     public $formSelector;
 
@@ -79,7 +79,7 @@ class FormDataContainer
     protected $deactivated = array();
 
     /**
-     * @param \jSelectorForm $formSelector
+     * @param FormSelector $formSelector
      * @param string        $formId
      */
     public function __construct($formSelector, $formId)

@@ -109,7 +109,7 @@ class jFormsSession
      */
     public function getCacheKey($formSel, $formId)
     {
-        $sel = new jSelectorForm($formSel);
+        $sel = new \Jelix\Forms\FormSelector($formSel);
         // normalize the form id
         if ($formId === null || $formId === '') {
             $formId = self::DEFAULT_ID;
