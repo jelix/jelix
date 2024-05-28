@@ -12,6 +12,7 @@
 
 namespace Jelix\Forms\Builder;
 
+use Jelix\Core\App;
 use Jelix\Forms\FormInstance;
 
 /**
@@ -67,16 +68,16 @@ abstract class BuilderBase
     }
 
     /**
-     * @param string $action       action selector where form will be submit
+     * @param string $action       action selector where form will be submitted
      * @param array  $actionParams parameters for the action
      */
-    public function setAction($action, $actionParams)
+    public function setAction(string $action, array $actionParams)
     {
         $this->_action = $action;
         $this->_actionParams = $actionParams;
         $this->_name = self::generateFormName($this->_form->getSelector());
-        if (\jApp::coord()->response != null && \jApp::coord()->response->getType() == 'html') {
-            $this->_endt = (\jApp::coord()->response->isXhtml() ? '/>' : '>');
+        if (App::router()->response != null && App::router()->response->getType() == 'html') {
+            $this->_endt = (App::router()->response->isXhtml() ? '/>' : '>');
         }
     }
 

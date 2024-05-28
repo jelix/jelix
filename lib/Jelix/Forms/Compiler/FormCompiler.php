@@ -158,6 +158,7 @@ class FormCompiler
 
         $source[] = 'namespace Jelix\\BuiltComponents\\Forms\\' . ucfirst($module) . ';';
         $source[] = 'use \\Jelix\\Forms\\Controls as Ctl;';
+        $source[] = 'use \\Jelix\\Locale\\Locale;';
         $source[] = 'class ' . ucfirst(str_replace('.form.xml', '', $sourceFileName)) . ' extends \\Jelix\\Forms\\FormInstance {';
 
         $source[] = ' public function __construct($sel, &$container, $reset = false){';

@@ -110,7 +110,7 @@ abstract class FormInstance
 
     /**
      * @param string              $sel       the form selector
-     * @param \Jelix\Forms\FormDataContainer $container the data container
+     * @param FormDataContainer $container the data container
      * @param bool                $reset     says if the data should be reset
      */
     public function __construct($sel, $container, $reset = false)

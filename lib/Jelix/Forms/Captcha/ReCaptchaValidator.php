@@ -9,6 +9,8 @@
 
 namespace Jelix\Forms\Captcha;
 
+use Jelix\Core\App;
+
 class ReCaptchaValidator implements CaptchaValidatorInterface
 {
     /**
@@ -35,7 +37,7 @@ class ReCaptchaValidator implements CaptchaValidatorInterface
      */
     public function validate($value, $internalData)
     {
-        $config = \jApp::config()->recaptcha;
+        $config = App::config()->recaptcha;
         if (!isset($config['secret']) || $config['secret'] == '') {
             \jLog::log('secret for recaptcha is missing from the configuration', 'warning');
 

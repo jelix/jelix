@@ -325,7 +325,7 @@ class XmlCompiler10
         if (isset($control->emptyitem)) {
             if (isset($control->emptyitem['locale'])) {
                 $labellocale = (string)$control->emptyitem['locale'];
-                $source[] = '$ctrl->emptyItemLabel=\\jLocale::get(\'' . $labellocale . '\');';
+                $source[] = '$ctrl->emptyItemLabel=Locale::get(\'' . $labellocale . '\');';
             } else {
                 $label = (string)$control->emptyitem;
                 $source[] = '$ctrl->emptyItemLabel=\'' . str_replace("'", "\\'", $label) . '\';';
@@ -347,7 +347,7 @@ class XmlCompiler10
 
         if (isset($control->confirm)) {
             if (isset($control->confirm['locale'])) {
-                $label = "\\jLocale::get('" . (string)$control->confirm['locale'] . "');";
+                $label = "Locale::get('" . (string)$control->confirm['locale'] . "');";
             } elseif ((string)$control->confirm != '') {
                 $label = "'" . str_replace("'", "\\'", (string)$control->confirm) . "';";
             } else {
@@ -489,7 +489,7 @@ class XmlCompiler10
         }
         if (isset($control->label['locale'])) {
             $labellocale = (string)$control->label['locale'];
-            $source[] = '$ctrl->label=\\jLocale::get(\'' . $labellocale . '\');';
+            $source[] = '$ctrl->label=Locale::get(\'' . $labellocale . '\');';
         } else {
             $label = (string)$control->label;
             $source[] = '$ctrl->label=\'' . str_replace("'", "\\'", $label) . '\';';
@@ -503,7 +503,7 @@ class XmlCompiler10
         }
         if (isset($control->emptyvaluelabel['locale'])) {
             $labellocale = (string)$control->emptyvaluelabel['locale'];
-            $source[] = '$ctrl->emptyValueLabel=\\jLocale::get(\'' . $labellocale . '\');';
+            $source[] = '$ctrl->emptyValueLabel=Locale::get(\'' . $labellocale . '\');';
         } else {
             $label = (string)$control->emptyvaluelabel;
             $source[] = '$ctrl->emptyValueLabel=\'' . str_replace("'", "\\'", $label) . '\';';
@@ -514,14 +514,14 @@ class XmlCompiler10
     {
         if (isset($control->help)) { // help value is readed in the html compiler
             if (isset($control->help['locale'])) {
-                $source[] = '$ctrl->help=\\jLocale::get(\'' . (string)$control->help['locale'] . '\');';
+                $source[] = '$ctrl->help=Locale::get(\'' . (string)$control->help['locale'] . '\');';
             } else {
                 $source[] = '$ctrl->help=\'' . str_replace("'", "\\'", (string)$control->help) . '\';';
             }
         }
         if (isset($control->hint)) {
             if (isset($control->hint['locale'])) {
-                $source[] = '$ctrl->hint=\\jLocale::get(\'' . (string)$control->hint['locale'] . '\');';
+                $source[] = '$ctrl->hint=Locale::get(\'' . (string)$control->hint['locale'] . '\');';
             } else {
                 $source[] = '$ctrl->hint=\'' . str_replace("'", "\\'", (string)$control->hint) . '\';';
             }
@@ -531,7 +531,7 @@ class XmlCompiler10
         if (isset($control->alert)) {
             foreach ($control->alert as $alert) {
                 if (isset($alert['locale'])) {
-                    $msg = '\\jLocale::get(\'' . (string)$alert['locale'] . '\');';
+                    $msg = 'Locale::get(\'' . (string)$alert['locale'] . '\');';
                 } else {
                     $msg = '\'' . str_replace("'", "\\'", (string)$alert) . '\';';
                 }
@@ -627,7 +627,7 @@ class XmlCompiler10
             foreach ($control->item as $item) {
                 $value = "'" . str_replace("'", "\\'", (string)$item['value']) . "'=>";
                 if (isset($item['locale'])) {
-                    $source[] = $value . "\\jLocale::get('" . (string)$item['locale'] . "'),";
+                    $source[] = $value . "Locale::get('" . (string)$item['locale'] . "'),";
                 } elseif ((string)$item != '') {
                     $source[] = $value . "'" . str_replace("'", "\\'", (string)$item) . "',";
                 } else {

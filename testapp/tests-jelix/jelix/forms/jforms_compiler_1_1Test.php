@@ -452,7 +452,7 @@ $ctrl->required=true;
 $ctrl->label=\'Votre nom\';
 $this->addControl($ctrl);',
 3=>'$ctrl= new Ctl\\InputControl(\'nom\');
-$ctrl->label=\\jLocale::get(\'foo~bar\');
+$ctrl->label=Locale::get(\'foo~bar\');
 $this->addControl($ctrl);',
 4=>'$ctrl= new Ctl\\TextareaControl(\'nom\');
 $ctrl->label=\'Votre nom\';
@@ -535,28 +535,28 @@ $this->addControl($ctrl);',
 25=>'$ctrl= new Ctl\\CheckboxesControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 26=>'$ctrl= new Ctl\\RadiobuttonsControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 27=>'$ctrl= new Ctl\\ListboxControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->size=8;
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 28=>'$ctrl= new Ctl\\MenulistControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 29=>'$ctrl= new Ctl\\ListboxControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $this->addControl($ctrl);',
 30=>'$ctrl= new Ctl\\InputControl(\'nom\');
 $ctrl->defaultValue=\'toto\';
@@ -565,7 +565,7 @@ $this->addControl($ctrl);',
 31=>'$ctrl= new Ctl\\ListboxControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->defaultValue=array (
   0 => \'aaa\',
 );
@@ -573,7 +573,7 @@ $this->addControl($ctrl);',
 32=>'$ctrl= new Ctl\\ListboxControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->defaultValue=array (
   0 => \'aaa\',
   1 => \'ccc\',
@@ -584,14 +584,14 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue=array(\'aaa\');
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 34=>'$ctrl= new Ctl\\ListboxControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue= array(\'bbb\',\'aaa\',);
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->multiple=true;
 $this->addControl($ctrl);',
 35=>'$ctrl= new Ctl\\InputControl(\'nom\');
@@ -616,11 +616,11 @@ $ctrl->alertRequired=\'vous avez oublié le nom\';
 $this->addControl($ctrl);',
 40=>'$ctrl= new Ctl\\InputControl(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->alertInvalid=\\jLocale::get(\'error.alert.invalid.nom\');
+$ctrl->alertInvalid=Locale::get(\'error.alert.invalid.nom\');
 $this->addControl($ctrl);',
 41=>'$ctrl= new Ctl\\InputControl(\'nom\');
 $ctrl->label=\'Votre nom\';
-$ctrl->alertRequired=\\jLocale::get(\'error.alert.invalid.nom\');
+$ctrl->alertRequired=Locale::get(\'error.alert.invalid.nom\');
 $ctrl->alertInvalid=\'Le nom est invalide\';
 $this->addControl($ctrl);',
 42=>'$ctrl= new Ctl\\CheckboxControl(\'nom\');
@@ -640,7 +640,7 @@ $this->addControl($ctrl2);',
 $ctrl->label=\'Votre mot de passe\';
 $ctrl2 = new Ctl\\SecretConfirmControl(\'pwd_confirm\');
 $ctrl2->primarySecret = \'pwd\';
-$ctrl2->label=\\jLocale::get(\'password.confirm\');
+$ctrl2->label=Locale::get(\'password.confirm\');
 $ctrl2->required = $ctrl->required;
 $this->addControl($ctrl);
 $this->addControl($ctrl2);',
@@ -652,7 +652,7 @@ $this->addControl($ctrl);',
 46=>'$ctrl= new Ctl\\SubmitControl(\'validation\');
 $ctrl->label=\'Type de validation\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
-$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data = array(\'aaa\'=>\'1aa\',\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->standalone=false;
 $this->addControl($ctrl);',
 47=>'$ctrl= new Ctl\\UploadControl(\'nom\');
@@ -875,21 +875,21 @@ $ctrl->label=\'Votre nom\';
 $ctrl->size=8;
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $this->addControl($ctrl);',
 88=>'$ctrl= new Ctl\\MenulistControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $this->addControl($ctrl);',
 89=>'$ctrl= new Ctl\\ListboxControl(\'nom\');
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $ctrl->defaultValue=array (
   0 => \'bbb\',
@@ -899,7 +899,7 @@ $this->addControl($ctrl);',
 $ctrl->label=\'Votre nom\';
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $ctrl->defaultValue=array (
   0 => \'aaa\',
@@ -912,7 +912,7 @@ $ctrl->label=\'Votre nom\';
 $ctrl->defaultValue= array(\'bbb\',\'aaa\',);
 $ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();
 $ctrl->datasource->data[\'\'] = array(\'aaa\'=>\'1aa\',);
-$ctrl->datasource->data[\'group\']=array(\'bbb\'=>\\jLocale::get(\'locb\'),\'ccc\'=>\'ccc\',);
+$ctrl->datasource->data[\'group\']=array(\'bbb\'=>Locale::get(\'locb\'),\'ccc\'=>\'ccc\',);
 $ctrl->datasource->setGroupBy(true);
 $ctrl->multiple=true;
 $this->addControl($ctrl);',

@@ -12,10 +12,12 @@
 
 namespace Jelix\Forms\Builder;
 
+use Jelix\Core\App;
 use Jelix\Forms\FormInstance;
 use Jelix\Forms\HtmlWidget\ParentWidgetInterface;
 use Jelix\Forms\HtmlWidget\WidgetBase;
 use Jelix\Forms\HtmlWidget\WidgetInterface;
+use Jelix\Locale\Locale;
 
 /**
  * Main HTML form builder.
@@ -88,7 +90,7 @@ class HtmlBuilder extends BuilderBase
     public function __construct($form)
     {
         parent::__construct($form);
-        $config = \jApp::config()->{$this->formConfig};
+        $config = App::config()->{$this->formConfig};
         if (isset($this->pluginsConf['root'])) { //first the builder conf
             $pluginName = $this->pluginsConf['root'];
         } elseif (isset($config['root'])) { //then the ini conf
@@ -97,7 +99,7 @@ class HtmlBuilder extends BuilderBase
             $pluginName = $this->formType;
         }
         $className = $pluginName.'FormWidget';
-        $this->rootWidget = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className);
+        $this->rootWidget = App::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className);
         if (!$this->rootWidget) {
             throw new \Exception('Unknown root widget plugin '.$pluginName);
         }
@@ -116,8 +118,8 @@ class HtmlBuilder extends BuilderBase
      */
     public function setOptions($options)
     {
-        if (\jApp::config()->tplplugins['defaultJformsErrorDecorator']) {
-            $errorDecorator = \jApp::config()->tplplugins['defaultJformsErrorDecorator'];
+        if (App::config()->tplplugins['defaultJformsErrorDecorator']) {
+            $errorDecorator = App::config()->tplplugins['defaultJformsErrorDecorator'];
         } else {
             $errorDecorator = $this->jFormsJsVarName.'ErrorDecoratorHtml';
         }
@@ -217,7 +219,7 @@ class HtmlBuilder extends BuilderBase
 
     public function outputMetaContent($t)
     {
-        $resp = \jApp::coord()->response;
+        $resp = App::rooter()->response;
         if ($resp === null || $resp->getType() != 'html') {
             return;
         }
@@ -307,20 +309,20 @@ class HtmlBuilder extends BuilderBase
                     if ($ctrls[$cname]->alertRequired) {
                         echo '<li>', $ctrls[$cname]->alertRequired, '</li>';
                     } else {
-                        echo '<li>', \jLocale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label), '</li>';
+                        echo '<li>', Locale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label), '</li>';
                     }
                 } elseif ($err === \jForms::ERRDATA_INVALID) {
                     if ($ctrls[$cname]->alertInvalid) {
                         echo '<li>', $ctrls[$cname]->alertInvalid, '</li>';
                     } else {
-                        echo '<li>', \jLocale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label), '</li>';
+                        echo '<li>', Locale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label), '</li>';
                     }
                 } elseif ($err === \jForms::ERRDATA_INVALID_FILE_SIZE) {
-                    echo '<li>', \jLocale::get('jelix~formserr.js.err.invalid.file.size', $ctrls[$cname]->label), '</li>';
+                    echo '<li>', Locale::get('jelix~formserr.js.err.invalid.file.size', $ctrls[$cname]->label), '</li>';
                 } elseif ($err === \jForms::ERRDATA_INVALID_FILE_TYPE) {
-                    echo '<li>', \jLocale::get('jelix~formserr.js.err.invalid.file.type', $ctrls[$cname]->label), '</li>';
+                    echo '<li>', Locale::get('jelix~formserr.js.err.invalid.file.type', $ctrls[$cname]->label), '</li>';
                 } elseif ($err === \jForms::ERRDATA_FILE_UPLOAD_ERROR) {
-                    echo '<li>', \jLocale::get('jelix~formserr.js.err.file.upload', $ctrls[$cname]->label), '</li>';
+                    echo '<li>', Locale::get('jelix~formserr.js.err.file.upload', $ctrls[$cname]->label), '</li>';
                 } elseif ($err != '') {
                     echo '<li>', $err, '</li>';
                 }
@@ -352,7 +354,7 @@ class HtmlBuilder extends BuilderBase
 
         // we have to retrieve the plugin name corresponding to the widget
 
-        $config = \jApp::config()->{$this->formConfig};
+        $config = App::config()->{$this->formConfig};
         // check the builder conf
         if (isset($this->pluginsConf[$ctrl->ref])) {
             $pluginName = $this->pluginsConf[$ctrl->ref];
@@ -371,7 +373,7 @@ class HtmlBuilder extends BuilderBase
         // now we have its name, let's create the widget instance
         $className = $pluginName.'FormWidget';
         /** @var WidgetBase $plugin */
-        $plugin = \jApp::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
+        $plugin = App::loadPlugin($pluginName, 'formwidget', '.formwidget.php', $className, array($ctrl, $this, $parentWidget));
         if (!$plugin) {
             throw new \Exception('Widget '.$pluginName.' not found');
         }
