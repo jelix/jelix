@@ -10,7 +10,7 @@
  * @contributor  Mickael Fradin, Bruno Perles
  * @contributor  Vincent Morel
  *
- * @copyright    2007-2022 Laurent Jouanneau
+ * @copyright    2007-2024 Laurent Jouanneau
  * @copyright    2007 Thibault Piront
  * @copyright    2007,2008 Bastien Jaillot
  * @copyright    2009 Mickael Fradin, 2011 Bruno Perles
@@ -19,7 +19,9 @@
  * @see         http://www.jelix.org
  * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 use Jelix\Forms\FormInstance;
+use Jelix\Forms\Forms;
 
 /**
  * a base class for crud controllers.
@@ -175,7 +177,7 @@ class jControllerDaoCrud extends jController
      */
     protected function _createForm($formId = null)
     {
-        return jForms::create($this->form, $formId);
+        return Forms::create($this->form, $formId);
     }
 
     /**
@@ -192,7 +194,7 @@ class jControllerDaoCrud extends jController
      */
     protected function _getForm($formId = null)
     {
-        return jForms::get($this->form, $formId);
+        return Forms::get($this->form, $formId);
     }
 
     /**
@@ -312,7 +314,7 @@ class jControllerDaoCrud extends jController
 
         $this->_index($rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->listTemplate));
-        jForms::destroy($this->form, $this->pseudoFormId);
+        Forms::destroy($this->form, $this->pseudoFormId);
 
         return $rep;
     }
@@ -453,7 +455,7 @@ class jControllerDaoCrud extends jController
             if ($this->uploadsDirectory !== false) {
                 $form->saveAllFiles($this->uploadsDirectory);
             }
-            jForms::destroy($this->form);
+            Forms::destroy($this->form);
 
             return $rep;
         }
@@ -613,7 +615,7 @@ class jControllerDaoCrud extends jController
                 $form->saveAllFiles($this->uploadsDirectory);
             }
 
-            jForms::destroy($this->form, $id);
+            Forms::destroy($this->form, $id);
             return $rep;
         }
 

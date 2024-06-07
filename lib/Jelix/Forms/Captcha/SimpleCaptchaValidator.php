@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2017 Laurent Jouanneau
+ * @copyright   2017-2024 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -46,13 +46,13 @@ class SimpleCaptchaValidator implements CaptchaValidatorInterface
     public function validate($value, $internalData)
     {
         if (trim($value) == '') {
-            return \jForms::ERRDATA_REQUIRED;
+            return \Jelix\Forms\Forms::ERRDATA_REQUIRED;
         }
         if (!$internalData
                 || !is_array($internalData)
                 || !isset($internalData['expectedresponse'])
                 || $value != $internalData['expectedresponse']) {
-            return \jForms::ERRDATA_INVALID;
+            return \Jelix\Forms\Forms::ERRDATA_INVALID;
         }
 
         return null;

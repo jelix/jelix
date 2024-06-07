@@ -12,6 +12,8 @@
  */
 namespace Jelix\Forms\Controls;
 
+use Jelix\Forms\Forms;
+
 /**
  */
 class UploadControl extends AbstractControl
@@ -58,23 +60,23 @@ class UploadControl extends AbstractControl
 
         if ($this->fileInfo['error'] == UPLOAD_ERR_NO_FILE) {
             if ($this->required) {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = Forms::ERRDATA_REQUIRED;
             }
         } else {
             if ($this->fileInfo['error'] == UPLOAD_ERR_NO_TMP_DIR
                || $this->fileInfo['error'] == UPLOAD_ERR_CANT_WRITE) {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_FILE_UPLOAD_ERROR;
+                return $this->container->errors[$this->ref] = Forms::ERRDATA_FILE_UPLOAD_ERROR;
             }
 
             if ($this->fileInfo['error'] == UPLOAD_ERR_INI_SIZE
                || $this->fileInfo['error'] == UPLOAD_ERR_FORM_SIZE
                || ($this->maxsize && $this->fileInfo['size'] > $this->maxsize)) {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID_FILE_SIZE;
+                return $this->container->errors[$this->ref] = Forms::ERRDATA_INVALID_FILE_SIZE;
             }
 
             if ($this->fileInfo['error'] == UPLOAD_ERR_PARTIAL
                || !is_uploaded_file($this->fileInfo['tmp_name'])) {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID;
+                return $this->container->errors[$this->ref] = Forms::ERRDATA_INVALID;
             }
 
             if (count($this->mimetype)) {
@@ -85,7 +87,7 @@ class UploadControl extends AbstractControl
                 }
 
                 if (!in_array($this->fileInfo['type'], $this->mimetype)) {
-                    return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID_FILE_TYPE;
+                    return $this->container->errors[$this->ref] = Forms::ERRDATA_INVALID_FILE_TYPE;
                 }
             }
         }

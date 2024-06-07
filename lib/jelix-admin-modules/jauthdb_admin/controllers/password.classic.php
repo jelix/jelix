@@ -5,12 +5,14 @@
  * @subpackage  jauthdb_admin
  *
  * @author    Laurent Jouanneau
- * @copyright 2009-2022 Laurent Jouanneau
+ * @copyright 2009-2024 Laurent Jouanneau
  *
  * @see      http://jelix.org
  *
  * @license   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public Licence
  */
+use Jelix\Forms\Forms;
+
 class passwordCtrl extends jController
 {
     public $sensitiveParameters = array('pwd', 'pwd_confirm');
@@ -42,7 +44,7 @@ class passwordCtrl extends jController
 
         $rep = $this->getResponse('html');
 
-        $form = jForms::create('jauthdb_admin~password_change', $login);
+        $form = Forms::create('jauthdb_admin~password_change', $login);
         $tpl = new jTpl();
         $tpl->assign('id', $login);
         $tpl->assign('form', $form);
@@ -74,7 +76,7 @@ class passwordCtrl extends jController
             return $this->redirect('master_admin~default:index');
         }
 
-        $form = jForms::fill('jauthdb_admin~password_change', $login);
+        $form = Forms::fill('jauthdb_admin~password_change', $login);
         if (!$form) {
             return $this->redirect('password:index', ['j_user_login' => $login]);
         }
@@ -86,7 +88,7 @@ class passwordCtrl extends jController
         }
         $pwd = $form->getData('pwd');
         if (jAuth::changePassword($login, $pwd)) {
-            jForms::destroy('jauthdb_admin~password_change', $login);
+            Forms::destroy('jauthdb_admin~password_change', $login);
             jMessage::add(jLocale::get('crud.message.change.password.ok', $login), 'notice');
             if ($personalView) {
                 return $this->redirect('user:index', ['j_user_login' => $login]);

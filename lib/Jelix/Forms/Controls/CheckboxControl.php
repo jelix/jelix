@@ -51,10 +51,10 @@ class CheckboxControl extends AbstractControl
     {
         $value = $this->container->data[$this->ref];
         if ($this->required && $value == $this->valueOnUncheck) {
-            return $this->container->errors[$this->ref] = \jForms::ERRDATA_REQUIRED;
+            return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_REQUIRED;
         }
         if ($value != $this->valueOnCheck && $value != $this->valueOnUncheck) {
-            return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID;
+            return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_INVALID;
         }
 
         return null;

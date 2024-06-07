@@ -1,15 +1,13 @@
 <?php
 /**
- * @package     jelix
- * @subpackage  forms
- *
  * @author      Laurent Jouanneau
  * @copyright   2006-2024 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-use Jelix\Forms\FormInstance;
+
+namespace Jelix\Forms;
 
 /**
  * static class to manage and call a form.
@@ -17,10 +15,8 @@ use Jelix\Forms\FormInstance;
  * A form is identified by a selector, and each instance of a form have a unique id (formId).
  * This id can be the id of a record for example. If it is not given, the id is set to 0.
  *
- * @package     jelix
- * @subpackage  forms
  */
-class jForms
+class Forms
 {
     const ID_PARAM = '__forms_id__';
 
@@ -48,7 +44,7 @@ class jForms
         // have the opportunity to save the content of FormsSession into a cache, instead of the session storage
         // See FormsSession
         if (!isset($_SESSION['JFORMS_SESSION'])) {
-            $_SESSION['JFORMS_SESSION'] = new \Jelix\Forms\FormsSession();
+            $_SESSION['JFORMS_SESSION'] = new FormsSession();
         }
 
         return $_SESSION['JFORMS_SESSION'];

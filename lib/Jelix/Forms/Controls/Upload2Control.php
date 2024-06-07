@@ -14,6 +14,7 @@ namespace Jelix\Forms\Controls;
 
 use Jelix\Core\App;
 use Jelix\Routing\ClientRequest;
+use Jelix\Forms\Forms;
 
 /**
  */
@@ -165,7 +166,7 @@ class Upload2Control extends AbstractControl
                     $this->container->data[$this->ref] = '';
                 } else {
                     $this->modified = false;
-                    $this->error = \jForms::ERRDATA_REQUIRED;
+                    $this->error = Forms::ERRDATA_REQUIRED;
                 }
 
                 break;
@@ -188,7 +189,7 @@ class Upload2Control extends AbstractControl
 
         if ($this->fileInfo['error'] == UPLOAD_ERR_NO_FILE) {
             if ($this->required) {
-                $this->error = \jForms::ERRDATA_REQUIRED;
+                $this->error = Forms::ERRDATA_REQUIRED;
             }
 
             return null;
@@ -196,20 +197,20 @@ class Upload2Control extends AbstractControl
         if ($this->fileInfo['error'] == UPLOAD_ERR_NO_TMP_DIR
                 || $this->fileInfo['error'] == UPLOAD_ERR_CANT_WRITE
             ) {
-            $this->error = \jForms::ERRDATA_FILE_UPLOAD_ERROR;
+            $this->error = Forms::ERRDATA_FILE_UPLOAD_ERROR;
         }
 
         if ($this->fileInfo['error'] == UPLOAD_ERR_INI_SIZE
                 || $this->fileInfo['error'] == UPLOAD_ERR_FORM_SIZE
                 || ($this->maxsize && $this->fileInfo['size'] > $this->maxsize)
             ) {
-            $this->error = \jForms::ERRDATA_INVALID_FILE_SIZE;
+            $this->error = Forms::ERRDATA_INVALID_FILE_SIZE;
         }
 
         if ($this->fileInfo['error'] == UPLOAD_ERR_PARTIAL
                 || !$this->isUploadedFile($this->fileInfo['tmp_name'])
             ) {
-            $this->error = \jForms::ERRDATA_INVALID;
+            $this->error = Forms::ERRDATA_INVALID;
         }
 
         if (count($this->mimetype)) {
@@ -220,7 +221,7 @@ class Upload2Control extends AbstractControl
             }
 
             if (!in_array($this->fileInfo['type'], $this->mimetype)) {
-                $this->error = \jForms::ERRDATA_INVALID_FILE_TYPE;
+                $this->error = Forms::ERRDATA_INVALID_FILE_TYPE;
             }
         }
 
@@ -229,7 +230,7 @@ class Upload2Control extends AbstractControl
             if ($this->moveUploadedFile($this->fileInfo['tmp_name'], $filePath)) {
                 return $this->fileInfo['name'];
             }
-            $this->error = \jForms::ERRDATA_FILE_UPLOAD_ERROR;
+            $this->error = Forms::ERRDATA_FILE_UPLOAD_ERROR;
         }
 
         return null;

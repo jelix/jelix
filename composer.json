@@ -53,7 +53,7 @@
             "jelix\\": "lib/jelix-legacy",
             "Jelix\\": "lib/Jelix"
         },
-        "classmap": [ "lib/Jelix/components-proxies" ],
+        "classmap": [  ],
         "files": [
             "lib/Jelix/Legacy/init.php",
             "lib/jelix-legacy/init.php"

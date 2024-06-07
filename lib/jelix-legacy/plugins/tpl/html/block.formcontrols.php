@@ -6,11 +6,13 @@
  * @author      Laurent Jouanneau
  * @contributor Mickaël Fradin, F. Fernandez, Dominique Papin, Alexis Métaireau
  *
- * @copyright   2007-2022 Laurent Jouanneau, 2007 Mickaël Fradin, 2007 F. Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
+ * @copyright   2007-2024 Laurent Jouanneau, 2007 Mickaël Fradin, 2007 F. Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
+use Jelix\Forms\Forms;
 
 /**
  * a block to loop over controls list of a form and to display them.
@@ -29,7 +31,7 @@
  *
  * @return string the php code corresponding to the begin or end of the block
  *
- * @see jForms
+ * @see Forms
  */
 function jtpl_block_html_formcontrols($compiler, $begin, $param = array())
 {

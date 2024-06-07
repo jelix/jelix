@@ -10,6 +10,7 @@
 */
 
 use Jelix\Forms\Datasource\DaoDatasource;
+use Jelix\Forms\Forms;
 
 
 class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
@@ -23,7 +24,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
             unset($_SESSION['JFORMS_SESSION']);
         };
         jFile::removeDir(__DIR__.'/../../../temp/jelixtests/jforms');
-        $form = jForms::create('product');
+        $form = Forms::create('product');
         $this->savedParams = jApp::coord()->request->params;
 
         $labels = array(array('key'=>1, 'keyalias'=>'aa', 'lang'=>'fr', 'label'=>'aa-fr'),
@@ -46,12 +47,12 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     function tearDown() : void {
         
         jApp::coord()->request->params = $this->savedParams;
-        jForms::destroy('product');
+        Forms::destroy('product');
         jApp::popCurrentModule();
     }
 
     function testValueIsPkSimpleTable() {
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ============= The selected value is the primary key
         // ---- retrieve all data
         $ds = new DaoDatasource('jelix_tests~labels1' , "findAll" , 'label', 'key', '');
@@ -69,7 +70,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testValueIsPkSimpleTableStaticCriteria() {
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ============= The selected value is the primary key
         // ---- retrieve data with a static criteria
         $ds = new DaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'key', '', "fr");
@@ -82,7 +83,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testValueIsPkSimpleTableDynamicCriteria() {
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ============= The selected value is the primary key
         // ---- retrieve data with a dynamic criteria
         $ds = new DaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'key', '', null, 'name');
@@ -103,7 +104,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testValueNotPkSimpleTable() {
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ============= The selected value is not the primary key
         // ---- retrieve all data
             // method for the label is not given
@@ -125,7 +126,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     function testValueNotPkSimpleTableMultipleLabels() {
         // ============= The selected value is not the primary key
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ---- retrieve data with multiple label
                 // method for the label is not given
         $ds = new DaoDatasource('jelix_tests~labels1' , "findAll" , 'lang,label', 'keyalias', '', null, null, '#');
@@ -144,7 +145,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testValueNotPkSimpleTableStaticCriteria() {
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ============= The selected value is not the primary key
         // ---- retrieve data with a static criteria
                 // method for the label is not given
@@ -164,7 +165,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testValueNotPkSimpleTableDynamicCriteriaWithoutMethod() {
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ============= The selected value is not the primary key
         // ---- retrieve data with a dynamic criteria
         $ds = new DaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'keyalias', '', null, 'name');
@@ -186,7 +187,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testValueNotPkSimpleTableDynamicCriteriaWithMethod() {
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ============= The selected value is not the primary key
         // ---- retrieve data with a dynamic criteria
         $ds = new DaoDatasource('jelix_tests~labels1' , "findByLang" , 'label', 'keyalias', '', null, 'name');
@@ -208,7 +209,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testValueIsPkMultiKeyTable() {
-        $form = jForms::get('product');
+        $form = Forms::get('product');
 
         // ---- retrieve data
         $ds = new DaoDatasource('jelix_tests~labels' , "findAllOrderByKeyalias" , 'label', 'key', '');
@@ -228,7 +229,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertEquals(array('1'=>'en#dd-en', '2'=>'en#ee-en', '3'=>'fr#cc-fr'), $data);
     }
     function testValueIsPkMultiKeyTableStaticCriteria(){
-        $form = jForms::get('product');
+        $form = Forms::get('product');
 
         // ---- retrieve data with a static criteria
         $ds = new DaoDatasource('jelix_tests~labels' , "findByLang" , 'label', 'key', '', "fr");
@@ -240,7 +241,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     function testValueIsPkMultiKeyTableMutlipleStaticCriteria(){
         // ---- retrieve data with multiple static criteria
-        $form = jForms::get('product');
+        $form = Forms::get('product');
 
         // should throw a warning. impossible
         //$ds = new DaoDatasource('jelix_tests~labels' , "findByLang" , 'label', 'key', '', "fr,en");
@@ -258,7 +259,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
     
     function testValueIsPkMultiKeyTableDynamicCriteria(){
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ---- retrieve data with a dynamic criteria
         $ds = new DaoDatasource('jelix_tests~labels' , "findByLang" , 'label', 'key', '', null, 'name');
 
@@ -277,7 +278,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testValueIsPkMultiKeyTableDynamicCriteriaNotPK(){
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         $ds = new DaoDatasource('jelix_tests~labels' , "findByLang" , 'label', 'key', '', null, 'price');
         $form->setData('price', '5');
         $data = $ds->getData($form);
@@ -296,7 +297,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testValueIsPkMultiKeyTableMultipleDynamicCriteria(){
-        $form = jForms::get('product');
+        $form = Forms::get('product');
         // ---- retrieve data with multiple dynamic criteria
         $ds = new DaoDatasource('jelix_tests~labels' , "findByLang3" , 'label', 'key', '', null, 'price,name');
         $ds->labelMethod = 'getByLang3';
@@ -309,7 +310,7 @@ class jforms_datasourcesTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
     
     function testValueNotPkMultiKeyTable(){
-        $form = jForms::get('product');
+        $form = Forms::get('product');
 
         // ---- retrieve data with a value which is not part of the key
         // should not work

@@ -8,7 +8,7 @@
 * @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
+use Jelix\Forms\Forms;
 
 class UTjformsDummyObject {
     public $name='';
@@ -38,7 +38,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->form1Descriptor = '
 <object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
     <object method="getContainer()" class="\\Jelix\\Forms\\FormDataContainer">
-        <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
+        <integer property="formId" value="'.Forms::DEFAULT_ID.'" />
         <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
             <string key="name" value="" />
@@ -50,7 +50,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         <string key="name" value="" />
         <string key="price" value="" />
     </array>
-    <integer method="id()" value="'.jForms::DEFAULT_ID.'" />
+    <integer method="id()" value="'.Forms::DEFAULT_ID.'" />
     <array method="getControls()">
         <object key="name" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="name"/>
@@ -138,7 +138,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
     function testCreate(){
-        $form1 = jForms::create('product');
+        $form1 = Forms::create('product');
         $this->assertComplexIdenticalStr($form1, $this->form1Descriptor);
 
         $this->assertTrue(isset($_SESSION['JFORMS_SESSION']));
@@ -163,10 +163,10 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($form1->getContainer(), $verifContainer1);
 
         // second time
-        $form1 = jForms::create('product');
+        $form1 = Forms::create('product');
         $this->assertEquals(2, $form1->getContainer()->refcount);
 
-        $form2 = jForms::create('product', 'akey');
+        $form2 = Forms::create('product', 'akey');
         $this->assertComplexIdenticalStr($form2, $this->form2Descriptor);
 
         list($selector, $formId, $key2) = $_SESSION['JFORMS_SESSION']->getCacheKey('product', 'akey');
@@ -188,7 +188,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($form2->getContainer(), $verifContainer2);
 
         // with a complex form id
-        $formLabel = jForms::create('label', array(1,'fr'));
+        $formLabel = Forms::create('label', array(1,'fr'));
         $this->assertComplexIdenticalStr($formLabel, $this->formLabelDescriptor);
 
         list($selector, $formId, $key3) = $_SESSION['JFORMS_SESSION']->getCacheKey('label', array(1,'fr'));
@@ -272,16 +272,16 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
      * @depends testCreate
      */
     function testGet(){
-        $f1 = jForms::get('product');
+        $f1 = Forms::get('product');
         $this->assertComplexIdenticalStr($f1, $this->form1Descriptor);
 
-        $f2 = jForms::get('product', 'akey');
+        $f2 = Forms::get('product', 'akey');
         $this->assertComplexIdenticalStr($f2, $this->form2Descriptor);
 
-        $f3 = jForms::get('product', 'anUnknownKey');
+        $f3 = Forms::get('product', 'anUnknownKey');
         $this->assertNull($f3);
 
-        $f4 = jForms::get('label', array(1,'fr'));
+        $f4 = Forms::get('label', array(1,'fr'));
         $this->assertComplexIdenticalStr($f4, $this->formLabelDescriptor);
     }
 
@@ -292,17 +292,17 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $req = jApp::coord()->request;
         $savedParams = $req->params;
 
-        $form = jForms::fill('product');
+        $form = Forms::fill('product');
         $this->assertComplexIdenticalStr($form, $this->form1Descriptor);
 
         $req->params['name'] = 'phone';
         $req->params['price'] = '45';
 
-        $form = jForms::fill('product');
+        $form = Forms::fill('product');
         $verif = '
 <object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
     <object method="getContainer()" class="\\Jelix\\Forms\\FormDataContainer">
-        <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
+        <integer property="formId" value="'.Forms::DEFAULT_ID.'" />
         <string property="formSelector" value="jelix_tests~product" />
         <array property="data">
             <string key="name" value="phone" />
@@ -315,7 +315,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         <string key="name" value="phone" />
         <string key="price" value="45" />
     </array>
-    <integer method="id()" value="'.jForms::DEFAULT_ID.'" />
+    <integer method="id()" value="'.Forms::DEFAULT_ID.'" />
     <array method="getControls()">
         <object key="name" class="\\Jelix\\Forms\\Controls\\InputControl">
             <string property="ref" value="name"/>
@@ -336,11 +336,11 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($form, $verif);
 
         // verify that the other form hasn't changed
-        $form = jForms::get('product', 'akey');
+        $form = Forms::get('product', 'akey');
         $this->assertComplexIdenticalStr($form, $this->form2Descriptor);
 
         $req->params['price'] = '23';
-        $form = jForms::fill('product', 'akey');
+        $form = Forms::fill('product', 'akey');
         $verif = '
 <object class="\\Jelix\\BuiltComponents\\Forms\\Jelix_tests\\Product">
     <object method="getContainer()" class="\\Jelix\\Forms\\FormDataContainer">
@@ -449,11 +449,11 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         // first destroy of the default instance
         // since we called create() twice, we should still have
         // the instance
-        jForms::destroy('product');
+        Forms::destroy('product');
 
         $verifProduct0='
         <object class="\\Jelix\\Forms\\FormDataContainer">
-            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
+            <integer property="formId" value="'.Forms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">[]</array>
             <array property="errors">[]</array>
@@ -490,7 +490,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($container, $verifProduct2);
 
         // second destroy, we should have no more default instance
-        jForms::destroy('product');
+        Forms::destroy('product');
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
         $this->assertNull($container);
         
@@ -522,7 +522,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($container, $verifProduct2);
 
         // destroy other instance of product
-        jForms::destroy('product','akey');
+        Forms::destroy('product','akey');
 
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', 'akey', false);
         $this->assertNull($container);
@@ -577,14 +577,14 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
      * @depends testSessionSavedAfterDestroy
      */
     function testPrepareObjectFromControls() {
-        $f = jForms::create('product');
+        $f = Forms::create('product');
         $ctrl= new \Jelix\Forms\Controls\CheckboxControl('instock');
         $ctrl->label='En stock?';
         $f->addControl($ctrl);
         
         $verif='
         <object class="\\Jelix\\Forms\\FormDataContainer">
-            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
+            <integer property="formId" value="'.Forms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="" />
@@ -602,7 +602,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
 
         $verif='
         <object  class="\\Jelix\\Forms\\FormDataContainer">
-            <integer property="formId" value="'.jForms::DEFAULT_ID.'" />
+            <integer property="formId" value="'.Forms::DEFAULT_ID.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
                 <string key="name" value="car" />
@@ -624,7 +624,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
         </object>';
         $this->assertComplexIdenticalStr($o, $verif);
 
-        jForms::destroy('product');
+        Forms::destroy('product');
     } 
 
     /**
@@ -664,7 +664,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
      * @depends testSessionSavedPrepareObjectFromControls
      */
     public function testTokenGenerationDefaultId() {
-        $f = jForms::create('product');
+        $f = Forms::create('product');
         $c = $f->getContainer();
         $this->assertEquals(0, $c->formId);
         
@@ -680,7 +680,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
      * @depends testTokenGenerationDefaultId
      */
     public function testTokenGenerationStringIntId() {
-        $f = jForms::create('product', "8");
+        $f = Forms::create('product', "8");
         $c = $f->getContainer();
         $this->assertEquals("8", $c->formId);
         
@@ -696,7 +696,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
      * @depends testTokenGenerationStringIntId
      */
     public function testTokenGenerationString0Id() {
-        $f = jForms::create('product', "0");
+        $f = Forms::create('product', "0");
         $c = $f->getContainer();
         $this->assertEquals("0", $c->formId);
 
@@ -712,7 +712,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
      * @depends testTokenGenerationString0Id
      */
     public function testTokenGenerationIntId() {
-        $f = jForms::create('product', 8);
+        $f = Forms::create('product', 8);
         $c = $f->getContainer();
         $this->assertEquals(8, $c->formId);
 
@@ -728,7 +728,7 @@ class jforms_sessionTest extends \Jelix\UnitTests\UnitTestCase {
      * @depends testTokenGenerationIntId
      */
     public function testTokenGeneration0Id() {
-        $f = jForms::create('product', 0);
+        $f = Forms::create('product', 0);
         $c = $f->getContainer();
         $this->assertEquals(0, $c->formId);
 

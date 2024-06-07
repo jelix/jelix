@@ -4,7 +4,7 @@
  * @subpackage  jtpl_plugin
  *
  * @author      Laurent Jouanneau
- * @copyright   2006-2008 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -13,6 +13,8 @@
  * @param mixed $begin
  * @param mixed $param
  */
+
+use Jelix\Forms\Forms;
 
 /**
  * a block to display only data of a form.
@@ -28,7 +30,7 @@
  *
  * @return string the php code corresponding to the begin or end of the block
  *
- * @see jForms
+ * @see Forms
  * @since 1.0.1
  */
 function jtpl_block_html_formdata($compiler, $begin, $param = array())

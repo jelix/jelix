@@ -11,6 +11,8 @@
  * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
  */
 
+use Jelix\Forms\Forms;
+
 /**
  * @package    jelix-modules
  * @subpackage jelix-module
@@ -33,7 +35,7 @@ class jformsCtrl extends jController
         $rep = $this->getResponse('json', true);
 
         try {
-            $form = jForms::get($this->param('__form'), $this->param('__formid'));
+            $form = Forms::get($this->param('__form'), $this->param('__formid'));
             if (!$form) {
                 throw new Exception('Unknown form');
             }
@@ -126,7 +128,7 @@ class jformsCtrl extends jController
         if ($frmSel == '') {
             throw new \Exception('missing form selector parameters');
         }
-        $form = jForms::get($frmSel, $frmId);
+        $form = Forms::get($frmSel, $frmId);
         if (!$form) {
             throw new jHttp404NotFoundException();
         }

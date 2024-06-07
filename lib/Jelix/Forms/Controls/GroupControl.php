@@ -67,7 +67,7 @@ class GroupControl extends AbstractGroupsControl
         $value = $this->container->data[$this->ref];
 
         if ($value != $this->valueOnCheck && $value != $this->valueOnUncheck) {
-            return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID;
+            return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_INVALID;
         }
 
         if ($value == $this->valueOnCheck) {

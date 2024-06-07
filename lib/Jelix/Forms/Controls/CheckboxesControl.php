@@ -27,15 +27,15 @@ class CheckboxesControl extends AbstractDatasourceControl
         $value = $this->container->data[$this->ref];
         if (is_array($value)) {
             if (count($value) == 0 && $this->required) {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_REQUIRED;
             }
         } else {
             if (is_string($value) && trim($value) == '') {
                 if ($this->required) {
-                    return $this->container->errors[$this->ref] = \jForms::ERRDATA_REQUIRED;
+                    return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_REQUIRED;
                 }
             } else {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID;
+                return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_INVALID;
             }
         }
 

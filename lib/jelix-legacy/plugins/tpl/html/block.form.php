@@ -6,12 +6,14 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Bastien Jaillot, Dominique Papin
  *
- * @copyright   2006-2020 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  * @copyright   2008 Julien Issler, 2008 Bastien Jaillot, 2008 Dominique Papin
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
+use Jelix\Forms\Forms;
 
 /**
  * a block to display an html form, with data from a jforms.
@@ -37,7 +39,7 @@
  *
  * @return string the php code corresponding to the begin or end of the block
  *
- * @see jForms
+ * @see Forms
  */
 function jtpl_block_html_form($compiler, $begin, $param = array())
 {

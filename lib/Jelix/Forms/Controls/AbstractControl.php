@@ -127,10 +127,10 @@ abstract class AbstractControl
         }
         if ($trimedValue == '') {
             if ($this->required) {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_REQUIRED;
             }
         } elseif (!$this->datatype->check($value)) {
-            return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID;
+            return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_INVALID;
         }
         if ($this->datatype instanceof \jIFilteredDatatype) {
             $this->container->data[$this->ref] = $this->datatype->getFilteredValue();

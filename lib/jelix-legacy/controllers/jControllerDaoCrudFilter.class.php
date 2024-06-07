@@ -9,7 +9,9 @@
  * @see          https://www.jelix.org
  * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 use Jelix\Forms\FormInstance;
+use Jelix\Forms\Forms;
 
 /**
  * Implements a CRUD controller, having a filter form to filter the list.
@@ -131,9 +133,9 @@ class jControllerDaoCrudFilter extends jControllerDaoCrud
     protected function _filterCreateForm()
     {
         if ($this->filterForm) {
-            $form = jForms::get($this->filterForm, $this->pseudoFilterFormId);
+            $form = Forms::get($this->filterForm, $this->pseudoFilterFormId);
             if (!$form) {
-                $form = jForms::create($this->filterForm, $this->pseudoFilterFormId);
+                $form = Forms::create($this->filterForm, $this->pseudoFilterFormId);
             }
             $form->securityLevel = 0;
 

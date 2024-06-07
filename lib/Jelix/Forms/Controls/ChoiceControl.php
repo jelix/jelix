@@ -40,7 +40,7 @@ class ChoiceControl extends AbstractGroupsControl
         $val = $this->container->data[$this->ref];
 
         if (isset($this->container->privateData[$this->ref][$val])) {
-            return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID;
+            return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_INVALID;
         }
 
         if ($val !== '' && isset($this->items[$val])) {
@@ -57,7 +57,7 @@ class ChoiceControl extends AbstractGroupsControl
             return $rv;
         }
         if ($this->required) {
-            return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID;
+            return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_INVALID;
         }
 
         return null;

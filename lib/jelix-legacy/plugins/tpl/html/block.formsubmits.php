@@ -6,11 +6,13 @@
  * @author      Laurent Jouanneau
  * @contributor Mickaël Fradin
  *
- * @copyright   2007-2020 Laurent Jouanneau, 2007 Mickaël Fradin
+ * @copyright   2007-2024 Laurent Jouanneau, 2007 Mickaël Fradin
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
+use Jelix\Forms\Forms;
 
 /**
  * a block to loop over submit button list of a form and to display them.
@@ -29,7 +31,7 @@
  *
  * @return string the php code corresponding to the begin or end of the block
  *
- * @see jForms
+ * @see Forms
  */
 function jtpl_block_html_formsubmits($compiler, $begin, $param = array())
 {

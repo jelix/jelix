@@ -9,7 +9,7 @@
  * @contributor  Thibault Piront (nuKs)
  * @contributor  Bruno Perles (brunto)
  *
- * @copyright    2007-2022 Laurent Jouanneau
+ * @copyright    2007-2024 Laurent Jouanneau
  * @copyright    2007 Thibault Piront
  * @copyright    2007,2008 Bastien Jaillot
  * @copyright    2011 Bruno PERLES
@@ -17,7 +17,9 @@
  * @see         http://www.jelix.org
  * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
 use Jelix\Forms\FormInstance;
+use Jelix\Forms\Forms;
 
 /**
  * a base class for crud controllers, for DAO which have a primary key based on
@@ -257,7 +259,7 @@ class jControllerDaoCrudDfk extends jController
 
         // we're using a form to have the portunity to have
         // labels for each columns.
-        $form = jForms::create($this->form, $this->pseudoFormId);
+        $form = Forms::create($this->form, $this->pseudoFormId);
         $tpl = new jTpl();
         $tpl->assign('list', $results);
         $tpl->assign('dpkName', $this->dpkName);
@@ -286,7 +288,7 @@ class jControllerDaoCrudDfk extends jController
 
         $this->_index($rep, $tpl);
         $rep->body->assign($this->templateAssign, $tpl->fetch($this->listTemplate));
-        jForms::destroy($this->form, $this->pseudoFormId);
+        Forms::destroy($this->form, $this->pseudoFormId);
 
         return $rep;
     }
@@ -333,7 +335,7 @@ class jControllerDaoCrudDfk extends jController
         // first, we cannot create the form directly in the create action
         // because if the forms already exists, we wouldn't show
         // errors or already filled field. see ticket #292
-        $form = jForms::create($this->form);
+        $form = Forms::create($this->form);
         $this->_preCreate($form);
 
         return $this->redirect(
@@ -356,9 +358,9 @@ class jControllerDaoCrudDfk extends jController
      */
     public function create()
     {
-        $form = jForms::get($this->form);
+        $form = Forms::get($this->form);
         if ($form == null) {
-            $form = jForms::create($this->form);
+            $form = Forms::create($this->form);
         }
         $rep = $this->_getResponse();
 
@@ -395,7 +397,7 @@ class jControllerDaoCrudDfk extends jController
      */
     public function savecreate()
     {
-        $form = jForms::fill($this->form);
+        $form = Forms::fill($this->form);
         $spk = $this->param($this->spkName);
         $repParams = [$this->spkName => $spk];
 
@@ -425,7 +427,7 @@ class jControllerDaoCrudDfk extends jController
                 $form->saveAllFiles($this->uploadsDirectory);
             }
 
-            jForms::destroy($this->form);
+            Forms::destroy($this->form);
 
             $pknames = $form_dao->getPrimaryKeyNames();
             if ($pknames[0] == $this->spkName) {
@@ -487,7 +489,7 @@ class jControllerDaoCrudDfk extends jController
         }
 
         $id = $this->_getPk($spk, $dpk);
-        $form = jForms::create($this->form, $id);
+        $form = Forms::create($this->form, $id);
 
         try {
             $form->initFromDao($this->dao, $id, $this->dbProfile);
@@ -525,7 +527,7 @@ class jControllerDaoCrudDfk extends jController
         $page = $this->param($this->offsetParameterName);
 
         $id = $this->_getPk($spk, $dpk);
-        $form = jForms::get($this->form, $id);
+        $form = Forms::get($this->form, $id);
         if ($form === null || $dpk === null) {
 
             return $this->redirect(
@@ -576,7 +578,7 @@ class jControllerDaoCrudDfk extends jController
         $repParams = [$this->spkName => $spk];
 
         $id = $this->_getPk($spk, $dpk);
-        $form = jForms::fill($this->form, $id);
+        $form = Forms::fill($this->form, $id);
         if ($form === null || $dpk === null) {
 
             return $this->redirect($this->_getAction('index'), $repParams);
@@ -598,7 +600,7 @@ class jControllerDaoCrudDfk extends jController
                 $form->saveAllFiles($this->uploadsDirectory);
             }
 
-            jForms::destroy($this->form, $id);
+            Forms::destroy($this->form, $id);
         } else {
             $rep = $this->redirect($this->_getAction('editupdate'), $repParams);
         }
@@ -655,7 +657,7 @@ class jControllerDaoCrudDfk extends jController
         // we're using a form to display a record, to have the portunity to have
         // labels with each values. We need also him to load easily values of some
         // of controls with initControlFromDao (to use in _view method).
-        $form = jForms::create($this->form, $id);
+        $form = Forms::create($this->form, $id);
         $form->initFromDao($this->dao, $id, $this->dbProfile);
 
         $tpl = new jTpl();

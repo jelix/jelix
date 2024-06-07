@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2017 Laurent Jouanneau
+ * @copyright   2017-2024 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -10,6 +10,7 @@
 namespace Jelix\Forms\Captcha;
 
 use Jelix\Core\App;
+use Jelix\Forms\Forms;
 
 class ReCaptchaValidator implements CaptchaValidatorInterface
 {
@@ -41,11 +42,11 @@ class ReCaptchaValidator implements CaptchaValidatorInterface
         if (!isset($config['secret']) || $config['secret'] == '') {
             \jLog::log('secret for recaptcha is missing from the configuration', 'warning');
 
-            return \jForms::ERRDATA_INVALID;
+            return Forms::ERRDATA_INVALID;
         }
 
         if (!isset($_POST['g-recaptcha-response'])) {
-            return \jForms::ERRDATA_REQUIRED;
+            return Forms::ERRDATA_REQUIRED;
         }
 
         $recaptcha = new \ReCaptcha\ReCaptcha($config['secret']);
@@ -62,6 +63,6 @@ class ReCaptchaValidator implements CaptchaValidatorInterface
             }
         }
 
-        return \jForms::ERRDATA_INVALID;
+        return Forms::ERRDATA_INVALID;
     }
 }

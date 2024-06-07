@@ -8,7 +8,7 @@
  * @link        https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-
+use Jelix\Forms\Forms;
 
 class tesMFormUpload extends \Jelix\Forms\FormInstance {
     function addCtrl($control, $reset=true){
@@ -137,7 +137,7 @@ class jforms_uploadTest extends \Jelix\UnitTests\UnitTestCase {
         $this->uploadCtrl->required = true;
 
         $this->uploadCtrl->testProcessUpload('new', null);
-        $this->assertEquals(jForms::ERRDATA_REQUIRED, $this->uploadCtrl->check());
+        $this->assertEquals(Forms::ERRDATA_REQUIRED, $this->uploadCtrl->check());
         $this->assertFalse($this->uploadCtrl->isModified());
         $this->assertEquals(
             array(
@@ -290,7 +290,7 @@ class jforms_uploadTest extends \Jelix\UnitTests\UnitTestCase {
         $this->uploadCtrl->setDataFromDao('foo.txt', 'string');
 
         $this->uploadCtrl->testProcessUpload('del', null);
-        $this->assertEquals(jForms::ERRDATA_REQUIRED, $this->uploadCtrl->check());
+        $this->assertEquals(Forms::ERRDATA_REQUIRED, $this->uploadCtrl->check());
         $this->assertFalse($this->uploadCtrl->isModified());
         $this->assertEquals(
             array(

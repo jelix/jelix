@@ -21,7 +21,7 @@ class RadiobuttonsControl extends AbstractDatasourceControl
     public function check()
     {
         if ($this->container->data[$this->ref] == '' && $this->required) {
-            return $this->container->errors[$this->ref] = \jForms::ERRDATA_REQUIRED;
+            return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_REQUIRED;
         }
 
         return null;

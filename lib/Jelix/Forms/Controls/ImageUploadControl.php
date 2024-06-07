@@ -8,6 +8,7 @@
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 namespace Jelix\Forms\Controls;
+use Jelix\Forms\Forms;
 
 /**
  */
@@ -41,7 +42,7 @@ class ImageUploadControl extends Upload2Control
             $this->fileInfo = array('name' => '', 'type' => '', 'size' => 0,
                 'tmp_name' => '', 'error' => UPLOAD_ERR_NO_FILE, );
             if ($this->required) {
-                $this->error = \jForms::ERRDATA_REQUIRED;
+                $this->error = Forms::ERRDATA_REQUIRED;
             }
 
             return null;
@@ -56,13 +57,13 @@ class ImageUploadControl extends Upload2Control
         if ($content != '') {
             $content = @base64_decode($content, true);
             if ($content === false) {
-                $this->error = \jForms::ERRDATA_INVALID;
+                $this->error = Forms::ERRDATA_INVALID;
 
                 return null;
             }
         } else {
             if ($this->required) {
-                $this->error = \jForms::ERRDATA_REQUIRED;
+                $this->error = Forms::ERRDATA_REQUIRED;
             }
 
             return null;
@@ -72,13 +73,13 @@ class ImageUploadControl extends Upload2Control
         $size = file_put_contents($filePath, $content);
 
         if ($size === false) {
-            $this->error = \jForms::ERRDATA_FILE_UPLOAD_ERROR;
+            $this->error = Forms::ERRDATA_FILE_UPLOAD_ERROR;
 
             return null;
         }
 
         if ($this->maxsize && $size > $this->maxsize) {
-            $this->error = \jForms::ERRDATA_INVALID_FILE_SIZE;
+            $this->error = Forms::ERRDATA_INVALID_FILE_SIZE;
             unlink($filePath);
 
             return null;
@@ -92,7 +93,7 @@ class ImageUploadControl extends Upload2Control
             }
 
             if (!in_array($this->fileInfo['type'], $this->mimetype)) {
-                $this->error = \jForms::ERRDATA_INVALID_FILE_TYPE;
+                $this->error = Forms::ERRDATA_INVALID_FILE_TYPE;
                 unlink($filePath);
 
                 return null;

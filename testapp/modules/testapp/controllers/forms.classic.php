@@ -8,6 +8,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Forms\Forms;
 
 class formsCtrl extends jController {
 
@@ -19,7 +20,7 @@ class formsCtrl extends jController {
         $tpl = new jTpl();
         if(isset($_SESSION['testapp_jforms'])) {
             $list = array_map(function($key) {
-                return jForms::get('sample2', $key)->getContainer();
+                return Forms::get('sample2', $key)->getContainer();
             },$_SESSION['testapp_jforms']);
             $tpl->assign('liste', $list);
         } else {
@@ -35,7 +36,7 @@ class formsCtrl extends jController {
      */
     function newform(){
         // création d'un formulaire vierge
-        $form = jForms::create('sample2');
+        $form = Forms::create('sample2');
         $rep= $this->getResponse("redirect");
         $rep->action="forms:showform";
         $rep->params['id']= $form->id();
@@ -48,7 +49,7 @@ class formsCtrl extends jController {
      */
     function edit(){
         $id = $this->param('id');
-        $form = jForms::create('sample2', $this->param('id'));
+        $form = Forms::create('sample2', $this->param('id'));
         // remplissage du formulaire. Ici on le fait à la main, mais ça pourrait
         // être à partir d'un dao
         if($id == 1){
@@ -80,7 +81,7 @@ class formsCtrl extends jController {
         $rep->body->assign('page_title', 'forms');
 
         // Get the form which have the given id
-        $form = jForms::get('sample2', $this->param('id'));
+        $form = Forms::get('sample2', $this->param('id'));
         if ($form) {
             $tpl = new jTpl();
             $tpl->assign('form', $form->getContainer());
@@ -106,16 +107,16 @@ class formsCtrl extends jController {
         $newid = $this->param('newid');
 
         // retrieve the form object and fill it with values coming from the request
-        $form = jForms::fill('sample2', $id);
+        $form = Forms::fill('sample2', $id);
 
         if($id != $newid){
-            $form2 = jForms::create('sample2', $newid);
+            $form2 = Forms::create('sample2', $newid);
             $form2->getContainer()->data = $form->getContainer()->data;
             $_SESSION['testapp_jforms'][] = $newid;
         }
         
         if ($id == '0') {
-           jForms::destroy('sample2', $id);
+           Forms::destroy('sample2', $id);
             $_SESSION['testapp_jforms'] = array_filter($_SESSION['testapp_jforms'],
                 function($val) use ($id) {
                     return $val != $id;
@@ -128,7 +129,7 @@ class formsCtrl extends jController {
     }
 
     function view(){
-        $form = jForms::get('sample2',$this->param('id'));
+        $form = Forms::get('sample2',$this->param('id'));
         $rep = $this->getResponse('html');
         $rep->title = 'Content of a form';
         $rep->body->assign('page_title','forms');
@@ -147,7 +148,7 @@ class formsCtrl extends jController {
 
    function destroy(){
        $id = $this->param('id');
-       jForms::destroy('sample2',$id);
+       Forms::destroy('sample2',$id);
        $_SESSION['testapp_jforms'] = array_filter($_SESSION['testapp_jforms'],
            function($val) use ($id) {
                return $val != $id;

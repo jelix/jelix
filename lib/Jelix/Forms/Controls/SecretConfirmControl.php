@@ -26,7 +26,7 @@ class SecretConfirmControl extends AbstractControl
     public function check()
     {
         if ($this->container->data[$this->ref] != $this->form->getData($this->primarySecret)) {
-            return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID;
+            return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_INVALID;
         }
 
         return null;

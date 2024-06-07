@@ -30,14 +30,14 @@ class ListboxControl extends AbstractDatasourceControl
         $value = $this->container->data[$this->ref];
         if (is_array($value)) {
             if (!$this->multiple) {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_INVALID;
+                return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_INVALID;
             }
             if (count($value) == 0 && $this->required) {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_REQUIRED;
             }
         } else {
             if (trim($value) == '' && $this->required) {
-                return $this->container->errors[$this->ref] = \jForms::ERRDATA_REQUIRED;
+                return $this->container->errors[$this->ref] = \Jelix\Forms\Forms::ERRDATA_REQUIRED;
             }
         }
 

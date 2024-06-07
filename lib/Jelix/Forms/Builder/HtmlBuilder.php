@@ -13,6 +13,7 @@
 namespace Jelix\Forms\Builder;
 
 use Jelix\Core\App;
+use Jelix\Forms\Forms;
 use Jelix\Forms\FormInstance;
 use Jelix\Forms\HtmlWidget\ParentWidgetInterface;
 use Jelix\Forms\HtmlWidget\WidgetBase;
@@ -305,23 +306,23 @@ class HtmlBuilder extends BuilderBase
                 if (!array_key_exists($cname, $ctrls) || !$this->_form->isActivated($ctrls[$cname]->ref)) {
                     continue;
                 }
-                if ($err === \jForms::ERRDATA_REQUIRED) {
+                if ($err === Forms::ERRDATA_REQUIRED) {
                     if ($ctrls[$cname]->alertRequired) {
                         echo '<li>', $ctrls[$cname]->alertRequired, '</li>';
                     } else {
                         echo '<li>', Locale::get('jelix~formserr.js.err.required', $ctrls[$cname]->label), '</li>';
                     }
-                } elseif ($err === \jForms::ERRDATA_INVALID) {
+                } elseif ($err === Forms::ERRDATA_INVALID) {
                     if ($ctrls[$cname]->alertInvalid) {
                         echo '<li>', $ctrls[$cname]->alertInvalid, '</li>';
                     } else {
                         echo '<li>', Locale::get('jelix~formserr.js.err.invalid', $ctrls[$cname]->label), '</li>';
                     }
-                } elseif ($err === \jForms::ERRDATA_INVALID_FILE_SIZE) {
+                } elseif ($err === Forms::ERRDATA_INVALID_FILE_SIZE) {
                     echo '<li>', Locale::get('jelix~formserr.js.err.invalid.file.size', $ctrls[$cname]->label), '</li>';
-                } elseif ($err === \jForms::ERRDATA_INVALID_FILE_TYPE) {
+                } elseif ($err === Forms::ERRDATA_INVALID_FILE_TYPE) {
                     echo '<li>', Locale::get('jelix~formserr.js.err.invalid.file.type', $ctrls[$cname]->label), '</li>';
-                } elseif ($err === \jForms::ERRDATA_FILE_UPLOAD_ERROR) {
+                } elseif ($err === Forms::ERRDATA_FILE_UPLOAD_ERROR) {
                     echo '<li>', Locale::get('jelix~formserr.js.err.file.upload', $ctrls[$cname]->label), '</li>';
                 } elseif ($err != '') {
                     echo '<li>', $err, '</li>';
