@@ -4,7 +4,7 @@
  * @subpackage  forms_widget_plugin
  *
  * @author      Laurent Jouanneau
- * @copyright   2017 Laurent Jouanneau
+ * @copyright   2017-2024 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -17,7 +17,7 @@
  *
  * ```
  * [forms]
- * captcha.recaptcha.validator = \jelix\forms\Captcha\ReCaptchaValidator
+ * captcha.recaptcha.validator = \Jelix\Forms\Captcha\ReCaptchaValidator
  * captcha.recaptcha.widgettype = recaptcha
  *
  * [recaptcha]
@@ -51,7 +51,7 @@
  * @package     jelix
  * @subpackage  forms_widget_plugin
  */
-class recaptcha_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class recaptcha_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {

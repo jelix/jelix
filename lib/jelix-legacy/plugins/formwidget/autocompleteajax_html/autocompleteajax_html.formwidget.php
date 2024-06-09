@@ -5,7 +5,7 @@
  * @subpackage  forms_widget_plugin
  *
  * @author    Laurent Jouanneau
- * @copyright 2019-2020 Laurent Jouanneau
+ * @copyright 2019-2024 Laurent Jouanneau
  *
  * @see      https://jelix.org
  *
@@ -19,12 +19,12 @@
  * autocomplete plugin.
  *
  * You should use a menulist control, and a datasource, inheriting from
- * jFormsDaoDatasource or jFormsDynamicDatasource, and having a getData() method
+ * \Jelix\Forms\Datasource\DaoDatasource or \Jelix\Forms\Datasource\DynamicDatasource, and having a getData() method
  * returning an empty list.
  *
  * The widget accepts a specific attribute, 'attr-autocomplete', an array
  * which should contains at least an item 'source' indicating the url of the search
- * engine. The array may contains other attributes for the input element used to
+ * engine. The array may contain other attributes for the input element used to
  * type the search term (class, style..).
  *
  * example of use:
@@ -37,7 +37,7 @@
  * ```
  * The datasource:
  * ```
- * class mydatasource extends jFormsDaoDatasource {
+ * class mydatasource extends \Jelix\Forms\Datasource\DaoDatasource {
  *    function __construct($formId) {
  *       parent::__construct ("mymodule~myDao" , "findAll" , "label", 'id');
  *    }
@@ -58,7 +58,7 @@
  * {/formcontrols}
  * ```
  */
-class autocompleteajax_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class autocompleteajax_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {
@@ -71,8 +71,11 @@ class autocompleteajax_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
         $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
-        if ($ctrl instanceof jFormsControlDatasource
-            && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
+        if ( ($ctrl instanceof \Jelix\Forms\Controls\AbstractDatasourceControl
+                && $ctrl->datasource instanceof \Jelix\Forms\Datasource\DynamicDatasourceInterface)
+            || ($ctrl instanceof jFormsControlDatasource
+                && $ctrl->datasource instanceof jIFormsDynamicDatasource)
+        ) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->parentWidget->addJs("c.dependencies = ['".implode("','", $dependentControls)."'];\n");

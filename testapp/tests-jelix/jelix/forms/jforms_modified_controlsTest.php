@@ -4,12 +4,16 @@
 * @subpackage  unittest module
 * @author      Bastien Jaillot
 * @contributor Laurent Jouanneau, Steven Jehannet
-* @copyright   2008 Bastien Jaillot, 2009-2020 Laurent Jouanneau, 2010 Steven Jehannet
-* @link        http://jelix.org
+* @copyright   2008 Bastien Jaillot, 2009-2024 Laurent Jouanneau, 2010 Steven Jehannet
+* @link        https://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
- 
-class tesMForm extends jFormsBase {
+use Jelix\Forms\Datasource\StaticDatasource;
+use Jelix\Forms\Controls\InputControl;
+use Jelix\Forms\Controls\CheckboxControl;
+use Jelix\Forms\Controls\ListboxControl;
+
+class tesMForm extends \Jelix\Forms\FormInstance {
     function addCtrl($control, $reset=true){
         if($reset){
             $this->controls = array();
@@ -23,45 +27,45 @@ class jforms_modified_ControlsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     protected $form;
     protected $container;
     function setUp() : void {
-        $this->container = new jFormsDataContainer('','');
+        $this->container = new \Jelix\Forms\FormDataContainer('','');
         $this->form = new tesMForm('foo', $this->container);
 
-        $ctrl = new jFormsControlInput('inputctrl');
+        $ctrl = new InputControl('inputctrl');
         $ctrl->setForm($this->form);
         $ctrl->setData('toto');
         $this->form->addCtrl($ctrl);
         $this->form->setData('inputctrl', 'toto');
 
-        $ctrl = new jFormsControlInput('emptyctrl');
+        $ctrl = new InputControl('emptyctrl');
         // no value
         $ctrl->setForm($this->form);
         $this->form->addControl($ctrl);
 
-        $ctrl = new jFormsControlInput('integerctrl');
+        $ctrl = new InputControl('integerctrl');
         $ctrl->datatype=new jDatatypeInteger();
         $ctrl->setForm($this->form);
         $ctrl->setData('');
         $this->form->addControl($ctrl);
 
 
-        $ctrl = new jFormsControlCheckbox('chckbxctrl');
+        $ctrl = new CheckboxControl('chckbxctrl');
         $ctrl->datatype=new jDatatypeBoolean();
         $this->form->addControl($ctrl);
         $this->form->setData('chckbxctrl', '1');
-        $ctrl= new jFormsControlCheckbox('chckbxctrl1');
+        $ctrl= new CheckboxControl('chckbxctrl1');
         $ctrl->defaultValue='0';
         $ctrl->valueOnCheck='1';
         $ctrl->valueOnUncheck='0';
         $this->form->addControl($ctrl);
-        $ctrl= new jFormsControlCheckbox('chckbxctrl2');
+        $ctrl= new CheckboxControl('chckbxctrl2');
         $ctrl->defaultValue='1';
         $ctrl->valueOnCheck='1';
         $ctrl->valueOnUncheck='0';
         $this->form->addControl($ctrl);
 
-        $ctrl= new jFormsControlListbox('list');
+        $ctrl= new ListboxControl('list');
         $ctrl->multiple=true;
-        $ctrl->datasource = new jFormsStaticDatasource();
+        $ctrl->datasource = new StaticDatasource();
         $ctrl->datasource->data = array('a'=>'aaa', 'b'=>'bbb', 'c'=>'123', 'd'=>'456');
         $this->form->addControl($ctrl);
         $this->form->setData('list', array('bbb','123'));

@@ -21,7 +21,7 @@
  *
  * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
-class datetime_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class datetime_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {

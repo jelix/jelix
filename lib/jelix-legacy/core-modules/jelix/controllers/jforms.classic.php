@@ -6,10 +6,12 @@
  * @author     Laurent Jouanneau
  * @contributor Julien Issler
  *
- * @copyright  2010-2020 Laurent Jouanneau
+ * @copyright  2010-2024 Laurent Jouanneau
  * @copyright  2015 Julien Issler
  * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
  */
+
+use Jelix\Forms\Forms;
 
 /**
  * @package    jelix-modules
@@ -33,7 +35,7 @@ class jformsCtrl extends jController
         $rep = $this->getResponse('json', true);
 
         try {
-            $form = jForms::get($this->param('__form'), $this->param('__formid'));
+            $form = Forms::get($this->param('__form'), $this->param('__formid'));
             if (!$form) {
                 throw new Exception('Unknown form');
             }
@@ -46,7 +48,7 @@ class jformsCtrl extends jController
         }
 
         // check CSRF
-        if ($form->securityLevel == jFormsBase::SECURITY_CSRF) {
+        if ($form->securityLevel == \Jelix\Forms\FormInstance::SECURITY_CSRF) {
             if (!$form->isValidToken($this->param('__JFORMS_TOKEN__'))) {
                 $rep = $this->getResponse('text', true);
                 $rep->setHttpStatus('422', 'Unprocessable entity');
@@ -62,7 +64,7 @@ class jformsCtrl extends jController
 
         // retrieve the control to fill
         $control = $form->getControl($this->param('__ref'));
-        if (!$control || !($control instanceof jFormsControlDatasource)) {
+        if (!$control || (!($control instanceof \Jelix\Forms\Controls\AbstractDatasourceControl) && !($control instanceof jFormsControlDatasource))) {
             $rep = $this->getResponse('text', true);
             $rep->setHttpStatus('422', 'Unprocessable entity');
             $rep->content = 'bad control';
@@ -70,7 +72,9 @@ class jformsCtrl extends jController
             return $rep;
         }
 
-        if (!($control->datasource instanceof jIFormsDynamicDatasource)) {
+        if (!($control->datasource instanceof \Jelix\Forms\Datasource\DynamicDatasource
+            || $control->datasource instanceof jIFormsDynamicDatasource)
+        ) {
             $rep = $this->getResponse('text', true);
             $rep->setHttpStatus('422', 'Unprocessable entity');
             $rep->content = 'not supported datasource type';
@@ -124,7 +128,7 @@ class jformsCtrl extends jController
         if ($frmSel == '') {
             throw new \Exception('missing form selector parameters');
         }
-        $form = jForms::get($frmSel, $frmId);
+        $form = Forms::get($frmSel, $frmId);
         if (!$form) {
             throw new jHttp404NotFoundException();
         }

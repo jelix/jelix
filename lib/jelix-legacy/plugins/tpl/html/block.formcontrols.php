@@ -6,30 +6,32 @@
  * @author      Laurent Jouanneau
  * @contributor Mickaël Fradin, F. Fernandez, Dominique Papin, Alexis Métaireau
  *
- * @copyright   2007-2022 Laurent Jouanneau, 2007 Mickaël Fradin, 2007 F. Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
+ * @copyright   2007-2024 Laurent Jouanneau, 2007 Mickaël Fradin, 2007 F. Fernandez, 2007 Dominique Papin, 2008 Alexis Métaireau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
+use Jelix\Forms\Forms;
 
 /**
  * a block to loop over controls list of a form and to display them.
  *
  * usage : {formcontrols} here content to display one control {/formcontrols}
  * It accept also some parameters
- * 1) an optional jFormsBase object if the {formcontrols} is outside a {form} block
+ * 1) an optional FormInstance object if the {formcontrols} is outside a {form} block
  * 2) an optional array of control names : only these controls will be displayed
  *
  * @param jTplCompiler $compiler the template compiler
  * @param bool         $begin    true if it is the begin of block, else false
  * @param array        $param    empty array
- *                               or 0=>jFormsBase object
- *                               or 0=>jFormsBase object, 1=>array of control names
+ *                               or 0=>FormInstance object
+ *                               or 0=>FormInstance object, 1=>array of control names
  *                               or 0=>array of control names
  *
  * @return string the php code corresponding to the begin or end of the block
  *
- * @see jForms
+ * @see Forms
  */
 function jtpl_block_html_formcontrols($compiler, $begin, $param = array())
 {
@@ -79,7 +81,7 @@ function jtpl_block_html_formcontrols($compiler, $begin, $param = array())
     $content .= '
 if (!isset($t->_privateVars[\'__formTplController\'])) {
     if ($form === null) { throw new \Exception("Error: form is missing to process formcontrols"); }
-    $t->_privateVars[\'__formTplController\'] = new \\jelix\\forms\\HtmlWidget\\TemplateController($form,\''.$builder.'\');
+    $t->_privateVars[\'__formTplController\'] = new \\Jelix\\Forms\\HtmlWidget\\TemplateController($form,\''.$builder.'\');
 }
 ';
 

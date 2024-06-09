@@ -4,14 +4,15 @@
 * @subpackage  unittest module
 * @author      Laurent Jouanneau
 * @contributor Julien Issler, Dominique Papin
-* @copyright   2007-2008 Laurent Jouanneau
+* @copyright   2007-2024 Laurent Jouanneau
 * @copyright   2008 Julien Issler, 2008 Dominique Papin
-* @link        http://www.jelix.org
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+use Jelix\Forms\Controls\InputControl;
 
-class testCDForm extends jFormsBase {
+class testCDForm extends \Jelix\Forms\FormInstance {
     function addCtrl($control, $reset=true){
         if($reset){
             $this->controls = array();
@@ -26,12 +27,12 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
     protected $container;
     function setUp() : void {
         self::initJelixConfig();
-        $this->container = new jFormsDataContainer('','');
+        $this->container = new \Jelix\Forms\FormDataContainer('','');
         $this->form = new testCDForm('foo',$this->container);
     }
 
     function testInput() {
-        $ctrl = new jFormsControlInput('nom');
+        $ctrl = new InputControl('nom');
         $ctrl->required = false;
         //$ctrl->value='';
         $this->form->addCtrl($ctrl);
@@ -70,7 +71,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->form->setData('nom','1234');
         $this->assertFalse($this->form->check());
 
-        $ctrl = new jFormsControlInput('nom');
+        $ctrl = new InputControl('nom');
         $ctrl->datatype=new jDatatypeBoolean();
         $ctrl->required = false;
         $this->form->addCtrl($ctrl);
@@ -88,7 +89,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->form->setData('nom',' off ');
         $this->assertTrue($this->form->check());
 
-        $ctrl = new jFormsControlInput('nom');
+        $ctrl = new InputControl('nom');
         $ctrl->datatype = new jDatatypeHtml();
         $ctrl->required = false;
         $this->form->addCtrl($ctrl);
@@ -118,7 +119,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->form->setData('nom','<div>lorem<em>aaa</er></div>');
         $this->assertTrue($this->form->check());
 
-        $ctrl = new jFormsControlInput('nom');
+        $ctrl = new InputControl('nom');
         $ctrl->datatype=new jDatatypeEmail();
         $ctrl->required = false;
         $this->form->addCtrl($ctrl);
@@ -146,7 +147,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testCheckbox() {
-        $ctrl = new jFormsControlCheckbox('nom');
+        $ctrl = new \Jelix\Forms\Controls\CheckboxControl('nom');
         $ctrl->datatype=new jDatatypeBoolean();
         $this->form->addCtrl($ctrl);
 
@@ -212,7 +213,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testCheckboxes() {
-        $ctrl = new jFormsControlCheckboxes('nom');
+        $ctrl = new \Jelix\Forms\Controls\CheckboxesControl('nom');
         $ctrl->datatype=new jDatatypeString();
         $this->form->addCtrl($ctrl);
 
@@ -240,7 +241,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testSecret(){
-        $ctrl = new jFormsControlSecret('nom');
+        $ctrl = new \Jelix\Forms\Controls\SecretControl('nom');
         $ctrl->required = false;
         $this->form->addCtrl($ctrl);
 
@@ -253,7 +254,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $ctrl->required = false;
         $this->assertTrue($this->form->check());
 
-        $ctrl2 = new jFormsControlSecretConfirm('nom_confirm');
+        $ctrl2 = new \Jelix\Forms\Controls\SecretConfirmControl('nom_confirm');
         $ctrl2->primarySecret = 'nom';
         $this->form->addCtrl($ctrl2, false);
 
@@ -271,7 +272,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testDate(){
-        $ctrl = new jFormsControlInput('datenaissance');
+        $ctrl = new InputControl('datenaissance');
         $ctrl->datatype= new jDatatypelocaledate();
         $this->form->addCtrl($ctrl);
         $this->assertTrue($this->form->check());
@@ -280,7 +281,7 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     function testCaptcha() {
 
-        $ctrl = new jFormsControlCaptcha('captcha');
+        $ctrl = new \Jelix\Forms\Controls\CaptchaControl('captcha');
         $this->form->addCtrl($ctrl);
 
         // captcha required by default $ctrl->required = true;
@@ -310,13 +311,13 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function testGroup() {
-        $group = new jFormsControlGroup('group');
+        $group = new \Jelix\Forms\Controls\GroupControl('group');
 
-        $ctrl = new jFormsControlInput('nom');
+        $ctrl = new InputControl('nom');
         $ctrl->required = false;
         $group->addChildControl($ctrl);
 
-        $ctrl = new jFormsControlCheckboxes('categories');
+        $ctrl = new \Jelix\Forms\Controls\CheckboxesControl('categories');
         $ctrl->required = true;
         $group->addChildControl($ctrl);
         $this->form->addCtrl($group);
@@ -347,22 +348,22 @@ class jforms_check_dataTest extends \Jelix\UnitTests\UnitTestCaseDb {
         </choice>
         */
 
-        $choice = new jFormsControlChoice('choice');
+        $choice = new \Jelix\Forms\Controls\ChoiceControl('choice');
         $choice->required = false;
 
         $choice->createItem('item1','labelitem1');
         $choice->createItem('item2','labelitem2');
         $choice->createItem('item3','labelitem3');
 
-        $ctrl = new jFormsControlInput('nom');
+        $ctrl = new InputControl('nom');
         $ctrl->required = false;
         $choice->addChildControl($ctrl, 'item1');
 
-        $ctrl = new jFormsControlCheckboxes('categories');
+        $ctrl = new \Jelix\Forms\Controls\CheckboxesControl('categories');
         $ctrl->required = true;
         $choice->addChildControl($ctrl, 'item1');
 
-        $ctrl = new jFormsControlInput('datenaissance');
+        $ctrl = new InputControl('datenaissance');
         $ctrl->datatype= new jDatatypelocaledate();
         $choice->addChildControl($ctrl, 'item2');
 

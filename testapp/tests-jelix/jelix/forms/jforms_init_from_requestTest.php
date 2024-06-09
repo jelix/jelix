@@ -4,12 +4,16 @@
 * @subpackage  unittest module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2011 Laurent Jouanneau
-* @link        http://www.jelix.org
+* @copyright   2011-2024 Laurent Jouanneau
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Forms\Controls\InputControl;
+use Jelix\Forms\Controls\ChoiceControl;
+use Jelix\Forms\Controls\CheckboxesControl;
+use Jelix\Forms\Controls\GroupControl;
 
-class testIFRForm extends jFormsBase {
+class testIFRForm extends \Jelix\Forms\FormInstance {
     function addCtrl($control, $reset=true){
         if($reset){
             $this->controls = array();
@@ -23,7 +27,7 @@ class jforms_init_from_requestTest extends \PHPUnit\Framework\TestCase {
     protected $form;
     protected $container;
     function setUp() : void {
-        $this->container = new jFormsDataContainer('','');
+        $this->container = new \Jelix\Forms\FormDataContainer('','');
         $this->form = new testIFRForm('bar',$this->container, true);
         $this->form->securityLevel = 0 ; // by default, we don't want to deal with a token in our test
 
@@ -37,12 +41,12 @@ class jforms_init_from_requestTest extends \PHPUnit\Framework\TestCase {
     }
 
     function testSimpleform() {
-        $ctrl = new jFormsControlInput('name');
+        $ctrl = new InputControl('name');
         $ctrl->required = false;
         $ctrl->defaultValue='namexxx';
         $this->form->addControl($ctrl);
 
-        $ctrl2 = new jFormsControlInput('firstname');
+        $ctrl2 = new InputControl('firstname');
         $ctrl2->required = false;
         $ctrl2->defaultValue='firstnamexxx';
         $this->form->addControl($ctrl2);
@@ -82,13 +86,13 @@ class jforms_init_from_requestTest extends \PHPUnit\Framework\TestCase {
 
 /*
     function testGroup() {
-        $group = new jFormsControlGroup('group');
+        $group = new GroupControl('group');
 
-        $ctrl = new jFormsControlInput('nom');
+        $ctrl = new InputControl('nom');
         $ctrl->required = false;
         $group->addChildControl($ctrl);
 
-        $ctrl = new jFormsControlCheckboxes('categories');
+        $ctrl = new CheckboxesControl('categories');
         $ctrl->required = true;
         $group->addChildControl($ctrl);
         $this->form->addCtrl($group);
@@ -119,22 +123,22 @@ class jforms_init_from_requestTest extends \PHPUnit\Framework\TestCase {
         </choice>
         */
 
-        $choice = new jFormsControlChoice('choice');
+        $choice = new ChoiceControl('choice');
         $choice->required = false;
 
         $choice->createItem('item1','labelitem1');
         $choice->createItem('item2','labelitem2');
         $choice->createItem('item3','labelitem3');
 
-        $ctrl = new jFormsControlInput('nom');
+        $ctrl = new InputControl('nom');
         $ctrl->required = false;
         $choice->addChildControl($ctrl, 'item1');
 
-        $ctrl = new jFormsControlCheckboxes('categories');
+        $ctrl = new CheckboxesControl('categories');
         $ctrl->required = true;
         $choice->addChildControl($ctrl, 'item1');
 
-        $ctrl = new jFormsControlInput('datenaissance');
+        $ctrl = new InputControl('datenaissance');
         $ctrl->datatype= new jDatatypelocaledate();
         $choice->addChildControl($ctrl, 'item2');
 

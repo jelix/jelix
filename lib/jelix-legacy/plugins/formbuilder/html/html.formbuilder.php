@@ -20,7 +20,7 @@
  * @package     jelix
  * @subpackage  forms_builder_plugin
  */
-class htmlFormBuilder extends \jelix\forms\Builder\HtmlBuilder
+class htmlFormBuilder extends \Jelix\Forms\Builder\HtmlBuilder
 {
     protected $jFormsJsVarName = 'jFormsJQ';
 

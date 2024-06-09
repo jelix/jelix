@@ -7,7 +7,7 @@
  * @contributor Laurent Jouanneau, Julien Issler, Dominique Papin
  *
  * @copyright   2012 Claudio Bernardes
- * @copyright   2006-2015 Laurent Jouanneau, 2008-2015 Julien Issler, 2008 Dominique Papin
+ * @copyright   2006-2024 Laurent Jouanneau, 2008-2015 Julien Issler, 2008 Dominique Papin
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -21,7 +21,7 @@
  *
  * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
-class menulist_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class menulist_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     protected function outputJs()
     {
@@ -29,8 +29,11 @@ class menulist_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
         $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
-        if ($ctrl instanceof jFormsControlDatasource
-            && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
+        if ( ($ctrl instanceof \Jelix\Forms\Controls\AbstractDatasourceControl
+                && $ctrl->datasource instanceof \Jelix\Forms\Datasource\DynamicDatasourceInterface)
+            || ($ctrl instanceof jFormsControlDatasource
+                && $ctrl->datasource instanceof jIFormsDynamicDatasource)
+        ) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->parentWidget->addJs("c.dependencies = ['".implode("','", $dependentControls)."'];\n");

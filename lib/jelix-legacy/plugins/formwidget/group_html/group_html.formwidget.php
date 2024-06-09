@@ -21,7 +21,7 @@
  *
  * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
-class group_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements \jelix\forms\HtmlWidget\ParentWidgetInterface
+class group_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase implements \Jelix\Forms\HtmlWidget\ParentWidgetInterface
 {
     //------ ParentWidgetInterface
 

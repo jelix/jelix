@@ -5,11 +5,12 @@
  *
  * @author      Laurent Jouanneau
  *
- * @copyright   2023 Laurent Jouanneau
+ * @copyright   2023-2024 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+use \Jelix\Forms\FormInstance;
 
 /**
  * Response for jForms forms submitted with XHR (ajax).
@@ -42,10 +43,10 @@ class jResponseFormJQJson extends jResponse
      * Its status and content will help to generate the JSON content
      * for the HTTP response.
      *
-     * @param jFormsBase $form
+     * @param FormInstance $form
      * @return void
      */
-    public function setForm(\jFormsBase $form)
+    public function setForm(FormInstance $form)
     {
         $this->form = $form;
     }

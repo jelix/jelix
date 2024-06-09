@@ -12,7 +12,7 @@
 
 /**
  */
-class password_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class password_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {

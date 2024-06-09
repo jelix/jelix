@@ -4,13 +4,13 @@
  * @subpackage  jelix_tests module
  * @author      Laurent Jouanneau
  * @contributor
- * @copyright   2019 Laurent Jouanneau
- * @link        http://www.jelix.org
+ * @copyright   2019-2024 Laurent Jouanneau
+ * @link        https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+use Jelix\Forms\Forms;
 
-
-class tesMFormUpload extends jFormsBase {
+class tesMFormUpload extends \Jelix\Forms\FormInstance {
     function addCtrl($control, $reset=true){
         if($reset){
             $this->controls = array();
@@ -20,7 +20,7 @@ class tesMFormUpload extends jFormsBase {
     }
 }
 
-class testUploadCtrl extends jFormsControlUpload2 {
+class testUploadCtrl extends \Jelix\Forms\Controls\Upload2Control {
 
     function testProcessUpload($action, $fileInfo)
     {
@@ -68,7 +68,7 @@ class jforms_uploadTest extends \Jelix\UnitTests\UnitTestCase {
     protected $container;
     function setUp() :void
     {
-        $this->container = new jFormsDataContainer('', '');
+        $this->container = new \Jelix\Forms\FormDataContainer('', '');
         $this->form = new tesMFormUpload('foo', $this->container);
 
         $this->uploadCtrl = new testUploadCtrl('uploadctrl');
@@ -77,7 +77,7 @@ class jforms_uploadTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
     function testUniqueName() {
-        $ctrl = new jFormsControlUpload2('up');
+        $ctrl = new \Jelix\Forms\Controls\Upload2Control('up');
         $dir = __DIR__.'/';
         $this->assertEquals('foo.test',
             $ctrl->getUniqueFileName(__DIR__, 'foo.test')
@@ -137,7 +137,7 @@ class jforms_uploadTest extends \Jelix\UnitTests\UnitTestCase {
         $this->uploadCtrl->required = true;
 
         $this->uploadCtrl->testProcessUpload('new', null);
-        $this->assertEquals(jForms::ERRDATA_REQUIRED, $this->uploadCtrl->check());
+        $this->assertEquals(Forms::ERRDATA_REQUIRED, $this->uploadCtrl->check());
         $this->assertFalse($this->uploadCtrl->isModified());
         $this->assertEquals(
             array(
@@ -290,7 +290,7 @@ class jforms_uploadTest extends \Jelix\UnitTests\UnitTestCase {
         $this->uploadCtrl->setDataFromDao('foo.txt', 'string');
 
         $this->uploadCtrl->testProcessUpload('del', null);
-        $this->assertEquals(jForms::ERRDATA_REQUIRED, $this->uploadCtrl->check());
+        $this->assertEquals(Forms::ERRDATA_REQUIRED, $this->uploadCtrl->check());
         $this->assertFalse($this->uploadCtrl->isModified());
         $this->assertEquals(
             array(

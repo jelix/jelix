@@ -21,7 +21,7 @@
  *
  * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
-class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class checkboxes_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     protected function outputJs($refName)
     {
@@ -61,7 +61,10 @@ class checkboxes_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $id = $this->builder->getName().'_'.$this->ctrl->ref.'_';
         $i = 0;
         $data = $this->ctrl->datasource->getData($this->builder->getForm());
-        if ($this->ctrl->datasource instanceof \jIFormsDatasource2 && $this->ctrl->datasource->hasGroupedData()) {
+        if ( ($this->ctrl->datasource instanceof \Jelix\Forms\Datasource\DatasourceInterface
+            || $this->ctrl->datasource instanceof \jIFormsDatasource2)
+            && $this->ctrl->datasource->hasGroupedData()
+        ) {
             if (isset($data[''])) {
                 $this->echoCheckboxes($span, $id, $data[''], $attr, $value, $i);
             }

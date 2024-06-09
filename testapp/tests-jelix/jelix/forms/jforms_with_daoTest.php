@@ -4,11 +4,11 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007 Laurent Jouanneau
-* @link        http://www.jelix.org
+* @copyright   2007-2024 Laurent Jouanneau
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
+use Jelix\Forms\Forms;
 
 class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
@@ -21,9 +21,9 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
         jFile::removeDir(__DIR__.'/../../../temp/jelixtests/jforms');
         self::initClassicRequest(TESTAPP_URL.'index.php');
         jApp::pushCurrentModule('jelix_tests');
-        $form = jForms::create('product');
-        $form = jForms::create('label', array(1,'fr'));
-        $form = jForms::create('label', array(1,'en'));
+        $form = Forms::create('product');
+        $form = Forms::create('label', array(1,'fr'));
+        $form = Forms::create('label', array(1,'en'));
     }
 
     function setUp() : void {
@@ -54,7 +54,7 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $req->params['name'] = 'phone';
         $req->params['price'] = '45';
         $req->params['tag'] = array('professionnal','book');
-        $form = jForms::fill('product');
+        $form = Forms::fill('product');
 
         // save main data
         self::$id = $form->saveToDao('products');
@@ -76,7 +76,7 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $req->params['name'] = 'computer';
         $req->params['price'] = '590';
         $req->params['tag'] = array('professionnal','promotion');
-        $form = jForms::fill('product');
+        $form = Forms::fill('product');
 
         self::$id2 = $form->saveToDao('products');
         $this->assertEquals(1, preg_match("/^[0-9]+$/",self::$id2));
@@ -106,7 +106,7 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $req = jApp::coord()->request;
 
         $req->params['label'] = 'bonjour';
-        $form = jForms::fill('label', array(1,'fr'));
+        $form = Forms::fill('label', array(1,'fr'));
 
         // save main data
         $id = $form->saveToDao('labels');
@@ -118,7 +118,7 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         //insert a second label
         $req->params['label'] = 'Hello';
-        $form = jForms::fill('label', array(1,'en'));
+        $form = Forms::fill('label', array(1,'en'));
 
         $id2 = $form->saveToDao('labels');
         $this->assertEquals(array(1,'en'), $id2);
@@ -136,13 +136,13 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $req = jApp::coord()->request;
 
-        $form = jForms::create('product',self::$id); // "fill" need an existing form
+        $form = Forms::create('product',self::$id); // "fill" need an existing form
 
         $req->params['name'] = 'other phone';
         $req->params['price'] = '68';
         $req->params['tag'] = array('high tech','best seller');
 
-        $form = jForms::fill('product',self::$id);
+        $form = Forms::fill('product',self::$id);
         $id = $form->saveToDao('products');
 
         $this->assertEquals(self::$id, $id);
@@ -171,18 +171,18 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
      * @depends testUpdateDao
      */
     function testLoadDao(){
-        jForms::destroy('product');
-        jForms::destroy('product', self::$id);
+        Forms::destroy('product');
+        Forms::destroy('product', self::$id);
 
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', null, false);
         $this->assertNull($container);
         list($container, $sel) = $_SESSION['JFORMS_SESSION']->getContainer('product', self::$id, false);
         $this->assertNull($container);
 
-        $form = jForms::create('product', self::$id);
+        $form = Forms::create('product', self::$id);
 
         $verif='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.self::$id.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -198,7 +198,7 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $form->initFromDao('products');
 
         $verif='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.self::$id.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">
@@ -213,7 +213,7 @@ class jforms_With_DaoTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $form->initControlFromDao('tag', 'product_tags');
         $verif='
-        <object class="jFormsDataContainer">
+        <object class="\\Jelix\\Forms\\FormDataContainer">
             <integer property="formId" value="'.self::$id.'" />
             <string property="formSelector" value="jelix_tests~product" />
             <array property="data">

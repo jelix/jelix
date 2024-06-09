@@ -17,19 +17,19 @@
 class jSoapObject
 {
     /**
-     * you can give a jFormsBase or an array, containing values
+     * you can give a FormInstance or an array, containing values
      * that will be mapped to properties of the object.
      * Note that SoapClient do not call the constructor when
      * it does the mapping with soap results.
      *
-     * @param array|jFormsBase $data data to hydrate the object
+     * @param array|\Jelix\Forms\FormInstance $data data to hydrate the object
      *
      * @see soapObject::_initFromArray
      */
     public function __construct($data = null)
     {
         if ($data) {
-            if ($data instanceof \jFormsBase) {
+            if ($data instanceof \Jelix\Forms\FormInstance) {
                 $data = $data->getAllData();
             }
             $this->_initFromArray($data);
@@ -58,7 +58,7 @@ class jSoapObject
      * You can override this methods to do specific
      * settings.
      *
-     * @param jFormsBase $form
+     * @param \Jelix\Forms\FormInstance $form
      */
     public function _fillForm($form)
     {

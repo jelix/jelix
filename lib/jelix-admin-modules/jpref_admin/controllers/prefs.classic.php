@@ -6,11 +6,13 @@
  *
  * @author    Florian Lonqueu-Brochard
  * @contributor Laurent Jouanneau
- * @copyright 2012 Florian Lonqueu-Brochard, 2012-2022 Laurent Jouanneau
+ * @copyright 2012 Florian Lonqueu-Brochard, 2012-2024 Laurent Jouanneau
  *
  * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+use Jelix\Forms\Forms;
+
 class prefsCtrl extends jController
 {
     public $pluginParams = array(
@@ -47,7 +49,7 @@ class prefsCtrl extends jController
             return $this->redirect('jpref_admin~prefs:index');
         }
 
-        $form = jForms::create('jpref_admin~pref', $id);
+        $form = Forms::create('jpref_admin~pref', $id);
 
         $ctrls = array('integer', 'string', 'boolean', 'decimal');
         foreach ($ctrls as $c) {
@@ -81,7 +83,7 @@ class prefsCtrl extends jController
         $id = $this->param('id', 0);
         $field = $this->param('field');
 
-        $form = jForms::fill('jpref_admin~pref', $id);
+        $form = Forms::fill('jpref_admin~pref', $id);
         if (!$form || !$id || !$field) {
             return $this->redirect('jpref_admin~prefs:index');
         }

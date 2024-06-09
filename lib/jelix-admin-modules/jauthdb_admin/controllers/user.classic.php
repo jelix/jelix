@@ -5,12 +5,14 @@
  * @subpackage  jauthdb_admin
  *
  * @author    Laurent Jouanneau
- * @copyright 2009-2023 Laurent Jouanneau
+ * @copyright 2009-2024 Laurent Jouanneau
  *
  * @see      http://jelix.org
  *
  * @license   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public Licence
  */
+
+use Jelix\Forms\Forms;
 
 /**
  * controller to allow a user to edit his own profile in the admin.
@@ -91,7 +93,7 @@ class userCtrl extends jController
 
         // we're using a form to display a record, to have the opportunity to have
         // labels with each values.
-        $form = jForms::create($this->form, $login);
+        $form = Forms::create($this->form, $login);
         $form->initFromDao($daoUser, null, $this->dbProfile);
 
         $tpl = new jTpl();
@@ -135,7 +137,7 @@ class userCtrl extends jController
             return $this->redirect('master_admin~default:index');
         }
 
-        $form = jForms::create($this->form, $login);
+        $form = Forms::create($this->form, $login);
 
         try {
             $rec = $form->initFromDao($daoUser, null, $this->dbProfile);
@@ -166,7 +168,7 @@ class userCtrl extends jController
     public function editupdate()
     {
         $login = $this->param('j_user_login');
-        $form = jForms::get($this->form, $login);
+        $form = Forms::get($this->form, $login);
         if ($form === null || $login === null) {
 
             return $this->redirect('master_admin~default:index');
@@ -217,7 +219,7 @@ class userCtrl extends jController
             return $this->redirect('master_admin~default:index');
         }
 
-        $form = jForms::get($this->form, $login);
+        $form = Forms::get($this->form, $login);
 
         if ($form === null || $login === null) {
 
@@ -248,7 +250,7 @@ class userCtrl extends jController
             $form->saveAllFiles($this->uploadsDirectory);
 
             jMessage::add(jLocale::get('crud.message.update.ok', $login), 'notice');
-            jForms::destroy($this->form, $login);
+            Forms::destroy($this->form, $login);
 
             return $this->redirect('user:index', ['j_user_login' => $login]);
         }

@@ -5,12 +5,14 @@
  * @subpackage  jauthdb_admin
  *
  * @author    Laurent Jouanneau
- * @copyright 2009-2023 Laurent Jouanneau
+ * @copyright 2009-2024 Laurent Jouanneau
  *
  * @see      http://jelix.org
  *
  * @license   http://www.gnu.org/licenses/old-licenses/gpl-2.0.html GNU Public Licence
  */
+
+use Jelix\Forms\Forms;
 
 /**
  * controller to manage all users.
@@ -154,7 +156,7 @@ class defaultCtrl extends jController
         $tpl->assign('filter', $filter);
         $tpl->assign('listOrder', $listOrder);
         $tpl->assign('propertiesList', $this->propertiesForList);
-        $tpl->assign('controls', jForms::create($this->form, '___$$$___')->getControls());
+        $tpl->assign('controls', Forms::create($this->form, '___$$$___')->getControls());
         $tpl->assign('listPageSize', $this->listPageSize);
         $tpl->assign('page', $offset);
         $tpl->assign('recordCount', $dao->countAll());
@@ -162,7 +164,7 @@ class defaultCtrl extends jController
         $tpl->assign('canview', jAcl2::check('auth.users.view'));
         $rep->body->assign('MAIN', $tpl->fetch('crud_list'));
         $rep->body->assign('selectedMenuItem', 'users');
-        jForms::destroy($this->form, '___$$$___');
+        Forms::destroy($this->form, '___$$$___');
 
         return $rep;
     }
@@ -190,7 +192,7 @@ class defaultCtrl extends jController
 
         // we're using a form to display a record, to have the opportunity to have
         // labels with each values.
-        $form = jForms::create($this->form, $login);
+        $form = Forms::create($this->form, $login);
         $form->initFromDao($daorec, null, $this->dbProfile);
 
         $tpl = new jTpl();
@@ -219,7 +221,7 @@ class defaultCtrl extends jController
      */
     public function precreate()
     {
-        $form = jForms::create($this->form);
+        $form = Forms::create($this->form);
         $form->deactivate('password', false);
         $form->deactivate('password_confirm', false);
         jEvent::notify('jauthdbAdminPrepareCreate', array('form' => $form));
@@ -232,9 +234,9 @@ class defaultCtrl extends jController
      */
     public function create()
     {
-        $form = jForms::get($this->form);
+        $form = Forms::get($this->form);
         if ($form == null) {
-            $form = jForms::create($this->form);
+            $form = Forms::create($this->form);
         }
         $rep = $this->getResponse('html');
 
@@ -258,7 +260,7 @@ class defaultCtrl extends jController
      */
     public function savecreate()
     {
-        $form = jForms::get($this->form);
+        $form = Forms::get($this->form);
         if ($form == null) {
             jMessage::add(jLocale::get('crud.message.bad.form'), 'error');
 
@@ -295,7 +297,7 @@ class defaultCtrl extends jController
             // it will save files that are not already saved by listeners of jauthdbAdminAfterCreate
             $form->saveAllFiles($this->uploadsDirectory);
 
-            jForms::destroy($this->form);
+            Forms::destroy($this->form);
             jMessage::add(jLocale::get('crud.message.create.ok', $user->login), 'notice');
 
             return $this->redirect('default:view', ['j_user_login' => $user->login]);
@@ -325,7 +327,7 @@ class defaultCtrl extends jController
             return $this->redirect('default:index');
         }
 
-        $form = jForms::create($this->form, $login);
+        $form = Forms::create($this->form, $login);
 
         try {
             $rec = $form->initFromDao($daoUser, null, $this->dbProfile);
@@ -356,7 +358,7 @@ class defaultCtrl extends jController
     public function editupdate()
     {
         $login = $this->param('j_user_login');
-        $form = jForms::get($this->form, $login);
+        $form = Forms::get($this->form, $login);
         if ($form === null || $login === null) {
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');
 
@@ -402,7 +404,7 @@ class defaultCtrl extends jController
             return $this->redirect('default:index');
         }
 
-        $form = jForms::get($this->form, $login);
+        $form = Forms::get($this->form, $login);
 
         if ($form === null) {
             jMessage::add(jLocale::get('crud.message.bad.form'), 'error');
@@ -432,7 +434,7 @@ class defaultCtrl extends jController
             $form->saveAllFiles($this->uploadsDirectory);
 
             jMessage::add(jLocale::get('crud.message.update.ok', $login), 'notice');
-            jForms::destroy($this->form, $login);
+            Forms::destroy($this->form, $login);
 
             return $this->redirect('default:view', ['j_user_login' => $login]);
         }

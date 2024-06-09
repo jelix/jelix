@@ -8,6 +8,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Forms\Forms;
 
 class sampleFormCtrl extends jController {
 
@@ -19,9 +20,9 @@ class sampleFormCtrl extends jController {
   }
 
   function newform(){
-      jForms::destroy('sample');
+      Forms::destroy('sample');
       // create a new form
-      $form = jForms::create('sample');
+      $form = Forms::create('sample');
       $this->prepareForm($form);
       $rep= $this->getResponse("redirect");
       $rep->action="sampleform:show";
@@ -32,9 +33,9 @@ class sampleFormCtrl extends jController {
 
   function show(){
       // retrieve form data
-      $form = jForms::get('sample');
+      $form = Forms::get('sample');
       if($form == null){
-          $form = jForms::create('sample');
+          $form = Forms::create('sample');
           $form->deactivate('unwanted');
       }
       $this->prepareForm($form);
@@ -62,7 +63,7 @@ class sampleFormCtrl extends jController {
       $rep= $this->getResponse("redirect");
       
       
-      $form = jForms::get('sample');
+      $form = Forms::get('sample');
       $this->prepareForm($form);
       $form->initFromRequest();
       if($form->check())
@@ -73,7 +74,7 @@ class sampleFormCtrl extends jController {
    }
 
    function ok(){
-      $form = jForms::get('sample');
+      $form = Forms::get('sample');
 
       $rep = $this->getResponse('html');
       $rep->title = 'Form editing';
@@ -91,16 +92,16 @@ class sampleFormCtrl extends jController {
    }
 
    function destroy(){
-      jForms::destroy('sample');
+      Forms::destroy('sample');
       $rep= $this->getResponse("redirect");
       $rep->action="sampleform:ok";
       return $rep;
    }
 
   function newajaxform(){
-      jForms::destroy('sample');
+      Forms::destroy('sample');
       // création d'un formulaire vierge
-      $form = jForms::create('sample');
+      $form = Forms::create('sample');
       $this->prepareForm($form);
       $rep= $this->getResponse("html");
       $rep->title = 'show ajax form';
@@ -113,9 +114,9 @@ class sampleFormCtrl extends jController {
 
   function showajaxform() {
       // retrieve form data
-      $form = jForms::get('sample');
+      $form = Forms::get('sample');
       if($form == null){
-          $form = jForms::create('sample');
+          $form = Forms::create('sample');
           $form->deactivate('unwanted');
       }
       $this->prepareForm($form);
@@ -131,7 +132,7 @@ class sampleFormCtrl extends jController {
         /** @var jResponseFormJQJson $rep */
         $rep= $this->getResponse("formjq");
 
-        $form = jForms::get('sample');
+        $form = Forms::get('sample');
         $this->prepareForm($form);
         $form->initFromRequest();
         if ($form->check()) {

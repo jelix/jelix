@@ -4,17 +4,20 @@
 * @subpackage  unittest module
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2007-2023 Laurent Jouanneau
+* @copyright   2007-2024 Laurent Jouanneau
 * @copyright   2008-2010 Julien Issler
-* @link        http://www.jelix.org
+* @link        https://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+use Jelix\Forms\Controls\GroupControl;
+use Jelix\Forms\Controls\InputControl;
+use Jelix\Forms\Datasource\StaticDatasource;
 
 require_once(JELIX_LIB_PATH.'plugins/formbuilder/html/html.formbuilder.php');
 require_once(JELIX_LIB_PATH.'plugins/formwidget/html/html.formwidget.php');
 
-class testHMLForm2 extends jFormsBase {
+class testHMLForm2 extends \Jelix\Forms\FormInstance {
 }
 
 class testHtmlRootWidget2 extends htmlFormWidget {
@@ -68,7 +71,7 @@ class jforms_HTMLBuilder2Test extends \Jelix\UnitTests\UnitTestCaseDb {
             unset($_SESSION['JFORMS_SESSION']);
         };
         jFile::removeDir(__DIR__.'/../../../temp/jelixtests/jforms');
-        $this->container = new jFormsDataContainer('formtesthtmlbuilder','0');
+        $this->container = new \Jelix\Forms\FormDataContainer('formtesthtmlbuilder','0');
         $this->form = new testHMLForm2('formtesthtmlbuilder', $this->container, true );
         $this->builder = new testHtmlFormsBuilder2($this->form);
     }
@@ -78,24 +81,24 @@ class jforms_HTMLBuilder2Test extends \Jelix\UnitTests\UnitTestCaseDb {
     }
     function testOutputGroup(){
 
-        $group= new jFormsControlGroup('identity');
+        $group= new GroupControl('identity');
         $group->label='Your identity';
 
-        $ctrl= new jFormsControlInput('nom');
+        $ctrl= new InputControl('nom');
         $ctrl->required=true;
         $ctrl->label='Your name';
         $group->addChildControl($ctrl);
 
-        $ctrl= new jFormsControlInput('prenom');
+        $ctrl= new InputControl('prenom');
         $ctrl->defaultValue='robert';
         $ctrl->label='Your firstname';
         $group->addChildControl($ctrl);
 
-        $ctrl= new jFormsControlRadiobuttons('sexe');
+        $ctrl= new \Jelix\Forms\Controls\RadiobuttonsControl('sexe');
         $ctrl->required=true;
         $ctrl->label='Vous êtes ';
         $ctrl->alertRequired='Vous devez indiquer le sexe, même si vous ne savez pas :-)';
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->data = array(
         'h'=>'un homme',
         'f'=>'une femme',
@@ -103,7 +106,7 @@ class jforms_HTMLBuilder2Test extends \Jelix\UnitTests\UnitTestCaseDb {
         );
         $group->addChildControl($ctrl);
 
-        $ctrl= new jFormsControlInput('mail');
+        $ctrl= new InputControl('mail');
         $ctrl->datatype= new jDatatypeemail();
         $ctrl->label='Votre mail';
         $group->addChildControl($ctrl);
@@ -216,27 +219,27 @@ jFormsJQ.tForm.addControl(c);
             </item>
         </choice>
         */
-        $choice= new jFormsControlChoice('status');
+        $choice= new \Jelix\Forms\Controls\ChoiceControl('status');
         $choice->label='Task Status';
         $choice->createItem('new','New');
         $choice->createItem('assigned','Assigned');
         $choice->createItem('closed','Closed');
 
-        $ctrlnom= new jFormsControlInput('nom');
+        $ctrlnom= new InputControl('nom');
         $ctrlnom->required=true;
         $ctrlnom->label='Name';
         $choice->addChildControl($ctrlnom,'assigned');
 
-        $ctrlprenom= new jFormsControlInput('prenom');
+        $ctrlprenom= new InputControl('prenom');
         $ctrlprenom->defaultValue='robert';
         $ctrlprenom->label='Firstname';
         $choice->addChildControl($ctrlprenom,'assigned');
 
-        $ctrlreason= new jFormsControlMenulist('reason');
+        $ctrlreason= new \Jelix\Forms\Controls\MenulistControl('reason');
         $ctrlreason->required=true;
         $ctrlreason->label='Reason ';
         $ctrlreason->alertRequired='Hey, specify a reason !';
-        $ctrlreason->datasource= new jFormsStaticDatasource();
+        $ctrlreason->datasource= new StaticDatasource();
         $ctrlreason->datasource->data = array(
             'aa'=>'fixed',
             'bb'=>'won t fixed',
@@ -532,26 +535,26 @@ jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
 
     function testOutputGroupWithCheckbox(){
 
-        $group= new jFormsControlGroup('identity');
+        $group= new GroupControl('identity');
         $group->label='Your identity';
         $group->hasCheckbox = true;
         $group->defaultValue = '1';
 
-        $ctrl= new jFormsControlInput('nom');
+        $ctrl= new InputControl('nom');
         $ctrl->required=true;
         $ctrl->label='Your name';
         $group->addChildControl($ctrl);
 
-        $ctrl= new jFormsControlInput('prenom');
+        $ctrl= new InputControl('prenom');
         $ctrl->defaultValue='robert';
         $ctrl->label='Your firstname';
         $group->addChildControl($ctrl);
 
-        $ctrl= new jFormsControlRadiobuttons('sexe');
+        $ctrl= new \Jelix\Forms\Controls\RadiobuttonsControl('sexe');
         $ctrl->required=true;
         $ctrl->label='Vous êtes ';
         $ctrl->alertRequired='Vous devez indiquer le sexe, même si vous ne savez pas :-)';
-        $ctrl->datasource= new jFormsStaticDatasource();
+        $ctrl->datasource= new StaticDatasource();
         $ctrl->datasource->data = array(
             'h'=>'un homme',
             'f'=>'une femme',
@@ -559,7 +562,7 @@ jFormsJQ.tForm.setErrorDecorator(new jFormsJQErrorDecoratorHtml());
         );
         $group->addChildControl($ctrl);
 
-        $ctrl= new jFormsControlInput('mail');
+        $ctrl= new InputControl('mail');
         $ctrl->datatype= new jDatatypeemail();
         $ctrl->label='Votre mail';
         $group->addChildControl($ctrl);
@@ -671,7 +674,7 @@ gr.showActivate();})(c);
      *
      */
     function testOutputColor(){
-        $ctrl= new jFormsControlColor('inputcol');
+        $ctrl= new \Jelix\Forms\Controls\ColorControl('inputcol');
         $ctrl->datatype= new jDatatypeColor();
         $ctrl->label='Couleur';
         $this->form->addControl($ctrl);

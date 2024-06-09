@@ -11,7 +11,7 @@
 /**
  * display a textarea form control as an input html
  */
-class textarea_as_input_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase {
+class textarea_as_input_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase {
     protected function outputJs() {
         $ctrl = $this->ctrl;
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();

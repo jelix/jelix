@@ -128,7 +128,6 @@ require JELIX_LIB_CORE_PATH.'jBasicErrorHandler.class.php';
 require JELIX_LIB_CORE_PATH.'jException.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorDao.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorDaoRecord.class.php';
-require JELIX_LIB_CORE_PATH.'selector/jSelectorForm.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorZone.class.php';
 require JELIX_LIB_CORE_PATH.'selector/jSelectorAppCfg.class.php';
 require JELIX_LIB_CORE_PATH.'jUrlBase.class.php';

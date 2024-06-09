@@ -37,6 +37,9 @@ cd lib/Jelix/DevHelper
 cd lib/Jelix/Event
   __ALL__
 
+cd lib/Jelix/Forms
+  __ALL_RECURSIVELY__
+
 cd lib/Jelix/Installer
   __ALL_RECURSIVELY__
 
@@ -53,6 +56,9 @@ cd lib/Jelix/Legacy/db
 
 cd lib/Jelix/Legacy/events
   __ALL__
+
+cd lib/Jelix/Legacy/forms
+  __ALL_RECURSIVELY__
 
 cd lib/Jelix/Legacy/tpl
   __ALL__

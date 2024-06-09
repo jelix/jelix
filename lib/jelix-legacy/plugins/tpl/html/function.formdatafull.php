@@ -17,7 +17,7 @@
  * Display all data of a form without the use of other plugins.
  *
  * @param jTpl       $tpl     template engine
- * @param jFormsBase $form    the form to display
+ * @param \Jelix\Forms\FormInstance $form    the form to display
  * @param string     $builder the builder type to use
  * @param array      $options options for the builder
  */
@@ -27,7 +27,7 @@ function jtpl_function_html_formdatafull($tpl, $form, $builder = '', $options = 
         $builder = jApp::config()->tplplugins['defaultJformsBuilder'];
     }
 
-    $formTplController = new \jelix\forms\HtmlWidget\TemplateController($form, $builder, $options);
+    $formTplController = new \Jelix\Forms\HtmlWidget\TemplateController($form, $builder, $options);
     $formTplController->startForm();
     $formTplController->outputAllControlsValues();
     $formTplController->endForm();

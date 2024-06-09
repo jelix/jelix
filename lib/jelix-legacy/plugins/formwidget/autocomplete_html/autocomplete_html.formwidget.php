@@ -5,7 +5,7 @@
  * @subpackage  forms_widget_plugin
  *
  * @author    Laurent Jouanneau
- * @copyright 2019 Laurent Jouanneau
+ * @copyright 2019-2024 Laurent Jouanneau
  *
  * @see      https://jelix.org
  *
@@ -45,7 +45,7 @@
  * {/formcontrols}
  * ```
  */
-class autocomplete_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class autocomplete_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {
@@ -58,8 +58,11 @@ class autocomplete_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         $jFormsJsVarName = $this->builder->getjFormsJsVarName();
 
         $this->parentWidget->addJs('c = new '.$jFormsJsVarName."ControlString('".$ctrl->ref."', ".$this->escJsStr($ctrl->label).");\n");
-        if ($ctrl instanceof jFormsControlDatasource
-            && $ctrl->datasource instanceof jIFormsDynamicDatasource) {
+        if ( ($ctrl instanceof \Jelix\Forms\Controls\AbstractDatasourceControl
+            && $ctrl->datasource instanceof \Jelix\Forms\Datasource\DynamicDatasourceInterface)
+            || ($ctrl instanceof jFormsControlDatasource
+            && $ctrl->datasource instanceof jIFormsDynamicDatasource)
+        ) {
             $dependentControls = $ctrl->datasource->getCriteriaControls();
             if ($dependentControls) {
                 $this->parentWidget->addJs("c.dependencies = ['".implode("','", $dependentControls)."'];\n");

@@ -1,6 +1,6 @@
 <?php
 
-class mydatasource implements jIFormsDatasource {
+class mydatasource implements \Jelix\Forms\Datasource\DatasourceInterface {
 
     protected $datas = array(
         'aaa'=>'label for aaa',
@@ -21,10 +21,19 @@ class mydatasource implements jIFormsDatasource {
      * @param string $key the key 
      * @return string the label
      */
-    public function getLabel($key) {
+    public function getLabel($key, $form) {
         return $this->datas[$key];
     }
 
+    public function hasGroupedData()
+    {
+        return false;
+    }
+
+    public function setGroupBy($group)
+    {
+        // nothing
+    }
 }
 
 ?>

@@ -94,9 +94,25 @@ Plugins for jDaoCompiler (type 'daobuilder'), are not supported anymore.
 
 All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~dao.*` locales.
 
+
+## Changes in jForms
+
+All `jForms*` classes and `jIForms*` interfaces are deprecated, and you should
+use corresponding classes and interfaces from the `\Jelix\Forms\` namespace,
+except  for `jForms` which is still the main class to use to load and use forms.
+
+Interfaces `jIFormsDatasource` and `jIFormsDatasource2` have been merged into a
+new interface `\Jelix\Forms\Datasource\DatasourceInterface`, having no more
+`getLabel2()` method, and a `getLabel()` changed method.
+
+Also :
+
+- `jExceptionForms` is deprecated, you should catch `\Jelix\Forms\FormException` instead
+- the ref attribute on control objects is now readonly
+
 ## test environment
 
-- upgrade PHPUnit to 8.5.0
+- upgrade PHPUnit to 10.4.0
 
 
 ## internal

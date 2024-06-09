@@ -4,11 +4,14 @@
  * @subpackage   controllers
  *
  * @author       Laurent Jouanneau
- * @copyright    2021-2022 Laurent Jouanneau
+ * @copyright    2021-2024 Laurent Jouanneau
  *
- * @see         http://www.jelix.org
+ * @see          https://www.jelix.org
  * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
+use Jelix\Forms\FormInstance;
+use Jelix\Forms\Forms;
 
 /**
  * Implements a CRUD controller, having a filter form to filter the list.
@@ -52,7 +55,7 @@ class jControllerDaoCrudFilter extends jControllerDaoCrud
     protected $pseudoFilterFormId = 'jelix_crud_filter';
 
     /**
-     * @var jFormsBase
+     * @var FormInstance
      */
     protected $filterFormObj;
 
@@ -99,7 +102,7 @@ class jControllerDaoCrudFilter extends jControllerDaoCrud
     /**
      * this method set conditions according to the form filter submit.
      *
-     * @param jFormsBase $form
+     * @param FormInstance $form
      * @param jDaoConditions $cond the conditions
      */
     protected function _filterSetConditions($form, $cond)
@@ -125,14 +128,14 @@ class jControllerDaoCrudFilter extends jControllerDaoCrud
     /**
      * Get or Create the filter form if we use filter.
      *
-     * @return null|jFormsBase the form if filter is enable
+     * @return null|FormInstance the form if filter is enable
      */
     protected function _filterCreateForm()
     {
         if ($this->filterForm) {
-            $form = jForms::get($this->filterForm, $this->pseudoFilterFormId);
+            $form = Forms::get($this->filterForm, $this->pseudoFilterFormId);
             if (!$form) {
-                $form = jForms::create($this->filterForm, $this->pseudoFilterFormId);
+                $form = Forms::create($this->filterForm, $this->pseudoFilterFormId);
             }
             $form->securityLevel = 0;
 
@@ -142,7 +145,7 @@ class jControllerDaoCrudFilter extends jControllerDaoCrud
             }
 
             if (!$form->getControl('_submitFilter')) {
-                $submit = new jFormsControlSubmit('_submitFilter');
+                $submit = new \Jelix\Forms\Controls\SubmitControl('_submitFilter');
                 $submit->label = jLocale::get('jelix~ui.buttons.search');
                 $form->addControl($submit);
             }
