@@ -47,7 +47,7 @@
   and so, builders named `legacy.html` or `legacy.htmllight`
 - remove binding feature from jClasses
 
-## changes in jDb
+## Changes in jDb
 
 jDb is now relying on [JelixDatabase](https://github.com/jelix/JelixDatabase).
 The `jDb` class is still existing, but most of internal classes of jDb
@@ -69,7 +69,7 @@ anymore.
 
 All error messages are now only in english. No more `jelix~db.*` locales.
 
-## changes in jDao
+## Changes in jDao
 
 jDao is now relying on [JelixDao](https://github.com/jelix/JelixDao).
 The `jDao` class is still the main class to use to load and use Dao.
@@ -98,27 +98,26 @@ All error messages are now only in english. No more `jelix~daoxml.*` and `jelix~
 ## Changes in jForms
 
 All `jForms*` classes and `jIForms*` interfaces are deprecated, and you should
-use corresponding classes and interfaces from the `\Jelix\Forms\` namespace,
-except  for `jForms` which is still the main class to use to load and use forms.
+use corresponding classes and interfaces from the `\Jelix\Forms\` namespace.
 
 Interfaces `jIFormsDatasource` and `jIFormsDatasource2` have been merged into a
 new interface `\Jelix\Forms\Datasource\DatasourceInterface`, having no more
-`getLabel2()` method, and a `getLabel()` changed method.
+`getLabel2()` method, and having a `getLabel()` changed method.
 
 Also :
 
 - `jExceptionForms` is deprecated, you should catch `\Jelix\Forms\FormException` instead
 - the ref attribute on control objects is now readonly
 
-## test environment
+## Test environment
 
 - upgrade PHPUnit to 10.4.0
 
 
-## internal
+## Internal
 
 
-## deprecated
+## Deprecated
 
 - `App::initPaths()` and `jApp::initPaths()`: the `$scriptPath` parameter is deprecated and not used anymore
 - `\Jelix\Installer\EntryPoint::isCliScript()` (it returns always false from now)
@@ -151,9 +150,6 @@ Internal classes and methods, you did not supposed to use, except for complex pl
 - `jFormsBuilderBase`, `jFormsBuilderHtml`, `htmlJformsBuilder`, `htmllightJformsBuilder`
 - remove parameter `$installWholeApp` from the `Jelix\Installer\Module\InstallerAbstract` constructor.
 
-
-
-
 From the command line scripts system of Jelix <=1.6:
 
 - `jApp::scriptsPath()`, `App::scriptsPath()`, `AppInstance::$scriptsPath`, 
@@ -169,7 +165,7 @@ From the command line scripts system of Jelix <=1.6:
 
 - kvdb: file2
 
-## other removes:
+## Other removes:
 
 - `lib/jelix-scripts`. Its DevHelper classes and templates have been moved to `lib/Jelix`
 - `lib/jelix-scripts/includes/cmd.inc.php` and `lib/jelix-scripts/includes/scripts.inc.php`
