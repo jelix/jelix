@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2020 Laurent Jouanneau
+ * @copyright   2020-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -174,6 +174,32 @@ class TemplateController {
     function doesControlExist($ref)
     {
         return ($this->form->getControl($ref) !== null);
+    }
+
+
+    function getControlValue($ref, $tplName, $insteadOfDisplay)
+    {
+        $ctrl = $this->retrieveControl($ref, $tplName);
+        if (!$ctrl) {
+            return false;
+        }
+        if ($ctrl->type == 'hidden' || $ctrl->type == 'captcha' || $ctrl->type == 'reset') {
+            return false;
+        }
+
+        if ($ctrl->type == 'submit' && ($ctrl->standalone || !$this->formViewMode)) {
+            return false;
+        }
+
+        if ($insteadOfDisplay === null && $this->formViewMode) {
+            $insteadOfDisplay = true;
+        }
+
+        if ($insteadOfDisplay) {
+            $this->displayedControls[$ref] = true;
+        }
+
+        return $this->builder->getForm()->getData($ref);
     }
 
 
