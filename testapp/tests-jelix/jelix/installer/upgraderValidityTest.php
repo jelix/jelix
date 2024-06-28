@@ -4,13 +4,15 @@
  * @subpackage  jelix_tests module
  * @author      Laurent Jouanneau
  * @contributor
- * @copyright   2023 Laurent Jouanneau
+ * @copyright   2023-2024 Laurent Jouanneau
  * @link        https://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
 use Jelix\Core\Infos\ModuleInfos;
 use Jelix\Installer\ModuleStatus;
+use Jelix\Version\Parser;
+
 require_once(__DIR__.'/installer.lib.php');
 
 class testUpgraderComponentModule3 extends \Jelix\Installer\ModuleInstallerLauncher {
@@ -43,6 +45,8 @@ class testUpgraderComponentModule3 extends \Jelix\Installer\ModuleInstallerLaunc
         $upgraderDate
     )
     {
+        $currentVersion = Parser::parse($currentVersion);
+        $newVersion = Parser::parse($newVersion);
         return $this->checkUpgraderValidity(
             $currentVersion,
             $currentVersionDate,
@@ -87,12 +91,15 @@ class upgraderValidityTest extends \Jelix\UnitTests\UnitTestCase
             // upgrade from 1.3 to 2.0, and have an upgrader for 1.1 -> to ignore
             ['1.3', '2021-03-03', '2.0', '2022-01-01', ['1.1'], '2021-01-30', false ],
 
-            // upgrade from 1.4 to 2.0, and have an upgrader for 1.3 and 2.0 -> to ignore
-            // because already applied in 1.4
-            ['1.4', '2021-04-04', '2.0', '2022-01-01', ['1.3', '2.0'], '2021-03-30', false ],
+            // upgrade from 1.4.0 to 1.4.5, and have an upgrader for 1.1, 1.5 -> to ignore
+            ['1.4.0', '2021-03-03', '1.4.5', '2022-01-01', ['1.1', '1.5'], '2021-10-30', false ],
+            ['1.4.0', '2021-03-03', '1.4.5', '2022-01-01', ['1.1', '1.4.5', '1.5'], '2021-10-30', '1.4.5' ],
 
             // upgrade from 1.4 to 2.0, and have an upgrader for 1.3 and 2.0 -> to execute
-            // because upgrader date is higher that 1.4 date
+             ['1.4', '2021-04-04', '2.0', '2022-01-01', ['1.3', '2.0'], '2022-01-01', false ],
+
+            // upgrade from 1.4 to 2.0, and have an upgrader for 1.3 and 2.0 -> to execute
+            // because upgrader date is higher than 1.4 date
             ['1.4', '2021-04-04', '2.0', '2022-01-01', ['1.3', '2.0'], '2021-10-30', '2.0' ],
 
             // upgrade from 2.0 to 2.1, and have an upgrader for 1.3 and 2.0 -> to ignore
@@ -104,15 +111,16 @@ class upgraderValidityTest extends \Jelix\UnitTests\UnitTestCase
 
             // upgrade from 1.4 to 2.5, and have an upgrader for 1.5 and 2.3 -> to execute
             ['1.4', '2021-04-04', '2.5', '2023-02-01', ['1.5', '2.3'], '2022-10-30', '1.5' ],
-            // 9
+            // 11
             // upgrade from 3.5.10 to 3.6.2 and upgrade for 3.6.1 : it should be executed, even if its date
             // is before the release of 3.5.10
             [ '3.5.10', '2023-01-25', '3.6.2', '2023-02-17', ['3.6.1-beta.1'], '2022-11-30', '3.6.1-beta.1' ],
             [ '3.5.10', '2023-01-25', '3.6.2', '2023-02-17', ['3.6.1-beta.1'], '', '3.6.1-beta.1' ],
+            [ '3.5.10', '2023-01-25', '3.6.2', '2023-02-17', ['3.6.1-beta.1', '3.7.0-alpha.1'], '2022-11-30', '3.6.1-beta.1' ],
 
             ['1.2.3', '2022-02-02', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.2', '1.2.4'], '2022-02-20', '1.2.4'],
 
-            // 12 testGetUpgradersWithOneValidUpgrader
+            // 15 testGetUpgradersWithOneValidUpgrader
             ['1.2.3', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.2', '1.2.4'], '', '1.2.4'], // testinstall2ModuleUpgrader_newupgraderfilename
             ['1.2.3', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.3', '1.2.2'], '2011-01-13', false], //testinstall2ModuleUpgrader_newupgraderfilenamedate
             ['1.2.3', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.5'], '', false], //testinstall2ModuleUpgrader_second
@@ -120,35 +128,39 @@ class upgraderValidityTest extends \Jelix\UnitTests\UnitTestCase
 
             ['1.2.3', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.3', '1.2.2'], '', false], //testinstall2ModuleUpgrader_newupgraderfilenamedate
 
-            // 17 testGetUpgradersWithTwoValidUpgrader
+            // 20 testGetUpgradersWithTwoValidUpgrader
             ['1.1.2', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.2', '1.2.4'], '', false], // testinstall2ModuleUpgrader_newupgraderfilename
             ['1.1.2', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.3', '1.2.2'], '2011-01-13', '1.1.3' ], //testinstall2ModuleUpgrader_newupgraderfilenamedate
             ['1.1.2', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.5'], '', '1.1.5'], //testinstall2ModuleUpgrader_second
             ['1.1.2', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1'], '', false], // testinstall2ModuleUpgrader_first
 
-            // 21  testGetUpgradersWithTwoValidUpgrader2
+            // 24  testGetUpgradersWithTwoValidUpgrader2
             ['1.1.1', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.2', '1.2.4'], '', '1.1.2'],
             ['1.1.1', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.3', '1.2.2'], '2011-01-13', '1.1.3'],
             ['1.1.1', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.5'], '', '1.1.5'],
             ['1.1.1', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1'], '', false],
 
-            // 25 testGetUpgradersWithTwoValidUpgraderWithDate
+            // 28 testGetUpgradersWithTwoValidUpgraderWithDate
             ['1.1', '2011-01-10', '1.1.5','2011-01-15', ['1.1.2', '1.2.4'], '', '1.1.2'], // testinstall2ModuleUpgrader_newupgraderfilename
             ['1.1', '2011-01-10', '1.1.5','2011-01-15', ['1.1.3', '1.2.2'], '2011-01-13', '1.1.3'], //testinstall2ModuleUpgrader_newupgraderfilenamedate
             ['1.1', '2011-01-10', '1.1.5','2011-01-15', ['1.1.5'], '', '1.1.5'], //testinstall2ModuleUpgrader_second
             ['1.1', '2011-01-10', '1.1.5','2011-01-15', ['1.1'], '', false], // testinstall2ModuleUpgrader_first
 
-            // 29
+            // 32
             ['1.1.5', '2011-01-15', '1.2.5', '2011-01-25', ['1.1.2', '1.2.4'], '', '1.2.4'],  // testinstall2ModuleUpgrader_newupgraderfilename
             ['1.1.5', '2011-01-15', '1.2.5', '2011-01-25', ['1.1.3', '1.2.2'], '2011-01-13', false ],//testinstall2ModuleUpgrader_newupgraderfilenamedate
             ['1.1.5', '2011-01-15', '1.2.5', '2011-01-25', ['1.1.5'], '', false], //testinstall2ModuleUpgrader_second
             ['1.1.5', '2011-01-15', '1.2.5', '2011-01-25', ['1.1'], '', false],// testinstall2ModuleUpgrader_first
 
-            // 33 testGetUpgradersWithAllUpgraders
+            // 36 testGetUpgradersWithAllUpgraders
             ['0.9', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.2', '1.2.4'], '', '1.1.2'],  // testinstall2ModuleUpgrader_newupgraderfilename
             ['0.9', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.3', '1.2.2'], '2011-01-13', '1.1.3'],//testinstall2ModuleUpgrader_newupgraderfilenamedate
             ['0.9', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1.5'], '', '1.1.5'], //testinstall2ModuleUpgrader_second
             ['0.9', '', '1.8.0-rc.4', '2023-01-23 12:53', ['1.1'], '', '1.1'],// testinstall2ModuleUpgrader_first
+
+            // 40
+            ['1.6.36', '2022-03-14', '1.8.9', '2024-05-07', ['1.6.36-rc.1', '1.7.11-rc.1'], '2022-01-17', false],
+            ['3.5.17-pre', '2023-10-11', '3.7.9-pre', '2024-05-27', ['3.5.14', '3.6.5', '3.7.0-alpha.2'], '2023-07-27', false]
         );
     }
 

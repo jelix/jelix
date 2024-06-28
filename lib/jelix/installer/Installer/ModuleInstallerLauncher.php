@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2023 Laurent Jouanneau
+ * @copyright   2008-2024 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -9,6 +9,8 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Version\Parser;
+use Jelix\Version\Version;
 use Jelix\Version\VersionComparator;
 
 /**
@@ -608,14 +610,15 @@ class ModuleInstallerLauncher
         }
 
         $list = array();
-
+        $currentVersion = Parser::parse($this->moduleStatus->version);
+        $newVersion = Parser::parse($this->moduleInfos->version);
         foreach ($this->moduleUpgraders as $upgrader) {
 
             $version = $this->checkUpgraderValidity(
-                $this->moduleStatus->version,
+                $currentVersion,
                 $this->globalSetup->getInstallerIni()
                     ->getValue($this->name.'.version.date', 'modules'),
-                $this->moduleInfos->version,
+                $newVersion,
                 $this->moduleInfos->versionDate,
                 $upgrader->getTargetVersions(),
                 $upgrader->getDate()
@@ -660,9 +663,9 @@ class ModuleInstallerLauncher
     }
 
     /**
-     * @param string $currentVersion
+     * @param Version $currentVersion
      * @param string $currentVersionDate
-     * @param string $newVersion
+     * @param Version $newVersion
      * @param string $newVersionDate
      * @param string[] $upgraderTargetVersions
      * @param string $upgraderDate
@@ -676,55 +679,59 @@ class ModuleInstallerLauncher
         array $upgraderTargetVersions,
         $upgraderDate
     ) {
-        $foundVersion = '';
-        $severalTargets = count($upgraderTargetVersions) > 1;
-        // check the version
-        foreach ($upgraderTargetVersions as $version) {
-            $res = VersionComparator::compareVersion($currentVersion, $version);
-            if ($res > 0) {
-                // we don't execute upgraders having a version lower than the installed version (they are old upgrader)
-                // but let's verify it another upgrader version targets the current one
-                continue;
-            }
-            if ($res == 0) { // the upgrader targets the current installed version, so we should not execute the upgrader
-                $foundVersion = '';
-                break;
-            }
-
-            if (VersionComparator::compareVersion($newVersion, $version) < 0) {
-                // we don't execute upgraders having a version higher than the version indicated in the module.xml
-                // but let's verify it another upgrader version targets the current one
-                continue;
-            }
-            if ($foundVersion == '' || VersionComparator::compareVersion($foundVersion, $version) > 0) {
-                $foundVersion = $version;
-            }
-        }
-        if ($foundVersion == '') {
+        if (count($upgraderTargetVersions) === 0) {
             return false;
         }
 
-        // we have to check the date of versions
-        // we should not execute the updater in some case.
-        // for example, we have an updater for the 1.2 and 2.3 version
-        // we have the 1.4 installed, and want to upgrade to the 2.5 version
-        // we should not execute the update for 2.3 since modifications have already been
-        // made into the 1.4. The only way to know that, is to compare date of versions
-        if ($upgraderDate != '' && $severalTargets) {
-            $upgraderDate = $this->_formatDate($upgraderDate);
+        // convert target versions into Version objects, and order them.
+        $upgraderTargetVersions = array_map(function($v) {
+            return Parser::parse($v);
+        }, $upgraderTargetVersions);
 
-            $newVersionDate = $this->_formatDate($newVersionDate);
-            if ($newVersionDate !== null && $newVersionDate < $upgraderDate) {
-                return false;
-            }
+        usort($upgraderTargetVersions, function($v1, $v2) {
+            return VersionComparator::compare($v1, $v2);
+        });
 
-            // the date of the current installed version
-            $currentVersionDate = $this->_formatDate($currentVersionDate);
-            if ($currentVersionDate !== null && $currentVersionDate >= $upgraderDate) {
-                return false;
+        $minimumVersion = $upgraderTargetVersions[0];
+        $maximumVersion = $upgraderTargetVersions[count($upgraderTargetVersions) - 1];
+
+        // we don't execute upgraders for versions that are lower or higher than the range between the current version and new version
+        if (VersionComparator::compare($currentVersion, $maximumVersion) >= 0
+            || VersionComparator::compare($newVersion, $minimumVersion) < 0
+        ) {
+            return false;
+        }
+
+        $upgraderDate = $this->_formatDate($upgraderDate);
+        $newVersionDate = $this->_formatDate($newVersionDate);
+        $currentVersionDate = $this->_formatDate($currentVersionDate);
+
+        if ($upgraderDate != '' && $newVersionDate != '' && $newVersionDate <= $upgraderDate) {
+            // if the date of the new version is lower than the date of the upgrader
+            // it means the upgrader is not about this version
+            // FIXME: in the case that the upgrader is a backport of a feature of the branch of the new version,
+            // there are chance that it must be still executed.
+            return false;
+        }
+
+        $isUpgradeStartingAfterMinimumVersion = VersionComparator::compare($currentVersion, $minimumVersion);
+        if ($isUpgradeStartingAfterMinimumVersion < 0) {
+            return $minimumVersion->toString(false, false);
+        }
+        if ($isUpgradeStartingAfterMinimumVersion == 0) {
+            return false;
+        }
+        else if ($upgraderDate != '' && $currentVersionDate != '' && $currentVersionDate > $upgraderDate) {
+            return false;
+        }
+
+        foreach ($upgraderTargetVersions as $version) {
+
+            if (VersionComparator::compare($currentVersion, $version) <= 0 && VersionComparator::compare($version, $newVersion) <= 0 ) {
+                return $version->toString(false, false);
             }
         }
-        return $foundVersion;
+        return false;
     }
 
     public function installFinished()

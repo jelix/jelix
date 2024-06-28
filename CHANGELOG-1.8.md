@@ -1,6 +1,11 @@
 Changes into Jelix 1.8
 ======================
 
+Next
+----
+
+- Fix installer: some upgraders may not be executed in some case
+
 1.8.9
 -----
 
