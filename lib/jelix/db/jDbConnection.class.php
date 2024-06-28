@@ -412,7 +412,7 @@ abstract class jDbConnection
      */
     public function lastIdInTable($fieldName, $tableName)
     {
-        $rs = $this->query('SELECT MAX('.$fieldName.') as ID FROM '.$tableName);
+        $rs = $this->query('SELECT MAX('.$this->encloseName($fieldName).') as ID FROM '.$this->encloseName($tableName));
         if (($rs !== null) && $r = $rs->fetch()) {
             return $r->ID;
         }
