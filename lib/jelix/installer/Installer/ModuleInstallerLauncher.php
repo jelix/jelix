@@ -706,7 +706,7 @@ class ModuleInstallerLauncher
         $newVersionDate = $this->_formatDate($newVersionDate);
         $currentVersionDate = $this->_formatDate($currentVersionDate);
 
-        if ($upgraderDate != '' && $newVersionDate != '' && $newVersionDate <= $upgraderDate) {
+        if ($upgraderDate != '' && $newVersionDate != '' && $newVersionDate < $upgraderDate) {
             // if the date of the new version is lower than the date of the upgrader
             // it means the upgrader is not about this version
             // FIXME: in the case that the upgrader is a backport of a feature of the branch of the new version,

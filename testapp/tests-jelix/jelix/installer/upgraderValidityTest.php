@@ -96,10 +96,11 @@ class upgraderValidityTest extends \Jelix\UnitTests\UnitTestCase
             ['1.4.0', '2021-03-03', '1.4.5', '2022-01-01', ['1.1', '1.4.5', '1.5'], '2021-10-30', '1.4.5' ],
 
             // upgrade from 1.4 to 2.0, and have an upgrader for 1.3 and 2.0 -> to execute
-             ['1.4', '2021-04-04', '2.0', '2022-01-01', ['1.3', '2.0'], '2022-01-01', false ],
+            // because upgrader date is higher than 1.4 date  and equals to the target version
+            ['1.4', '2021-04-04', '2.0', '2022-01-01', ['1.3', '2.0'], '2022-01-01', '2.0' ],
 
             // upgrade from 1.4 to 2.0, and have an upgrader for 1.3 and 2.0 -> to execute
-            // because upgrader date is higher than 1.4 date
+            // because upgrader date is higher than 1.4 date and lower that target version
             ['1.4', '2021-04-04', '2.0', '2022-01-01', ['1.3', '2.0'], '2021-10-30', '2.0' ],
 
             // upgrade from 2.0 to 2.1, and have an upgrader for 1.3 and 2.0 -> to ignore
