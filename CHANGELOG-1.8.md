@@ -4,7 +4,13 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.10
+------
+
+- New template plugin ctrl_value_assign for forms
 - Fix installer: some upgraders may not be executed in some case
+- Fix jDbConnection::lastIdInTable(): names should be enclosed
+- Fix lastInsertId() on Sqlserver connector
 
 1.8.9
 -----
