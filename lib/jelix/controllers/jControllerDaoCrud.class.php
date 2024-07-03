@@ -231,7 +231,7 @@ class jControllerDaoCrud extends jController
         $keyActionDao = $this->_getAction($this->dao);
         if ($this->showPropertiesOrderLinks && count($this->propertiesForRecordsOrder)) {
             if (!isset($_SESSION['CRUD_LISTORDER'][$keyActionDao])) {
-                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = array();
+                $_SESSION['CRUD_LISTORDER'][$keyActionDao] = $this->propertiesForRecordsOrder;
             }
             if (($lo = $this->param('listorder'))
                 && (array_key_exists($lo, $this->propertiesForRecordsOrder))
