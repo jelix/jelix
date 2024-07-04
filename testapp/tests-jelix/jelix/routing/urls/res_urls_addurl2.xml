@@ -17,7 +17,7 @@
         <url handler="superhandler2" pathinfo="/articles" module="cms"/>
         <url pathinfo="/dynamic/method" module="firstmodule" controller="myctrl2"/>
     </entrypoint>
-    <entrypoint type="soap" name="mysoap"/>
+    <entrypoint type="soap" name="mysoap" alias="supersoap"/>
     <classicentrypoint name="news">
         <url module="news" default="true"/>
         <url module="articles" pathinfo="/mynews/"/>

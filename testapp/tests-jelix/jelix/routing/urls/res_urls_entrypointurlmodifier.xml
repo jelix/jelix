@@ -5,7 +5,7 @@
         <url include="urls-my-include.xml" module="foo" pathinfo="/my-include"/>
         <url module="foo" pathinfo="/my-foo-module"/>
     </entrypoint>
-    <entrypoint type="soap" name="mysoap">
+    <entrypoint type="soap" name="mysoap" alias="supersoap">
         <url include="urls-soap.xml" module="foo" pathinfo="/my-soap-include"/>
         <url module="foo" pathinfo="/my-soap-module"/>
     </entrypoint>
