@@ -190,8 +190,11 @@ class InstallationResolver
             list($infos, $status) = $component;
 
             $resolverItem = $status->getResolverItem($infos,
-                [$status::FILTER_ENABLED_UNINSTALLED,
-                 $status::FILTER_ENABLED_INSTALLED_NOT_UPGRADED]);
+                [
+                    $status::FILTER_DISABLED_INSTALLED,
+                    $status::FILTER_ENABLED_UNINSTALLED,
+                    $status::FILTER_ENABLED_INSTALLED_NOT_UPGRADED
+                ]);
 
             if ($resolver->hasItem($resolverItem->getName())) {
                 continue;
