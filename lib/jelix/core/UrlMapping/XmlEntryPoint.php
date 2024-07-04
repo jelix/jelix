@@ -29,7 +29,7 @@ class XmlEntryPoint
 
     public function setOptions($options)
     {
-        $authorizedOptions = array('default', 'https', 'noentrypoint', 'optionalTrailingSlash');
+        $authorizedOptions = array('default', 'https', 'noentrypoint', 'optionalTrailingSlash', 'alias');
         $this->setElementOptions($this->ep, $options, $authorizedOptions);
     }
 
@@ -41,6 +41,18 @@ class XmlEntryPoint
     public function getName()
     {
         return $this->ep->getAttribute('name');
+    }
+
+    public function getAliases()
+    {
+        $aliasesStr = $this->ep->getAttribute('alias');
+        if ($aliasesStr) {
+            $aliasesArr = preg_split('/\s*,\s*/', $aliasesStr);
+        }
+        else {
+            $aliasesArr = array();
+        }
+        return $aliasesArr;
     }
 
     public function getType()

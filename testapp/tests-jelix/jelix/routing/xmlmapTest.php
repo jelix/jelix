@@ -48,6 +48,13 @@ class xmlmapTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals("soap", $ep->getType());
     }
 
+    function testGetEntryPointByAlias() {
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
+        $ep = $modifier->getEntryPointByNameOrAlias('supersoap', 'soap');
+
+        $this->assertEquals("mysoap", $ep->getName());
+        $this->assertEquals("soap", $ep->getType());
+    }
 
     function testAddUrl() {
         $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));

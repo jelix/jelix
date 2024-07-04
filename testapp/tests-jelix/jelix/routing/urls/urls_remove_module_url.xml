@@ -19,7 +19,7 @@
         <url pathinfo="/dynamic/method" module="firstmodule" controller="myctrl"/>
         <url include="urls-my-include.xml" pathinfo="/my-include" module="foo"/>
     </entrypoint>
-    <entrypoint type="soap" name="mysoap"/>
+    <entrypoint type="soap" name="mysoap" alias="supersoap"/>
     <classicentrypoint name="news">
         <url module="news" default="true"/>
     </classicentrypoint>
