@@ -42,7 +42,7 @@ class xmlmapTest extends \Jelix\UnitTests\UnitTestCase {
 
     function testGetEntryPoint() {
         $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
-        $ep = $modifier->getEntryPoint('mysoap', 'soap');
+        $ep = $modifier->getEntryPoint('mysoap');
 
         $this->assertEquals("mysoap", $ep->getName());
         $this->assertEquals("soap", $ep->getType());
@@ -50,7 +50,7 @@ class xmlmapTest extends \Jelix\UnitTests\UnitTestCase {
 
     function testGetEntryPointByAlias() {
         $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
-        $ep = $modifier->getEntryPointByNameOrAlias('supersoap', 'soap');
+        $ep = $modifier->getEntryPointByNameOrAlias('supersoap');
 
         $this->assertEquals("mysoap", $ep->getName());
         $this->assertEquals("soap", $ep->getType());
