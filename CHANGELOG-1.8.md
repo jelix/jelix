@@ -11,7 +11,8 @@ Next
   entrypoint corresponding to the administration interface is named `foo`, you
   can declare the alias `admin` on this entrypoint, and then the module can
   be installed.
-
+- Fix issue in installer: versions of dependencies of an already installed module
+  were not checked when this module was not upgraded and its dependencies were upgraded.
 
 1.8.10
 ------

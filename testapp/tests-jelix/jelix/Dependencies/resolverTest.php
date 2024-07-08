@@ -14,9 +14,11 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testOneItemNoDeps() {
+    public function testOneItemNoDeps()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_NONE);
+
         $resolver = new Resolver();
         $resolver->addItem($packA);
         $chain = $resolver->getDependenciesChainForInstallation();
@@ -29,12 +31,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
     }
 
-    public function testTwoDependItems() {
+    public function testTwoDependItems()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB', '1.0.*');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -51,12 +56,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
     }
 
-    public function testUpgrade() {
+    public function testUpgrade()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB', '1.0.*');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", true);
         $packC->setAction(Resolver::ACTION_UPGRADE, "1.1");
 
@@ -75,12 +83,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[2]->getAction());
     }
 
-    public function testUpgradeWithLowerVersion() {
+    public function testUpgradeWithLowerVersion()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB', '1.0.*');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.1", true);
         $packC->setAction(Resolver::ACTION_UPGRADE, "1.0");
 
@@ -101,12 +112,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
     /**
      */
-    public function testTwoDependItemsNoForceInstall() {
+    public function testTwoDependItemsNoForceInstall()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB', '1.0.*');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -121,12 +135,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     }
 
 
-    public function testTwoDependItemsForceInstall() {
+    public function testTwoDependItemsForceInstall()
+    {
         $packA = new Item('testA', "1.0", true);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB', '1.0.*');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -144,12 +161,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     }
 
 
-    public function testTwoDependItemsForceReinstall() {
+    public function testTwoDependItemsForceReinstall()
+    {
         $packA = new Item('testA', "1.0", true);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB', '1.0.*');
+
         $packB = new Item('testB', "1.0", true);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", true);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -166,12 +186,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
     /**
      */
-    public function testForbidInstallDependencies() {
+    public function testForbidInstallDependencies()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB', '1.0.*');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -188,12 +211,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
     /**
      */
-    public function testInstallDependenciesThatCannotBeInstalled() {
+    public function testInstallDependenciesThatCannotBeInstalled()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB', '1.0.*');
+
         $packB = new Item('testB', "1.0", false, false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -209,13 +235,16 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
     /**
      */
-    public function testCircularDependencies() {
+    public function testCircularDependencies()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB', '1.0.*');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
         $packB->addDependency('testC', '1.0.*');
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
         $packC->addDependency('testA', '1.0.*');
@@ -230,21 +259,24 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
-    public function testComplexInstallDependencies() {
+    public function testComplexInstallDependencies()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB');
         $packA->addDependency('testC');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
-
 
         $packD = new Item('testD', "1.0", false);
         $packD->setAction(Resolver::ACTION_INSTALL);
         $packD->addDependency('testB');
         $packD->addDependency('testE');
+
         $packE = new Item('testE', "1.0", false);
         $packE->setAction(Resolver::ACTION_NONE);
 
@@ -269,9 +301,11 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_INSTALL, $chain[4]->getAction());
     }
 
-    public function testRemoveOneItemNoDeps() {
+    public function testRemoveOneItemNoDeps()
+    {
         $packA = new Item('testA', "1.0", true);
         $packA->setAction(Resolver::ACTION_REMOVE);
+
         $resolver = new Resolver();
         $resolver->addItem($packA);
         $chain = $resolver->getDependenciesChainForInstallation();
@@ -281,9 +315,11 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_REMOVE, $chain[0]->getAction());
     }
 
-    public function testRemoveUninstalledItem() {
+    public function testRemoveUninstalledItem()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_REMOVE);
+
         $resolver = new Resolver();
         $resolver->addItem($packA);
         $chain = $resolver->getDependenciesChainForInstallation();
@@ -292,13 +328,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     }
 
 
-    public function testRemoveOneDependItems() {
+    public function testRemoveOneDependItems()
+    {
         $packA = new Item('testA', "1.0", true);
         $packA->setAction(Resolver::ACTION_REMOVE);
         $packA->addDependency('testB', '1.0.*');
 
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", true);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -313,12 +351,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_REMOVE, $chain[0]->getAction());
     }
 
-    public function testRemoveOneAncesterDependItems() {
+    public function testRemoveOneAncesterDependItems()
+    {
         $packA = new Item('testA', "1.0", true);
         $packA->setAction(Resolver::ACTION_REMOVE);
+
         $packB = new Item('testB', "1.0", true);
         $packB->setAction(Resolver::ACTION_NONE);
         $packB->addDependency('testA', '1.0.*');
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -335,15 +376,19 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_REMOVE, $chain[1]->getAction());
     }
 
-    public function testRemoveOneAncesterAltDependItems() {
+    public function testRemoveOneAncesterAltDependItems()
+    {
         $packA = new Item('testA', "1.0", true);
         $packA->setAction(Resolver::ACTION_REMOVE);
+
         $packB = new Item('testB', "1.0", true);
         $packB->setAction(Resolver::ACTION_NONE);
         $packB->addDependency('testA', '1.0.*');
+
         $packC = new Item('testC', "1.0", true);
         $packC->setAction(Resolver::ACTION_NONE);
         $packC->addAlternativeDependencies(array('testA' => '1.0.*', 'testD' => '1.0.*'));
+
         $packD = new Item('testD', false, "1.0", Resolver::ACTION_NONE);
 
         $resolver = new Resolver();
@@ -362,15 +407,19 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_REMOVE, $chain[2]->getAction());
     }
 
-    public function testRemoveOneAncesterAltDependCascadeItems() {
+    public function testRemoveOneAncesterAltDependCascadeItems()
+    {
         $packA = new Item('testA', "1.0", true);
         $packA->setAction(Resolver::ACTION_REMOVE);
+
         $packB = new Item('testB', "1.0", true);
         $packB->setAction(Resolver::ACTION_NONE);
         $packB->addDependency('testA', '1.0.*');
+
         $packC = new Item('testC', "1.0", true);
         $packC->setAction(Resolver::ACTION_NONE);
         $packC->addAlternativeDependencies(array('testB' => '1.0.*', 'testD' => '1.0.*'));
+
         $packD = new Item('testD', false, "1.0", Resolver::ACTION_NONE);
 
         $resolver = new Resolver();
@@ -391,12 +440,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
     /**
      */
-    public function testRemoveOneAncesterToInstallDependItems() {
+    public function testRemoveOneAncesterToInstallDependItems()
+    {
         $packA = new Item('testA', "1.0", true);
         $packA->setAction(Resolver::ACTION_REMOVE);
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_INSTALL);
         $packB->addDependency('testA', '1.0.*');
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -412,13 +464,16 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
     /**
      */
-    public function testRemoveCircularDependencies() {
+    public function testRemoveCircularDependencies()
+    {
         $packA = new Item('testA', "1.0", true);
         $packA->setAction(Resolver::ACTION_REMOVE);
         $packA->addDependency('testC', '1.0.*');
+
         $packB = new Item('testB', "1.0", true);
         $packB->setAction(Resolver::ACTION_NONE);
         $packB->addDependency('testA', '1.0.*');
+
         $packC = new Item('testC', "1.0", true);
         $packC->setAction(Resolver::ACTION_NONE);
         $packC->addDependency('testB', '1.0.*');
@@ -433,17 +488,22 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $chain = $resolver->getDependenciesChainForInstallation();
     }
 
-    public function testInstallRemove() {
+    public function testInstallRemove()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addDependency('testB');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", true);
         $packC->setAction(Resolver::ACTION_NONE);
         $packC->addDependency('testD');
+
         $packD = new Item('testD', "1.0", true);
         $packD->setAction(Resolver::ACTION_REMOVE);
+
         $packE = new Item('testE', "1.0", true);
         $packE->setAction(Resolver::ACTION_NONE);
 
@@ -470,12 +530,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testNoConflictItems() {
+    public function testNoConflictItems()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addIncompatibility('testB', '*');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
-        $packA->addIncompatibility('testB', '*');
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -490,12 +553,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testConflictItems() {
+    public function testConflictItems()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
+        $packA->addIncompatibility('testB', '*');
+
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_INSTALL);
-        $packA->addIncompatibility('testB', '*');
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -513,12 +579,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testConflictItemAlreadyInstalled() {
+    public function testConflictItemAlreadyInstalled()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addIncompatibility('testB', '*');
+
         $packB = new Item('testB', "1.0", true);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -536,12 +605,15 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testNoConflictWithRemovedItem() {
+    public function testNoConflictWithRemovedItem()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addIncompatibility('testB', '*');
+
         $packB = new Item('testB', "1.0", true);
         $packB->setAction(Resolver::ACTION_REMOVE);
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
@@ -553,7 +625,8 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(array($packA, $packB), $chain);
     }
 
-    public function testChoiceOneItemInstalled() {
+    public function testChoiceOneItemInstalled()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addAlternativeDependencies(array(
@@ -564,8 +637,10 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
         $packB = new Item('testB', "1.0", true);
         $packB->setAction(Resolver::ACTION_NONE);
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
+
         $packD = new Item('testD', "1.0", false);
         $packD->setAction(Resolver::ACTION_INSTALL);
 
@@ -583,7 +658,8 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
     }
 
-    public function testChoiceOneItemToInstall() {
+    public function testChoiceOneItemToInstall()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addAlternativeDependencies(array(
@@ -595,8 +671,10 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
         $packB->addDependency('testD');
+
         //$packC = new Item('testC', "1.0", false);
         //$packC->setAction(Resolver::ACTION_NONE);
+
         $packD = new Item('testD', "1.0", false);
         $packD->setAction(Resolver::ACTION_NONE);
 
@@ -619,7 +697,8 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testChoiceAmbigusItems() {
+    public function testChoiceAmbigusItems()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addAlternativeDependencies(array(
@@ -632,8 +711,10 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
         $packB->addDependency('testD');
+
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
+
         $packD = new Item('testD', "1.0", false);
         $packD->setAction(Resolver::ACTION_NONE);
 
@@ -651,7 +732,8 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testChoiceBadVersionItem() {
+    public function testChoiceBadVersionItem()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addAlternativeDependencies(array(
@@ -663,8 +745,10 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
         $packB->addDependency('testD');
+
         //$packC = new Item('testC', "1.0", false);
         //$packC->setAction(Resolver::ACTION_NONE);
+
         $packD = new Item('testD', "1.0", false);
         $packD->setAction(Resolver::ACTION_NONE);
 
@@ -684,7 +768,8 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testChoiceUnknownItems() {
+    public function testChoiceUnknownItems()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addAlternativeDependencies(array(
@@ -694,10 +779,12 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         );
 
         //$packB = new Item('testB', "1.0", false);
-        //$packA->setAction(Resolver::ACTION_NONE);
+        //$packB->setAction(Resolver::ACTION_NONE);
         //$packB->addDependency('testD');
+
         //$packC = new Item('testC', "1.0", false);
         //$packC->setAction(Resolver::ACTION_NONE);
+
         $packD = new Item('testD', "1.0", false);
         $packD->setAction(Resolver::ACTION_NONE);
 
@@ -716,7 +803,8 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testChoiceItemHasBadDependency() {
+    public function testChoiceItemHasBadDependency()
+    {
         $packA = new Item('testA', "1.0", false);
         $packA->setAction(Resolver::ACTION_INSTALL);
         $packA->addAlternativeDependencies(array(
@@ -728,8 +816,10 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_NONE);
         $packB->addDependency('testD');
+
         //$packC = new Item('testC', "1.0", false)
         //$packC->setAction(Resolver::ACTION_NONE);
+
         //$packD = new Item('testD', "1.0", false);
         //$packD->setAction(Resolver::ACTION_NONE);
 
@@ -746,7 +836,8 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     }
 
 
-    public function testOptionalDependencies() {
+    public function testOptionalDependencies()
+    {
         /*
                 A->B
                 A->C
@@ -791,7 +882,8 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
     /**
      *
      */
-    public function testOptionalDependenciesWithMissingDependency() {
+    public function testOptionalDependenciesWithMissingDependency()
+    {
         /*
                 A->B optional and missing
                 A->C
@@ -857,13 +949,13 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $packB = new Item('testB', "1.0", false);
         $packB->setAction(Resolver::ACTION_INSTALL);
         $packB->addDependency('testA', '1.0.*');
+        $packB->addDependency('testF', '1.0.*');
 
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
         $packD = new Item('testD', "1.0", false);
         $packD->setAction(Resolver::ACTION_INSTALL);
-        $packB->addDependency('testF', '1.0.*');
 
         $packE = new Item('testE', "1.0", false);
         $packE->setAction(Resolver::ACTION_INSTALL);
@@ -898,14 +990,14 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
 
         $packB = new Item('testB', "1.0", true);
         $packB->setAction(Resolver::ACTION_NONE);
-        $packB->addDependency('testA', '1.0.*');
+        $packB->addDependency('testA', '1.0.*', true);
+        $packB->addDependency('testF', '1.0.*', true);
 
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
         $packD = new Item('testD', "1.0", false);
         $packD->setAction(Resolver::ACTION_INSTALL);
-        $packB->addDependency('testF', '1.0.*');
 
         $packE = new Item('testE', "1.0", false);
         $packE->setAction(Resolver::ACTION_INSTALL);
@@ -920,11 +1012,16 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $resolver->addItem($packD);
         $resolver->addItem($packE);
         $resolver->addItem($packF);
+
         $chain = $resolver->getDependenciesChainForSpecificItems(['testB', 'testD'], false);
 
-        $this->assertEquals(1, count($chain));
-        $this->assertEquals('testD', $chain[0]->getName());
+        // testB is already install, with none of its optional dependencies installed. As the installation
+        // of one of dependency is asked to be installed, this dependency should appear into the list
+        $this->assertEquals(2, count($chain));
+        $this->assertEquals('testA', $chain[0]->getName());
         $this->assertEquals(Resolver::ACTION_INSTALL, $chain[0]->getAction());
+        $this->assertEquals('testD', $chain[1]->getName());
+        $this->assertEquals(Resolver::ACTION_INSTALL, $chain[1]->getAction());
     }
 
     public function testTwoDependItemsInstallOneItemOnlyIfNeeded()
@@ -1144,13 +1241,13 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $packB = new Item('testB', "1.2", true);
         $packB->setAction(Resolver::ACTION_UPGRADE, "1.3.0");
         $packB->addDependency('testA', '1.1.*');
+        $packB->addDependency('testF', '1.7.*');
 
         $packC = new Item('testC', "1.0", false);
         $packC->setAction(Resolver::ACTION_NONE);
 
         $packD = new Item('testD', "1.4", true);
         $packD->setAction(Resolver::ACTION_UPGRADE, "1.5.0");
-        $packB->addDependency('testF', '1.7.*');
 
         $packE = new Item('testE', "1.5.0", true);
         $packE->setAction(Resolver::ACTION_UPGRADE, "1.5.1");
@@ -1176,5 +1273,56 @@ class resolverTest extends \PHPUnit\Framework\TestCase {
         $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[2]->getAction());
         $this->assertEquals('testD', $chain[3]->getName());
         $this->assertEquals(Resolver::ACTION_UPGRADE, $chain[3]->getAction());
+    }
+
+    public function testTwoDependItemsUpgradeDependencyHavingNewVersionNotMatching()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_UPGRADE, "1.1.0");
+
+        $packB = new Item('testB', "1.0", true);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packB->addDependency('testA', '1.0.*');
+
+        $packC = new Item('testC', "1.0", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(2);
+        $this->expectExceptionMessage('Version of item \'testA\' (1.1.0) does not match required version by item testB (1.0.*)');
+        $chain = $resolver->getDependenciesChainForInstallation();
+    }
+
+// A installé, upgrade vers une version qui a une dépendance vers B qui a une dépendance vers C qui a une dépendance vers A. B et C pas encore installé
+
+
+    public function testUpgradeToNewVersionHavingNewDependencyOccuringCircularDependencies()
+    {
+        $packA = new Item('testA', "1.0", true);
+        $packA->setAction(Resolver::ACTION_UPGRADE, "1.1.0");
+        $packA->addDependency('testB', '1.0.*');
+
+        $packB = new Item('testB', "1.0", false);
+        $packB->setAction(Resolver::ACTION_NONE);
+        $packB->addDependency('testC', '1.1.*');
+
+        $packC = new Item('testC', "1.1", false);
+        $packC->setAction(Resolver::ACTION_NONE);
+        $packB->addDependency('testA', '1.1.*');
+
+        $resolver = new Resolver();
+        $resolver->addItem($packA);
+        $resolver->addItem($packB);
+        $resolver->addItem($packC);
+
+        $this->expectException(\Jelix\Dependencies\ItemException::class);
+        $this->expectExceptionCode(1);
+        $chain = $resolver->getDependenciesChainForInstallation();
+
     }
 }
