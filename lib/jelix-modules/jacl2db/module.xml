@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jacl2db@modules.jelix.org" name="jacl2db" createdate="2008-04-06">
-        <version date="2024-07-03 09:52">1.8.11-pre</version>
+        <version date="2024-07-08 14:34">1.8.11-rc.1</version>
         <label lang="en_US">jAcl2Db</label>
         <description lang="en_US">ressources for the jacl2 db plugin</description>
         <license URL="http://www.gnu.org/licenses/old-licenses/lgpl-2.1.html">LGPL 2.1</license>
