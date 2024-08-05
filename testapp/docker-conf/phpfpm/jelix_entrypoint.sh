@@ -25,3 +25,7 @@ if [ ! -f $APPDIR/var/config/profiles.ini.php ]; then
     echo "   ./app-ctl reset"
     echo "in order to setup databases and testapp, after containers will be ready."
 fi
+
+touch /tmp/xdebug_cli.log
+chown userphp:groupphp /tmp/xdebug_cli.log
+chmod 664 /tmp/xdebug_cli.log
