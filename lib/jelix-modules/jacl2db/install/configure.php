@@ -34,10 +34,18 @@ class jacl2dbModuleConfigurator extends \Jelix\Installer\Module\Configurator
             )
         ;
 
-        $config = $helpers->getConfigIni();
-        $driver = $config->getValue('driver', 'acl2');
-        if ($driver != 'db') {
-            $config->setValue('driver', 'db', 'acl2');
+        $epList = $helpers->getEntryPointsList();
+        foreach ($epList as $entryPoint ) {
+            if ($entryPoint->getType() == 'cmdline') {
+                return;
+            }
+            /** @var \Jelix\IniFile\IniModifierArray $conf */
+            $conf = $entryPoint->getConfigIni();
+            $driver = $conf->getValue('driver', 'acl2');
+            if ($driver !== null && $driver != 'db') {
+                $conf->setValue('driver', 'db', 'acl2');
+            }
+            $conf->save();
         }
     }
 
