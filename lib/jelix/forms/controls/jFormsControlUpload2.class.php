@@ -198,21 +198,19 @@ class jFormsControlUpload2 extends jFormsControl
             ) {
             $this->error = jForms::ERRDATA_FILE_UPLOAD_ERROR;
         }
-
-        if ($this->fileInfo['error'] == UPLOAD_ERR_INI_SIZE
+        else if ($this->fileInfo['error'] == UPLOAD_ERR_INI_SIZE
                 || $this->fileInfo['error'] == UPLOAD_ERR_FORM_SIZE
                 || ($this->maxsize && $this->fileInfo['size'] > $this->maxsize)
             ) {
             $this->error = jForms::ERRDATA_INVALID_FILE_SIZE;
         }
-
-        if ($this->fileInfo['error'] == UPLOAD_ERR_PARTIAL
+        else if ($this->fileInfo['error'] == UPLOAD_ERR_PARTIAL
                 || !$this->isUploadedFile($this->fileInfo['tmp_name'])
             ) {
             $this->error = jForms::ERRDATA_INVALID;
         }
 
-        if (count($this->mimetype)) {
+        if ($this->error === null && count($this->mimetype)) {
             $this->fileInfo['type'] = \Jelix\FileUtilities\File::getMimeType($this->fileInfo['tmp_name']);
             if ($this->fileInfo['type'] == 'application/octet-stream') {
                 // let's try with the name

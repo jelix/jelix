@@ -27,7 +27,7 @@ class jFormsControlImageUpload extends jFormsControlUpload2
     {
         $this->error = null;
 
-        // for browsers that don't support canvas.toBlob method, we need to store
+        // for main browsers that don't support canvas.toBlob method (before 2019), we need to store
         // the modified image (base64 encoded) and its properties into a JSON object.
         // This object is send into a '*_jforms_edited_image' parameter.
         $inputRef = $this->ref.'_jforms_edited_image';
