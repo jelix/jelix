@@ -15,6 +15,12 @@ Next
 - Fix installer: versions of dependencies of an already installed module
   were not checked when this module was not upgraded and its dependencies were upgraded.
 - Fix column order into jControllerDaoCrud
+- Fix jForms: php error when trying to process a file that is too big 
+- Fix default charset of mysql table for jacl2db and jauthdb
+- Fix jacl2db configurator: driver was not set correctly on EP config
+- Fix jAuthdb installer: it should use the conf given by the installer
+- tests: install xdebug and add `--xdebug` options on some commands
+- Fix `app:create` command: create missing `var/db/sqlite3` directory.
 
 1.8.10
 ------
