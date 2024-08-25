@@ -165,7 +165,7 @@ class Installer
         }
 
         $result = $this->_installModules($modulesChains);
-        $this->globalSetup->getInstallerIni()->save();
+
 
         $this->endMessage();
 
@@ -537,6 +537,8 @@ class Installer
                 $this->error('install.module.error', array($component->getName(), $e->getMessage()));
             }
         }
+
+        $this->globalSetup->getInstallerIni()->save();
 
         if ($result) {
             $this->warmUp->launch($this->enabledModules, WarmUpLauncherInterface::STEP_POSTINSTALL);
