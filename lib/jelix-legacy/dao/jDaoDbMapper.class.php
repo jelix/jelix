@@ -10,6 +10,8 @@
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Database\Schema\Reference;
+
 
 /**
  * It allows to create tables corresponding to a dao file.
@@ -57,13 +59,14 @@ class jDaoDbMapper
 
         // create the columns and the table
         $columns = array();
-        foreach ($tableInfo['fields'] as $propertyName) {
+        foreach ($tableInfo->fields as $propertyName) {
             $property = $properties[$propertyName];
             $columns[] = $this->createColumnFromProperty($property);
         }
-        $table = $schema->createTable($tableInfo['realname'], $columns, $tableInfo['pk']);
+
+        $table = $schema->createTable($tableInfo->realName, $columns, $tableInfo->primaryKey);
         if (!$table) {
-            $table = $schema->getTable($tableInfo['realname']);
+            $table = $schema->getTable($tableInfo->realName);
             foreach ($columns as $column) {
                 $table->alterColumn($column);
             }
@@ -71,11 +74,11 @@ class jDaoDbMapper
 
         // create foreign keys
         foreach ($tables as $tableName => $info) {
-            if ($tableName == $tableInfo['realname']) {
+            if ($tableName == $tableInfo->realName) {
                 continue;
             }
-            if (isset($info['fk'])) {
-                $ref = new Jelix\Database\Schema\Reference('', $info['fk'], $info['realname'], $info['pk']);
+            if (count($info->foreignKeys)) {
+                $ref = new Reference('', $info->foreignKeys, $info->realName, $info->primaryKey);
                 $table->addReference($ref);
             }
         }
@@ -115,7 +118,7 @@ class jDaoDbMapper
         }
 
         return $tools->insertBulkData(
-            $tables[$parser->getPrimaryTable()]['realname'],
+            $tables[$parser->getPrimaryTable()]->realName,
             $columns,
             $data,
             $primaryKey,
