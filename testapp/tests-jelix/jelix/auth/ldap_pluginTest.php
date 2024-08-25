@@ -48,10 +48,6 @@ class ldap_pluginTest extends \Jelix\UnitTests\UnitTestCase {
         $this->listenersBackup = jApp::config()->disabledListeners;
         jApp::config()->disabledListeners['AuthCanRemoveUser'] = 'jacl2db~jacl2db';
         \jApp::reloadServices();
-        $cacheFile = jApp::tempPath('compiled/'.jApp::config()->urlengine['urlScriptId'].'.events.php');
-        if (file_exists($cacheFile)) {
-            unlink($cacheFile);
-        }
     }
 
     function tearDown() : void {
@@ -62,10 +58,6 @@ class ldap_pluginTest extends \Jelix\UnitTests\UnitTestCase {
         jAcl2DbUserGroup::removeUser('testldap');
         jApp::config()->disabledListeners = $this->listenersBackup;
         \jApp::reloadServices();
-        $cacheFile = jApp::tempPath('compiled/'.jApp::config()->urlengine['urlScriptId'].'.events.php');
-        if (file_exists($cacheFile)) {
-            unlink($cacheFile);
-        }
     }
 
     public function testUsersList() {
