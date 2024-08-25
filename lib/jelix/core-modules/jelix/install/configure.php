@@ -43,22 +43,22 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
         $storage = $configIni->getValue('storage', 'sessions');
 
         if ($cli->askConfirmation('Do you want to store sessions into a database?', $storage == 'dao')) {
-            $configIni->setValue('storage', 'dao', 'session');
+            $configIni->setValue('storage', 'dao', 'sessions');
             if (!$configIni->getValue('dao_selector', 'sessions')) {
                 $dao = $cli->askInformation('Indicate the dao selector to store session data', 'jelix~jsession');
-                $configIni->setValue('dao_selector', $dao, 'session');
+                $configIni->setValue('dao_selector', $dao, 'sessions');
             }
         } elseif ($cli->askConfirmation('Do you want to store sessions as files into a specific directory?', $storage == 'files')) {
-            $configIni->setValue('storage', 'files', 'session');
+            $configIni->setValue('storage', 'files', 'sessions');
             $path = $cli->askInformation('Indicate the path of the directory', $configIni->getValue('files_path', 'sessions'));
             if ($path) {
-                $configIni->setValue('storage', 'files', 'session');
-                $configIni->setValue('files_path', $path, 'session');
+                $configIni->setValue('storage', 'files', 'sessions');
+                $configIni->setValue('files_path', $path, 'sessions');
             } else {
-                $configIni->setValue('storage', '', 'session');
+                $configIni->setValue('storage', '', 'sessions');
             }
         } else {
-            $configIni->setValue('storage', '', 'session');
+            $configIni->setValue('storage', '', 'sessions');
         }
     }
 

@@ -65,6 +65,7 @@ class jAuth
      *
      * @param array|null $newconfig a specific configuration of jAuth. If not given,
      *                              configuration is readed from the files
+     * @param object|null $appConfig the application configuration as given by jApp::config()
      *
      * @throws jException
      *
@@ -72,7 +73,7 @@ class jAuth
      *
      * @since 1.2.10
      */
-    public static function loadConfig($newconfig = null)
+    public static function loadConfig($newconfig = null, $appConfig = null)
     {
         if (self::$config === null || $newconfig) {
             if (!$newconfig) {
@@ -89,9 +90,14 @@ class jAuth
                 $config = $newconfig;
             }
 
+            if ($appConfig === null) {
+                $appConfig = jApp::config();
+            }
+            $appConfigAuth = $appConfig && isset($appConfig->coordplugin_auth) ? $appConfig->coordplugin_auth:array();
+
             // we allow to indicate the driver into the localconfig.ini or mainconfig.ini
-            if (isset(jApp::config()->coordplugin_auth, jApp::config()->coordplugin_auth['driver'])) {
-                $config['driver'] = trim(jApp::config()->coordplugin_auth['driver']);
+            if (isset($appConfigAuth['driver'])) {
+                $config['driver'] = trim($appConfigAuth['driver']);
             }
 
             if (!isset($config['session_name'])
@@ -101,7 +107,7 @@ class jAuth
 
             if (!isset($config['persistant_cookie_path'])
                 || $config['persistant_cookie_path'] == '') {
-                if (jApp::config()) {
+                if ($appConfig) {
                     $config['persistant_cookie_path'] = jApp::urlBasePath();
                 } else {
                     $config['persistant_cookie_path'] = '/';
@@ -110,8 +116,8 @@ class jAuth
 
             if (!isset($config['persistant_encryption_key']) || $config['persistant_encryption_key'] == '') {
                 // in the case of the use of a separate file, persistant_encryption_key may be into the liveconfig.ini.php
-                if (isset(jApp::config()->coordplugin_auth, jApp::config()->coordplugin_auth['persistant_encryption_key'])) {
-                    $config['persistant_encryption_key'] = trim(jApp::config()->coordplugin_auth['persistant_encryption_key']);
+                if (isset($appConfigAuth['persistant_encryption_key'])) {
+                    $config['persistant_encryption_key'] = trim($appConfigAuth['persistant_encryption_key']);
                 } else {
                     $config['persistant_encryption_key'] = '';
                 }
@@ -145,7 +151,7 @@ class jAuth
             $config['password_hash_method'] = $password_hash_method;
             $config['password_hash_options'] = $password_hash_options;
 
-            $config[$config['driver']] = self::_buildDriverConfig($config, jApp::config());
+            $config[$config['driver']] = self::_buildDriverConfig($config, $appConfig);
 
             if (isset($config['url_return_external_allowed_domains']) && $config['url_return_external_allowed_domains']) {
                 if (is_string($config['url_return_external_allowed_domains'])) {

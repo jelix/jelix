@@ -53,7 +53,7 @@ services:
       - "./docker-conf/openldap/ldif:/customldif"
     networks:
       - default
-  php:
+  phpfpm:
     build:
       context: ./docker-conf/phpfpm
       args:
@@ -65,11 +65,14 @@ services:
       TLS_CA_CRT_FILENAME: "tests.jelix-CA.crt"
       TESTAPP_WEB_PORT: "${TESTAPP_WEB_PORT}"
       DISPLAY_ERRORS: "on"
+      PHP_IDE_CONFIG: "serverName=testappsrv"
     volumes:
       - "../:/jelixapp/"
       - "./docker-conf/certs:/customcerts"
     networks:
       - default
+    extra_hosts:
+      - host.docker.internal:host-gateway
     depends_on:
       - pgsql
       - redis
@@ -91,7 +94,7 @@ services:
          aliases:
            - testapp.local
     depends_on:
-      - php
+      - phpfpm
 volumes:
   pg_data:
     name: "jelix_${JLX_BRANCH}_pg_data"

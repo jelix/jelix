@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018-2022 Laurent Jouanneau
+ * @copyright   2018-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -50,6 +50,27 @@ class XmlRedefinedMapModifier extends XmlMapModifier
             return new XmlEntryPoint($this, $domEp);
         }
 
+        return null;
+    }
+
+    public function getEntryPointByNameOrAlias($name)
+    {
+        $ep = parent::getEntryPointByNameOrAlias($name);
+        if ($ep) {
+            return $ep;
+        }
+        $ep = $this->originalMap->getEntryPointByNameOrAlias($name);
+        if ($ep) {
+            $domEp = $ep->getDomElement();
+            $domEp = $domEp->cloneNode(false);
+            $domEp = $this->document->importNode($domEp);
+            $sep = $this->document->createTextNode('    ');
+            $sep2 = $this->document->createTextNode("\n");
+            $this->document->documentElement->appendChild($sep);
+            $this->document->documentElement->appendChild($domEp);
+            $this->document->documentElement->appendChild($sep2);
+            return new XmlEntryPoint($this, $domEp);
+        }
         return null;
     }
 

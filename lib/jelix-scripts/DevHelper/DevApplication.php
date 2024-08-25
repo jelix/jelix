@@ -1,30 +1,13 @@
 <?php
-/**
- * @author      Laurent Jouanneau
- * @copyright   2018-2024 Laurent Jouanneau
- *
- * @see         https://www.jelix.org
- * @licence     MIT
- */
 
-namespace Jelix\Scripts;
+namespace Jelix\DevHelper;
 
-use Symfony\Component\Console\Application;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class SingleCommandApplication extends Application
+class DevApplication extends \Symfony\Component\Console\Application
 {
-
-    public function __construct(Command $command, $name = 'UNKNOWN')
-    {
-        parent::__construct($name);
-        $this->add($command);
-        $this->setDefaultCommand($command->getName(), true);
-    }
-
     public function getDefinition()
     {
         $inputDefinition = parent::getDefinition();

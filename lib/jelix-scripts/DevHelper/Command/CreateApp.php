@@ -309,6 +309,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $this->createDir($varPath.'uploads/');
         $this->createDir($varPath.'sessions/');
         $this->createDir($varPath.'mails/');
+        $this->createDir($varPath.'db/sqlite3/');
 
         $this->createDir($appPath.'install/uninstall/');
         $this->createDir($appPath.'modules');
@@ -347,7 +348,6 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $param['php_rp_conf'] = $this->convertRp($param['rp_conf']);
         $param['php_rp_www'] = $this->convertRp($param['rp_www']);
 
-        $param['rp_vendor'] = '';
         $param['jelix_package_name'] = 'jelix';
         $param['jelix_version'] = \jFramework::version();
 
@@ -395,7 +395,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, 'Configuration file for specific environment');
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, 'Profiles file');
         $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param, 'Profiles file for your repository');
-        $this->createFile(\jApp::appSystemPath('preferences.ini.php'), 'app/system/preferences.ini.php.tpl', $param, 'Preferences file');
+        //$this->createFile(\jApp::appSystemPath('preferences.ini.php'), 'app/system/preferences.ini.php.tpl', $param, 'Preferences file');
         $this->createFile(\jApp::appSystemPath('urls.xml'), 'app/system/urls.xml.tpl', $param, 'URLs mapping file');
 
         $this->createFile(\jApp::appSystemPath('index/config.ini.php'), 'app/system/index/config.ini.php.tpl', $param, 'Entry point configuration file');
@@ -403,7 +403,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $this->createFile($appPath.'install/installer.php', 'installer/installer.php.tpl', $param, 'Installer script');
         $this->createFile($appPath.'install/configurator.php', 'installer/configurator.php.tpl', $param, 'Installer script');
         $this->createFile($appPath.'install/uninstall/uninstaller.ini.php', 'installer/uninstall/uninstaller.ini.php', $param, 'uninstaller.ini.php file');
-        $this->createFile($appPath.'tests/runtests.php', 'tests/runtests.php', $param, 'Tests script');
+        //$this->createFile($appPath.'tests/runtests.php', 'tests/runtests.php', $param, 'Tests script');
 
         $this->createFile($wwwpath.'index.php', 'www/index.php.tpl', $param, 'Main entry point');
         $this->createFile($wwwpath.'.htaccess', 'htaccess_allow', $param, 'Configuration file for Apache');

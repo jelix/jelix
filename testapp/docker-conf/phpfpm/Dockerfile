@@ -28,7 +28,8 @@ RUN set -eux; \
     mkdir -p /etc/openldap/ /etc/ssl/ldap/; \
     chmod 755 /etc/openldap/ /etc/ssl/ldap/;
 
-
+COPY xdebug_fpm.ini  /etc/php/${PHP_VERSION}/fpm/conf.d/90-xdebug.ini
+COPY xdebug_cli.ini  /etc/php/${PHP_VERSION}/cli/conf.d/90-xdebug.ini
 COPY profile.start /etc/profile.d/start
 COPY ldap.conf /etc/openldap/ldap.conf
 COPY jelix_entrypoint.sh /bin/entrypoint.d/
