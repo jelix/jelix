@@ -5,6 +5,7 @@
       <event name="TestEvent" />
        <event name="TestEventResponse" />
    </listener>
+   <listener name="\JelixTests\Tests\Listener\TestAttrEventsListener"/>
    <listener name="testdaoevents">
       <event name="daoDeleteBefore" />
       <event name="daoDeleteAfter" />

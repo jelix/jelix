@@ -32,6 +32,10 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
      */
     protected $hashListened = array();
 
+    /**
+     * Jelix Configuration
+     * @var object
+     */
     protected $config;
 
     public function __construct(object $jelixConfig)
@@ -42,14 +46,33 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
 
     public function getListenersForEvent(object $event) : iterable
     {
-        if ($event instanceof EventInterface) {
+        $eventClass = get_class($event);
+        if ($eventClass == 'jEvent' || $eventClass == 'Jelix\Event\Event') {
+            // if this is a jEvent or Jelix\Event\Event class, we search with the event name
             $eventName = $event->getName();
-        } else {
-            $eventName = get_class($event);
+            if (!isset($this->hashListened[$eventName])) {
+                $this->loadListenersFor($eventName);
+            }
         }
-
-        if (!isset($this->hashListened[$eventName])) {
-            $this->loadListenersFor($eventName);
+        else if ($event instanceof EventInterface) {
+            // if this is an inherited class from Jelix\Event\Event, we must
+            // search listeners both by event name and event class name
+            $eventName = $event->getName();
+            if (!isset($this->hashListened[$eventName])) {
+                $this->loadListenersFor($eventName);
+            }
+            $listeners = $this->hashListened[$eventName];
+            if (!isset($this->hashListened[$eventClass])) {
+                $this->loadListenersFor($eventClass);
+            }
+            return array_merge($listeners, $this->hashListened[$eventClass]);
+        } else {
+            // if the event is a class other than Jelix\Event\Event, we must
+            // search listeners by event class name
+            $eventName = get_class($event);
+            if (!isset($this->hashListened[$eventName])) {
+                $this->loadListenersFor($eventName);
+            }
         }
 
         return $this->hashListened[$eventName];
@@ -69,7 +92,6 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
      */
     protected function loadListenersFor($eventName)
     {
-
         if ($this->listenersList === null) {
 
             $compiledFile = App::buildPath('listeners.php');
@@ -84,8 +106,12 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
         $this->hashListened[$eventName] = array();
         if (isset($this->listenersList[$eventName])) {
 
+            // We check disabled listeners at runtime because the list of
+            // disabled listeners can change from an entrypoint to another,
+            // and the listeners compiler doesn't create the listeners list from
+            // a specific entrypoint.
             $disabledListeners = [];
-            $allDisabledListeners = App::config()->disabledListeners;
+            $allDisabledListeners = $this->config->disabledListeners;
             if (isset($allDisabledListeners[$eventName]) && !empty($allDisabledListeners[$eventName])) {
                 $disabledListeners = $allDisabledListeners[$eventName];
 
@@ -94,27 +120,20 @@ class ListenerProvider implements \Psr\EventDispatcher\ListenerProviderInterface
                 }
             }
 
-            $modules = & $this->config->_modulesPathList;
-            $me = $this;
             foreach ($this->listenersList[$eventName] as $listener) {
-                list($module, $listenerClass, $oldListenerName, $selector) = $listener;
-                if (!isset($modules[$module])) {  // some modules could be unused
-                    continue;
-                }
+                list($listenerClass, $method, $classPath, $selector) = $listener;
 
                 if (in_array($selector, $disabledListeners)) {
                     continue;
                 }
 
-                if (!isset($this->listenersSingleton[$module][$listenerClass])) {
-                    if ($oldListenerName) {
-                        require_once $modules[$module] . 'classes/' . $oldListenerName . '.listener.php';
+                if (!isset($this->listenersSingleton[$listenerClass])) {
+                    if ($classPath) {
+                        require_once $classPath;
                     }
-                    $this->listenersSingleton[$module][$listenerClass] = new $listenerClass();
+                    $this->listenersSingleton[$listenerClass] = new $listenerClass();
                 }
-                $this->hashListened[$eventName][] = function($event) use($me, $module, $listenerClass) {
-                    $me->listenersSingleton[$module][$listenerClass]->performEvent($event);
-                };
+                $this->hashListened[$eventName][] = $this->listenersSingleton[$listenerClass]->$method(...);
             }
         }
     }

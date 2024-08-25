@@ -7,7 +7,7 @@ use Testapp\Tests\EventForTest;
  * @subpackage  jelix_tests module
  * @author      Laurent Jouanneau
  * @contributor
- * @copyright   2006-2023 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  * @link        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -26,22 +26,29 @@ class eventsTest extends \Jelix\UnitTests\UnitTestCase
     {
         self::initJelixConfig();
         jFile::removeDir(jApp::tempPath(), false);
+
+        $warmup = new \Jelix\Event\EventWarmup(\Jelix\Core\App::app());
+        $warmup->launch(\Jelix\Core\App::getEnabledModulesPaths(), 0);
+        \Jelix\Core\App::reloadServices();
         parent::setUp();
     }
 
     function testBasics()
     {
         $response = jEvent::notify('TestEvent');
-        $response = $response->getResponse();
-        $response = serialize($response[0]);
-        $temoin = serialize(array('module' => 'jelix_tests', 'ok' => true));
+        $response = serialize($response->getResponse());
+        $expected = serialize([
+            array('module' => 'jelix_tests', 'ok' => true),
+            array('module' => 'jelix_tests2', 'ok' => true)
+        ]);
 
-        $this->assertEquals($temoin, $response, 'simple event');
+        $this->assertEquals($expected, $response, 'simple event');
 
-        $temoin = array('hello' => 'world');
-        $response = jEvent::notify('TestEventWithParams', $temoin);
+        $expected = array('hello' => 'world');
+        $response = jEvent::notify('TestEventWithParams', $expected);
         $response = $response->getResponse();
         $this->assertEquals('world', $response[0]['params'], 'event with parameters');
+        $this->assertEquals('world', $response[1]['params2'], 'event with parameters');
     }
 
     function testResponseItem()
@@ -109,24 +116,28 @@ class eventsTest extends \Jelix\UnitTests\UnitTestCase
 
     function testDisabledListener()
     {
-        jIncluder::clear();
         jApp::config()->disabledListeners['TestEvent'] = array('\JelixTests\Tests\Listener\TestEventsListener');
 
         $response = jEvent::notify('TestEvent');
-        $response = $response->getResponse();
-        $this->assertEquals(array(), $response);
-        jIncluder::clear();
+        $response = serialize($response->getResponse());
+        $expected = serialize([
+            array('module' => 'jelix_tests2', 'ok' => true)
+        ]);
+
+        $this->assertEquals($expected, $response);
     }
 
     function testSingleDisabledListener()
     {
-        jIncluder::clear();
         jApp::config()->disabledListeners['TestEvent'] = '\JelixTests\Tests\Listener\TestEventsListener';
 
         $response = jEvent::notify('TestEvent');
         $response = $response->getResponse();
-        $this->assertEquals(array(), $response);
-        jIncluder::clear();
+        $expected = [
+            array('module' => 'jelix_tests2', 'ok' => true)
+        ];
+
+        $this->assertEquals($expected, $response);
     }
 
     function testEventObject()
@@ -134,6 +145,7 @@ class eventsTest extends \Jelix\UnitTests\UnitTestCase
         $event = new EventForTest();
         jEvent::notify($event);
         $this->assertEquals('onTestEventObject called', $event->getDummyValue());
+        $this->assertEquals('TestAttrEventsListener called', $event->getDummy2Value());
     }
 
     function testEventHavingNoListener()

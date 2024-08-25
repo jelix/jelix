@@ -39,7 +39,7 @@ class EventWarmup implements WarmUpLauncherInterface
         $compiler = new \Jelix\Event\Compiler();
 
         foreach($modulesList as $name => $path) {
-            $compiler->compileListenersFile($path.'/events.xml', $name);
+            $compiler->compileListenersFile($path, 'events.xml', $name);
         }
         $compiler->save($this->app->buildPath.'listeners.php');
     }

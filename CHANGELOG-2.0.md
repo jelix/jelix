@@ -109,6 +109,30 @@ Also :
 - `jExceptionForms` is deprecated, you should catch `\Jelix\Forms\FormException` instead
 - the ref attribute on control objects is now readonly
 
+## Changes in jEvent
+
+- Declaration of event listener can now be done into the listener class with PHP attributes
+  In this case, the listener class can be any classes, not only classes inheriting
+  from \Jelix\Event\EventListener. However the listener class should be still
+  declared into the event.xml files.
+
+```xml
+<events xmlns="http://jelix.org/ns/events/1.0">
+   <listener name="\JelixTests\Tests\Listener\TestAttrEventsListener"/>
+</events>
+```
+
+```php
+class TestAttrEventsListener
+{
+    #[ListenEvent('TestEvent')]
+    function onTestEvent ($event) { }
+
+    #[ListenEventClass]
+    function testEventObject(EventForTest $event) { }
+}
+```
+
 ## Test environment
 
 - upgrade PHPUnit to 10.4.0
