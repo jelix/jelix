@@ -53,7 +53,7 @@ class EntryPointUrlModifier
      */
     protected function _havingName($entryPointName, & $urlMap, $errorIfMissing = true)
     {
-        $ep = $this->mapModifier->getEntryPoint($entryPointName);
+        $ep = $this->mapModifier->getEntryPointByNameOrAlias($entryPointName);
         if ($ep) {
             foreach($urlMap as $entry) {
                 $entry->addToEntryPoint($ep, $this->module);

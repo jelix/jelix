@@ -15,6 +15,7 @@ class xmlmapTest extends \Jelix\UnitTests\UnitTestCase {
     public function setUp() : void {
         //self::initClassicRequest(TESTAPP_URL.'index.php');
         copy(__DIR__.'/urls/urls.xml', jApp::tempPath('urls.xml'));
+        copy(__DIR__.'/urls/urls_empty.xml', jApp::tempPath('localurls.xml'));
         copy(__DIR__.'/urls/res_urls_addurl.xml', jApp::tempPath('urls2.xml'));
         parent::setUp();
     }
@@ -42,12 +43,64 @@ class xmlmapTest extends \Jelix\UnitTests\UnitTestCase {
 
     function testGetEntryPoint() {
         $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
-        $ep = $modifier->getEntryPoint('mysoap', 'soap');
+        $ep = $modifier->getEntryPoint('mysoap');
 
         $this->assertEquals("mysoap", $ep->getName());
         $this->assertEquals("soap", $ep->getType());
     }
 
+    function testGetEntryPointOnRedefined()
+    {
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
+        $localModifier = new \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier($modifier, jApp::tempPath('localurls.xml'));
+
+        $ep = $localModifier->getEntryPoint('mysoap');
+        $this->assertNotNull($ep);
+        $this->assertEquals("mysoap", $ep->getName());
+        $this->assertEquals("soap", $ep->getType());
+    }
+
+    function testGetEntryPointOnRedefinedSwapped()
+    {
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('localurls.xml'));
+        $localModifier = new \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier($modifier, jApp::tempPath('urls.xml'));
+
+        $ep = $localModifier->getEntryPoint('mysoap');
+        $this->assertNotNull($ep);
+        $this->assertEquals("mysoap", $ep->getName());
+        $this->assertEquals("soap", $ep->getType());
+    }
+
+    function testGetEntryPointByAlias()
+    {
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
+        $ep = $modifier->getEntryPointByNameOrAlias('supersoap');
+        $this->assertNotNull($ep);
+        $this->assertEquals("mysoap", $ep->getName());
+        $this->assertEquals("soap", $ep->getType());
+    }
+
+    function testGetEntryPointByAliasOnRedefined()
+    {
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));
+        $localModifier = new \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier($modifier, jApp::tempPath('localurls.xml'));
+
+        $ep = $localModifier->getEntryPointByNameOrAlias('supersoap');
+        $this->assertNotNull($ep);
+        $this->assertEquals("mysoap", $ep->getName());
+        $this->assertEquals("soap", $ep->getType());
+    }
+
+    function testGetEntryPointByAliasOnRedefinedSwapped()
+    {
+        $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('localurls.xml'));
+        $localModifier = new \Jelix\Routing\UrlMapping\XmlRedefinedMapModifier($modifier, jApp::tempPath('urls.xml'));
+
+        $ep = $localModifier->getEntryPointByNameOrAlias('supersoap');
+        $this->assertNotNull($ep);
+        $this->assertEquals("mysoap", $ep->getName());
+        $this->assertEquals("soap", $ep->getType());
+    }
 
     function testAddUrl() {
         $modifier = new \Jelix\Routing\UrlMapping\XmlMapModifier(jApp::tempPath('urls.xml'));

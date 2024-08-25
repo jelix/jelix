@@ -312,6 +312,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $this->createDir($varPath.'sessions/');
         $this->createDir($varPath.'mails/');
         $this->createDir($varPath.'build/');
+        $this->createDir($varPath.'db/sqlite3/');
 
         $this->createDir($appPath.'install/uninstall/');
         $this->createDir($appPath.'modules');
@@ -396,7 +397,8 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
         $this->createFile($configPath.'localconfig.ini.php.dist', 'var/config/localconfig.ini.php.tpl', $param, 'Configuration file for specific environment');
         $this->createFile($configPath.'profiles.ini.php', 'var/config/profiles.ini.php.tpl', $param, 'Profiles file');
         $this->createFile($configPath.'profiles.ini.php.dist', 'var/config/profiles.ini.php.tpl', $param, 'Profiles file for your repository');
-        $this->createFile(App::appSystemPath('preferences.ini.php'), 'app/system/preferences.ini.php.tpl', $param, 'Preferences file');
+
+        //$this->createFile(App::appSystemPath('preferences.ini.php'), 'app/system/preferences.ini.php.tpl', $param, 'Preferences file');
         $this->createFile(App::appSystemPath('urls.xml'), 'app/system/urls.xml.tpl', $param, 'URLs mapping file');
         $this->createFile(App::appSystemPath('index/config.ini.php'), 'app/system/index/config.ini.php.tpl', $param, 'Entry point configuration file');
         $this->createFile($appPath.'app/responses/myHtmlResponse.class.php', 'app/responses/myHtmlResponse.class.php.tpl', $param, 'Main response class');

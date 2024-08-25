@@ -53,7 +53,8 @@ class XmlMapModifier
         } else {
             $this->document->load($file);
         }
-        $this->currentEntryPoint = $this->getEntryPoint('index');
+
+        $this->currentEntryPoint = $this->getEntryPointByNameOrAlias('index');
     }
 
     public function setAsModified()
@@ -176,6 +177,40 @@ class XmlMapModifier
             if (preg_match('/^.*entrypoint$/', $item->localName)
                 && $item->getAttribute('name') == $name) {
                 return new XmlEntryPoint($this, $item);
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @param mixed $name
+     *
+     * @return XmlEntryPoint
+     */
+    public function getEntryPointByNameOrAlias($name)
+    {
+        if (($pos = strpos($name, '.php')) !== false) {
+            $name = substr($name, 0, $pos);
+        }
+        foreach ($this->document->documentElement->childNodes as $item) {
+            if ($item->nodeType != XML_ELEMENT_NODE) {
+                continue;
+            }
+
+            if (preg_match('/^.*entrypoint$/', $item->localName)) {
+
+                if ($item->getAttribute('name') == $name) {
+                    return new XmlEntryPoint($this, $item);
+                }
+
+                $aliasesStr = $item->getAttribute('alias');
+                if ($aliasesStr) {
+                    $aliasesArr = preg_split('/\s*,\s*/', $aliasesStr);
+                    if (in_array($name, $aliasesArr)) {
+                        return new XmlEntryPoint($this, $item);
+                    }
+                }
             }
         }
 

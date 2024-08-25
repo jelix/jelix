@@ -38,6 +38,7 @@ application configuration by executing these commands:
 ```
 ./app-ctl ldap-reset
 ./app-ctl reset
+./app-ctl install
 ```
 
 If you made change into jelix, you can rerun these commands.
@@ -85,13 +86,90 @@ export TESTAPP_WEB_PORT=12345
 Using a specific php version
 -----------------------------
 
-By default, PHP 7.4 is installed. If you want to use an other PHP version,
+By default, PHP 8.3 is installed. If you want to use an other PHP version,
 set the environment variable `PHP_VERSION`, and rebuild the containers:
 
 ```
-export PHP_VERSION=8.3
+export PHP_VERSION=8.2
 
 ./run-docker stop # if containers are running
 ./run-docker build
 ./run-docker
 ```
+
+Working with Xdebug
+===================
+
+Into PhpStorm
+-------------
+
+Into `File > Settings > PHP > Servers`, add a new server with the name "testappsrv".
+Indicate `testapp.local` as the host and `8820` as port. Check `use path mappings`
+and indicate to map `/jelixapp/` on the root of your project.
+
+Into `File > Settings > PHP > Debug`, indicate `9003` as port.
+
+Into `Run > Edit Configurations`, add a new configuration of type "PHP remote debug" :
+Check "filter debug connection by IDE key" then choose the server "testapp" you configured
+previously and use the IDE key "PHPSTORM"
+
+To debug the testapp web site :
+
+1. In your browser, install the xdebug extension, and indicate "PHPSTORM" as IDE key.
+2. Go to `http://testapp.local:8820` and activate the xdebug extension
+2. Into PHPStorm, add breakpoints, and activate the debug listener
+4. browse testapp on pages concerned by your breakpoints, PHPStorm should halt the execution on these breakpoints.
+
+To debug cli scripts,
+
+1. Into PHPStorm, add breakpoints, and activate the debug listener
+2. Go into the phpfpm container (`./app-ctl shell`)
+3. Launch commands:
+   - for installer.php, configurator.php and dev.php scripts, launch them with the `--xdebug` option
+   - for any other scripts, type `export XDEBUG_SESSION=1` before launching them.
+
+Into VisualStudio Code
+----------------------
+
+- Install the plugin php-xdebug into VSC
+- Create the `.vscode/launch.json` with this content:
+
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Testapp web",
+      "type": "php",
+      "request": "launch",
+      "pathMappings": {
+        "/jelixapp/": "${workspaceFolder}/"
+      },
+      "port": 9003,
+      "xdebugSettings": {
+        "max_data": 1024,
+        "max_depth": 5
+      }
+    },
+    {
+      "name": "Testapp CLI",
+      "type": "php",
+      "request": "launch",
+      "pathMappings": {
+        "/jelixapp/": "${workspaceFolder}/"
+      },
+      "port": 9003,
+      "xdebugSettings": {
+        "max_data": 1024,
+        "max_depth": 5
+      }
+    }
+  ]
+}
+```
+
+- restart VSC
+- You can now add breakpoint into your code
+- in the "run and debug" tab, click on "listen for xdebug"
+- browse the website, and then the code will halt on your break points
+

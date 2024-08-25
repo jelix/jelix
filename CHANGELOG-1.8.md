@@ -1,6 +1,35 @@
 Changes into Jelix 1.8
 ======================
 
+Next
+----
+
+- In urls.xml, entrypoint can have an "alias" attribute, to indicate an alternate
+  name, that could be used into the `declareUrls` of configurator. It is useful
+  when your entrypoint name is not the name expected by external modules. For
+  example, a module wants to be attached to the `admin` entrypoint, but the
+  entrypoint corresponding to the administration interface is named `foo`, you
+  can declare the alias `admin` on this entrypoint, and then the module can
+  be installed.
+- Fix installer: deconfigured modules were not uninstalled
+- Fix installer: versions of dependencies of an already installed module
+  were not checked when this module was not upgraded and its dependencies were upgraded.
+- Fix column order into jControllerDaoCrud
+- Fix jForms: php error when trying to process a file that is too big 
+- Fix default charset of mysql table for jacl2db and jauthdb
+- Fix jacl2db configurator: driver was not set correctly on EP config
+- Fix jAuthdb installer: it should use the conf given by the installer
+- tests: install xdebug and add `--xdebug` options on some commands
+- Fix `app:create` command: create missing `var/db/sqlite3` directory.
+
+1.8.10
+------
+
+- New template plugin ctrl_value_assign for forms
+- Fix installer: some upgraders may not be executed in some case
+- Fix jDbConnection::lastIdInTable(): names should be enclosed
+- Fix lastInsertId() on Sqlserver connector
+
 1.8.9
 -----
 

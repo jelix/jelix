@@ -65,7 +65,7 @@ services:
       TLS_CA_CRT_FILENAME: "tests.jelix-CA.crt"
       TESTAPP_WEB_PORT: "${TESTAPP_WEB_PORT}"
       DISPLAY_ERRORS: "on"
-      PHP_IDE_CONFIG: "serverName=appcli"
+      PHP_IDE_CONFIG: "serverName=testappsrv"
     volumes:
       - "../:/jelixapp/"
       - "./docker-conf/certs:/customcerts"

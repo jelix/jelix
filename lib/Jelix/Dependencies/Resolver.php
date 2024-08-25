@@ -96,6 +96,10 @@ class Resolver
                 continue;
             }
             if ($item->getAction() == self::ACTION_NONE) {
+                if (!$item->isInstalled()) {
+                    continue;
+                }
+                $this->_checkDependencies($item);
                 continue;
             }
             if ($item->getAction() == self::ACTION_REMOVE) {
@@ -207,10 +211,6 @@ class Resolver
                 );
             }
 
-            if (isset($this->checkedItems[$depItemName])) {
-                continue;
-            }
-
             if ($depItem->getAction() == self::ACTION_NONE) {
                 $version = $depItem->getCurrentVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
@@ -221,10 +221,10 @@ class Resolver
                         $depItem
                     );
                 }
-                if (!$depItem->isInstalled()) {
+                if (!$depItem->isInstalled() && !$depItemOptional) {
                     if (!$depItem->canBeInstalled() || !$this->allowToForceInstallDependencies) {
                         throw new ItemException(
-                            "item '".$depItemName."' needed by ".$item->getName().'cannot be installed ',
+                            "item '".$depItemName."' needed by ".$item->getName().', cannot be installed ',
                             $item,
                             ItemException::ERROR_DEPENDENCY_CANNOT_BE_INSTALLED,
                             $depItem
@@ -244,8 +244,10 @@ class Resolver
                         $depItem
                     );
                 }
-                $this->_checkDependencies($depItem);
-                $this->chain[] = $depItem;
+                if (!isset($this->checkedItems[$depItemName])) {
+                    $this->_checkDependencies($depItem);
+                    $this->chain[] = $depItem;
+                }
             } elseif ($depItem->getAction() == self::ACTION_UPGRADE) {
                 $version = $depItem->getNextVersion();
                 if (!VersionComparator::compareVersionRange($version, $depItemVersion)) {
@@ -256,8 +258,10 @@ class Resolver
                         $depItem
                     );
                 }
-                $this->_checkDependencies($depItem);
-                $this->chain[] = $depItem;
+                if (!isset($this->checkedItems[$depItemName])) {
+                    $this->_checkDependencies($depItem);
+                    $this->chain[] = $depItem;
+                }
             }
         }
 

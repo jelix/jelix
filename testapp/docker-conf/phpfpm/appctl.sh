@@ -74,7 +74,6 @@ function resetApp() {
     fi
 
     setRights $appdir
-    launchInstaller $appdir
 }
 
 function resetSqlite3() {

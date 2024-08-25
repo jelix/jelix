@@ -297,7 +297,7 @@ class configureResolverTest extends \Jelix\UnitTests\UnitTestCase
 
         $resolver = new \Jelix\Installer\InstallationResolver();
         $modules = $resolver->getItemsToConfigure($componentsList, ['testinstall1'], false);
-        $this->assertEquals(0, count($modules));
+        $this->assertEquals(1, count($modules));
 
         $modules = $resolver->getItemsToConfigure($componentsList, ['testinstall1'], true);
         $this->assertEquals(2, count($modules));

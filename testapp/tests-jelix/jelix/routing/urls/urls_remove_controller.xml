@@ -18,7 +18,7 @@
         <url handler="superhandler" pathinfo="/articles" module="cms"/>
         <url include="urls-my-include.xml" pathinfo="/my-include" module="foo"/>
     </entrypoint>
-    <entrypoint type="soap" name="mysoap"/>
+    <entrypoint type="soap" name="mysoap" alias="supersoap"/>
     <classicentrypoint name="news">
         <url module="news" default="true"/>
         <url module="articles" pathinfo="/mynews/"/>

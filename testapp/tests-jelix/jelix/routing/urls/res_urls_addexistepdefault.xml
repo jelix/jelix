@@ -3,7 +3,7 @@
     <entrypoint name="index">
         <url module="testapp" default="true"/>
     </entrypoint>
-    <entrypoint type="soap" name="mysoap"/>
+    <entrypoint type="soap" name="mysoap" alias="supersoap"/>
     <classicentrypoint name="news">
         <url module="news" default="true"/>
         <url module="articles" pathinfo="/mynews/"/>

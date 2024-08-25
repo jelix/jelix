@@ -171,7 +171,8 @@ class debugbarHTMLResponsePlugin implements jIHTMLResponsePlugin
         if (isset($_COOKIE['jxdebugbarpos'])) {
             $class = 'jxdb-position-'.$_COOKIE['jxdebugbarpos'];
         } else {
-            $class = 'jxdb-position-'.(jApp::config()->debugbar['defaultPosition'] == 'left' ? 'l' : 'r');
+            $defPos = jApp::config()->debugbar['defaultPosition'];
+            $class = 'jxdb-position-'.($defPos == 'left' ? 'l' : ($defPos == 'center' ? 'c' : 'r'));
         } ?>
 <div id="jxdb" class="<?php echo $class; ?>">
     <div id="jxdb-header">

@@ -31,7 +31,7 @@ class JelixCommands
         $jelixScriptConfig = \Jelix\DevHelper\JelixScript::loadConfig();
         $jelixScriptConfig->generateUndefinedProperties();
 
-        $application = new Application('Jelix commands, ONLY FOR DEVELOPERS.');
+        $application = new DevApplication('Jelix commands, ONLY FOR DEVELOPERS.');
         $application->add(new Command\MigrateApp($jelixScriptConfig));
         $application->add(new Command\InitAdmin($jelixScriptConfig));
         $application->add(new Command\CreateCtrl($jelixScriptConfig));

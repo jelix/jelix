@@ -179,6 +179,32 @@ class TemplateController {
     }
 
 
+    function getControlValue($ref, $tplName, $insteadOfDisplay)
+    {
+        $ctrl = $this->retrieveControl($ref, $tplName);
+        if (!$ctrl) {
+            return false;
+        }
+        if ($ctrl->type == 'hidden' || $ctrl->type == 'captcha' || $ctrl->type == 'reset') {
+            return false;
+        }
+
+        if ($ctrl->type == 'submit' && ($ctrl->standalone || !$this->formViewMode)) {
+            return false;
+        }
+
+        if ($insteadOfDisplay === null && $this->formViewMode) {
+            $insteadOfDisplay = true;
+        }
+
+        if ($insteadOfDisplay) {
+            $this->displayedControls[$ref] = true;
+        }
+
+        return $this->builder->getForm()->getData($ref);
+    }
+
+
     protected function retrieveControl(&$ref, $tplName)
     {
         if ($ref == '') {
