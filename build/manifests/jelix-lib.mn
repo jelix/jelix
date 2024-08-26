@@ -147,9 +147,6 @@ cd lib/jelix-legacy/docs
 cd lib/jelix-legacy/docs/ns
   __ALL__
 
-cd lib/jelix-legacy/forms
-  __ALL_RECURSIVELY__
-
 cd lib/jelix-legacy/kvdb
   __ALL__
 
