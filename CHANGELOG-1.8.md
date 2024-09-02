@@ -4,7 +4,10 @@ Changes into Jelix 1.8
 Next
 ----
 
-- In urls.xml, entrypoint can have an "alias" attribute, to indicate an alternate
+1.8.11
+------
+
+- In urls.xml, entrypoint can now have an "alias" attribute, to indicate an alternate
   name, that could be used into the `declareUrls` of configurator. It is useful
   when your entrypoint name is not the name expected by external modules. For
   example, a module wants to be attached to the `admin` entrypoint, but the
@@ -21,6 +24,9 @@ Next
 - Fix jAuthdb installer: it should use the conf given by the installer
 - tests: install xdebug and add `--xdebug` options on some commands
 - Fix `app:create` command: create missing `var/db/sqlite3` directory.
+- Fix debugbar: `'center'` value of defaultPosition config parameter was not taken account
+- Fix configurator for sessions: some parameters were stored into the `session` 
+  section of the configuration instead of `sessions`.
 
 1.8.10
 ------
