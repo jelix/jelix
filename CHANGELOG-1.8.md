@@ -3,6 +3,7 @@ Changes into Jelix 1.8
 
 Next
 ----
+- Fix datetime picker: wrong selected value into the hour drop box
 
 1.8.11
 ------
