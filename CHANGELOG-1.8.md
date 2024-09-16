@@ -4,6 +4,7 @@ Changes into Jelix 1.8
 Next
 ----
 
+- New: support of error page for any locales, into `app/responses/` : `error.fr_FR.php`, `error.de_DE.php`...
 - Fix datetime picker: wrong selected value into the hour drop box
 - Fix datetime picker: localization were missing
 
