@@ -209,6 +209,13 @@ class jDbColumn
     public $hasDefault = false;
 
     /**
+     * says if the column is generated.
+     *
+     * @var bool
+     */
+    public $generated = false;
+
+    /**
      * The length for a string.
      *
      * @var int
@@ -256,12 +263,14 @@ class jDbColumn
         $length = 0,
         $hasDefault = false,
         $default = null,
-        $notNull = false
+        $notNull = false,
+        $generated = false
     ) {
         $this->type = $type;
         $this->name = $name;
         $this->length = $length;
         $this->hasDefault = $hasDefault;
+        $this->generated = $generated;
         if ($hasDefault) {
             $this->default = ($notNull && $default === null ? '' : $default);
         } else {

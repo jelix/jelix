@@ -258,6 +258,7 @@ class jDbSchema_pgsqlTest extends \Jelix\UnitTests\UnitTestCase {
         $schema = $db->schema();
 
         $goodList = array(
+            'generated_column_test',
             'jacl2_group',
             'jacl2_rights',
             'jacl2_subject',
@@ -402,6 +403,42 @@ class jDbSchema_pgsqlTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals(array(), $table->getReferences());
         $this->assertTrue($table->getColumn('id')->isAutoincrementedColumn());
         $this->assertFalse($table->getColumn('name')->isAutoincrementedColumn());
+        $this->assertFalse($table->getColumn('name')->generated);
+    }
+
+    function testGeneratedColumn()
+    {
+        $db = jDb::getConnection('testapp_pgsql');
+        $schema = $db->schema();
+
+        $table = $schema->getTable('generated_column_test');
+
+        $this->assertNotNull($table);
+
+        $this->assertEquals('generated_column_test', $table->getName());
+
+        $pk = $table->getPrimaryKey();
+        $this->assertEquals(array('id'), $pk->columns);
+        $this->assertTrue($table->getColumn('total')->generated);
+
+        // insert test value
+        $stmt = $db->prepare('INSERT INTO generated_column_test (description, amount, change) VALUES(:d, :a, :c)');
+
+        $stmt->bindValue('d','candy');
+        $stmt->bindValue('a', 2);
+        $stmt->bindValue('c',1.02);
+
+        $stmt->execute();
+
+        $rs = $db->query('SELECT id, description, amount, change, total FROM generated_column_test');
+
+        $record = $rs->fetch();
+
+        $this->assertEquals($record->id, 1);
+        $this->assertEquals($record->description, 'candy');
+        $this->assertEquals($record->amount, 2);
+        $this->assertEquals($record->change, 1.02);
+        $this->assertEquals($record->total, 2.04);
     }
 
     function testCreateTable()
@@ -616,6 +653,7 @@ class jDbSchema_pgsqlTest extends \Jelix\UnitTests\UnitTestCase {
         $goodList = array(
             'country',
             'bigcity',
+            'generated_column_test',
             'jacl2_group',
             'jacl2_rights',
             'jacl2_subject',
@@ -795,6 +833,7 @@ class jDbSchema_pgsqlTest extends \Jelix\UnitTests\UnitTestCase {
         $schema->dropTable('bigcity');
         $schema->dropTable($schema->getTable('country'));
         $goodList = array(
+            'generated_column_test',
             'jacl2_group',
             'jacl2_rights',
             'jacl2_subject',

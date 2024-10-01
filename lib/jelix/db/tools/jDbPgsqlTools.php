@@ -260,7 +260,7 @@ class jDbPgsqlTools extends jDbTools
         // pg_get_expr on adbin, not compatible with pgsql < 9
         $adColName = ($version < 12 ? 'd.adsrc' : 'pg_get_expr(d.adbin,d.adrelid) AS adsrc');
 
-        $sql_get_fields = "SELECT t.typname, a.attname, a.attnotnull, a.attnum, a.attlen, a.atttypmod,
+        $sql_get_fields = "SELECT t.typname, a.attname, a.attnotnull, a.attnum, a.attlen, a.atttypmod, a.attgenerated,
         a.atthasdef, {$adColName}
         FROM pg_type t, pg_attribute a LEFT JOIN pg_attrdef d ON (d.adrelid=a.attrelid AND d.adnum=a.attnum)
         WHERE
@@ -276,6 +276,7 @@ class jDbPgsqlTools extends jDbTools
             $field->notNull = ($line->attnotnull == 't');
             $field->hasDefault = ($line->atthasdef == 't');
             $field->default = $line->adsrc;
+            $field->generated = ($line->attgenerated != '');
 
             $typeinfo = $this->getTypeInfo($field->type);
             $field->unifiedType = $typeinfo[1];
