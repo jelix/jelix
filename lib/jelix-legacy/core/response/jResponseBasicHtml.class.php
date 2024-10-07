@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Brice Tence
  *
- * @copyright   2010-2012 Laurent Jouanneau
+ * @copyright   2010-2024 Laurent Jouanneau
  * @copyright   2011 Julien Issler, 2011 Brice Tence
  *
  * @see        http://www.jelix.org
@@ -299,7 +299,11 @@ class jResponseBasicHtml extends jResponse
      */
     public function outputErrors()
     {
-        if (file_exists(jApp::appPath('app/responses/error.en_US.php'))) {
+
+        $locale = jLocale::getCurrentLocale();
+        if (file_exists(jApp::appPath('app/responses/error.'.$locale.'.php'))) {
+            $file = jApp::appPath('app/responses/error.'.$locale.'.php');
+        } else if (file_exists(jApp::appPath('app/responses/error.en_US.php'))) {
             $file = jApp::appPath('app/responses/error.en_US.php');
         } else {
             $file = JELIX_LIB_CORE_PATH.'response/error.en_US.php';

@@ -468,8 +468,9 @@ jforms_datepicker_default.js[]="$jelix/js/jforms/datepickers/default/init.js"
 jforms_datepicker_default.require=jquery_ui
 
 jforms_datetimepicker_default.require=jforms_datepicker_default
-jforms_datetimepicker_default.js[]="$jelix/js/jforms/datetimepickers/default/init.js"
 jforms_datetimepicker_default.js[]="$jelix/jquery/jquery-ui-timepicker-addon.js"
+jforms_datetimepicker_default.js[]="$jelix/jquery/jquery-ui-timepicker-addon-i18n.min.js"
+jforms_datetimepicker_default.js[]="$jelix/js/jforms/datetimepickers/default/init.js"
 jforms_datetimepicker_default.css="$jelix/jquery/jquery-ui-timepicker-addon.css"
 
 ;jforms_timepicker_default.require=
