@@ -1,4 +1,7 @@
 <?php
+
+use Jelix\Database\Schema\TableNameInterface;
+
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
@@ -32,6 +35,11 @@ class queryparseConnection extends \Jelix\Database\AbstractConnection {
      protected function _doExec ($queryString) {}
      protected function _doLimitQuery ($queryString, $offset, $number) {}
     protected function _getSchema(){}
+
+    public function createTableName(string $name): TableNameInterface
+    {
+        // TODO: Implement createTableName() method.
+    }
 }
 
 

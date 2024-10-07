@@ -69,6 +69,9 @@ anymore.
 
 All error messages are now only in english. No more `jelix~db.*` locales.
 
+- `\Jelix\Database\ConnectionInterface` has a new method `createTableName()`.
+
+
 ## Changes in jDao
 
 jDao is now relying on [JelixDao](https://github.com/jelix/JelixDao).
