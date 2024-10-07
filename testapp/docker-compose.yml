@@ -2,7 +2,7 @@ name: jelix-${JLX_BRANCH}-tests
 
 services:
   pgsql:
-    image: postgres:11
+    image: postgres:13
     container_name: "jelix_${JLX_BRANCH}_test_pgsql"
     environment:
       POSTGRES_DB: testapp

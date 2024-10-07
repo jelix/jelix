@@ -39,7 +39,7 @@ class pgsqlDbTable extends jDbTable
         // pg_get_expr on adbin, not compatible with pgsql < 9
         $adColName = ($version < 12 ? 'd.adsrc' : 'pg_get_expr(d.adbin,d.adrelid) AS adsrc');
 
-        $sql = "SELECT a.attname, a.attnotnull, a.atthasdef, a.attlen, a.atttypmod,
+        $sql = "SELECT a.attname, a.attnotnull, a.atthasdef, a.attlen, a.atttypmod, a.attgenerated,
                 FORMAT_TYPE(a.atttypid, a.atttypmod) AS type, a.attndims,
                 {$adColName}, co.contype AS primary, co.conname
             FROM pg_attribute AS a
@@ -58,11 +58,12 @@ class pgsqlDbTable extends jDbTable
             $notNull = ($line->attnotnull == 't');
             $default = $line->adsrc;
             $hasDefault = ($line->atthasdef == 't');
+            $generated = ($line->attgenerated != '');
             if ($type == 'boolean' && $hasDefault) {
                 $default = (strtolower($default) === 'true');
             }
 
-            $col = new jDbColumn($name, $type, $length, $hasDefault, $default, $notNull);
+            $col = new jDbColumn($name, $type, $length, $hasDefault, $default, $notNull, $generated);
 
             $typeinfo = $tools->getTypeInfo($type);
             if (is_string($default) && preg_match('/^nextval\(([^\)]*)\)$/', $default, $m)) {

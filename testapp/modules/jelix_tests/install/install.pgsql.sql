@@ -49,7 +49,17 @@ CREATE TABLE products (
     promo boolean NOT NULL
 );
 
+CREATE TABLE generated_column_test (
+    id serial NOT NULL,
+    description character varying(150) NOT NULL,
+    amount integer,
+    change numeric,
+    total numeric GENERATED ALWAYS AS (amount * change) STORED
+);
+
 SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('products', 'id'), 1, false);
+
+SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('generated_column_test', 'id'), 1, false);
 
 ALTER TABLE ONLY product_tags_test
     ADD CONSTRAINT product_tags_test_pkey PRIMARY KEY (product_id, tag);
@@ -71,4 +81,5 @@ ALTER TABLE ONLY product_test
 ALTER TABLE ONLY products
     ADD CONSTRAINT products_pkey PRIMARY KEY (id);
 
-
+ALTER TABLE ONLY generated_column_test
+    ADD CONSTRAINT generated_column_test_pkey PRIMARY KEY (id);
