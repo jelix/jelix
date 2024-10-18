@@ -231,4 +231,17 @@ class jLocaleTest extends \Jelix\UnitTests\UnitTestCase {
         jApp::config()->locale = 'fr_FR';
         $this->assertEquals('bonne valeur',jLocale::get('jelix_tests~newoverload.test'));
     }
+
+    function testGetBundle()
+    {
+        jApp::config()->locale = 'fr_FR';
+        $expected = array(
+            'first.locale' => 'ceci est une phrase fr_FR',
+            'second.locale' => 'ceci est une phrase 2 fr_FR',
+            'multiline.locale.with.accent' => 'Chaîne à tester',
+            'multiline.locale.with.accent2' => 'Chaîne à tester à foison',
+            'first-dash-locale' => 'ceci est une phrase fr_FR avec tiret',
+        );
+        $this->assertEquals($expected, jLocale::getBundle('tests1.first.locale')->getAllKeys());
+    }
 }

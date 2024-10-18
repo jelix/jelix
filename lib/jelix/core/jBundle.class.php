@@ -5,9 +5,9 @@
  *
  * @author     Laurent Jouanneau
  * @author     Gerald Croes
- * @copyright  2001-2005 CopixTeam, 2005-2018 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 use Jelix\PropertiesFile\Parser;
@@ -67,6 +67,22 @@ class jBundle
         }
 
         return null;
+    }
+
+    /**
+     * Get all translations of the bundle.
+     * @param string|null $charset
+     * @return array
+     */
+    public function getAllKeys($charset = null)
+    {
+        if ($charset == null) {
+            $charset = jApp::config()->charset;
+        }
+        if (!in_array($charset, $this->_loadedCharset)) {
+            $this->_loadLocales($charset);
+        }
+        return $this->_strings[$charset];
     }
 
     /**

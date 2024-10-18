@@ -5,13 +5,13 @@
  *
  * @author     Laurent Jouanneau
  * @author     Gerald Croes
- * @copyright  2001-2005 CopixTeam, 2005-2016 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau
  * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
  * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
  * initial authors : Gerald Croes, Laurent Jouanneau.
  * enhancement by Laurent Jouanneau for Jelix.
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -92,32 +92,7 @@ class jLocale
      */
     public static function get($key, $args = null, $locale = null, $charset = null, $tryOtherLocales = true)
     {
-        $config = jApp::config();
-
-        try {
-            $file = new jSelectorLoc($key, $locale, $charset);
-        } catch (jExceptionSelector $e) {
-            // the file is not found
-            if ($e->getCode() == 12) {
-                // unknown module..
-                throw $e;
-            }
-            if ($charset === null) {
-                $charset = $config->charset;
-            }
-
-            throw new Exception('(212)No locale file found for the given locale key "'.$key
-                            .'" in any other default languages (charset '.$charset.')');
-        }
-
-        $locale = $file->locale;
-        $keySelector = $file->module.'~'.$file->fileKey;
-
-        if (!isset(self::$bundles[$keySelector][$locale])) {
-            self::$bundles[$keySelector][$locale] = new jBundle($file, $locale);
-        }
-
-        $bundle = self::$bundles[$keySelector][$locale];
+        list($bundle, $file) = self::getBundleAndSelector($key, $locale, $charset);
 
         //try to get the message from the bundle.
         $string = $bundle->get($file->messageKey, $file->charset);
@@ -130,7 +105,7 @@ class jLocale
                                     ', charset:'.$file->charset.')');
             }
 
-            $words = self::tryOtherLocales($key, $args, $locale, $charset, $config);
+            $words = self::tryOtherLocales($key, $args, $locale, $charset, jApp::config());
             if ($words === null) {
                 throw new Exception('(213)The given locale key "'.$file->toString().
                                     '" does not exists in any default languages for the '.$file->charset.' charset');
@@ -146,6 +121,55 @@ class jLocale
 
         return $string;
     }
+
+    /**
+     * @param $key
+     * @param $locale
+     * @param $charset
+     * @return jBundle
+     * @throws jExceptionSelector
+     */
+    public static function getBundle($key, $locale = null, $charset = null)
+    {
+        list($bundle, $selector) = self::getBundleAndSelector($key, $locale, $charset);
+        return $bundle;
+    }
+
+    /**
+     * @param $key
+     * @param $locale
+     * @param $charset
+     * @return array
+     * @throws jExceptionSelector
+     */
+    protected static function getBundleAndSelector($key, $locale = null, $charset = null)
+    {
+        $config = jApp::config();
+        try {
+            $file = new jSelectorLoc($key, $locale, $charset);
+        } catch (jExceptionSelector $e) {
+            // the file is not found
+            if ($e->getCode() == 12) {
+                // unknown module..
+                throw $e;
+            }
+            if ($charset === null) {
+                $charset = $config->charset;
+            }
+
+            throw new Exception('(212)No locale file found for the given locale key "'.$key
+                .'" in any other default languages (charset '.$charset.')');
+        }
+
+        $locale = $file->locale;
+        $keySelector = $file->module.'~'.$file->fileKey;
+
+        if (!isset(self::$bundles[$keySelector][$locale])) {
+            self::$bundles[$keySelector][$locale] = new jBundle($file, $locale);
+        }
+        return [ self::$bundles[$keySelector][$locale], $file ];
+    }
+
 
     /**
      * return the list of alternative locales to the given one.

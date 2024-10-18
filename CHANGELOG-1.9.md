@@ -14,6 +14,10 @@ Features
   can declare the alias `admin` on this entrypoint, and then the module can
   be installed.
 
+- jDb: Support of generated column from Postgresql (contributor: Riccardo Beltrami)
+
+- New methods `jLocale::getBundle()` and `jBundle::getAllKeys()`
+
 
 Removes
 -------
