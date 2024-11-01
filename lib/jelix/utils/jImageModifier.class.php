@@ -7,7 +7,7 @@
  * @contributor Dominique Papin, Lepeltier kévin (the author of the original plugin)
  * @contributor geekbay, Brunto, Laurent Jouanneau
  *
- * @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2011-2020 Laurent Jouanneau
+ * @copyright   2007-2008 Lepeltier kévin, 2008 Dominique Papin, 2008 Bastien Jaillot, 2009 geekbay, 2010 Brunto, 2011-2024 Laurent Jouanneau
  *
  * @see       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -104,16 +104,7 @@ class jImageModifier
         }
 
         // extension
-        if (empty($params['ext'])) {
-            $path_parts = pathinfo($src);
-            if (isset($path_parts['extension'])) {
-                $ext = strtolower($path_parts['extension']);
-            } else {
-                $ext = '';
-            }
-        } else {
-            $ext = strtolower($params['ext']);
-        }
+        $ext = self::getExtension($src, $params['ext']??'');
 
         //// white background for IE
         //if (empty($params['background'])
@@ -243,8 +234,12 @@ class jImageModifier
      */
     public static function transformImage($srcFs, $targetPath, $targetName, $params)
     {
-        $path_parts = pathinfo($srcFs);
-        $mimeType = self::$mimes[strtolower($path_parts['extension'])];
+        $ext = self::getExtension($srcFs);
+        if (!$ext || !isset(self::$mimes[$ext])) {
+            return false;
+        }
+
+        $mimeType = self::$mimes[$ext];
 
         $quality = (!empty($params['quality'])) ? $params['quality'] : 100;
 
@@ -411,6 +406,21 @@ class jImageModifier
         @imagedestroy($image);
 
         return true;
+    }
+
+    protected static function getExtension($filename, $priorityExt = '')
+    {
+        if ($priorityExt == '') {
+            $path_parts = pathinfo($filename);
+            if (isset($path_parts['extension'])) {
+                $ext = strtolower($path_parts['extension']);
+            } else {
+                $ext = '';
+            }
+        } else {
+            $ext = strtolower($priorityExt);
+        }
+        return $ext;
     }
 
     /**

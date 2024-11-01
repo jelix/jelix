@@ -63,7 +63,7 @@ class SubjectGroupDelete extends \Jelix\Scripts\ModuleCommandAbstract
             throw new \Exception('This rights group does not exist');
         }
 
-        $sql = 'UDPATE '.$cnx->prefixTable('jacl2_rights').' SET id_aclsbjgrp=NULL WHERE id_aclsbjgrp=';
+        $sql = 'UPDATE '.$cnx->prefixTable('jacl2_rights').' SET id_aclsbjgrp=NULL WHERE id_aclsbjgrp=';
         $sql .= $cnx->quote($group);
         $cnx->exec($sql);
 
