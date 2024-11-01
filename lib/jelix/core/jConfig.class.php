@@ -4,7 +4,7 @@
  * @subpackage core
  *
  * @author   Laurent Jouanneau
- * @copyright 2005-2013 Laurent Jouanneau
+ * @copyright 2005-2024 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -82,7 +82,7 @@ class jConfig
                     include $file;
                     $config = (object) $config;
                 } else {
-                    $config = jelix_read_ini($file);
+                    $config = \jFile::mergeIniFile($file);
                 }
 
                 // we check all directories to see if it has been modified

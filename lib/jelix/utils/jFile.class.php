@@ -11,7 +11,7 @@
  * @contributor Cedric (fix bug ticket 56)
  * @contributor Julien Issler
  *
- * @copyright   2005-2022 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
+ * @copyright   2005-2024 Laurent Jouanneau, 2006 Christophe Thiriot, 2006 Loic Mathaud, 2008 Bastien Jaillot, 2008 Olivier Demah, 2009-2010 Julien Issler
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -19,6 +19,7 @@
 use Jelix\FileUtilities\Directory;
 use Jelix\FileUtilities\File;
 use Jelix\FileUtilities\Path;
+use Jelix\IniFile\Util as IniUtil;
 
 /**
  * A class helper to read or create files.
@@ -289,10 +290,13 @@ class jFile
      */
     public static function mergeIniFile($fileName, $object = null, $ignoredSection = array())
     {
-        return \Jelix\IniFile\Util::readAndMergeObject(
+        if ($object === null) {
+            $object = new stdClass();
+        }
+        return IniUtil::readAndMergeObject(
             $fileName,
             $object,
-            \Jelix\IniFile\Util::NOT_MERGE_PROTECTED_DIRECTIVE | \Jelix\IniFile\Util::NORMAL_MERGE_ARRAY_VALUES_WITH_INTEGER_KEYS,
+            IniUtil::NOT_MERGE_PROTECTED_DIRECTIVE | IniUtil::NORMAL_MERGE_ARRAY_VALUES_WITH_INTEGER_KEYS,
             $ignoredSection
         );
     }
@@ -308,10 +312,10 @@ class jFile
      */
     public static function mergeIniContent($contentToImport, $baseContent = null, $ignoredSection = array())
     {
-        return \Jelix\IniFile\Util::mergeIniObjectContents(
+        return IniUtil::mergeIniObjectContents(
             $baseContent,
             (object) $contentToImport,
-            \Jelix\IniFile\Util::NOT_MERGE_PROTECTED_DIRECTIVE | \Jelix\IniFile\Util::NORMAL_MERGE_ARRAY_VALUES_WITH_INTEGER_KEYS,
+            IniUtil::NOT_MERGE_PROTECTED_DIRECTIVE | IniUtil::NORMAL_MERGE_ARRAY_VALUES_WITH_INTEGER_KEYS,
             $ignoredSection
         );
     }

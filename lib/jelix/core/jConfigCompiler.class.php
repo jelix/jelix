@@ -6,7 +6,7 @@
  * @author       Laurent Jouanneau
  * @contributor  Thibault Piront (nuKs), Christophe Thiriot, Philippe Schelté
  *
- * @copyright    2006-2022 Laurent Jouanneau
+ * @copyright    2006-2024 Laurent Jouanneau
  * @copyright    2007 Thibault Piront, 2008 Christophe Thiriot, 2008 Philippe Schelté
  *
  * @see         http://www.jelix.org
@@ -75,10 +75,10 @@ class jConfigCompiler
         }
 
         // this is the defaultconfig file of JELIX itself
-        $config = jelix_read_ini(__DIR__.'/defaultconfig.ini.php');
+        $config = \jFile::mergeIniFile(__DIR__.'/defaultconfig.ini.php');
 
         // read the main configuration of the app
-        @jelix_read_ini(jApp::mainConfigFile(), $config);
+        \jFile::mergeIniFile(jApp::mainConfigFile(), $config);
 
         if (!file_exists($appSystemPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
             throw new Exception("Configuration file of the entrypoint is missing -- {$configFile}", 5);
@@ -91,25 +91,25 @@ class jConfigCompiler
 
         // read the configuration of the entry point
         if (file_exists($appSystemPath.$configFile)) {
-            if (@jelix_read_ini($appSystemPath.$configFile, $config, jConfig::sectionsToIgnoreForEp) === false) {
+            if (\jFile::mergeIniFile($appSystemPath.$configFile, $config, jConfig::sectionsToIgnoreForEp) === false) {
                 throw new Exception("Syntax error in the configuration file -- {$configFile}", 6);
             }
         }
 
         // read the local configuration of the app
         if (file_exists($varConfigPath.'localconfig.ini.php')) {
-            @jelix_read_ini($varConfigPath.'localconfig.ini.php', $config);
+            \jFile::mergeIniFile($varConfigPath.'localconfig.ini.php', $config);
         }
 
         // read the local configuration of the entry point
         if (file_exists($varConfigPath.$configFile)) {
-            if (@jelix_read_ini($varConfigPath.$configFile, $config, jConfig::sectionsToIgnoreForEp) === false) {
+            if (\jFile::mergeIniFile($varConfigPath.$configFile, $config, jConfig::sectionsToIgnoreForEp) === false) {
                 throw new Exception("Syntax error in the configuration file -- {$configFile}", 6);
             }
         }
 
         if (file_exists($varConfigPath.'liveconfig.ini.php')) {
-            @jelix_read_ini($varConfigPath.'liveconfig.ini.php', $config);
+            \jFile::mergeIniFile($varConfigPath.'liveconfig.ini.php', $config);
         }
 
         self::prepareConfig($config, $allModuleInfo, $isCli, $pseudoScriptName);

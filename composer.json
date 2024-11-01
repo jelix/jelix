@@ -21,7 +21,7 @@
         "jelix/composer-module-setup": "^1.1.0",
         "phpmailer/phpmailer": "^6.8.0",
         "jelix/castor": "^1.1.1",
-        "jelix/inifile": "^3.3.2",
+        "jelix/inifile": "^3.4.0",
         "jelix/simplelocalization": "^1.7.2",
         "jelix/properties-file": "^1.2.3",
         "symfony/console":"^5.4.26",

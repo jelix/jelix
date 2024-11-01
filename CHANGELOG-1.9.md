@@ -18,6 +18,8 @@ Features
 
 - New methods `jLocale::getBundle()` and `jBundle::getAllKeys()`
 
+- New methods `jFile::mergeIniFile()` and `jFile::mergeIniContent()`
+
 
 Removes
 -------
@@ -27,7 +29,8 @@ Removes
 Deprecated API and features
 ---------------------------
 
-* jClassBinding
+* `jClassBinding`
+* `jelix_read_ini`
 
 Internal changes
 ----------------
