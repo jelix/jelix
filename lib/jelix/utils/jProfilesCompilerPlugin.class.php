@@ -88,6 +88,8 @@ class jProfilesCompilerPlugin
             }
             $profiles[$this->category][$name] = $this->consolidate($profile);
         }
+        // create profiles for alias
+        // note that if a profile have the same name of the alias, it will be overwritten
         foreach ($this->aliases as $alias => $profileName) {
             if (isset($profiles[$this->category][$profileName])) {
                 $profiles[$this->category][$alias] = $profiles[$this->category][$profileName];
