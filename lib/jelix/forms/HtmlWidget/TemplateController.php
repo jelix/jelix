@@ -176,6 +176,13 @@ class TemplateController {
         return ($this->form->getControl($ref) !== null);
     }
 
+    function isControlActivated($ref = '')
+    {
+        if ($ref == '') {
+            $ref = $this->currentCtrlRef;
+        }
+        return $this->form->isActivated($ref);
+    }
 
     function getControlValue($ref, $tplName, $insteadOfDisplay)
     {
