@@ -84,6 +84,23 @@ class TemplateController {
     }
 
     /**
+     * @return bool
+     */
+    public function isViewMode()
+    {
+        return $this->formViewMode;
+    }
+
+    /**
+     * Give the form
+     * @return \jFormsBase
+     */
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    /**
      * @param bool $insideRealForm
      * @param array|null $controlsToDisplay
      * @param array|null $controlsToNotDisplay
@@ -209,8 +226,33 @@ class TemplateController {
         return $this->builder->getForm()->getData($ref);
     }
 
+    /**
+     * @return \jFormsControl|null
+     */
+    public function getCurrentControl()
+    {
+        if ($this->currentCtrlRef == '') {
+            return null;
+        }
+        return $this->currentCtrl;
+    }
 
-    protected function retrieveControl(&$ref, $tplName)
+    /**
+     * @param $ref
+     * @return \jFormsControl|null
+     */
+    public function getControl($ref)
+    {
+        return $this->form->getControl($ref);
+    }
+
+    /**
+     * @param $ref
+     * @param $tplName
+     * @return false|\jFormsControl|null
+     * @throws \jException
+     */
+    public function retrieveControl(&$ref, $tplName)
     {
         if ($ref == '') {
             if ($this->currentCtrlRef == '') {

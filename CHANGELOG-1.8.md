@@ -4,6 +4,8 @@ Changes into Jelix 1.8
 Next
 ----
 
+- jForms: add new methods to TemplateController for some external template plugins
+
 1.8.13
 ------
 
