@@ -48,7 +48,7 @@ class ChangeVersion {
 
 
 
-    public function __construct($jelixPath, OutputInterface $output = null) {
+    public function __construct($jelixPath, ?OutputInterface $output = null) {
         $jelixPath = rtrim($jelixPath, '/') . '/';
         $this->jelixPath = $jelixPath;
         $this->output = $output;

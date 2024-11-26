@@ -31,7 +31,6 @@ class jBasicErrorHandler
         E_USER_WARNING => 'warning',
         E_USER_NOTICE => 'notice',
         E_USER_DEPRECATED => 'deprecated',
-        E_STRICT => 'strict',
     );
 
     public static function register()
@@ -60,6 +59,10 @@ class jBasicErrorHandler
             $errmsg = $m[2];
         } else {
             $code = 1;
+        }
+
+        if (version_compare(phpversion(), '8.4.0', '<')) {
+            self::$errorCode[E_STRICT] = 'strict';
         }
 
         if (!isset(self::$errorCode[$errno])) {

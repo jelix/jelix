@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
  *
- * @copyright   2006-2022 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  * @copyright   2008-2016 Julien Issler, 2008 Dominique Papin, 2012 Claudio Bernardes
  *
  * @see        http://www.jelix.org
@@ -343,7 +343,7 @@ class HtmlBuilder extends BuilderBase
      *
      * @return WidgetInterface
      */
-    public function getWidget($ctrl, ParentWidgetInterface $parentWidget = null)
+    public function getWidget($ctrl, ?ParentWidgetInterface $parentWidget = null)
     {
         if (isset($this->widgets[$ctrl->ref])) {
             return $this->widgets[$ctrl->ref];

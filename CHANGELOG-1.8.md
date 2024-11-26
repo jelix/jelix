@@ -5,6 +5,8 @@ Next
 ----
 
 - jForms: add new methods to TemplateController for some external template plugins
+- Fix compatibility with PHP 8.4
+
 
 1.8.13
 ------

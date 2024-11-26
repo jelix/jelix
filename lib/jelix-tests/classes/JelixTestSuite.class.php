@@ -20,7 +20,7 @@ class JelixTestSuite extends PHPUnit\Framework\TestSuite {
         parent::__construct();
     }
 
-    public function run(TestResult $result = null): TestResult
+    public function run(?TestResult $result = null): TestResult
     {
         jApp::pushCurrentModule($this->module);
         $result = parent::run($result);

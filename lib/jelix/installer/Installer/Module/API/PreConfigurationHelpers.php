@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018 Laurent Jouanneau
+ * @copyright   2018-2024 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -63,7 +63,7 @@ class PreConfigurationHelpers
      *
      * @return null|array null if plugin is unknown, else array($iniModifier, $section)
      */
-    public function getCoordPluginConfig($pluginName, IniReaderInterface $config = null)
+    public function getCoordPluginConfig($pluginName, ?IniReaderInterface $config = null)
     {
         if (!$config) {
             $config = $this->getConfigIni();

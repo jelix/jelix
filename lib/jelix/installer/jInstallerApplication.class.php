@@ -4,12 +4,13 @@
  * @subpackage installer
  *
  * @author     Laurent Jouanneau
- * @copyright  2011-2021 Laurent Jouanneau
+ * @copyright  2011-2024 Laurent Jouanneau
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Installer\GlobalSetup;
 /**
  * Application configuration reader and manager.
  *
@@ -29,17 +30,17 @@ class jInstallerApplication
     /**
      * the global app setup.
      *
-     * @var \Jelix\Installer\GlobalSetup
+     * @var GlobalSetup
      */
     protected $globalSetup;
 
     /**
      * @param string $projectFile the filename of the XML project file
      */
-    public function __construct($projectFile = '', Jelix\Installer\GlobalSetup $globalSetup = null)
+    public function __construct($projectFile = '', ?GlobalSetup $globalSetup = null)
     {
         if (!$globalSetup) {
-            $globalSetup = new \Jelix\Installer\GlobalSetup();
+            $globalSetup = new GlobalSetup();
         }
         $this->globalSetup = $globalSetup;
     }
