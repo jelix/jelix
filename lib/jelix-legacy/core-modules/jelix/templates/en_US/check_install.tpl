@@ -1,7 +1,7 @@
 {meta_html css $j_jelixwww.'design/jelix.css'}
 
 <div id="page">
-    <div class="logo">Powered by <img src="{$j_jelixwww}design/images/logo_jelix_100.png" alt="Jelix"/></div>
+    <div class="logo">Powered by <img src="{$j_jelixwww}design/images/logo_jelix_100.png" alt="Jelix"/> {$version}</div>
 
     <div class="nocss">
         <hr />
@@ -16,7 +16,7 @@
         <p>If you want to use another name for the Jelix's web file directory,
             modify the <code>jelixWWWPath</code> parameter in
             <em>app/system/mainconfig.ini.php</em>.</p>
-        <p>For more informations, see <a href="http://docs.jelix.org/en/manual-1.7/server-configuration"
+        <p>For more informations, see <a href="http://docs.jelix.org/en/manual-1.8/server-configuration"
             title="installation documentation">the installation documentation</a> of Jelix.</p>
         <hr />
     </div>
@@ -27,6 +27,18 @@
             {$check}
         </div>
     </div>
+
+    <div class="block">
+        <h2>Extensions availables on your installation</h2>
+        <div class="blockcontent">
+            {foreach $phpExtensions as $extension}
+            {if $extension!= 'Core'}
+            <a href="https://www.php.net/manual/book.{$extension|lower}.php" alt="view the doc of the extension">{$extension}</a>,
+            {/if}
+            {/foreach}
+        </div>
+    </div>
+
 
     <div class="block">
         <h2>This is a temporary page</h2>
@@ -43,7 +55,7 @@
             <ul>
                 <li><a href="http://www.jelix.org">Visit the Official Jelix's site</a></li>
                 <li><a href="http://jelix.org/articles/en/tutorials">Learn with tutorials</a></li>
-                <li><a href="http://docs.jelix.org/en/manual-1.7">Read the documentation of Jelix</a></li>
+                <li><a href="http://docs.jelix.org/en/manual-1.8">Read the documentation of Jelix</a></li>
                 <li><a href="http://jelix.org/forums/forum/cat/2-english">Ask your questions in forums</a></li>
             </ul>
         </div>
