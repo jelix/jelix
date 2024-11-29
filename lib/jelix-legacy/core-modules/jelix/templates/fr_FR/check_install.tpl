@@ -1,7 +1,7 @@
 {meta_html css $j_jelixwww.'design/jelix.css'}
 
 <div id="page">
-    <div class="logo">Propulsée par <img src="{$j_jelixwww}design/images/logo_jelix_100.png" alt="jelix"/></div>
+    <div class="logo">Propulsée par <img src="{$j_jelixwww}design/images/logo_jelix_100.png" alt="jelix"/> {$version}</div>
 
     <div class="nocss">
         <hr />
@@ -17,7 +17,7 @@
            modifier le paramêtre <code>jelixWWWPath</code>
            dans <em>app/system/mainconfig.ini.php</em>.</p>
         <p>Pour plus d'informations, consultez
-             <a href="http://docs.jelix.org/fr/manuel-1.7/configurer-server"
+             <a href="http://docs.jelix.org/fr/manuel-1.8/configurer-server"
              title="documentation officielle">la documentation sur l'installation de Jelix</a>.</p>
         <hr />
     </div>
@@ -29,6 +29,16 @@
         </div>
     </div>
 
+    <div class="block">
+        <h2>Extensions disponible sur votre installation</h2>
+        <div class="blockcontent">
+            {foreach $phpExtensions as $extension}
+            {if $extension!= 'Core'}
+            <a href="https://www.php.net/manual/book.{$extension|lower}.php" alt="voir the doc php de l'extension">{$extension}</a>,
+            {/if}
+            {/foreach}
+        </div>
+    </div>
     <div class="block">
         <h2>Ceci est une page temporaire</h2>
         <div class="blockcontent">
@@ -45,7 +55,7 @@
             <ul>
                 <li><a href="http://jelix.org" title="Site officiel de Jelix">Visitez le site de Jelix</a></li>
                 <li><a href="http://jelix.org/articles/fr/tutoriels">Suivez les tutoriels</a></li>
-                <li><a href="http://docs.jelix.org/fr/manuel-1.7">Lisez la documentation de Jelix</a></li>
+                <li><a href="http://docs.jelix.org/fr/manuel-1.8">Lisez la documentation de Jelix</a></li>
                 <li><a href="http://jelix.org/forums/forum/cat/1-francais">Posez vos questions dans les forums</a></li>
             </ul>
         </div>
