@@ -37,6 +37,9 @@ class check_installZone extends jZone
         $check = new \Jelix\Installer\Checker\Checker($reporter, $messages);
         $check->run();
 
+
+	$this->_tpl->assign('phpExtensions', get_loaded_extensions());
+	$this->_tpl->assign('version', jFramework::version());
         $this->_tpl->assign('wwwpath', jApp::wwwPath());
         $this->_tpl->assign('configpath', jApp::varConfigPath());
         $this->_tpl->assign('check', $reporter->trace);
