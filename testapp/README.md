@@ -86,11 +86,11 @@ export TESTAPP_WEB_PORT=12345
 Using a specific php version
 -----------------------------
 
-By default, PHP 7.4 is installed. If you want to use an other PHP version,
+By default, PHP 8.1 is installed. If you want to use an other PHP version,
 set the environment variable `PHP_VERSION`, and rebuild the containers:
 
 ```
-export PHP_VERSION=7.3
+export PHP_VERSION=8.4
 
 ./run-docker stop # if containers are running
 ./run-docker build

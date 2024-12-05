@@ -3,6 +3,8 @@ Changes into Jelix 1.9.0
 
 Not released yet.
 
+Minimum version of PHP is 8.1.
+
 Features
 --------
 

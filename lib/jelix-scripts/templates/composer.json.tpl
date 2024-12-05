@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php": ">=7.4",
+        "php": ">=8.1",
         "jelix/composer-module-setup": "^1.0.5"
     },
     "autoload": {

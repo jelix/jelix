@@ -110,7 +110,7 @@ class Checker extends CheckerBase
 
         $composerFile = __DIR__.'/../../../../../composer.json';
         if (!file_exists($composerFile)) {
-            $this->buildProperties['PHP_VERSION_TARGET'] = '7.4';
+            $this->buildProperties['PHP_VERSION_TARGET'] = '8.1';
         } else {
             $content = json_decode(file_get_contents($composerFile));
             preg_match('/([0-9\.]+)/', $content->require->php, $m);
