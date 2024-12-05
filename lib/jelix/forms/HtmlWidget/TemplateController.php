@@ -333,7 +333,7 @@ class TemplateController {
         return true;
     }
 
-    function outputControlValue($ref = '', $attributes='', $tplName='', $rawValue = false)
+    function outputControlValue($ref = '', $attributes='', $tplName='', $rawValue = false, $contentWhenEmpty = '')
     {
         $ctrl = $this->retrieveControl($ref, $tplName);
         if (!$ctrl) {
@@ -352,6 +352,15 @@ class TemplateController {
 
         if (!$this->form->isActivated($ref)) {
             return false;
+        }
+
+        $value = $this->form->getData($ref);
+
+        if ($contentWhenEmpty != ''
+            && ((is_array($value) && count($value) == 0) ||
+                (!is_array($value) && trim($value) == ''))) {
+            echo $contentWhenEmpty;
+            return true;
         }
 
         if ($rawValue) {
