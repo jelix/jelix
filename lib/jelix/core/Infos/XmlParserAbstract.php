@@ -3,7 +3,7 @@
  * @author    Vincent Viaud
  * @contributor Laurent Jouanneau
  *
- * @copyright 2010 Vincent Viaud, 2014-2018 Laurent Jouanneau
+ * @copyright 2010 Vincent Viaud, 2014-2024 Laurent Jouanneau
  *
  * @see      http://havefnubb.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -38,7 +38,7 @@ abstract class XmlParserAbstract
     {
         $object = $this->createInfos();
         $xml = new \XMLreader();
-        $xml->open($this->path, '', LIBXML_COMPACT);
+        $xml->open($this->path, null, LIBXML_COMPACT);
 
         while ($xml->read()) {
             if ($xml->nodeType == \XMLReader::ELEMENT) {

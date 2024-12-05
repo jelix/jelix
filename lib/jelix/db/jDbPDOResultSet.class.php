@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor Gwendal Jouannic, Thomas, Julien Issler
  *
- * @copyright  2005-2021 Laurent Jouanneau
+ * @copyright  2005-2024 Laurent Jouanneau
  * @copyright  2008 Gwendal Jouannic, 2009 Thomas
  * @copyright  2009 Julien Issler
  *
@@ -95,6 +95,7 @@ class jDbPDOResultSet extends PDOStatement
      *
      * @return bool true if the fetch mode is ok
      */
+    #[\ReturnTypeWillChange]
     public function setFetchMode($mode, ...$args)
     {
         $this->_fetchMode = $mode;

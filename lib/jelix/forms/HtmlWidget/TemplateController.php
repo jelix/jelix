@@ -84,6 +84,23 @@ class TemplateController {
     }
 
     /**
+     * @return bool
+     */
+    public function isViewMode()
+    {
+        return $this->formViewMode;
+    }
+
+    /**
+     * Give the form
+     * @return \jFormsBase
+     */
+    public function getForm()
+    {
+        return $this->form;
+    }
+
+    /**
      * @param bool $insideRealForm
      * @param array|null $controlsToDisplay
      * @param array|null $controlsToNotDisplay
@@ -176,6 +193,13 @@ class TemplateController {
         return ($this->form->getControl($ref) !== null);
     }
 
+    function isControlActivated($ref = '')
+    {
+        if ($ref == '') {
+            $ref = $this->currentCtrlRef;
+        }
+        return $this->form->isActivated($ref);
+    }
 
     function getControlValue($ref, $tplName, $insteadOfDisplay)
     {
@@ -202,8 +226,33 @@ class TemplateController {
         return $this->builder->getForm()->getData($ref);
     }
 
+    /**
+     * @return \jFormsControl|null
+     */
+    public function getCurrentControl()
+    {
+        if ($this->currentCtrlRef == '') {
+            return null;
+        }
+        return $this->currentCtrl;
+    }
 
-    protected function retrieveControl(&$ref, $tplName)
+    /**
+     * @param $ref
+     * @return \jFormsControl|null
+     */
+    public function getControl($ref)
+    {
+        return $this->form->getControl($ref);
+    }
+
+    /**
+     * @param $ref
+     * @param $tplName
+     * @return false|\jFormsControl|null
+     * @throws \jException
+     */
+    public function retrieveControl(&$ref, $tplName)
     {
         if ($ref == '') {
             if ($this->currentCtrlRef == '') {
@@ -284,7 +333,7 @@ class TemplateController {
         return true;
     }
 
-    function outputControlValue($ref = '', $attributes='', $tplName='', $rawValue = false)
+    function outputControlValue($ref = '', $attributes='', $tplName='', $rawValue = false, $contentWhenEmpty = '')
     {
         $ctrl = $this->retrieveControl($ref, $tplName);
         if (!$ctrl) {
@@ -303,6 +352,15 @@ class TemplateController {
 
         if (!$this->form->isActivated($ref)) {
             return false;
+        }
+
+        $value = $this->form->getData($ref);
+
+        if ($contentWhenEmpty != ''
+            && ((is_array($value) && count($value) == 0) ||
+                (!is_array($value) && trim($value) == ''))) {
+            echo $contentWhenEmpty;
+            return true;
         }
 
         if ($rawValue) {

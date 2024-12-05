@@ -1,7 +1,7 @@
 {meta_html css $j_jelixwww.'design/jelix.css'}
 
 <div id="page">
-    <div class="logo">Powered by <img src="{$j_jelixwww}design/images/logo_jelix_100.png" alt="Jelix"/></div>
+    <div class="logo">Powered by <img src="{$j_jelixwww}design/images/logo_jelix_100.png" alt="Jelix"/> {$version}</div>
 
     <div class="nocss">
         <hr />
@@ -27,6 +27,18 @@
             {$check}
         </div>
     </div>
+
+    <div class="block">
+        <h2>Extensions availables on your installation</h2>
+        <div class="blockcontent">
+            {foreach $phpExtensions as $extension}
+            {if $extension!= 'Core'}
+            <a href="https://www.php.net/manual/book.{$extension|lower}.php" alt="view the doc of the extension">{$extension}</a>,
+            {/if}
+            {/foreach}
+        </div>
+    </div>
+
 
     <div class="block">
         <h2>This is a temporary page</h2>

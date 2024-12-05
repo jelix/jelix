@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2023 Laurent Jouanneau
+ * @copyright   2008-2024 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -101,7 +101,7 @@ class Installer
      * @param GlobalSetup                $globalSetup
      * @param string                     $lang        the language code for messages
      */
-    public function __construct(Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang = '')
+    public function __construct(Reporter\ReporterInterface $reporter, ?GlobalSetup $globalSetup = null, $lang = '')
     {
         $this->reporter = $reporter;
         $this->messages = new \Jelix\Installer\Checker\Messages($lang);

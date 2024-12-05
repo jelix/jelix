@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
  *
- * @copyright   2006-2022 Laurent Jouanneau
+ * @copyright   2006-2024 Laurent Jouanneau
  * @copyright   2008-2016 Julien Issler, 2008 Dominique Papin, 2012 Claudio Bernardes
  *
  * @see        http://www.jelix.org
@@ -271,14 +271,14 @@ class HtmlBuilder extends BuilderBase
 
         $hiddens = '';
         foreach ($urlParams as $p_name => $p_value) {
-            $hiddens .= '<input type="hidden" name="'.$p_name.'" value="'.htmlspecialchars($p_value, ENT_COMPAT | ENT_SUBSTITUTE).'"'.$this->_endt."\n";
+            $hiddens .= '<input type="hidden" name="'.$p_name.'" value="'.htmlspecialchars((string)$p_value, ENT_COMPAT | ENT_SUBSTITUTE).'"'.$this->_endt."\n";
         }
 
         foreach ($this->_form->getHiddens() as $ctrl) {
             if (!$this->_form->isActivated($ctrl->ref)) {
                 continue;
             }
-            $hiddens .= '<input type="hidden" name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'" value="'.htmlspecialchars($this->_form->getData($ctrl->ref), ENT_COMPAT | ENT_SUBSTITUTE).'"'.$this->_endt."\n";
+            $hiddens .= '<input type="hidden" name="'.$ctrl->ref.'" id="'.$this->_name.'_'.$ctrl->ref.'" value="'.htmlspecialchars((string)$this->_form->getData($ctrl->ref), ENT_COMPAT | ENT_SUBSTITUTE).'"'.$this->_endt."\n";
         }
 
         if ($this->_form->securityLevel) {
@@ -343,7 +343,7 @@ class HtmlBuilder extends BuilderBase
      *
      * @return WidgetInterface
      */
-    public function getWidget($ctrl, ParentWidgetInterface $parentWidget = null)
+    public function getWidget($ctrl, ?ParentWidgetInterface $parentWidget = null)
     {
         if (isset($this->widgets[$ctrl->ref])) {
             return $this->widgets[$ctrl->ref];

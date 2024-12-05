@@ -4,6 +4,20 @@ Changes into Jelix 1.8
 Next
 ----
 
+- jForms: add new methods to TemplateController for some external template plugins
+- Fix compatibility with PHP 8.4
+
+
+1.8.13
+------
+
+- Fix some notices into jImageModifier
+- Fix autocomplete widget: missing semi-colon into the generated JS
+- Fix password editor widget: allow more customization in HTML
+- Fix password editor: generate less special characters
+- Fix SQL request into the `acl2:rights-group-delete` command
+
+
 1.8.12
 ------
 

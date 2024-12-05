@@ -4,7 +4,7 @@
  * @subpackage  core
  *
  * @author      Laurent Jouanneau
- * @copyright   2018-2019 laurent Jouanneau
+ * @copyright   2018-2024 laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -67,7 +67,7 @@ class jHttpErrorException extends Exception
 
     protected $reason = '';
 
-    public function __construct($httpCode, $reason = '', Throwable $previous = null)
+    public function __construct($httpCode, $reason = '', ?Throwable $previous = null)
     {
         if ($httpCode === 0) {
             $httpCode = 500;
@@ -99,7 +99,7 @@ class jHttpErrorException extends Exception
  */
 class jHttp404NotFoundException extends jHttpErrorException
 {
-    public function __construct($reason = '', Throwable $previous = null)
+    public function __construct($reason = '', ?Throwable $previous = null)
     {
         parent::__construct(404, $reason, $previous);
     }
@@ -115,7 +115,7 @@ class jHttp404NotFoundException extends jHttpErrorException
  */
 class jHttp401UnauthorizedException extends jHttpErrorException
 {
-    public function __construct($reason = '', Throwable $previous = null)
+    public function __construct($reason = '', ?Throwable $previous = null)
     {
         parent::__construct(401, $reason, $previous);
     }
@@ -131,7 +131,7 @@ class jHttp401UnauthorizedException extends jHttpErrorException
  */
 class jHttp403ForbiddenException extends jHttpErrorException
 {
-    public function __construct($reason = '', Throwable $previous = null)
+    public function __construct($reason = '', ?Throwable $previous = null)
     {
         parent::__construct(403, $reason, $previous);
     }

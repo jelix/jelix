@@ -6,7 +6,7 @@
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau, Julien Issler, Yannick Le Guédart, Philippe Villiers
  *
- * @copyright  2001-2005 CopixTeam, 2005-2018 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau
  * @copyright  2008 Thomas
  * @copyright  2008 Julien Issler, 2009 Yannick Le Guédart
  * @copyright  2013 Philippe Villiers
@@ -59,7 +59,7 @@ class jDaoCondition
      */
     public $glueOp;
 
-    public function __construct($glueOp = 'AND', jDaoCondition $parent = null)
+    public function __construct($glueOp = 'AND', ?jDaoCondition $parent = null)
     {
         $this->parent = $parent;
         $this->glueOp = $glueOp;
