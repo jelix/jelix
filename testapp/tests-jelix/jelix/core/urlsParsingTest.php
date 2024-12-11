@@ -704,4 +704,51 @@ class urlsParsingTest extends \Jelix\UnitTests\UnitTestCase {
             $this->assertFalse(true, 'Not the expected error: '.$e->getMessage());
         }
     }
+
+
+
+    function testBackendBasePath() {
+
+        $req = jApp::coord()->request;
+        $req->urlScriptPath = '/';
+        $req->params = array();
+        $config = jApp::config();
+        $config->urlengine = array(
+            'enableParser'=>true,
+            'multiview'=>false,
+            'basePath'=>'/foo/',
+            'backendBasePath' => '/',
+            'notFoundAct'=>'jelix~error:notfound',
+            'significantFile'=>'urlsfiles/url_maintests.xml',
+            'localSignificantFile'=> '',
+            'checkHttpsOnParsing'=>false,
+            'urlScriptIdenc'=>'index'
+        );
+        $config->compilation['force'] = true;
+        UTParseUrlsIncluder::resetUrlCache();
+        jUrl::getEngine(true);
+
+
+        $resultList=array();
+        $resultList[]= array('module'=>'jelix_tests', 'action'=>'urlsig:url1', 'mois'=>'10',  'annee'=>'2005', 'id'=>'35');
+
+
+        $request = array(
+            array("/foo/index.php","/test/news/2005/10/35",array()),
+        );
+
+        foreach($request as $k=>$urldata){
+            $url = jUrl::parse ($urldata[0], $urldata[1], $urldata[2]);
+            $p = $url->params;
+            ksort($p);
+            ksort($resultList[$k]);
+
+            $this->assertEquals($resultList[$k], $p, 'test '.$k);
+        }
+
+    }
+
+
+
+
 }
