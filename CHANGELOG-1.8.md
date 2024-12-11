@@ -4,7 +4,12 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.14
+------
+
 - jForms: add new methods to TemplateController for some external template plugins
+- jForms TemplateController: new parameter on outputControlValue for content when the value is empty
+- new template plugin ifctrlactivated for jForms
 - Fix compatibility with PHP 8.4
 
 
