@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <form xmlns="http://jelix.org/ns/forms/1.1">
 
-<input ref="login" required="true" maxlength="50">
+<input ref="login" required="true" maxlength="100">
    <label locale="jauthdb_admin~crud.form.login"/>
 </input>
 
