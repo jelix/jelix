@@ -13,7 +13,7 @@ services:
     networks:
       - default
   redis:
-    image: redis:5
+    image: redis:7
     container_name: "jelix_${JLX_BRANCH}_test_redis"
     command: ["redis-server", "--appendonly", "no"]
     networks:
