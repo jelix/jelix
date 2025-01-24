@@ -4,6 +4,12 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.15
+------
+
+- Fix jAcl2 : increase some id fields so we can use for example long email address for login names 
+- unit-tests are ok to use Redis 7
+
 1.8.14
 ------
 

@@ -19,7 +19,7 @@
         "php": ">=7.4.0",
         "jelix/fakeserverconf": "^1.0.0",
         "jelix/composer-module-setup": "^1.1.0",
-        "phpmailer/phpmailer": "^6.8.0",
+        "phpmailer/phpmailer": "^6.9.3",
         "jelix/castor": "^1.1.1",
         "jelix/inifile": "^3.3.2",
         "jelix/simplelocalization": "^1.7.2",
