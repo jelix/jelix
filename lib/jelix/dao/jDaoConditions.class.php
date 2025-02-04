@@ -180,7 +180,7 @@ class jDaoConditions
      *
      * @param string $field_id      the property name on which the condition applies
      * @param string $operator      the sql operator
-     * @param string $value         the value which is compared to the property
+     * @param string|array $value   the value which is compared to the property. Can be a list for operators like IN.
      * @param string $field_pattern the pattern to use on the property (WHERE clause)
      * @param bool   $foo           parameter for internal use : don't use it or set to false
      *

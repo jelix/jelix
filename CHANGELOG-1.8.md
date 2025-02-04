@@ -4,7 +4,9 @@ Changes into Jelix 1.8
 Next
 ----
 
+- New datasource class for jForms: jFormsDynamicStaticDatasource
 - Fix jForms linked list: loaded list containing "0" as value didn't show the corresponding item  
+
 
 1.8.15
 ------
