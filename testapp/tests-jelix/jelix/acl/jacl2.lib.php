@@ -37,7 +37,7 @@ abstract class jacl2APITest extends \Jelix\UnitTests\UnitTestCaseDb {
             $this->emptyTable('jacl2_user_group');
 
             $groups= array(array('id_aclgrp'=>'group1', 'name'=>'Groupe 1', 'grouptype'=>0, 'ownerlogin'=>null),
-                           array('id_aclgrp'=>'group2', 'name'=>'Groupe 2', 'grouptype'=>0, 'ownerlogin'=>null));
+                           array('id_aclgrp'=>'gROUp-2', 'name'=>'Groupe 2', 'grouptype'=>0, 'ownerlogin'=>null));
 
             $this->insertRecordsIntoTable('jacl2_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
 
@@ -71,7 +71,7 @@ abstract class jacl2APITest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     public function testIsMemberOfGroup(){
         $this->assertTrue(jAcl2DbUserGroup::isMemberOfGroup ('group1'));
-        $this->assertFalse(jAcl2DbUserGroup::isMemberOfGroup ('group2'));
+        $this->assertFalse(jAcl2DbUserGroup::isMemberOfGroup ('gROUp-2'));
     }
 
     /**
@@ -160,14 +160,14 @@ abstract class jacl2APITest extends \Jelix\UnitTests\UnitTestCaseDb {
     */
     public function testCheckCanceledRight(){
         $usergroups=array(
-            array('login'=>'laurent', 'id_aclgrp'=>'group2'),
+            array('login'=>'laurent', 'id_aclgrp'=>'gROUp-2'),
         );
         $this->insertRecordsIntoTable('jacl2_user_group', array('login','id_aclgrp'), $usergroups);
         jAcl2::clearCache();
         jAcl2DbUserGroup::clearCache();
 
         // it should cancel the right super.cms.update (which is set on group1)
-        jAcl2DbManager::removeRight('group2', 'super.cms.update', '-', true);
+        jAcl2DbManager::removeRight('gROUp-2', 'super.cms.update', '-', true);
 
         $this->assertTrue(jAcl2::check('super.cms.list'));
         $this->assertFalse(jAcl2::check('super.cms.update')); // is canceled

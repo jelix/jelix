@@ -54,10 +54,10 @@ class jacl_users_and_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         // creation de deux autres groupes
 
-        self::$grpId2 = jAclDbUserGroup::createGroup('group2');
+        self::$grpId2 = jAclDbUserGroup::createGroup('gROUp-2');
         self::$grpId3 = jAclDbUserGroup::createGroup('group3');
         self::$groups[] = array('id_aclgrp'=>self::$grpId2,
-            'name'=>'group2',
+            'name'=>'gROUp-2',
             'grouptype'=>0,
             'ownerlogin'=>null);
         self::$groups[] = array('id_aclgrp'=>self::$grpId3,
@@ -91,15 +91,15 @@ class jacl_users_and_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $verif='<array>
     <object>
-        <string property="id_aclgrp" value="'.self::$grpId1.'" />
-        <string property="name" value="group1" />
-        <string property="grouptype" value="0" />
+        <string property="id_aclgrp" value="'.self::$grpId2.'" />
+        <string property="name" value="gROUp-2" />
+        <string property="grouptype" value="1" />
         <null property="ownerlogin"/>
     </object>
     <object>
-        <string property="id_aclgrp" value="'.self::$grpId2.'" />
-        <string property="name" value="group2" />
-        <string property="grouptype" value="1" />
+        <string property="id_aclgrp" value="'.self::$grpId1.'" />
+        <string property="name" value="group1" />
+        <string property="grouptype" value="0" />
         <null property="ownerlogin"/>
     </object>
     <object>
