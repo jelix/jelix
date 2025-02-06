@@ -4,9 +4,13 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.16
+------
+
 - New datasource class for jForms: jFormsDynamicStaticDatasource
 - Add `$httpCode` and `$httpMessage` in template for html errors
-- Fix jForms linked list: loaded list containing "0" as value didn't show the corresponding item  
+- Fix jForms linked list: loaded list containing "0" as value didn't show the corresponding item
+- Fix jAcl2Db: group id can now contain upper case letter and dash character
 
 
 1.8.15
