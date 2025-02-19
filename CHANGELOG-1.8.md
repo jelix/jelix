@@ -4,6 +4,9 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix installer: module version into installer.ini.php may not be filled correctly after an upgrade
+- improved output messages during an upgrade
+
 1.8.16
 ------
 
