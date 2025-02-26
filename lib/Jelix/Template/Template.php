@@ -88,7 +88,7 @@ class Template extends \Jelix\Castor\CastorCore
      * process all meta instruction of a template.
      *
      * @param string $tpl        template selector
-     * @param string $outputtype the type of output (html, text etc..)
+     * @param string $outputType the type of output (html, text etc..)
      * @param bool   $trusted    says if the template file is trusted or not
      *
      * @return array
@@ -118,7 +118,7 @@ class Template extends \Jelix\Castor\CastorCore
      * display the generated content from the given template.
      *
      * @param string $tpl        template selector
-     * @param string $outputtype the type of output (html, text etc..)
+     * @param string $outputType the type of output (html, text etc..)
      * @param bool   $trusted    says if the template file is trusted or not
      */
     public function display($tpl, $outputType = '', $trusted = true)
@@ -142,7 +142,7 @@ class Template extends \Jelix\Castor\CastorCore
      * include the compiled template file and call one of the generated function.
      *
      * @param TemplateSelector $tpl        template selector
-     * @param string           $outputtype the type of output (html, text etc..)
+     * @param string           $outputType the type of output (html, text etc..)
      * @param bool             $trusted    says if the template file is trusted or not
      *
      * @throws \Exception
@@ -162,7 +162,7 @@ class Template extends \Jelix\Castor\CastorCore
      * return the generated content from the given template.
      *
      * @param string $tpl        template selector
-     * @param string $outputtype the type of output (html, text etc..)
+     * @param string $outputType the type of output (html, text etc..)
      * @param bool   $trusted    says if the template file is trusted or not
      * @param bool   $callMeta   false if meta should not be called
      *

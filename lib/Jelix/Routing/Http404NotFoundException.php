@@ -23,7 +23,7 @@ namespace Jelix\Routing;
  */
 class Http404NotFoundException extends HttpErrorException
 {
-    public function __construct($reason = '', \Throwable $previous = null)
+    public function __construct($reason = '', ?\Throwable $previous = null)
     {
         parent::__construct(404, $reason, $previous);
     }

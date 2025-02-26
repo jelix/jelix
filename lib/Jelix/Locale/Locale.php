@@ -2,13 +2,13 @@
 /**
  * @author     Laurent Jouanneau
  * @author     Gerald Croes
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau
  * Some parts of this file are took from Copix Framework v2.3dev20050901, CopixI18N.class.php, http://www.copix.org.
  * copyrighted by CopixTeam and released under GNU Lesser General Public Licence.
  * initial authors : Gerald Croes, Laurent Jouanneau.
  * enhancement by Laurent Jouanneau for Jelix.
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -89,29 +89,7 @@ class Locale
      */
     public static function get($key, $args = null, $locale = null, $tryOtherLocales = true)
     {
-        $config = App::config();
-
-        try {
-            $file = new LocaleSelector($key, $locale);
-        } catch (\Jelix\Core\Selector\Exception $e) {
-            // the file is not found
-            if ($e->getCode() == 12) {
-                // unknown module..
-                throw $e;
-            }
-
-            throw new Exception('(212)No locale file found for the given locale key "'.$key
-                            .'" in any other default languages', 212, $e);
-        }
-
-        $locale = $file->locale;
-        $keySelector = $file->module.'~'.$file->fileKey;
-
-        if (!isset(self::$bundles[$keySelector][$locale])) {
-            self::$bundles[$keySelector][$locale] = new Bundle($file, $locale);
-        }
-
-        $bundle = self::$bundles[$keySelector][$locale];
+        list($bundle, $file) = self::getBundleAndSelector($key, $locale);
 
         //try to get the message from the bundle.
         $string = $bundle->get($file->messageKey);
@@ -123,7 +101,8 @@ class Locale
                                     '" does not exists (lang:'.$file->locale.')');
             }
 
-            $words = self::tryOtherLocales($key, $args, $locale, $config);
+            $words = self::tryOtherLocales($key, $args, $locale, App::config());
+
             if ($words === null) {
                 throw new Exception('(213)The given locale key "'.$file->toString().
                                     '" does not exists in any default languages');
@@ -139,6 +118,49 @@ class Locale
 
         return $string;
     }
+
+    /**
+     * @param $key
+     * @param $locale
+     * @return Bundle
+     * @throws \Jelix\Core\Selector\Exception
+     */
+    public static function getBundle($key, $locale = null)
+    {
+        list($bundle, $selector) = self::getBundleAndSelector($key, $locale);
+        return $bundle;
+    }
+
+    /**
+     * @param $key
+     * @param $locale
+     * @return array
+     * @throws \Jelix\Core\Selector\Exception
+     */
+    protected static function getBundleAndSelector($key, $locale = null)
+    {
+        try {
+            $file = new LocaleSelector($key, $locale);
+        } catch (\Jelix\Core\Selector\Exception $e) {
+            // the file is not found
+            if ($e->getCode() == 12) {
+                // unknown module..
+                throw $e;
+            }
+
+            throw new Exception('(212)No locale file found for the given locale key "'.$key
+                .'" in any other default languages', 212, $e);
+        }
+
+        $locale = $file->locale;
+        $keySelector = $file->module.'~'.$file->fileKey;
+
+        if (!isset(self::$bundles[$keySelector][$locale])) {
+            self::$bundles[$keySelector][$locale] = new Bundle($file, $locale);
+        }
+        return [ self::$bundles[$keySelector][$locale], $file ];
+    }
+
 
     /**
      * return the list of alternative locales to the given one.

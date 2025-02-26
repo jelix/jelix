@@ -253,7 +253,7 @@ jFormsJQForm.prototype={
                     if(emptyitem)
                         select.append(emptyitem);
                     $.each(data, function(i, item){
-                        if (emptyitem && item.value == '') {
+                        if (emptyitem && item.value === '') {
                             // do not add empty item if it already exists.
                             return;
                         }

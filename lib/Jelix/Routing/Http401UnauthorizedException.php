@@ -24,7 +24,7 @@ namespace Jelix\Routing;
  */
 class Http401UnauthorizedException extends HttpErrorException
 {
-    public function __construct($reason = '', \Throwable $previous = null)
+    public function __construct($reason = '', ?\Throwable $previous = null)
     {
         parent::__construct(401, $reason, $previous);
     }

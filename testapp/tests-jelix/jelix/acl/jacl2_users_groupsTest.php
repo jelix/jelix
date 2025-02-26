@@ -63,10 +63,10 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         // creation de deux autres groupes
 
-        self::$grpId2 = jAcl2DbUserGroup::createGroup('group2');
+        self::$grpId2 = jAcl2DbUserGroup::createGroup('gROUp-2');
         self::$grpId3 = jAcl2DbUserGroup::createGroup('group3');
         self::$groups[] = array('id_aclgrp'=>self::$grpId2,
-            'name'=>'group2',
+            'name'=>'gROUp-2',
             'grouptype'=>0,
             'ownerlogin'=>null);
         self::$groups[] = array('id_aclgrp'=>self::$grpId3,
@@ -109,15 +109,15 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $verif='<array>
     <object>
-        <string property="id_aclgrp" value="'.self::$grpId1.'" />
-        <string property="name" value="group1" />
-        <string property="grouptype" value="0" />
+        <string property="id_aclgrp" value="'.self::$grpId2.'" />
+        <string property="name" value="gROUp-2" />
+        <string property="grouptype" value="1" />
         <null property="ownerlogin"/>
     </object>
     <object>
-        <string property="id_aclgrp" value="'.self::$grpId2.'" />
-        <string property="name" value="group2" />
-        <string property="grouptype" value="1" />
+        <string property="id_aclgrp" value="'.self::$grpId1.'" />
+        <string property="name" value="group1" />
+        <string property="grouptype" value="0" />
         <null property="ownerlogin"/>
     </object>
     <object>
@@ -344,7 +344,7 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
             'grouptype'=>0,
             'ownerlogin'=>null),
             array('id_aclgrp'=>self::$grpId2,
-            'name'=>'group2',
+            'name'=>'gROUp-2',
             'grouptype'=>1,
             'ownerlogin'=>null),
             array('id_aclgrp'=>self::$grpId5,
@@ -388,7 +388,7 @@ class jacl2_users_groupsTest extends \Jelix\UnitTests\UnitTestCaseDb {
     {
 
         $id = jAcl2DbUserGroup::createGroup('Friedhof Schüpfheim');
-        $this->assertEquals('friedhof_schpfheim', $id);
+        $this->assertEquals('Friedhof_Schpfheim', $id);
 
         $records = array(
             array('id_aclgrp'=> $id,

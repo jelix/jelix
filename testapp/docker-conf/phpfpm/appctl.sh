@@ -149,7 +149,7 @@ function composerInstall() {
     if [ -f $APPDIR/composer.lock ]; then
         rm -f $APPDIR/composer.lock
     fi
-    composer install --prefer-dist --no-progress --no-ansi --no-interaction --working-dir=$APPDIR
+    su $APP_USER -c "composer install --prefer-dist --no-progress --no-ansi --no-interaction --working-dir=$APPDIR"
     chown -R $APP_USER:$APP_GROUP $APPDIR/vendor $APPDIR/composer.lock
 }
 
@@ -158,7 +158,7 @@ function composerUpdate() {
     if [ -f $APPDIR/composer.lock ]; then
         rm -f $APPDIR/composer.lock
     fi
-    composer update --prefer-dist --no-progress --no-ansi --no-interaction --working-dir=$APPDIR
+    su $APP_USER -c "composer update --prefer-dist --no-progress --no-ansi --no-interaction --working-dir=$APPDIR"
     chown -R $APP_USER:$APP_GROUP $APPDIR/vendor $APPDIR/composer.lock
 }
 

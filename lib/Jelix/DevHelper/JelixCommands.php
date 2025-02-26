@@ -52,7 +52,7 @@ class JelixCommands
         return $application;
     }
 
-    public static function launch(Application $app = null)
+    public static function launch(?Application $app = null)
     {
         if (!$app) {
             $app = self::setup();

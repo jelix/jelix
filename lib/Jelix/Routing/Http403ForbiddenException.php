@@ -24,7 +24,7 @@ namespace Jelix\Routing;
  */
 class Http403ForbiddenException extends HttpErrorException
 {
-    public function __construct($reason = '', \Throwable $previous = null)
+    public function __construct($reason = '', ?\Throwable $previous = null)
     {
         parent::__construct(403, $reason, $previous);
     }

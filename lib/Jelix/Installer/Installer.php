@@ -105,7 +105,7 @@ class Installer
      * @param GlobalSetup                $globalSetup
      * @param string                     $lang        the language code for messages
      */
-    public function __construct(Reporter\ReporterInterface $reporter, GlobalSetup $globalSetup = null, $lang = '')
+    public function __construct(Reporter\ReporterInterface $reporter, ?GlobalSetup $globalSetup = null, $lang = '')
     {
         $this->reporter = $reporter;
         $this->messages = new \Jelix\Installer\Checker\Messages($lang);
@@ -409,21 +409,40 @@ class Installer
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
-                        $installerIni->setValue(
-                            $component->getName().'.version',
-                            $upgrader->getVersion(),
-                            'modules'
-                        );
-                        $installerIni->setValue(
-                            $component->getName().'.version.date',
-                            $upgrader->getDate(),
-                            'modules'
-                        );
-                        $this->ok(
-                            'install.module.upgraded',
-                            array($component->getName(), $upgrader->getVersion())
-                        );
-                        $lastversion = $upgrader->getVersion();
+                        if ($upgrader->getName() != $upgrader->getModuleName()) {
+                            $installerIni->setValue(
+                                $component->getName().'.version',
+                                $upgrader->getVersion(),
+                                'modules'
+                            );
+                            $installerIni->setValue(
+                                $component->getName().'.version.date',
+                                $upgrader->getDate(),
+                                'modules'
+                            );
+                            $this->ok(
+                                'install.module.upgrade.script.executed',
+                                array($upgrader->getVersion(), $component->getName())
+                            );
+                            $lastversion = $upgrader->getVersion();
+                        }
+                        else {
+                            $installerIni->setValue(
+                                $component->getName().'.version',
+                                $component->getSourceVersion(),
+                                'modules'
+                            );
+                            $installerIni->setValue(
+                                $component->getName().'.version.date',
+                                $component->getSourceDate(),
+                                'modules'
+                            );
+                            $this->ok(
+                                'install.module.main.upgrade.script.executed',
+                                array( $component->getName())
+                            );
+                            $lastversion = $component->getSourceVersion();
+                        }
                     }
                     // we set the version to the component version, because the version
                     // of the last upgrader could not correspond to the component version.
@@ -438,11 +457,11 @@ class Installer
                             $component->getSourceDate(),
                             'modules'
                         );
-                        $this->ok(
-                            'install.module.upgraded',
-                            array($component->getName(), $component->getSourceVersion())
-                        );
                     }
+                    $this->ok(
+                        'install.module.upgraded',
+                        array($component->getName(), $component->getSourceVersion())
+                    );
                     $installedModules[] = array($installer, $component, $action);
                     $this->warmUp->launch([$component->getName() => $component->getPath()], WarmUpLauncherInterface::STEP_MODULE_INSTALL);
 

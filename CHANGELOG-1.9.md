@@ -3,6 +3,8 @@ Changes into Jelix 1.9.0
 
 Not released yet.
 
+Minimum version of PHP is 8.1.
+
 Features
 --------
 
@@ -14,6 +16,12 @@ Features
   can declare the alias `admin` on this entrypoint, and then the module can
   be installed.
 
+- jDb: Support of generated column from Postgresql (contributor: Riccardo Beltrami)
+
+- New methods `jLocale::getBundle()` and `jBundle::getAllKeys()`
+
+- New methods `jFile::mergeIniFile()` and `jFile::mergeIniContent()`
+
 
 Removes
 -------
@@ -23,7 +31,8 @@ Removes
 Deprecated API and features
 ---------------------------
 
-* jClassBinding
+* `jClassBinding`
+* `jelix_read_ini`
 
 Internal changes
 ----------------

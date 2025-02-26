@@ -38,7 +38,7 @@
  * breadcrumb plugin : display breadcrumb trails, ie. user navigation tracking.
  *
  * @param jTpl   $tpl       template engine
- * @param array  $nb        the number of items displayed by the plugin
+ * @param int  $nb        the number of items displayed by the plugin
  * @param string $separator Symbol separating items
  */
 function jtpl_function_html_breadcrumb($tpl, $nb = null, $separator = '')

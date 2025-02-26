@@ -4,7 +4,7 @@
  * @subpackage  routing
  *
  * @author      Laurent Jouanneau
- * @copyright   2018-2019 laurent Jouanneau
+ * @copyright   2018-2024 laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -69,7 +69,7 @@ class HttpErrorException extends \Exception
 
     protected $reason = '';
 
-    public function __construct($httpCode, $reason = '', \Throwable $previous = null)
+    public function __construct($httpCode, $reason = '', ?\Throwable $previous = null)
     {
         if ($httpCode === 0) {
             $httpCode = 500;

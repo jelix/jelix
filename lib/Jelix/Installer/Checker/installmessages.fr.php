@@ -90,6 +90,8 @@ return array(
     'install.module.error' => 'Une erreur est survenue durant l\'installation du module %s: %s',
     'install.module.check.dependency' => 'Vérifie les dépendances du module %s',
     'install.module.upgraded' => 'Le module %s est mis à jour à la version %s',
+    'install.module.upgrade.script.executed' => 'Lancement du script de mise à jour pour la version %s du module %s',
+    'install.module.main.upgrade.script.executed' => 'Lancement du script principale de mise à jour du module %s',
     'install.module.uninstalled' => 'Le module %s a été désinstallé',
     'more.details' => 'Plus de details',
 

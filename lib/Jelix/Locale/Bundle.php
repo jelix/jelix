@@ -2,17 +2,13 @@
 /**
  * @author     Laurent Jouanneau
  * @author     Gerald Croes
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2024 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
 namespace Jelix\Locale;
-
-use Jelix\Core\App;
-use Jelix\PropertiesFile\Parser;
-use Jelix\PropertiesFile\Properties;
 
 /**
  * a bundle contains all readed properties in a given language.
@@ -62,5 +58,14 @@ class Bundle
         }
 
         return null;
+    }
+
+    /**
+     * Get all translations of the bundle.
+     * @return array
+     */
+    public function getAllKeys()
+    {
+        return $this->_strings;
     }
 }

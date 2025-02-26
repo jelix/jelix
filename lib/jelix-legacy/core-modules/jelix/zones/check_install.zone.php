@@ -8,7 +8,7 @@
  *
  * @copyright  2008 Bastien Jaillot
  * @copyright  2009 Julien Issler
- * @copyright 2012 Laurent Jouanneau
+ * @copyright  2012-2024 Laurent Jouanneau
  * @licence    http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
  */
 
@@ -38,8 +38,8 @@ class check_installZone extends jZone
         $check->run();
 
 
-	$this->_tpl->assign('phpExtensions', get_loaded_extensions());
-	$this->_tpl->assign('version', jFramework::version());
+        $this->_tpl->assign('phpExtensions', get_loaded_extensions());
+        $this->_tpl->assign('version', jFramework::version());
         $this->_tpl->assign('wwwpath', jApp::wwwPath());
         $this->_tpl->assign('configpath', jApp::varConfigPath());
         $this->_tpl->assign('check', $reporter->trace);

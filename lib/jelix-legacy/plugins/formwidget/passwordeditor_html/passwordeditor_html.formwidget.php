@@ -4,7 +4,7 @@
  * @subpackage  forms_widget_plugin
  *
  * @author       Laurent Jouanneau <laurent@jelix.org>
- * @copyright    2023 Laurent Jouanneau
+ * @copyright    2023-2024 Laurent Jouanneau
  *
  * @link         https://jelix.org
  * @licence      http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
@@ -14,6 +14,12 @@
  */
 class passwordeditor_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
+    /**
+     * @var string javascript code to access, from the input element, to the parent element that encapsulate the whole
+     *             content of the widget, so the javascript component JelixPasswordEditor can find all elements
+     */
+    protected $domPathToParentNode = '.parentNode';
+
     public function outputMetaContent($resp)
     {
         $JelixWWWPath = jApp::urlJelixWWWPath();
@@ -44,7 +50,7 @@ class passwordeditor_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 
         $js .= $this->customWidgetJs();
 
-        $js .= "JelixPasswordEditor.initEditor(document.getElementById('".$id."').parentNode, c);\n";
+        $js .= "JelixPasswordEditor.initEditor(document.getElementById('".$id."')".$this->domPathToParentNode.", c);\n";
         $this->parentWidget->addJs($js);
         $this->commonJs();
     }

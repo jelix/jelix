@@ -72,7 +72,7 @@ class autocomplete_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
         $this->commonJs();
         $searchInId = (strpos($this->getCSSClass(), 'autocomplete-search-in-id') !== false);
 
-        $this->parentWidget->addFinalJs('$(\'#'.$this->getId().'_autocomplete\').jAutocomplete({searchInId: '.($searchInId ? 'true' : 'false').'})');
+        $this->parentWidget->addFinalJs('$(\'#'.$this->getId().'_autocomplete\').jAutocomplete({searchInId: '.($searchInId ? 'true' : 'false').'});');
     }
 
     public function outputControl()
