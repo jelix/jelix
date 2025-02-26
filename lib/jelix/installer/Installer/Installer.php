@@ -428,16 +428,18 @@ class Installer
                     foreach ($installer as $upgrader) {
                         if ($upgrader instanceof \jInstallerModule) {
                             $upgrader->install();
+                            $moduleName = $upgrader->name;
                         } else {
                             $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
                             $upgrader->install($helpers);
+                            $moduleName = $upgrader->getModuleName();
                         }
                         $saveConfigIni = true;
 
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
-                        if ($upgrader->getName() != $upgrader->getModuleName()) {
+                        if ($upgrader->getName() != $moduleName) {
                             $installerIni->setValue(
                                 $component->getName().'.version',
                                 $upgrader->getVersion(),
