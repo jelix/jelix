@@ -27,7 +27,7 @@ class jacl_main_apiTest extends \Jelix\UnitTests\UnitTestCaseDb {
             $this->emptyTable('jacl_subject');
     
             $groups= array(array('id_aclgrp'=>1, 'name'=>'group1', 'grouptype'=>0, 'ownerlogin'=>null),
-                           array('id_aclgrp'=>2, 'name'=>'group2', 'grouptype'=>0, 'ownerlogin'=>null));
+                           array('id_aclgrp'=>2, 'name'=>'gROUp-2', 'grouptype'=>0, 'ownerlogin'=>null));
     
             $this->insertRecordsIntoTable('jacl_group', array('id_aclgrp','name','grouptype','ownerlogin'), $groups, true);
     

@@ -428,30 +428,51 @@ class Installer
                     foreach ($installer as $upgrader) {
                         if ($upgrader instanceof \jInstallerModule) {
                             $upgrader->install();
+                            $moduleName = $upgrader->name;
                         } else {
                             $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
                             $upgrader->install($helpers);
+                            $moduleName = $upgrader->getModuleName();
                         }
                         $saveConfigIni = true;
 
                         // we set the version of the upgrade, so if an error occurs in
                         // the next upgrader, we won't have to re-run this current upgrader
                         // during a future update
-                        $installerIni->setValue(
-                            $component->getName().'.version',
-                            $upgrader->getVersion(),
-                            'modules'
-                        );
-                        $installerIni->setValue(
-                            $component->getName().'.version.date',
-                            $upgrader->getDate(),
-                            'modules'
-                        );
-                        $this->ok(
-                            'install.module.upgraded',
-                            array($component->getName(), $upgrader->getVersion())
-                        );
-                        $lastversion = $upgrader->getVersion();
+                        if ($upgrader->getName() != $moduleName) {
+                            $installerIni->setValue(
+                                $component->getName().'.version',
+                                $upgrader->getVersion(),
+                                'modules'
+                            );
+                            $installerIni->setValue(
+                                $component->getName().'.version.date',
+                                $upgrader->getDate(),
+                                'modules'
+                            );
+                            $this->ok(
+                                'install.module.upgrade.script.executed',
+                                array($upgrader->getVersion(), $component->getName())
+                            );
+                            $lastversion = $upgrader->getVersion();
+                        }
+                        else {
+                            $installerIni->setValue(
+                                $component->getName().'.version',
+                                $component->getSourceVersion(),
+                                'modules'
+                            );
+                            $installerIni->setValue(
+                                $component->getName().'.version.date',
+                                $component->getSourceDate(),
+                                'modules'
+                            );
+                            $this->ok(
+                                'install.module.main.upgrade.script.executed',
+                                array( $component->getName())
+                            );
+                            $lastversion = $component->getSourceVersion();
+                        }
                     }
                     // we set the version to the component version, because the version
                     // of the last upgrader could not correspond to the component version.
@@ -466,11 +487,11 @@ class Installer
                             $component->getSourceDate(),
                             'modules'
                         );
-                        $this->ok(
-                            'install.module.upgraded',
-                            array($component->getName(), $component->getSourceVersion())
-                        );
                     }
+                    $this->ok(
+                        'install.module.upgraded',
+                        array($component->getName(), $component->getSourceVersion())
+                    );
                     $installedModules[] = array($installer, $component, $action);
                 } elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {

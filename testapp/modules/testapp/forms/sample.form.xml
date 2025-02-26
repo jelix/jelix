@@ -140,7 +140,20 @@
           criteriafrom="listdep" labelproperty="name" valueproperty="postalcode" />
       </menulist>
    </group>
-
+   <group ref="sampledatasource">
+        <label>Linked list with static datasources</label>
+      <menulist ref="listcat">
+          <label>Categories</label>
+          <emptyvaluelabel>category</emptyvaluelabel>
+          <item value="1">Cat 1</item>
+          <item value="2">Cat 2</item>
+          <item value="3">Cat 3</item>
+      </menulist>
+      <menulist ref="listsample">
+          <label>Items</label>
+          <datasource class="testapp~sampledatasource" criteriafrom="listcat" />
+      </menulist>
+   </group>
    <choice ref="task">
       <label>Task status</label>
       <item value="new">

@@ -19,7 +19,7 @@ class jformsCtrl extends jController
 {
     /**
      * web service for XHR request when a control should be filled with a list
-     * of values, depending of the value of an other control.
+     * of values, depending on the value of another control.
      */
     public function getListData()
     {

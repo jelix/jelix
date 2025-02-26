@@ -359,6 +359,8 @@ class jCoordinator
                 $response = null;
             }
             if ($response && $response instanceof jResponseHtml) {
+                $response->body->assign('httpCode', $httpCode);
+                $response->body->assign('httpMessage', $httpMessage);
                 $response->body->assign('httpErrorDetails', $errorDetails);
                 $response->setHttpStatus($httpCode, $httpMessage);
 

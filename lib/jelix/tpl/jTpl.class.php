@@ -91,14 +91,14 @@ class jTpl extends \Jelix\Castor\CastorCore
      * process all meta instruction of a template.
      *
      * @param string $tpl        template selector
-     * @param string $outputtype the type of output (html, text etc..)
+     * @param string $outputType the type of output (html, text etc..)
      * @param bool   $trusted    says if the template file is trusted or not
      *
      * @return array
      */
-    public function meta($tpl, $outputtype = '', $trusted = true)
+    public function meta($tpl, $outputType = '', $trusted = true)
     {
-        $sel = new jSelectorTpl($tpl, $outputtype, $trusted);
+        $sel = new jSelectorTpl($tpl, $outputType, $trusted);
         $tpl = $sel->toString();
 
         if (in_array($tpl, $this->processedMeta)) {
@@ -109,7 +109,7 @@ class jTpl extends \Jelix\Castor\CastorCore
         }
 
         $this->processedMeta[] = $tpl;
-        $md = $this->getTemplate($sel, $outputtype, $trusted);
+        $md = $this->getTemplate($sel, $outputType, $trusted);
 
         $fct = 'template_meta_'.$md;
         $fct($this);
@@ -121,19 +121,19 @@ class jTpl extends \Jelix\Castor\CastorCore
      * display the generated content from the given template.
      *
      * @param string $tpl        template selector
-     * @param string $outputtype the type of output (html, text etc..)
+     * @param string $outputType the type of output (html, text etc..)
      * @param bool   $trusted    says if the template file is trusted or not
      */
-    public function display($tpl, $outputtype = '', $trusted = true)
+    public function display($tpl, $outputType = '', $trusted = true)
     {
-        $sel = new jSelectorTpl($tpl, $outputtype, $trusted);
+        $sel = new jSelectorTpl($tpl, $outputType, $trusted);
         $tpl = $sel->toString();
 
         $previousTpl = $this->_templateName;
         $this->_templateName = $tpl;
         $this->recursiveTpl[] = $tpl;
 
-        $md = $this->getTemplate($sel, $outputtype, $trusted);
+        $md = $this->getTemplate($sel, $outputType, $trusted);
 
         $fct = 'template_'.$md;
         $fct($this);
@@ -145,14 +145,14 @@ class jTpl extends \Jelix\Castor\CastorCore
      * include the compiled template file and call one of the generated function.
      *
      * @param jSelectorTpl|string $tpl        template selector
-     * @param string              $outputtype the type of output (html, text etc..)
+     * @param string              $outputType the type of output (html, text etc..)
      * @param bool                $trusted    says if the template file is trusted or not
      *
      * @throws Exception
      *
      * @return string the suffix name of the function to call
      */
-    protected function getTemplate($tpl, $outputtype = '', $trusted = true)
+    protected function getTemplate($tpl, $outputType = '', $trusted = true)
     {
         $tpl->userModifiers = $this->userModifiers;
         $tpl->userFunctions = $this->userFunctions;
@@ -165,7 +165,7 @@ class jTpl extends \Jelix\Castor\CastorCore
      * return the generated content from the given template.
      *
      * @param string $tpl        template selector
-     * @param string $outputtype the type of output (html, text etc..)
+     * @param string $outputType the type of output (html, text etc..)
      * @param bool   $trusted    says if the template file is trusted or not
      * @param bool   $callMeta   false if meta should not be called
      *
@@ -173,12 +173,12 @@ class jTpl extends \Jelix\Castor\CastorCore
      *
      * @return string the generated content
      */
-    public function fetch($tpl, $outputtype = '', $trusted = true, $callMeta = true)
+    public function fetch($tpl, $outputType = '', $trusted = true, $callMeta = true)
     {
-        $sel = new jSelectorTpl($tpl, $outputtype, $trusted);
+        $sel = new jSelectorTpl($tpl, $outputType, $trusted);
         $tpl = $sel->toString();
 
-        return $this->_fetch($tpl, $sel, $outputtype, $trusted, $callMeta);
+        return $this->_fetch($tpl, $sel, $outputType, $trusted, $callMeta);
     }
 
     protected function getCachePath()

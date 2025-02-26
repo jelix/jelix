@@ -4,7 +4,30 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix installer: module version into installer.ini.php may not be filled correctly after an upgrade
+- improved output messages during an upgrade
+
+1.8.16
+------
+
+- New datasource class for jForms: jFormsDynamicStaticDatasource
+- Add `$httpCode` and `$httpMessage` in template for html errors
+- Fix jForms linked list: loaded list containing "0" as value didn't show the corresponding item
+- Fix jAcl2Db: group id can now contain upper case letter and dash character
+
+
+1.8.15
+------
+
+- Fix jAcl2 : increase some id fields so we can use for example long email address for login names 
+- unit-tests are ok to use Redis 7
+
+1.8.14
+------
+
 - jForms: add new methods to TemplateController for some external template plugins
+- jForms TemplateController: new parameter on outputControlValue for content when the value is empty
+- new template plugin ifctrlactivated for jForms
 - Fix compatibility with PHP 8.4
 
 

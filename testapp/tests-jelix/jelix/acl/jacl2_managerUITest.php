@@ -1925,11 +1925,11 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             'acl.group.modify' => 'n',
         );
         jAcl2DbUserGroup::createGroup('NotAdmin', 'notAdmin');
-        jAcl2DbManager::setRightsOnGroup('notadmin', $NotAdminRights);
+        jAcl2DbManager::setRightsOnGroup('notAdmin', $NotAdminRights);
 
         $mgr = new jAcl2DbAdminUIManager();
         $this->expectException(jAcl2DbAdminUIException::class);
-        $mgr->addUserToGroup('oneuser', 'notadmin', 'oneuser');
+        $mgr->addUserToGroup('oneuser', 'notAdmin', 'oneuser');
     }
 
     public function testGetUsersList()
