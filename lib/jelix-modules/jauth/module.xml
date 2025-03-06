@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="jauth@modules.jelix.org" name="jauth" createdate="2006-12-23">
-        <version date="2025-03-06 13:13">1.8.17</version>
+        <version date="2025-03-06 13:13">1.8.18-pre</version>
         <label lang="en_US">basic web interface for jAuth</label>
         <description lang="en_US">It provides a login form, a controller to login and logout, and
         a basic dao.</description>

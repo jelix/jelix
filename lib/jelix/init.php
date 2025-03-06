@@ -23,7 +23,7 @@
  * @deprecated
  * @see jFramework::version()
  */
-define('JELIX_VERSION', '1.8.17');
+define('JELIX_VERSION', '1.8.18-pre');
 
 /*
  * base of namespace path used in xml files of jelix
