@@ -220,6 +220,8 @@ class jResponseHtml extends jResponseBasicHtml
      */
     protected $webAssetsSelection;
 
+    protected $preloadLinks = array();
+
     /**
      * constructor;
      * setup the charset, the lang, the template engine.
@@ -367,7 +369,7 @@ class jResponseHtml extends jResponseBasicHtml
      * @param array  $params additionals attributes for the script tag
      * @param bool   $forIE  if true, the script sheet will be only for IE browser. string values possible (ex:'lt IE 7'). Deprecated parameter.
      */
-    public function addJSLink($src, $params = array(), $forIE = false)
+    public function addJSLink($src, $params = array(), $forIE = false, $addToPreload = false)
     {
         if ($forIE) {
             if (!isset($this->_JSIELink[$src])) {
@@ -389,6 +391,10 @@ class jResponseHtml extends jResponseBasicHtml
 
             if (!isset($this->_JSLink[$src])) {
                 $this->_JSLink[$src] = $params;
+            }
+
+            if($addToPreload) {
+                $this->addPreloadLink($src, 'script');
             }
         }
     }
@@ -517,7 +523,7 @@ class jResponseHtml extends jResponseBasicHtml
      * @param array  $params additionnals attributes for the link tag
      * @param mixed  $forIE  if true, the style sheet will be only for IE browser. string values possible (ex:'lt IE 7')
      */
-    public function addCSSLink($src, $params = array(), $forIE = false)
+    public function addCSSLink($src, $params = array(), $forIE = false, $addToPreload = false)
     {
         if ($forIE) {
             if (!isset($this->_CSSIELink[$src])) {
@@ -539,6 +545,10 @@ class jResponseHtml extends jResponseBasicHtml
 
             if (!isset($this->_CSSLink[$src])) {
                 $this->_CSSLink[$src] = $params;
+            }
+
+            if($addToPreload) {
+                $this->addPreloadLink($src, 'style');
             }
         }
     }
@@ -887,6 +897,10 @@ class jResponseHtml extends jResponseBasicHtml
             $this->outputMetaTag(array('name' => 'author', 'content' => $this->_MetaAuthor));
         }
 
+        // prelaod links
+        foreach ($this->preloadLinks as $link) {
+            $this->outputPreloadTag($link['href'], $link['as'], $link['type']);
+        }
         // css link
         foreach ($this->webAssetsSelection->getCssLinks() as $src) {
             $this->outputCssLinkTag($src[0], $src[1]);
@@ -1028,5 +1042,19 @@ class jResponseHtml extends jResponseBasicHtml
     public function endTag()
     {
         return $this->_endTag;
+    }
+
+    public function addPreloadLink($href, $as, $type = null)
+    {
+        $this->preloadLinks[] = array(
+            'href' => $href,
+            'as' => $as,
+            'type' => $type,
+        );
+    }
+
+    protected function outputPreloadTag($href, $as, $type)
+    {
+        echo '<link rel="preload" href="'.htmlspecialchars($href).'" as="'.$as.'" '.($type ? 'type="'.$type.'"' :'')." >\n";
     }
 }
