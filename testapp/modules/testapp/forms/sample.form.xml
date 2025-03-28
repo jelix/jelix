@@ -7,6 +7,7 @@
 
         <input ref="nom" required="true">
             <label>Your name</label>
+            <placeholder locale='testapp~sample.form.input.nom.placeholder'/>
         </input>
 
         <input ref="prenom" defaultvalue="robert">
@@ -23,6 +24,7 @@
         </radiobuttons>
         <input ref="mail" type="email">
             <label>Your email</label>
+            <placeholder>email@foo.bar</placeholder>
         </input>
 
         <checkbox ref="geek">
@@ -60,15 +62,18 @@
       </listbox>
       <textarea ref="address">
           <label>Your address</label>
+          <placeholder locale='testapp~sample.form.textarea.address.placeholder'/>
       </textarea>
    </group>
 
   <htmleditor ref="description">
       <label>Description in html</label>
+      <placeholder>HTML editor</placeholder>
   </htmleditor>
    
   <wikieditor ref="wikicontent">
       <label>a wiki editor</label>
+      <placeholder>WIKI editor</placeholder>
   </wikieditor>
 
     <color ref="couleur">
