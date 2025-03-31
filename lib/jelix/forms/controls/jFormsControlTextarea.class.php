@@ -22,6 +22,7 @@ class jFormsControlTextarea extends jFormsControl
     public $type = 'textarea';
     public $rows = 5;
     public $cols = 40;
+    public $placeholder = '';
 
     /**
      * @since 1.2

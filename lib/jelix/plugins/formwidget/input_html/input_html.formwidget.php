@@ -92,6 +92,9 @@ class input_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
         if ($maxl !== null) {
             $attr['maxlength'] = $maxl;
         }
+        if ($this->ctrl->placeholder != '') {
+            $attr['placeholder'] = $this->ctrl->placeholder;
+        }
         $attr['value'] = $this->getValue();
         $attr['type'] = 'text';
 

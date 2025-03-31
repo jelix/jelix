@@ -24,6 +24,7 @@ class jFormsControlWikiEditor extends jFormsControl
     public $rows = 5;
     public $cols = 40;
     public $config = 'default';
+    public $placeholder = '';
 
     public function __construct($ref)
     {

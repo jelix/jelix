@@ -23,6 +23,7 @@ class jFormsControlHtmlEditor extends jFormsControl
     public $cols = 40;
     public $config = 'default';
     public $skin = 'default';
+    public $placeholder = '';
 
     public function __construct($ref)
     {

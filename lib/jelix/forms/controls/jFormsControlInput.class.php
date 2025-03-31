@@ -21,6 +21,7 @@ class jFormsControlInput extends jFormsControl
 {
     public $type = 'input';
     public $size = 0;
+    public $placeholder = '';
 
     public function setDataFromDao($value, $daoDatatype)
     {
