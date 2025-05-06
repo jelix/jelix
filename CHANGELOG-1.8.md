@@ -4,6 +4,12 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.18
+------
+
+- Fix jAcl2: rights were not removed when removing a user who has not a private group.
+
+
 1.8.17
 ------
 
