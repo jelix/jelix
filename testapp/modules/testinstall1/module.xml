@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <module xmlns="http://jelix.org/ns/module/1.0">
     <info id="testinstall1@testapp.jelix.org" name="testinstall1">
-        <version date="2025-03-06 13:13">1.8.18-pre</version>
+        <version date="2025-05-06 13:15">1.8.18</version>
         <label>testapp</label>
         <description>module to test installer</description>
         <license URL=""/>
         <copyright>Copyright 2009-2011 jelix.org</copyright>
     </info>
     <dependencies>
-        <jelix minversion="1.7.0-beta.3" maxversion="1.8.18"/>
+        <jelix minversion="1.7.0-beta.3" maxversion="1.8.19"/>
     </dependencies>
 </module>
