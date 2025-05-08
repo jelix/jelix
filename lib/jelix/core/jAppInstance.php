@@ -2,7 +2,7 @@
 
 /**
  * @author     Laurent Jouanneau
- * @copyright  2015-2022 Laurent Jouanneau
+ * @copyright  2015-2025 Laurent Jouanneau
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -46,6 +46,8 @@ class jAppInstance
     protected $_modulesPath = array();
 
     protected $_pluginsDirPath = array();
+
+    protected $_localesDirPath = array();
 
     protected $_allModulesPath;
 
@@ -528,5 +530,36 @@ class jAppInstance
     public function reloadServices()
     {
         $this->_services = new \Jelix\Core\Services();
+    }
+
+
+
+    /**
+     * Declare a directory containing some locales.
+     *
+     * Content of this directory should be organized like this:
+     * `<localecode>/<module>/locales/<localefile>.UTF-8.properties`
+     *
+     * This method must be called before loading the configuration with `jApp::loadConfig()`
+     *
+     * @param array|string  $dirPath the directory path containing locales that can be used
+     */
+    public function declareLocalesDir($dirPath)
+    {
+        if (!is_array($dirPath)) {
+            $dirPath = array($dirPath);
+        }
+        foreach ($dirPath as $path) {
+            $p = realpath($path);
+            if ($p == '') {
+                throw new Exception('Given locales dir '.$path.'does not exists');
+            }
+            $this->_localesDirPath[] = rtrim($p, '/');
+        }
+    }
+
+    public function getDeclaredLocalesDir()
+    {
+        return $this->_localesDirPath;
     }
 }

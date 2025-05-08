@@ -10,7 +10,7 @@
  * @contributor Julien Issler
  * @contributor Baptiste Toinot
  *
- * @copyright   2005-2020 Laurent Jouanneau
+ * @copyright   2005-2025 Laurent Jouanneau
  * @copyright   2007 Rahal
  * @copyright   2008 Julien Issler
  * @copyright   2008 Baptiste Toinot
@@ -20,11 +20,11 @@
  */
 
 /**
- * selector for localisation string.
+ * Selector for localization string.
  *
- * localisation string are stored in file properties.
- * syntax : "module~prefixFile.keyString".
- * Corresponding file : locales/xx_XX/prefixFile.CCC.properties.
+ * Localization strings are stored in file properties.
+ * Syntax: "module~prefixFile.keyString".
+ * Corresponding file: locales/xx_XX/prefixFile.CCC.properties.
  * xx_XX and CCC are lang and charset set in the configuration
  *
  * @package    jelix
@@ -104,10 +104,10 @@ class jSelectorLoc extends jSelectorModule
                 }
             }
             if (!$found) {
-                // to avoid infinite loop in a specific lang or charset, we should check if we don't
-                // try to retrieve the same message as the one we use for the exception below,
-                // and if it is this message, it means that the error message doesn't exist
-                // in the specific lang or charset, so we retrieve it in en_US language and UTF-8 charset
+                // To avoid infinite loop in a specific lang or charset, we should check if we don't
+                // try to retrieve the same message as the one we use for the exception below.
+                // If it is this message, it means that the error message doesn't exist
+                // in the specific lang or charset, so we retrieve it in en_US language and UTF-8 charset.
                 if ($this->toString() == 'jelix~errors.selector.invalid.target') {
                     $l = 'en_US';
                     $c = 'UTF-8';
@@ -162,6 +162,18 @@ class jSelectorLoc extends jSelectorModule
             $this->_where = 'app/locales/';
 
             return true;
+        }
+
+        // check into other paths (that could be into a Composer package for example)
+        $dirs = jApp::getDeclaredLocalesDir();
+        foreach ($dirs as $k => $dir) {
+            $localesPath = $dir.'/'.$locale.'/'.$this->module.'/locales/'.$this->resource.$this->_suffix;
+            if (is_readable($localesPath)) {
+                $this->_path = $localesPath;
+                $this->_where = 'outside/'.$k.'/';
+
+                return true;
+            }
         }
 
         // else check for the original locale file in the module

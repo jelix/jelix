@@ -232,6 +232,11 @@ class jLocaleTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals('bonne valeur',jLocale::get('jelix_tests~newoverload.test'));
     }
 
+    function testOutsideLocalesDir() {
+        jApp::config()->locale = 'fr_FR';
+        $this->assertEquals('Bonne valeur outside',jLocale::get('jelix_tests~outside.test'));
+    }
+
     function testGetBundle()
     {
         jApp::config()->locale = 'fr_FR';

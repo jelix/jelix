@@ -22,6 +22,9 @@ Features
 
 - New methods `jFile::mergeIniFile()` and `jFile::mergeIniContent()`
 
+- Locales can be in a directory outside an application, like into a Composer package.
+  The directory should be declared with the new API `jApp::declareLocalesDir()`.
+
 
 Removes
 -------
