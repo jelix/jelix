@@ -31,7 +31,8 @@
         "guzzlehttp/guzzle": "^7.7.0",
         "jelix/feeds-module": "^1.7.6",
         "jelix/wikirenderer-plugin": "^1.7.3",
-        "jelix/helloworld-module": "1.0.*"
+        "jelix/helloworld-module": "1.0.*",
+        "jelix/jacl-module": "1.9.*"
     },
     "autoload": {
     },

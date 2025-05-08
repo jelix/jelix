@@ -25,11 +25,16 @@ Features
 - Locales can be in a directory outside an application, like into a Composer package.
   The directory should be declared with the new API `jApp::declareLocalesDir()`.
 
+- jForms:
+  - support of `<placeholder>` into `<input>`, `<textarea>`, `<htmleditor>`, `<wikieditor>`,
+
 
 Removes
 -------
 
-*  remove support of bytecode cache other than opcache.
+* remove support of bytecode cache other than opcache.
+* Remove jacl and jacldb modules. There are still available into the `jelix/jacl-module` package.
+  You should migrate to jacl2 and jacl2db.
 
 Deprecated API and features
 ---------------------------
@@ -40,3 +45,8 @@ Deprecated API and features
 Internal changes
 ----------------
 
+Contributors
+------------
+
+- Laurent Jouanneau
+- Raphael Martin
