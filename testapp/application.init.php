@@ -4,7 +4,7 @@
 * @subpackage testapp
 * @author   Laurent Jouanneau
 * @contributor
-* @copyright 2005-2011 Laurent Jouanneau
+* @copyright 2005-2025 Laurent Jouanneau
 * @link     http://www.jelix.org
 * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
 */
@@ -34,3 +34,4 @@ jApp::declarePluginsDir(array(
                     ));
 */
 
+jApp::declareLocalesDir(__DIR__.'/tests-jelix/locales/');

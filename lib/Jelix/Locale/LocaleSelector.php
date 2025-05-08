@@ -7,12 +7,12 @@
  * @contributor Julien Issler
  * @contributor Baptiste Toinot
  *
- * @copyright   2005-2020 Laurent Jouanneau
+ * @copyright   2005-2025 Laurent Jouanneau
  * @copyright   2007 Rahal
  * @copyright   2008 Julien Issler
  * @copyright   2008 Baptiste Toinot
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -21,11 +21,11 @@ namespace Jelix\Locale;
 use Jelix\Core\App;
 
 /**
- * selector for localisation string.
+ * Selector for localization string.
  *
- * localisation string are stored in file properties.
- * syntax : "module~prefixFile.keyString".
- * Corresponding file : locales/xx_XX/prefixFile.UTF-8.properties.
+ * Localization strings are stored in file properties.
+ * Syntax: "module~prefixFile.keyString".
+ * Corresponding file: locales/xx_XX/prefixFile.UTF-8.properties.
  * xx_XX is lang code set in the configuration
  */
 class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
@@ -97,10 +97,10 @@ class LocaleSelector extends \Jelix\Core\Selector\ModuleSelector
                 }
             }
             if (!$found) {
-                // to avoid infinite loop in a specific lang, we should check if we don't
-                // try to retrieve the same message as the one we use for the exception below,
-                // and if it is this message, it means that the error message doesn't exist
-                // in the specific lang, so we retrieve it in en_US language
+                // To avoid infinite loop in a specific lang, we should check if we don't
+                // try to retrieve the same message as the one we use for the exception below.
+                // If it is this message, it means that the error message doesn't exist
+                // in the specific lang, so we retrieve it in en_US language.
                 throw new Exception('(212)No locale file found for the given locale key "'.$this->toString()
                     .'" in any languages', 212);
             }

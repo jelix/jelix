@@ -244,4 +244,13 @@ class jApp
     {
         return \Jelix\Core\App::reloadServices();
     }
+
+    public static function declareLocalesDir($dirPath)
+    {
+        \Jelix\Core\App::declareLocalesDir($dirPath);
+    }
+    public static function getDeclaredLocalesDir()
+    {
+        return  \Jelix\Core\App::getDeclaredLocalesDir();
+    }
 }

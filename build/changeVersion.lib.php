@@ -22,13 +22,11 @@ class ChangeVersion {
         'lib/jelix-legacy/init.php' => 'JELIX_VERSION',
         'lib/jelix-admin-modules/jacl2db_admin/module.xml'=>'modulexml3',
         'lib/jelix-admin-modules/jauthdb_admin/module.xml'=>'modulexml3',
-        'lib/jelix-admin-modules/jpref_admin/module.xml'=>'modulexml3',
         'lib/jelix-admin-modules/master_admin/module.xml'=>'modulexml3',
         'lib/jelix-modules/jacl2/module.xml'=>'modulexml3',
         'lib/jelix-modules/jacl2db/module.xml'=>'modulexml3',
         'lib/jelix-modules/jauth/module.xml'=>'modulexml3',
         'lib/jelix-modules/jauthdb/module.xml'=>'modulexml3',
-        'lib/jelix-modules/jpref/module.xml'=>'modulexml3',
         'lib/jelix-legacy/core-modules/jelix/module.xml'=>'jelixmodule',
     );
     const TESTAPP_FILES = array(

@@ -27,10 +27,6 @@ table_prefix = admin_
 ; default profile
 default =
 jforms =
-;----------------- jKVDb for jPref
-[jkvdb:jpref]
-driver = memcache
-host = "memcached:11211"
 
 
 

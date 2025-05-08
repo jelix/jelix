@@ -18,6 +18,7 @@ class InputControl extends AbstractControl
 {
     public $type = 'input';
     public $size = 0;
+    public $placeholder = '';
 
     public function setDataFromDao($value, $daoDatatype)
     {

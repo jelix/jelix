@@ -59,12 +59,6 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
                 'Do not configure the jauthdb_admin module'
             )
             ->addOption(
-                'install-jpref-admin',
-                null,
-                InputOption::VALUE_NONE,
-                'Install the jpref_admin module'
-            )
-            ->addOption(
                 'no-acl2db',
                 null,
                 InputOption::VALUE_NONE,
@@ -91,11 +85,6 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
         $doNotInstallJauthdb = $input->getOption('no-jauthdb');
         $doNotInstallJacl2db = $input->getOption('no-acl2db');
         $doNotInstallJauthdbAdmin = $input->getOption('no-jauthdb-admin');
-        $doInstallJprefAdmin = $input->getOption('install-jpref-admin');
-
-        if ($doInstallJprefAdmin && $doNotInstallJacl2db) {
-            throw new \Exception('module jpref-admin needs jAcl2db');
-        }
 
         $entrypoint = $this->selectedEntryPointId;
 
@@ -190,11 +179,6 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
 
         $modulesToConfigure[] = 'master_admin';
         //$configurator->setModuleParameters('master_admin', array());
-
-        if ($doInstallJprefAdmin) {
-            $xmlEp->addUrlInclude('/admin/pref', 'jpref_admin', 'urls.xml');
-            $modulesToConfigure[] = 'jpref_admin';
-        }
 
         if (!$doNotInstallJacl2db) {
             if ($profile != '') {

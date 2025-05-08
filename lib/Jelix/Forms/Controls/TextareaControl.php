@@ -19,6 +19,7 @@ class TextareaControl extends AbstractControl
     public $type = 'textarea';
     public $rows = 5;
     public $cols = 40;
+    public $placeholder = '';
 
     /**
      * @since 1.2

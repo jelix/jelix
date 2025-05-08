@@ -24,7 +24,7 @@ class moduleAutoloadTest extends \Jelix\UnitTests\UnitTestCase
     
     function testClassSection() {
         $conf = jApp::config();
-        $this->assertEquals(26, count($conf->_autoload_class), '_autoload_class should have 25 declarations');
+        $this->assertEquals(22, count($conf->_autoload_class), '_autoload_class should have 22 declarations');
         $this->assertTrue(isset($conf->_autoload_class['myautoloadedclass']), '_autoload_class should declare info for myautoloadedclass');
         $this->assertEquals(self::$modulePath.'autoloadtest/autoloadtestclass.php', $conf->_autoload_class['myautoloadedclass'] , 'check path of file for myautoloadedclass');
     }

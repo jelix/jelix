@@ -34,8 +34,6 @@ jauthdb_admin.enabled=on
 jacl2.enabled=on
 jacl2db.enabled=on
 jacl2db_admin.enabled=on
-jpref.enabled=on
-jpref_admin.enabled=on
 [coordplugins]
 ;name = file_ini_name or var:file_ini_name or 1
 autolocale=1

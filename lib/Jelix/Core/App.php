@@ -2,7 +2,7 @@
 /**
  * @author     Laurent Jouanneau
  *
- * @copyright  2011-2023 Laurent Jouanneau
+ * @copyright  2011-2025 Laurent Jouanneau, 2012 Olivier Demah
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -34,6 +34,8 @@ use Jelix\Core\Infos\FrameworkInfos;
  * @method static FrameworkInfos getFrameworkInfo()
  * @method static \Jelix\Core\Services services()
  * @method static reloadServices()
+ * @method static void declareLocalesDir($basePath)
+ * @method static string[] getDeclaredLocalesDir()
  */
 class App
 {

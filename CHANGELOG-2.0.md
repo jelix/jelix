@@ -186,7 +186,8 @@ From the command line scripts system of Jelix <=1.6:
 
 ## Removed modules
 
-- jacl and jacldb. Use jacl2 and jacl2db instead.
+- jacl and jacldb modules are not supported anymore. Use jacl2 and jacl2db instead.
+- jpref and jpref_admin modules are not supported anymore.
 
 ## Removed plugins
 

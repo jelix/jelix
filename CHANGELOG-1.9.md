@@ -22,11 +22,20 @@ Features
 
 - New methods `jFile::mergeIniFile()` and `jFile::mergeIniContent()`
 
+- Locales can be in a directory outside an application, like into a Composer package.
+  The directory should be declared with the new API `jApp::declareLocalesDir()`.
+
+- jForms:
+  - support of `<placeholder>` into `<input>`, `<textarea>`, `<htmleditor>`, `<wikieditor>`,
+
 
 Removes
 -------
 
-*  remove support of bytecode cache other than opcache.
+* remove support of bytecode cache other than opcache.
+* Remove jacl and jacldb modules. There are still available into the `jelix/jacl-module` package.
+  You should migrate to jacl2 and jacl2db.
+* Remove jpref and jpref_admin modules. There are still available into the `jelix/jpref-module` package.
 
 Deprecated API and features
 ---------------------------
@@ -37,3 +46,8 @@ Deprecated API and features
 Internal changes
 ----------------
 
+Contributors
+------------
+
+- Laurent Jouanneau
+- Raphael Martin

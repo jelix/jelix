@@ -35,7 +35,7 @@ class LocaleWarmUp implements WarmUpLauncherInterface
 
     public function launch(array $modulesList, int $step): void
     {
-        $compiler = new LocaleCompiler($this->app->appPath, $this->app->varPath, $this->app->buildPath);
+        $compiler = new LocaleCompiler($this->app->appPath, $this->app->varPath, $this->app->getDeclaredLocalesDir(), $this->app->buildPath);
         foreach($modulesList as $name => $path) {
             $compiler->compileModule($name, $path);
         }
@@ -48,7 +48,7 @@ class LocaleWarmUp implements WarmUpLauncherInterface
 
     public function launchOnFile(FilePlace $file) : void
     {
-        $compiler = new LocaleCompiler($this->app->appPath, $this->app->varPath, $this->app->buildPath);
+        $compiler = new LocaleCompiler($this->app->appPath, $this->app->varPath,  $this->app->getDeclaredLocalesDir(), $this->app->buildPath);
         $compiler->compileSingleFile($file);
     }
 }

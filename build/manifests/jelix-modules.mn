@@ -15,6 +15,4 @@ cd lib/jelix-modules/jauthdb
 cd lib/jelix-modules/jauth
   __ALL_RECURSIVELY__
 
-cd lib/jelix-modules/jpref
-   __ALL_RECURSIVELY__
 

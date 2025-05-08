@@ -178,6 +178,7 @@ class XmlCompiler10
         $this->readEmptyValueLabel($source, $control);
         $this->readHelpHintAlert($source, $control);
         $this->attrSize($source, $attributes);
+        $this->readPlaceholder($source, $control);
         $this->attrReadOnly($source, $attributes);
 
         return false;
@@ -199,6 +200,7 @@ class XmlCompiler10
         }
         $this->readLabel($source, $control, 'textarea');
         $this->readEmptyValueLabel($source, $control);
+        $this->readPlaceholder($source, $control);
         $this->readHelpHintAlert($source, $control);
         if (isset($attributes['rows'])) {
             $rows = intval($attributes['rows']);
@@ -654,6 +656,19 @@ class XmlCompiler10
             }
         } else {
             $source[] = '$ctrl->datasource= new \\Jelix\\Forms\\Datasource\\StaticDatasource();';
+        }
+    }
+
+    protected function readPlaceholder(&$source, $control)
+    {
+        if (isset($control->placeholder)) {
+            if (isset($control->placeholder['locale'])) {
+                $placeHolderlocale = (string) $control->placeholder['locale'];
+                $source[] = '$ctrl->placeholder=jLocale::get(\''.$placeHolderlocale.'\');';
+            } else {
+                $label = (string) $control->placeholder;
+                $source[] = '$ctrl->placeholder=\''.str_replace("'", "\\'", $label).'\';';
+            }
         }
     }
 }

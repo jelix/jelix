@@ -56,8 +56,6 @@ installparam[defaultuser]=on
 enabled=on
 [module:jauth]
 enabled=on
-[module:jpref]
-enabled=on
 [module:jminify]
 enabled=on
 [module:jfeeds]

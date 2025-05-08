@@ -158,11 +158,6 @@ driver = db
 table=testkvdb
 dbprofile=default
 
-[jkvdb:jpref]
-driver = db
-table=testkvdb
-dbprofile=default
-
 [jkvdb:usingdba]
 driver = dba
 handler=db4

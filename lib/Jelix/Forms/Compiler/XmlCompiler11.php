@@ -216,6 +216,7 @@ class XmlCompiler11 extends XmlCompiler10
         $this->attrRequired($source, $attributes);
         $this->attrDefaultvalue($source, $attributes);
         $this->attrReadOnly($source, $attributes);
+        $this->readPlaceholder($source, $control);
 
         if (isset($attributes['minlength'])) {
             $source[] = '$ctrl->datatype->addFacet(\'minLength\',' . intval($attributes['minlength']) . ');';

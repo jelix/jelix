@@ -64,6 +64,9 @@ class wikieditor_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
         if (!isset($attr['cols'])) {
             $attr['cols'] = $this->ctrl->cols;
         }
+        if ($this->ctrl->placeholder != '') {
+            $attr['placeholder'] = $this->ctrl->placeholder;
+        }
 
         echo '<textarea';
         $this->_outputAttr($attr);

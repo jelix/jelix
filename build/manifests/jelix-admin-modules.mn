@@ -10,6 +10,3 @@ cd lib/jelix-admin-modules/jacl2db_admin
 cd lib/jelix-admin-modules/jauthdb_admin
   __ALL_RECURSIVELY__
   
-cd lib/jelix-admin-modules/jpref_admin
-  __ALL_RECURSIVELY__
-

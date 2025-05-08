@@ -20,22 +20,19 @@ use Jelix\PropertiesFile\Properties;
 class LocaleCompiler
 {
 
-    protected $appPath;
-    protected $varPath;
-    protected $buildPath;
-
-    function __construct($appPath, $varPath, $buildPath)
+    function __construct(
+        protected string $appPath,
+        protected string $varPath,
+        protected array $otherPath,
+        protected string $buildPath
+    )
     {
-        $this->appPath = $appPath;
-        $this->varPath = $varPath;
-        $this->buildPath = $buildPath;
     }
-
 
     protected $compiledLangFiles = [];
 
     /**
-     * Compile all locales file of the given module.
+     * Compile all locales files of the given module.
      *
      * To be called during the installation of the application for example.
      *
@@ -78,6 +75,11 @@ class LocaleCompiler
         $localesPath = $this->appPath.'app/locales/';
         if (is_readable($localesPath)) {
             $this->compileFromDirectory($module, $localesPath, true);
+        }
+
+        // check if the locale is available in other locales directory from packages
+        foreach ($this->otherPath as $dir) {
+            $this->compileFromDirectory($module, $dir, true);
         }
 
         if (is_readable($modulePath.'locales/')) {
