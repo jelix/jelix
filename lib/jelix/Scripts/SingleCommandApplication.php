@@ -25,7 +25,7 @@ class SingleCommandApplication extends Application
         $this->setDefaultCommand($command->getName(), true);
     }
 
-    public function getDefinition()
+    public function getDefinition(): \Symfony\Component\Console\Input\InputDefinition
     {
         $inputDefinition = parent::getDefinition();
 
