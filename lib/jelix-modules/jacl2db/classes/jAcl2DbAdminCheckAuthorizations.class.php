@@ -456,8 +456,8 @@ class jAcl2DbAdminCheckAuthorizations
     }
 
     /**
-     * check if the adding of the given user to the the given group still
-     * allows to administrate rights for at least one user.
+     * check if the adding of the given user to the given group still
+     * allows administrating rights for at least one user.
      *
      * (because the group may forbid to administrate rights.)
      *
