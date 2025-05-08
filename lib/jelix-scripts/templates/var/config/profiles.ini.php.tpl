@@ -67,12 +67,6 @@ host = "localhost:11211"
 ; umask for cache files (default '0600')
 ;file_umask =
 
-
-;----------------- jKVDb for jPref
-[jkvdb:jpref]
-;driver = 
-
-
 [smtp]
 
 ;------------------ for jMailer

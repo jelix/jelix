@@ -70,20 +70,6 @@ cd lib/jelix-modules/jauth/templates
 cd lib/jelix-modules/jauth/zones
   __ALL__
 
-cd lib/jelix-modules/jpref
-  __ALL__
-cd lib/jelix-modules/jpref/classes/
-  __ALL__
-cd lib/jelix-modules/jpref/install/
-  __ALL__
-cd lib/jelix-modules/jpref/locales/en_US
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
-cd lib/jelix-modules/jpref/locales/en_GB
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
-cd lib/jelix-modules/jpref/locales/fr_FR
-cch prefs.UTF-8.properties(prefs.%charset%.properties)
-
-
 cd lib/jelix-plugins
   INSTALL
   LICENCE

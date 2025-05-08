@@ -35,6 +35,7 @@ Removes
 * remove support of bytecode cache other than opcache.
 * Remove jacl and jacldb modules. There are still available into the `jelix/jacl-module` package.
   You should migrate to jacl2 and jacl2db.
+* Remove jpref and jpref_admin modules. There are still available into the `jelix/jpref-module` package.
 
 Deprecated API and features
 ---------------------------

@@ -32,7 +32,8 @@
         "jelix/feeds-module": "^1.7.6",
         "jelix/wikirenderer-plugin": "^1.7.3",
         "jelix/helloworld-module": "1.0.*",
-        "jelix/jacl-module": "1.9.*"
+        "jelix/jacl-module": "1.9.*",
+        "jelix/jpref-module": "1.9.*"
     },
     "autoload": {
     },
