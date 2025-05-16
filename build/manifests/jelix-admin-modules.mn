@@ -61,23 +61,4 @@ cch   crud.UTF-8.properties(crud.%charset%.properties)
 cch   user.UTF-8.properties(user.%charset%.properties)
 cd lib/jelix-admin-modules/jauthdb_admin/templates
   __ALL__
-  
-cd lib/jelix-admin-modules/jpref_admin
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/classes/
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/controllers
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/forms
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/install
-  __ALL__
-cd lib/jelix-admin-modules/jpref_admin/locales/en_GB
-cch   admin.UTF-8.properties(admin.%charset%.properties)
-cd lib/jelix-admin-modules/jpref_admin/locales/en_US
-cch   admin.UTF-8.properties(admin.%charset%.properties)
-cd lib/jelix-admin-modules/jpref_admin/locales/fr_FR
-cch   admin.UTF-8.properties(admin.%charset%.properties)
-cd lib/jelix-admin-modules/jpref_admin/templates
-  __ALL__
-
+ 
