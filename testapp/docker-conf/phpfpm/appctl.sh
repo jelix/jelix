@@ -103,7 +103,7 @@ function resetMysql() {
 
 function resetPostgresql() {
   echo "--- Reset Postgresql database"
-  PGTABLES="jacl2_group jacl2_rights jacl2_subject jacl2_subject_group jacl2_user_group jsessions labels1_tests labels_tests product_tags_test product_test products testkvdb"
+  PGTABLES="jacl2_group jacl2_rights jacl2_subject jacl2_subject_group jacl2_user_group jsessions labels1_tests labels_tests product_tags_test product_test products testkvdb generated_column_test products_with_identity"
   for TABLE in $PGTABLES
   do
       PGPASSWORD=jelix psql -h pgsql -U test_user -d testapp -c "drop table if exists $TABLE cascade;"

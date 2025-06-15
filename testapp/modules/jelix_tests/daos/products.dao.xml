@@ -10,6 +10,7 @@
       <property name="create_date" fieldname="create_date" datatype="datetime" insertpattern="NOW()" />
       <property name="promo" fieldname="promo" datatype="boolean" required="true" default="false"/>
       <property name="dummy" fieldname="dummy" datatype="string" />
+      <property name="metadata" fieldname="metadata" datatype="json" />
    </record>
    <factory>
        <method name="findByMaxId" type="select">

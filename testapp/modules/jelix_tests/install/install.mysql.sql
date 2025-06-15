@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS `product_test` (
 `price` FLOAT NOT NULL,
 `create_date` datetime default NULL,
 `promo` BOOL NOT NULL default 0,
-`dummy` set('created','started','stopped') DEFAULT NULL
+`dummy` set('created','started','stopped') DEFAULT NULL,
+`metadata` JSON default NULL
 ) ENGINE = InnoDB ;
 
 CREATE TABLE IF NOT EXISTS `product_tags_test` (
