@@ -2,10 +2,12 @@
 <dao xmlns="http://jelix.org/ns/dao/1.0">
    <datasources>
       <primarytable name="product_tags_test" primarykey="product_id,tag" />
+      <foreigntable name="product_test" primarykey="id" onforeignkey="product_id"/>
    </datasources>
    <record>
       <property name="id"  fieldname="product_id" datatype="int"/>
       <property name="tag" fieldname="tag"    datatype="string"/>
+      <property name="product_name" fieldname="name" table="product_test" datatype="string"/>
    </record>
 </dao>
 

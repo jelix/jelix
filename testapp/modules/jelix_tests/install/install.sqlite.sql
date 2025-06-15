@@ -13,3 +13,9 @@ CREATE TABLE products (
     name varchar(150) not null,
     price float default 0
 );
+
+CREATE TABLE product_tags_test (
+    product_id INTEGER,
+    tag VARCHAR( 50 ) NOT NULL,
+    PRIMARY KEY ( product_id, tag)
+);

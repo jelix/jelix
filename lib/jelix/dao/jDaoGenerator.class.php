@@ -662,11 +662,12 @@ class jDaoGenerator
         foreach ($this->_dataParser->getInnerJoins() as $tablejoin) {
             $table = $tables[$tablejoin];
             $tablename = $this->_encloseName($table['name']);
-            $sqlFrom .= ', '.$this->_encloseName($table['realname']).$this->aliasWord.$tablename;
-
+            $sqlFrom .= ' INNER JOIN '.$this->_encloseName($table['realname']).$this->aliasWord.$tablename. ' ON (';
+            $innerJoin = [];
             foreach ($table['fk'] as $k => $fk) {
-                $sqlWhere .= ' AND '.$ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
+                $innerJoin[] = $ptname.'.'.$this->_encloseName($fk).'='.$tablename.'.'.$this->_encloseName($table['pk'][$k]);
             }
+            $sqlFrom .= implode(' AND ', $innerJoin).')';
         }
 
         $this->sqlWhereClause = ($sqlWhere != '' ? ' WHERE '.substr($sqlWhere, 4) : '');

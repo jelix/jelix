@@ -89,8 +89,8 @@ class jdao_generator_selectTest extends \Jelix\UnitTests\UnitTestCase {
         $result = $generator->GetSelectClause();
         $this->assertEquals('SELECT `product_test`.`id`, `product_test`.`name`, `product_test`.`price`, `category`.`cat_id`, `category`.`name` as `category`',$result);
         list($from, $where) = $generator->GetFromClause();
-        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `product_test`, `\'.$this->_conn->prefixTable(\'category\').\'` AS `category`',$from);
-        $this->assertEquals(' WHERE  `product_test`.`cat_id`=`category`.`cat_id`',$where);
+        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `product_test` INNER JOIN `\'.$this->_conn->prefixTable(\'category\').\'` AS `category` ON (`product_test`.`cat_id`=`category`.`cat_id`)',$from);
+        $this->assertEquals('',$where);
 
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -112,8 +112,8 @@ class jdao_generator_selectTest extends \Jelix\UnitTests\UnitTestCase {
         $result = $generator->GetSelectClause();
         $this->assertEquals('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `c`.`cat_id`, `c`.`name` as `category`',$result);
         list($from, $where) = $generator->GetFromClause();
-        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p`, `\'.$this->_conn->prefixTable(\'category\').\'` AS `c`',$from);
-        $this->assertEquals(' WHERE  `p`.`cat_id`=`c`.`cat_id`',$where);
+        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p` INNER JOIN `\'.$this->_conn->prefixTable(\'category\').\'` AS `c` ON (`p`.`cat_id`=`c`.`cat_id`)',$from);
+        $this->assertEquals('',$where);
 
         $doc ='<?xml version="1.0"?>
 <dao xmlns="http://jelix.org/ns/dao/1.0">
@@ -161,8 +161,8 @@ class jdao_generator_selectTest extends \Jelix\UnitTests\UnitTestCase {
         $result = $generator->GetSelectClause();
         $this->assertEquals('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `c`.`cat_id`, `c`.`name` as `category`, `c2`.`cat_id2`, `c2`.`name` as `category2`',$result);
         list($from, $where) = $generator->GetFromClause();
-        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p` LEFT JOIN `\'.$this->_conn->prefixTable(\'category\').\'` AS `c` ON ( `p`.`cat_id`=`c`.`cat_id`), `\'.$this->_conn->prefixTable(\'category\').\'` AS `c2`',$from);
-        $this->assertEquals(' WHERE  `p`.`cat_id2`=`c2`.`cat_id`',$where);
+        $this->assertEquals(' FROM `\'.$this->_conn->prefixTable(\'product_test\').\'` AS `p` LEFT JOIN `\'.$this->_conn->prefixTable(\'category\').\'` AS `c` ON ( `p`.`cat_id`=`c`.`cat_id`) INNER JOIN `\'.$this->_conn->prefixTable(\'category\').\'` AS `c2` ON (`p`.`cat_id2`=`c2`.`cat_id`)',$from);
+        $this->assertEquals('',$where);
     }
 
 
