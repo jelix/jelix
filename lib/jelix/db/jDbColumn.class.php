@@ -4,7 +4,7 @@
  * @subpackage db
  *
  * @author     Laurent Jouanneau
- * @copyright  2010-2020 Laurent Jouanneau
+ * @copyright  2010-2025 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -256,6 +256,12 @@ class jDbColumn
     public $comment = '';
 
     public $arrayDims;
+
+    /**
+     * @var string indicate which kind of autoincremented the column is.
+     *              Content depends on the adapter.
+     */
+    public $autoIncrementFlavor = '';
 
     public function __construct(
         $name,

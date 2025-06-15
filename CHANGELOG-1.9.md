@@ -35,9 +35,13 @@ New features
 **jDb**
  
 - Support of generated column from Postgresql (contributor: Riccardo Beltrami)
+- Support of Identity column for Postgresql
 - Fix usage of `jDbPDOResulset` as an iterator (with `foreach` for example): the 
   `jDbPDOResulset::fetch()` method is now called during iteration, so modifiers
   are called on records.
+- Minimum version of supported databases:
+  - Mysql: 8.*
+  - PostgreSQL: 13 
 
 **jDao**
  
