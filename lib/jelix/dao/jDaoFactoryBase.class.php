@@ -14,7 +14,7 @@
  * @contributor Steven Jehannet, Didier Huguet
  * @contributor Philippe Villiers
  *
- * @copyright   2005-2018 Laurent Jouanneau
+ * @copyright   2005-2025 Laurent Jouanneau
  * @copyright   2007 Loic Mathaud
  * @copyright   2007-2009 Julien Issler
  * @copyright   2008 Thomas
@@ -717,5 +717,18 @@ abstract class jDaoFactoryBase
         }
 
         return $this->falseValue;
+    }
+
+    /**
+     * a callback function for some array_map call in generated methods.
+     *
+     * @param mixed $value
+     */
+    protected function _callbackJson($value)
+    {
+        if (!is_string($value)) {
+            $value = json_encode($value);
+        }
+        return $this->_conn->quote2($value);
     }
 }

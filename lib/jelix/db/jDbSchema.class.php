@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor Aurélien Marcel
  *
- * @copyright  2017-2018 Laurent Jouanneau, 2011 Aurélien Marcel
+ * @copyright  2017-2025 Laurent Jouanneau, 2011 Aurélien Marcel
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -242,7 +242,7 @@ abstract class jDbSchema
                 $colstr .= ','.$col->scale;
             }
             $colstr .= ')';
-        } elseif ($col->length && $ti[1] != 'text' && $ti[1] != 'blob') {
+        } elseif ($col->length && $ti[1] != 'text' && $ti[1] != 'blob' && $ti[1] != 'json') {
             $colstr .= '('.$col->length.')';
         }
 

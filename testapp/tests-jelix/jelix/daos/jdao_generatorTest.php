@@ -67,6 +67,7 @@ class jdao_generatorTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals('jDb::floatToStr($foo)',$this->_getProp('float','$foo', false));
         $this->assertEquals('jDb::floatToStr($foo)',$this->_getProp('numeric','$foo', false));
         $this->assertEquals('jDb::floatToStr($foo)',$this->_getProp('bigautoincrement','$foo', false));
+        $this->assertEquals('$this->_conn->quote(is_string($foo)?$foo:json_encode($foo))',$this->_getProp('json', '$foo', false));
 
         // with checknull 
         $this->assertEquals('($foo === null ? \'NULL\' : intval($foo))',$this->_getProp('integer','$foo', true));
@@ -76,6 +77,7 @@ class jdao_generatorTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('float','$foo', true));
         $this->assertEquals('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true));
         $this->assertEquals('($foo === null ? \'NULL\' : jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true));
+        $this->assertEquals('($foo === null ? \'NULL\' : $this->_conn->quote(is_string($foo)?$foo:json_encode($foo)))',$this->_getProp('json','$foo', true));
 
         // with checknull and operator =
         $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.intval($foo))',$this->_getProp('integer','$foo', true,'='));
@@ -85,6 +87,7 @@ class jdao_generatorTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('float','$foo', true,'='));
         $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('numeric','$foo', true,'='));
         $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.jDb::floatToStr($foo))',$this->_getProp('bigautoincrement','$foo', true,'='));
+        $this->assertEquals('($foo === null ? \'IS NULL\' : \' = \'.$this->_conn->quote(is_string($foo)?$foo:json_encode($foo)))',$this->_getProp('json','$foo', true,'='));
 
         // with checknull with default value and operator =
         /*$prop->defaultValue=34;

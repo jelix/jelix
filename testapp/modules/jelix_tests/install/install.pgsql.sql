@@ -8,7 +8,8 @@ CREATE TABLE product_test (
     price real NOT NULL,
     create_date time with time zone,
     promo boolean NOT NULL,
-    dummy character varying (10) NULL CONSTRAINT dummy_check CHECK (dummy IN ('created','started','stopped'))
+    dummy character varying (10) NULL CONSTRAINT dummy_check CHECK (dummy IN ('created','started','stopped')),
+    metadata jsonb default null
 );
 
 SELECT pg_catalog.setval(pg_catalog.pg_get_serial_sequence('product_test', 'id'), 1, false);

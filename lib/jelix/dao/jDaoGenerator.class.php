@@ -9,7 +9,7 @@
  * @contributor Julien Issler, Guillaume Dugas
  * @contributor Philippe Villiers
  *
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2025 Laurent Jouanneau
  * @copyright  2007-2008 Julien Issler
  * This class was get originally from the Copix project (CopixDAOGeneratorV1, Copix 2.3dev20050901, http://www.copix.org)
  * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -212,6 +212,8 @@ class jDaoGenerator
         $src[] = '   extract($pk);';
         $src[] = '   return \' where '.$this->buildSimpleConditions($pkFields, '', false).'\';';
         $src[] = '}';
+
+        $src[] = $this->buildFinishResultSet();
 
         //----- Insert method
 
@@ -755,6 +757,26 @@ class jDaoGenerator
         return $field;
     }
 
+    protected function buildFinishResultSet()
+    {
+        $jsonFields = $this->_getPropertiesBy('JsonField');
+        $src = [];
+        if ($jsonFields) {
+            $src[] = 'protected function finishInitResultSet($rs) {';
+            $src[] = '   parent::finishInitResultSet($rs);';
+            $src[] = '   $rs->addModifier(function ($record, $rs) {';
+
+            foreach ($jsonFields as $field) {
+                $src[] = '    if ($record->'.$field->name.' !== null) { $record->'.$field->name.' = json_decode($record->'.$field->name.', true); }';
+            }
+
+            $src[] = '   });';
+            $src[] = '}';
+        }
+
+        return implode("\n", $src);
+    }
+
     protected function buildEndOfClass()
     {
         return '';
@@ -886,6 +908,11 @@ class jDaoGenerator
     protected function _captureBinaryField(&$field)
     {
         return $field->unifiedType == 'binary' || $field->unifiedType == 'varbinary';
+    }
+
+    protected function _captureJsonField(&$field)
+    {
+        return $field->unifiedType == 'json';
     }
 
     /**
@@ -1202,6 +1229,13 @@ class jDaoGenerator
                 }
 
                 break;
+            case 'json':
+                if ($checknull) {
+                    $expr = '('.$expr.' === null ? \''.$opnull.'NULL\' : '.$forCondition.'$this->_conn->quote(is_string('.$expr.')?'.$expr.':json_encode('.$expr.')))';
+                } else {
+                    $expr = $forCondition.'$this->_conn->quote(is_string('.$expr.')?'.$expr.':json_encode('.$expr.'))';
+                }
+                break;
 
             default:
                 if ($type == 'varbinary' || $type == 'binary') {
@@ -1236,13 +1270,14 @@ class jDaoGenerator
 
             case 'boolean':
                 return 'array($this, \'_callbackBool\')';
-
+            case 'json':
+                return 'array($this, \'_callbackJson\')';
             default:
                 if ($type == 'varbinary' || $type == 'binary') {
                     return 'array($this, \'_callbackQuoteBin\')';
                 }
 
-                    return 'array($this, \'_callbackQuote\')';
+                return 'array($this, \'_callbackQuote\')';
         }
     }
 

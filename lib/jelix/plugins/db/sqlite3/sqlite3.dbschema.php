@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor     Loic Mathaud
  *
- * @copyright  2006 Loic Mathaud, 2007-2017 Laurent Jouanneau
+ * @copyright  2006 Loic Mathaud, 2007-2025 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -763,6 +763,7 @@ class sqlite3DbSchema extends jDbSchema
      * @param mixed     $isSinglePrimaryKey
      *
      * @return string the sql string
+     * @internal
      */
     public function _prepareSqlColumn($col, $isPrimaryKey = false, $isSinglePrimaryKey = false)
     {
@@ -775,7 +776,7 @@ class sqlite3DbSchema extends jDbSchema
                 $colstr .= ','.$col->scale;
             }
             $colstr .= ')';
-        } elseif ($col->length && $ti[1] != 'text' && $ti[1] != 'blob') {
+        } elseif ($col->length && $ti[1] != 'text' && $ti[1] != 'blob' && $ti[1] != 'json') {
             $colstr .= '('.$col->length.')';
         }
 

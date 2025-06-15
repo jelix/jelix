@@ -6,7 +6,7 @@
  * @author     Yann Lecommandoux
  * @contributor Julien, Laurent Jouanneau
  *
- * @copyright  2008 Yann Lecommandoux, 2010 Julien, 2017 Laurent Jouanneau
+ * @copyright  2008 Yann Lecommandoux, 2010 Julien, 2017-2025 Laurent Jouanneau
  *
  * @see      http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -76,6 +76,10 @@ class jDbSqlsrvTools extends jDbTools
         'long' => array('text',   'text',       null,       null,       0,     0),
         'clob' => array('text',   'text',       null,       null,       0,     0),
         'nclob' => array('text',   'text',       null,       null,       0,     0),
+
+        // native type only in sqlserver 2025+
+        'json' => array('text', 'json',       null,       null,       0,     0),
+        'jsonb' => array('text', 'json',       null,       null,       0,     0),
 
         'tinyblob' => array('varbinary',   'blob',       null,       null,       0,     255),
         'blob' => array('varbinary',   'blob',       null,       null,       0,     65535),

@@ -7,7 +7,7 @@
  * @contributor Laurent Jouanneau
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2025 Laurent Jouanneau
  * @copyright  2012 Florian Lonqueu-Brochard
  * This class was get originally from the Copix project (CopixDbToolsMysql, Copix 2.3dev20050901, http://www.copix.org)
  * Initial authors of this Copix class are Gerald Croes and Laurent Jouanneau,
@@ -84,6 +84,9 @@ class jDbMysqlTools extends jDbTools
         'long' => array('longtext',   'text',       null,       null,       0,     0),
         'clob' => array('longtext',   'text',       null,       null,       0,     0),
         'nclob' => array('longtext',   'text',       null,       null,       0,     0),
+
+        'json' => array('json', 'json',       null,       null,       0,     0),
+        'jsonb' => array('json', 'json',       null,       null,       0,     0),
 
         'tinyblob' => array('tinyblob',   'varbinary',  null,       null,       0,     255),
         'blob' => array('blob',       'varbinary',  null,       null,       0,     65535),

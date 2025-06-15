@@ -28,6 +28,9 @@ Features
 - jForms:
   - support of `<placeholder>` into `<input>`, `<textarea>`, `<htmleditor>`, `<wikieditor>`,
 
+- jDao:
+  - native support of JSON fields : dao properties having the datatype `json` 
+    are automatically encoded during insert/update, or decoded during a select.
 
 Removes
 -------

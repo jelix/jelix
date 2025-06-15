@@ -7,7 +7,7 @@
  * @contributor Laurent Jouanneau
  * @contributor Nicolas Jeudy (patch ticket #99)
  *
- * @copyright  2005-2021 Laurent Jouanneau
+ * @copyright  2005-2025 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -83,6 +83,9 @@ class jDbPgsqlTools extends jDbTools
         'long' => array('text',   'text',       null,       null,       0,     0),
         'clob' => array('text',   'text',       null,       null,       0,     0),
         'nclob' => array('text',   'text',       null,       null,       0,     0),
+
+        'json' => array('json', 'json',       null,       null,       0,     0),
+        'jsonb' => array('jsonb', 'json',       null,       null,       0,     0),
 
         'tinyblob' => array('bytea',   'blob',       null,       null,       0,     255),
         'blob' => array('bytea',   'blob',       null,       null,       0,     65535),

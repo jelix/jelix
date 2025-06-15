@@ -30,6 +30,7 @@ class jdao_main_api_sqlite3Test extends jdao_main_api_base {
             return;
         }
         $this->dbProfile ='testapp_sqlite3';
+        $this->jsonSpace = '';
     }
 
     function testInstanciation() {

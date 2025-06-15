@@ -6,7 +6,7 @@
  * @author     Gérald Croes, Laurent Jouanneau
  * @contributor Laurent Jouanneau, Gwendal Jouannic, Julien Issler
  *
- * @copyright  2001-2005 CopixTeam, 2005-2017 Laurent Jouanneau
+ * @copyright  2001-2005 CopixTeam, 2005-2025 Laurent Jouanneau
  * @copyright  2008 Gwendal Jouannic
  * @copyright  2008 Julien Issler
  *
@@ -161,6 +161,7 @@ abstract class jDbTools
         'blob' => 'string',
         'binary' => 'string',
         'varbinary' => 'string',
+        'json' => 'array',
     );
 
     protected $typesInfo = array();
@@ -289,7 +290,7 @@ abstract class jDbTools
      * @param mixed  $checkNull
      * @param mixed  $toPhpSource
      *
-     * @return string the value which is ready to include a SQL query string
+     * @return string the value which is ready to be included in an SQL query string
      *
      * @since 1.2
      */
@@ -310,7 +311,10 @@ abstract class jDbTools
             case 'numeric':
             case 'decimal':
                return jDb::floatToStr($value);
-
+            case 'array':
+                if (!is_string($value)) {
+                    $value = json_encode($value);
+                }
             default:
                 if ($toPhpSource) {
                     if ($unifiedType == 'varbinary' || $unifiedType == 'binary') {
@@ -793,7 +797,10 @@ abstract class jDbTools
                         $op = 'IS';
 
                         break;
-
+                    case 'array':
+                    case 'object':
+                         $val = $this->_conn->quote(json_encode($value));
+                        break;
                     default:
                         $this->_conn->rollback();
 

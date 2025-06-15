@@ -4,7 +4,8 @@ CREATE TABLE product_test (
     price FLOAT NOT NULL,
     create_date datetime default NULL,
     promo BOOL NOT NULL default 0,
-    dummy varchar(10) DEFAULT NULL
+    dummy varchar(10) DEFAULT NULL,
+    metadata TEXT DEFAULT NULL
 );
 
 CREATE TABLE products (
