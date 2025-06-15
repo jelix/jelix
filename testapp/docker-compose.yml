@@ -24,7 +24,7 @@ services:
     networks:
      - default
   mysql:
-    image: mysql
+    image: mysql:8.4
     container_name: jelix_${JLX_BRANCH}_test_mysql
     environment:
       MYSQL_ROOT_PASSWORD: mysqlpass

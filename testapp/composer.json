@@ -24,7 +24,7 @@
     "require": {
         "phpunit/phpunit": "9.6.*",
         "jelix/jelix-essential" : "@dev",
-        "jelix/soap-server-module": "^1.7.9",
+        "jelix/soap-server-module": "1.7.x-dev",
         "jelix/minify-module": "^1.7.4",
         "jelix/php-redis-plugin": "^1.7.8",
         "jelix/sitemap-module": "^1.7.7",
