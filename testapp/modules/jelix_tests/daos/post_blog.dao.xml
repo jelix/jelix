@@ -6,4 +6,6 @@
         <!-- add new property -->
         <property name="email" fieldname="email" datatype="varchar" maxlength="120"/>
     </record>
+    <factory extends="\JelixTests\Tests\Dao\PostBlogFactory">
+    </factory>
 </dao>

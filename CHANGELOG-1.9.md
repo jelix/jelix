@@ -5,8 +5,10 @@ Not released yet.
 
 Minimum version of PHP is 8.1.
 
-Features
---------
+New features
+------------
+
+**Core**
 
 - In urls.xml, entrypoint can have an "alias" attribute, to indicate an alternate
   name, that could be used into the `declareUrls` of configurator. It is useful
@@ -16,7 +18,6 @@ Features
   can declare the alias `admin` on this entrypoint, and then the module can
   be installed.
 
-- jDb: Support of generated column from Postgresql (contributor: Riccardo Beltrami)
 
 - New methods `jLocale::getBundle()` and `jBundle::getAllKeys()`
 
@@ -28,10 +29,17 @@ Features
 - jForms:
   - support of `<placeholder>` into `<input>`, `<textarea>`, `<htmleditor>`, `<wikieditor>`,
 
-- jDao:
-  - native support of JSON fields : dao properties having the datatype `json` 
-    are automatically encoded during insert/update, or decoded during a select.
 
+- jDb: Support of generated column from Postgresql (contributor: Riccardo Beltrami)
+- jDao:
+  - native support of JSON fields: dao properties having the datatype `json` 
+    are automatically encoded during insert/update, or decoded during a select.
+  - Possibility to indicate a class from which the generated factory class will inherit.
+    The classname should be indicated into the `extends` attribute of `<factory>`.
+    The class can be anywhere and should be autoloadable. The class must inherit
+    from `jDaoFactoryBase` and it must be abstract.
+  
+  
 Removes
 -------
 
@@ -45,6 +53,8 @@ Deprecated API and features
 
 * `jClassBinding`
 * `jelix_read_ini`
+* jDao: method type `xml`. A PHP class should be used instead, that is declared
+  into the `extends` attribute of `<factory>`.
 
 Internal changes
 ----------------

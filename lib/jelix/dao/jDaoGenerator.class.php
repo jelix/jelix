@@ -161,11 +161,11 @@ class jDaoGenerator
         $src[] = '   public function getPrimaryKeyNames() { return '.$this->_DaoClassName.'::$_pkFields; }';
         $src[] = '}';
 
-        //--------------------
-        // Build the dao class
-        //--------------------
+        //------------------------
+        // Build the factory class
+        //------------------------
 
-        $src[] = "\nclass ".$this->_DaoClassName.' extends jDaoFactoryBase {';
+        $src[] = "\nclass ".$this->_DaoClassName.' extends '.$this->_dataParser->getParentFactoryClass().' {';
         $src[] = '   protected $_tables = '.var_export($tables, true).';';
         $src[] = '   protected $_primaryTable = \''.$this->_dataParser->getPrimaryTable().'\';';
         $src[] = '   protected $_selectClause=\''.$this->sqlSelectClause.'\';';

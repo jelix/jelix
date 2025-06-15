@@ -86,6 +86,7 @@ class jDaoMethod
         }
 
         if ($this->type == 'php') {
+            trigger_error('PHP methods into DAO xml files are deprecated. Use custom factory class instead.', E_USER_DEPRECATED);
             if (isset($method->body)) {
                 $this->_body = (string) $method->body;
             } else {

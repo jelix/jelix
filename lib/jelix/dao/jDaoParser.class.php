@@ -94,6 +94,11 @@ class jDaoParser
     private $_userRecord;
 
     /**
+     * @var string name of the class that should the dao factory should inherits from.
+     */
+    private $parentFactoryClass = 'jDaoFactoryBase';
+
+    /**
      * selector of the imported dao.
      *
      * @var jSelectorDao[]
@@ -258,6 +263,11 @@ class jDaoParser
     {
         // get additionnal methods definition
         if (isset($xml->factory)) {
+
+            if (isset($xml->factory[0]['extends'])) {
+                $this->parentFactoryClass = (string) $xml->factory[0]['extends'];
+            }
+
             if (isset($xml->factory[0]['events'])) {
                 $events = (string) $xml->factory[0]['events'];
                 $this->_eventList = preg_split('/[\\s,]+/', $events);
@@ -460,6 +470,11 @@ class jDaoParser
     public function getUserRecord()
     {
         return $this->_userRecord;
+    }
+
+    public function getParentFactoryClass()
+    {
+        return $this->parentFactoryClass;
     }
 
     /**

@@ -37,6 +37,17 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $this->assertInstanceOf('postTrackerDaoRecord', $trackerPost);
     }
     
+    public function testExtendedFactory() {
+
+        $postDao = jDao::create('jelix_tests~posts');
+        $blogPostDao = jDao::create('jelix_tests~post_blog');
+        $this->assertInstanceOf('jDaoFactoryBase', $postDao);
+        $this->assertInstanceOf('jDaoFactoryBase', $blogPostDao);
+        $this->assertInstanceOf('\JelixTests\Tests\Dao\PostBlogFactory', $blogPostDao);
+
+        $this->assertTrue(method_exists($blogPostDao, 'getByEmail'));
+    }
+
     public function testImportedEvents() {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $blogSel = new jSelectorDao('jelix_tests~post_blog', '');
