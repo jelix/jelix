@@ -169,4 +169,19 @@ class jDbPDOResultSet extends PDOStatement
     {
         $this->modifier[] = $function;
     }
+
+    /**
+     * @internal We must implement a specific iterator that will call methods
+     * of jDbPDOResulset (fetch() etc) instead of PDO internals. Else using
+     * jDbPDOResulset with foreach will not return records on which modifiers
+     * will not be called.
+     *
+     * @return Iterator
+     */
+    public function getIterator(): Iterator
+    {
+        return new jDbPDOIterator($this);
+    }
+
+
 }

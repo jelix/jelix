@@ -146,12 +146,6 @@ class jDbPDOConnection extends PDO
     }
 
     /**
-     * @internal the implementation of Iterator on PDOStatement doesn't call
-     * fetch method of classes which inherit of PDOStatement.
-     * so, we cannot indicate to fetch object directly in jDbPDOResultSet::fetch().
-     * So we overload query() to do it.
-     * TODO check if this is still the case in PHP 8.1+
-     *
      * @return jDbPDOResultSet|PDOStatement
      */
     #[\ReturnTypeWillChange]

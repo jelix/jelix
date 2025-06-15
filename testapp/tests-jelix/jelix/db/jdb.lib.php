@@ -135,8 +135,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $resultSet->addModifier(array($this, '_callbackTest'));
 
         $list = array();
-        //foreach($resultSet as $res){
-        while($res = $resultSet->fetch()){
+        foreach($resultSet as $res){
             $list[] = $res;
         }
         $this->assertEquals(3, count($list), 'query return bad number of results ('.count($list).')');
