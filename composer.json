@@ -43,7 +43,7 @@
             "Jelix\\Event\\" : "lib/JelixFramework/Event/",
             "Jelix\\Routing\\UrlMapping\\": "lib/JelixFramework/Routing/UrlMapping/",
             "Jelix\\Installer\\": "lib/jelix/installer/Installer/",
-            "Jelix\\Scripts\\": "lib/jelix/Scripts/",
+            "Jelix\\Scripts\\": "lib/JelixFramework/Scripts/",
             "Jelix\\Core\\Infos\\": "lib/jelix/core/Infos/",
             "Jelix\\Dependencies\\" : "lib/jelix/Dependencies",
             "Jelix\\WebAssets\\" : "lib/JelixFramework/WebAssets",
