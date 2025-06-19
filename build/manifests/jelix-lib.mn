@@ -8,6 +8,9 @@ cd lib
   .htaccess
   composer.json
 
+cd lib/JelixFramework
+  __ALL_RECURSIVELY__
+
 cd lib/jelix
   init.php
   checker.php
@@ -113,13 +116,6 @@ cd lib/jelix/db
 cd lib/jelix/db/tools
   __ALL__
 
-cd lib/jelix/Dependencies
-  Exception.php
-  Item.php
-  ItemException.php
-  LICENCE
-  Resolver.php
-
 #if ENABLE_DEVELOPER
 cd lib/jelix/docs
   workflow_action.sxd
@@ -139,9 +135,6 @@ cd lib/jelix/installer
   __ALL_RECURSIVELY__
 
 cd lib/jelix/kvdb
-  __ALL__
-
-cd lib/jelix/Scripts
   __ALL__
 
 cd lib/jelix/tpl/
@@ -206,10 +199,6 @@ cd lib/jelix/plugins/tpl/text
 
 cd lib/jelix/plugins/tpl/xml
   __ALL__
-
-cd lib/jelix/WebAssets
-  __ALL__
-
 
 cd lib/jelix-plugins/cache/
   __ALL_RECURSIVELY__

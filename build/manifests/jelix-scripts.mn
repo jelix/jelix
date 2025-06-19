@@ -1,10 +1,4 @@
 cd lib/jelix-scripts
-  LICENCE
   INSTALL
-  CREDITS
-cd lib/jelix-scripts/DevHelper
-  __ALL_RECURSIVELY__
 cd lib/jelix-scripts/includes
   __ALL__
-cd lib/jelix-scripts/templates
-  __ALL_RECURSIVELY__
