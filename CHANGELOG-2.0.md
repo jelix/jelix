@@ -177,7 +177,9 @@ class TestAttrEventsListener
 - `jFile::getMimeType()`, `jFile::shortestPath()`, `jFile::normalizePath()`
 - `jIniFile`, `jIniFileModifier`, `jIniMultiFilesModifier`
 - `jClassBinding`, `jClasses::createBinded()`, `jClasses::getBindedService()`, `jClasses::bind()`, `jClasses::resetBindings()`  
-
+- Functions declared into the namespace `Jelix\Utilities`. Use those which are into the namespace `Jelix\Core\Utilities`
+- interface `Jelix\Core\ConfigCompilerPluginInterface`. Use `Jelix\Core\Config\CompilerPluginInterface` instead.
+ 
 Internal classes and methods, you did not supposed to use, except for complex plugins:
 
 - `jIUrlSignificantHandler`

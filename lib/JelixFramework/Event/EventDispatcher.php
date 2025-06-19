@@ -8,9 +8,9 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 namespace Jelix\Event;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\EventDispatcher\ListenerProviderInterface;
 use Psr\EventDispatcher\StoppableEventInterface;
-use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * The event dispatcher of Jelix
