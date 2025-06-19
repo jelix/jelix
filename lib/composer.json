@@ -23,7 +23,7 @@
         "psr-0": { "jelix\\": "."
         },
         "psr-4": {
-            "Jelix\\DevHelper\\": "jelix-scripts/DevHelper/",
+            "Jelix\\DevHelper\\": "JelixFramework/DevHelper/",
             "Jelix\\Event\\" : "jelix/events/",
             "Jelix\\Routing\\UrlMapping\\": "jelix/core/UrlMapping/",
             "Jelix\\Installer\\": "jelix/installer/Installer/",

@@ -39,7 +39,7 @@
             "jelix\\": "lib/"
         },
         "psr-4": {
-            "Jelix\\DevHelper\\": "lib/jelix-scripts/DevHelper/",
+            "Jelix\\DevHelper\\": "lib/JelixFramework/DevHelper/",
             "Jelix\\Event\\" : "lib/jelix/events/",
             "Jelix\\Routing\\UrlMapping\\": "lib/jelix/core/UrlMapping/",
             "Jelix\\Installer\\": "lib/jelix/installer/Installer/",

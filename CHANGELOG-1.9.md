@@ -70,9 +70,13 @@ Deprecated API and features
 * jDao: method type `xml`. A PHP class should be used instead, that is declared
   into the `extends` attribute of `<factory>`.
 * `css` http request object is deprecated.
+* constant `JELIX_SCRIPTS_PATH` is now deprecated, as it becomes useless
 
 Internal changes
 ----------------
+
+- constant `JELIX_SCRIPTS_PATH`: its value is now `<vendor path>/lib/JelixFramework/DevHelper/`.
+
 
 Contributors
 ------------
