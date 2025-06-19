@@ -44,7 +44,7 @@
             "Jelix\\Routing\\UrlMapping\\": "lib/JelixFramework/Routing/UrlMapping/",
             "Jelix\\Installer\\": "lib/JelixFramework/Installer/",
             "Jelix\\Scripts\\": "lib/JelixFramework/Scripts/",
-            "Jelix\\Core\\Infos\\": "lib/jelix/core/Infos/",
+            "Jelix\\Core\\Infos\\": "lib/JelixFramework/Core/Infos/",
             "Jelix\\Dependencies\\" : "lib/JelixFramework/Dependencies",
             "Jelix\\WebAssets\\" : "lib/JelixFramework/WebAssets",
             "Jelix\\UnitTests\\" : "lib/JelixFramework/UnitTests"

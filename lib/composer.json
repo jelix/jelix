@@ -28,7 +28,7 @@
             "Jelix\\Routing\\UrlMapping\\": "JelixFramework/Routing/UrlMapping/",
             "Jelix\\Installer\\": "JelixFramework/Installer/",
             "Jelix\\Scripts\\": "JelixFramework/Scripts/",
-            "Jelix\\Core\\Infos\\": "jelix/core/Infos/",
+            "Jelix\\Core\\Infos\\": "JelixFramework/Core/Infos/",
             "Jelix\\Dependencies\\" : "JelixFramework/Dependencies",
             "Jelix\\WebAssets\\" : "JelixFramework/WebAssets",
             "Jelix\\UnitTests\\" : "JelixFramework/UnitTests"
