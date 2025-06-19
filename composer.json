@@ -40,7 +40,7 @@
         },
         "psr-4": {
             "Jelix\\DevHelper\\": "lib/JelixFramework/DevHelper/",
-            "Jelix\\Event\\" : "lib/jelix/events/",
+            "Jelix\\Event\\" : "lib/JelixFramework/Event/",
             "Jelix\\Routing\\UrlMapping\\": "lib/jelix/core/UrlMapping/",
             "Jelix\\Installer\\": "lib/jelix/installer/Installer/",
             "Jelix\\Scripts\\": "lib/jelix/Scripts/",
