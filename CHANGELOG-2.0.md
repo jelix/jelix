@@ -53,19 +53,28 @@ jDb is now relying on [JelixDatabase](https://github.com/jelix/JelixDatabase).
 The `jDb` class is still existing, but most of internal classes of jDb
 are gone and replaced by classes of JelixDatabase:
 
-- `jDbConnection` and `jDbPDOConnection` are replaced by objects implementing `Jelix\Database\ConnectionInterface`
+- `jDbConnection` and `jDbPDOConnection` are replaced by objects implementing `Jelix\Database\ConnectionInterface` and  `Jelix\Database\ConnectionConstInterface`
+  - public methods are the same
+  - constants `FETCH_*`, `ATTR_*` and `CURSOR_*` are moved to `ConnectionConstInterface`
 - `jDbResultSet` and `jDbPDOResultSet` are replaced by objects implementing `Jelix\Database\ResultSetInterface`
+  - public methods are the same
 - `jDbParameters` is deprecated and replaced by `\Jelix\Database\AccessParameters`
+  - public methods are the same, however `getParameters()` is deprecated, `getNormalizedParameters()` should be used instead
 - `jDbTools` is  replaced by objects implementing `Jelix\Database\Schema\SqlToolsInterface`
+  - methods `getFieldList()` and `getTableList()` are deprecated
+  - constants `IBD_*` are moved to `SqlToolsInterface`
 - `jDbSchema` is replaced by objects implementing `Jelix\Database\Schema\SchemaInterface`
+  - public methods are the same 
 - `jDbIndex`, `jDbConstraint`, `jDbUniqueKey`, `jDbPrimaryKey`, `jDbReference`,
   `jDbColumn`, `jDbTable` are replaced by some classes of the `Jelix\Database\Schema\` namespace.
-- `jDbUtils::getTools()` is deprecated and is replaced by `\Jelix\Database\Connection::getTools()` 
+  - public methods and properties are the same
+- `jDbUtils` and `jDbUtils::getTools()` is deprecated and is replaced by `\Jelix\Database\Connection::getTools()` 
 - `jDbWidget` is deprecated and replaced by `Jelix\Database\Helpers`
+  - public methods are the same
 - `jDaoDbMapper::createTableFromDao()` returns an object `\Jelix\Database\Schema\TableInterface` instead of `jTable`
 
 Plugins for jDb (aka "drivers"), implementing connectors etc, are not supported
-anymore.
+anymore. They have been replaced by classes provided directly by the JelixDatabase package.
 
 All error messages are now only in english. No more `jelix~db.*` locales.
 
@@ -186,8 +195,8 @@ From the command line scripts system of Jelix <=1.6:
 
 ## Removed modules
 
-- jacl and jacldb modules are not supported anymore. Use jacl2 and jacl2db instead.
-- jpref and jpref_admin modules are not supported anymore.
+- jacl and jacldb modules are not supported anymore and not compatible with Jelix 2. Use jacl2 and jacl2db instead.
+- jpref and jpref_admin modules are not supported anymore  and not compatible with Jelix 2.
 
 ## Removed plugins
 
