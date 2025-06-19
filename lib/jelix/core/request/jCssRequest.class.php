@@ -17,6 +17,7 @@
  * @subpackage  core_request
  *
  * @since 1.0b1
+ * @deprecated use classic request instead.
  */
 class jCssRequest extends jRequest
 {

@@ -69,6 +69,7 @@ Deprecated API and features
 * `jelix_read_ini`
 * jDao: method type `xml`. A PHP class should be used instead, that is declared
   into the `extends` attribute of `<factory>`.
+* `css` http request object is deprecated.
 
 Internal changes
 ----------------
