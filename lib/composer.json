@@ -31,7 +31,7 @@
             "Jelix\\Core\\Infos\\": "jelix/core/Infos/",
             "Jelix\\Dependencies\\" : "JelixFramework/Dependencies",
             "Jelix\\WebAssets\\" : "JelixFramework/WebAssets",
-            "Jelix\\UnitTests\\" : "jelix-tests/UnitTests"
+            "Jelix\\UnitTests\\" : "JelixFramework/UnitTests"
         },
         "classmap": [ ],
         "files": [ "jelix/init.php" ]
