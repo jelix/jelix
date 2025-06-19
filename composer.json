@@ -45,7 +45,7 @@
             "Jelix\\Installer\\": "lib/jelix/installer/Installer/",
             "Jelix\\Scripts\\": "lib/JelixFramework/Scripts/",
             "Jelix\\Core\\Infos\\": "lib/jelix/core/Infos/",
-            "Jelix\\Dependencies\\" : "lib/jelix/Dependencies",
+            "Jelix\\Dependencies\\" : "lib/JelixFramework/Dependencies",
             "Jelix\\WebAssets\\" : "lib/JelixFramework/WebAssets",
             "Jelix\\UnitTests\\" : "lib/jelix-tests/UnitTests"
         },

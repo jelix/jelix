@@ -29,7 +29,7 @@
             "Jelix\\Installer\\": "jelix/installer/Installer/",
             "Jelix\\Scripts\\": "JelixFramework/Scripts/",
             "Jelix\\Core\\Infos\\": "jelix/core/Infos/",
-            "Jelix\\Dependencies\\" : "jelix/Dependencies",
+            "Jelix\\Dependencies\\" : "JelixFramework/Dependencies",
             "Jelix\\WebAssets\\" : "JelixFramework/WebAssets",
             "Jelix\\UnitTests\\" : "jelix-tests/UnitTests"
         },
