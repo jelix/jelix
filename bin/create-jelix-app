@@ -20,7 +20,7 @@ if (file_exists(__DIR__.'/../vendor/autoload.php')) {
 }
 else if (file_exists(__DIR__.'/../lib/vendor/autoload.php') &&
     file_exists(__DIR__.'/../lib/composer.json') &&
-    (is_dir(__DIR__.'/../lib/jelix')  || is_dir(__DIR__.'/../lib/Jelix'))
+    (is_dir(__DIR__.'/../lib/jelix')  || is_dir(__DIR__.'/../lib/JelixFramework'))
 ) {
     // when Jelix is installed via a tar.gz package
     require(__DIR__.'/../lib/vendor/autoload.php');
@@ -31,7 +31,7 @@ else if (file_exists(__DIR__.'/../lib/vendor/autoload.php') &&
         $jelixPath = realpath(__DIR__.'/../lib/jelix/');
     }
     else {
-        $jelixPath = realpath(__DIR__.'/../lib/Jelix/');
+        $jelixPath = realpath(__DIR__.'/../lib/JelixFramework/');
     }
     $jelixAsComposerPackage = false;
 }

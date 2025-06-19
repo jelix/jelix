@@ -10,7 +10,7 @@
     <version number="__VERSION__">
         <api>
             <source dsn=".">
-                <path>lib/Jelix</path>
+                <path>lib/JelixFramework</path>
                 <path>lib/jelix-legacy/</path>
                 <path>lib/jelix-admin-modules/</path>
                 <path>lib/jelix-modules/</path>

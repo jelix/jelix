@@ -135,7 +135,7 @@ require JELIX_LIB_CORE_PATH.'jUrlAction.class.php';
 require JELIX_LIB_CORE_PATH.'jUrl.class.php';
 require JELIX_LIB_CORE_PATH.'jController.class.php';
 
-require __DIR__.'/../Jelix/Core/Utilities.php';
+require __DIR__.'/../JelixFramework/Core/Utilities.php';
 
 /**
  * @deprecated use \Jelix\Core\AppManager::errorIfAppClosed()

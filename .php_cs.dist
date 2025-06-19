@@ -4,7 +4,7 @@ $finder = PhpCsFixer\Finder::create()
           //->exclude('somedir')
           //->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
           ->in(array(
-                __DIR__.'/lib/Jelix/',
+                __DIR__.'/lib/JelixFramework/',
                 __DIR__.'/lib/jelix-legacy/',
                 __DIR__.'/lib/jelix-admin-modules/',
                 __DIR__.'/lib/jelix-modules/',

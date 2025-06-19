@@ -148,7 +148,7 @@ class TestAttrEventsListener
 
 - `App::initPaths()` and `jApp::initPaths()`: the `$scriptPath` parameter is deprecated and not used anymore
 - `\Jelix\Installer\EntryPoint::isCliScript()` (it returns always false from now)
-- constant `JELIX_SCRIPTS_PATH`. Its value is now `<vendor path>/lib/Jelix/DevHelper/`.
+- constant `JELIX_SCRIPTS_PATH`. Its value is now `<vendor path>/lib/JelixFramework/DevHelper/`. However this constant is now deprecated.
 - `jConfigCompiler::findServerName()` has been moved to `Jelix\Core\Server::findServerName()`
 
 
@@ -195,7 +195,7 @@ From the command line scripts system of Jelix <=1.6:
 
 ## Other removes:
 
-- `lib/jelix-scripts`. Its DevHelper classes and templates have been moved to `lib/Jelix`
+- `lib/jelix-scripts`. Its DevHelper classes and templates have been moved to `lib/JelixFramework`
 - `lib/jelix-scripts/includes/cmd.inc.php` and `lib/jelix-scripts/includes/scripts.inc.php`
 - `lib/jelix/forms/jFormsDatasource.class.php`
 _ `j_jquerypath` variable in templates

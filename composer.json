@@ -51,11 +51,11 @@
     "autoload": {
         "psr-4": {
             "jelix\\": "lib/jelix-legacy",
-            "Jelix\\": "lib/Jelix"
+            "Jelix\\": "lib/JelixFramework"
         },
         "classmap": [  ],
         "files": [
-            "lib/Jelix/Legacy/init.php",
+            "lib/JelixFramework/Legacy/init.php",
             "lib/jelix-legacy/init.php"
         ]
     },

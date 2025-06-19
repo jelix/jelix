@@ -18,7 +18,7 @@ class ChangeVersion {
     protected $jelixPath;
 
     const FILES = array(
-        'lib/Jelix/VERSION' => 'raw',
+        'lib/JelixFramework/VERSION' => 'raw',
         'lib/jelix-legacy/init.php' => 'JELIX_VERSION',
         'lib/jelix-admin-modules/jacl2db_admin/module.xml'=>'modulexml3',
         'lib/jelix-admin-modules/jauthdb_admin/module.xml'=>'modulexml3',

@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Jelix\\": "Jelix/",
+            "Jelix\\": "JelixFramework/",
             "jelix\\": "jelix-legacy/"
         },
         "classmap": [ ],
         "files": [
-            "Jelix/Legacy/init.php",
+            "JelixFramework/Legacy/init.php",
             "jelix-legacy/init.php"
         ]
     },

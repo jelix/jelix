@@ -8,93 +8,93 @@ cd lib
   .htaccess
   composer.json
 
-cd lib/Jelix/Core
+cd lib/JelixFramework/Core
   __ALL__
 
-cd lib/Jelix/Core/Config
+cd lib/JelixFramework/Core/Config
   __ALL__
 ! defaultconfig.ini.php
 
-cd lib/Jelix/Core/Includer
+cd lib/JelixFramework/Core/Includer
   __ALL__
 
-cd lib/Jelix/Core/Infos
+cd lib/JelixFramework/Core/Infos
   __ALL__
 
-cd lib/Jelix/Core/Selector
+cd lib/JelixFramework/Core/Selector
   __ALL__
 
-cd lib/Jelix/Dependencies
+cd lib/JelixFramework/Dependencies
   Exception.php
   Item.php
   ItemException.php
   LICENCE
   Resolver.php
 
-cd lib/Jelix/DevHelper
+cd lib/JelixFramework/DevHelper
   __ALL_RECURSIVELY__
 
-cd lib/Jelix/Event
+cd lib/JelixFramework/Event
   __ALL__
 
-cd lib/Jelix/Forms
+cd lib/JelixFramework/Forms
   __ALL_RECURSIVELY__
 
-cd lib/Jelix/Installer
+cd lib/JelixFramework/Installer
   __ALL_RECURSIVELY__
 
-cd lib/Jelix/Legacy/
+cd lib/JelixFramework/Legacy/
   init.php
   mapping.json
   Autoloader.php
 
-cd lib/Jelix/Legacy/core
+cd lib/JelixFramework/Legacy/core
    __ALL_RECURSIVELY__
 
-cd lib/Jelix/Legacy/db
+cd lib/JelixFramework/Legacy/db
   __ALL__
 
-cd lib/Jelix/Legacy/events
+cd lib/JelixFramework/Legacy/events
   __ALL__
 
-cd lib/Jelix/Legacy/forms
+cd lib/JelixFramework/Legacy/forms
   __ALL_RECURSIVELY__
 
-cd lib/Jelix/Legacy/tpl
+cd lib/JelixFramework/Legacy/tpl
   __ALL__
 
-cd lib/Jelix/Legacy/utils
+cd lib/JelixFramework/Legacy/utils
   __ALL__
 
-cd lib/Jelix/Locale
+cd lib/JelixFramework/Locale
   __ALL__
 ! lang_to_locale.ini.php
 ! lang_names__.ini
 ! lang_names_en.ini
 ! lang_names_fr.ini
 
-cd lib/Jelix/Logger
+cd lib/JelixFramework/Logger
   __ALL_RECURSIVELY__
 
-cd lib/Jelix/Mailer
+cd lib/JelixFramework/Mailer
   __ALL__
 
-cd lib/Jelix/Routing
+cd lib/JelixFramework/Routing
   __ALL_RECURSIVELY__
 
-cd lib/Jelix/Scripts
+cd lib/JelixFramework/Scripts
   __ALL__
 
-cd lib/Jelix/Services
+cd lib/JelixFramework/Services
   __ALL_RECURSIVELY__
 
-cd lib/Jelix/Template
+cd lib/JelixFramework/Template
   __ALL__
 
-cd lib/Jelix/UnitTests
+cd lib/JelixFramework/UnitTests
   __ALL__
 
-cd lib/Jelix/WebAssets
+cd lib/JelixFramework/WebAssets
   __ALL__
 
 

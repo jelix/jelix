@@ -26,7 +26,7 @@ $namespace = '\\Jelix\\'.str_replace('/', '\\', $p['targetdir']).'\\';
 $newclass = $namespace.substr($p['targetfile'],0, strpos($p['targetfile'], '.'));
 $oldclass = substr($p['sourcefile'],0, strpos($p['sourcefile'], '.'));
 
-$legacyDir = 'lib/Jelix/Legacy/'.$p['sourcedir'];
+$legacyDir = 'lib/JelixFramework/Legacy/'.$p['sourcedir'];
 
 
 // ------------------ update manifests
@@ -35,7 +35,7 @@ $jelixLib = new Manifest\Modifier(__DIR__.'/../manifests/jelix-lib.mn');
 $jelixLib->parse();
 
 $jelixLib->removeFile('lib/jelix-legacy/'.$p['sourcedir'], $p['sourcefile']);
-$jelixLib->addFile('lib/Jelix/'.$p['targetdir'], $p['targetfile']);
+$jelixLib->addFile('lib/JelixFramework/'.$p['targetdir'], $p['targetfile']);
 $jelixLib->addFile($legacyDir, $oldclass.'.php');
 
 $jelixLib->save();
@@ -54,14 +54,14 @@ file_put_contents($legacyDir.'/'.$oldclass.'.php', $template);
 
 // ----------------- update mapping.json
 
-$mapping = json_decode(file_get_contents('lib/Jelix/Legacy/mapping.json'), true);
-$mapping[$oldclass] = str_replace('lib/Jelix/Legacy/', '', $legacyDir).'/'.$oldclass.'.php';
+$mapping = json_decode(file_get_contents('lib/JelixFramework/Legacy/mapping.json'), true);
+$mapping[$oldclass] = str_replace('lib/JelixFramework/Legacy/', '', $legacyDir).'/'.$oldclass.'.php';
 ksort($mapping);
-file_put_contents('lib/Jelix/Legacy/mapping.json', json_encode($mapping, JSON_PRETTY_PRINT| JSON_UNESCAPED_SLASHES));
+file_put_contents('lib/JelixFramework/Legacy/mapping.json', json_encode($mapping, JSON_PRETTY_PRINT| JSON_UNESCAPED_SLASHES));
 
 // ----------------- update newclassname.json
 
-$mapping = json_decode(file_get_contents('lib/Jelix/Legacy/newclassname.json'), true);
+$mapping = json_decode(file_get_contents('lib/JelixFramework/Legacy/newclassname.json'), true);
 $mapping[$oldclass] = $newclass;
 ksort($mapping);
-file_put_contents('lib/Jelix/Legacy/newclassname.json', json_encode($mapping, JSON_PRETTY_PRINT| JSON_UNESCAPED_SLASHES));
+file_put_contents('lib/JelixFramework/Legacy/newclassname.json', json_encode($mapping, JSON_PRETTY_PRINT| JSON_UNESCAPED_SLASHES));
