@@ -56,6 +56,6 @@ unset($t->_privateVars[\'__formTplController\']);';
         $options = 'array()';
     }
     return ' $t->_privateVars[\'__formTplController\'] = '.
-        'new \\jelix\\forms\\HtmlWidget\\TemplateController('.$param[0].','.$builder.','.$options.');';
+        'new \\Jelix\\Forms\\HtmlWidget\\TemplateController('.$param[0].','.$builder.','.$options.');';
 
 }

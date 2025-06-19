@@ -62,7 +62,7 @@ function jtpl_block_html_formsubmits($compiler, $begin, $param = array())
     $content .= '
 if (!isset($t->_privateVars[\'__formTplController\'])) {
     if ($form === null) { throw new \Exception("Error: form is missing to process formsubmits"); }
-    $t->_privateVars[\'__formTplController\'] = new \\jelix\\forms\\HtmlWidget\\TemplateController($form,"html");
+    $t->_privateVars[\'__formTplController\'] = new \\Jelix\\Forms\\HtmlWidget\\TemplateController($form,"html");
 }
 ';
     $content .= '
