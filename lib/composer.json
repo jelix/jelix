@@ -25,7 +25,7 @@
         "psr-4": {
             "Jelix\\DevHelper\\": "JelixFramework/DevHelper/",
             "Jelix\\Event\\" : "JelixFramework/Event/",
-            "Jelix\\Routing\\UrlMapping\\": "jelix/core/UrlMapping/",
+            "Jelix\\Routing\\UrlMapping\\": "JelixFramework/Routing/UrlMapping/",
             "Jelix\\Installer\\": "jelix/installer/Installer/",
             "Jelix\\Scripts\\": "jelix/Scripts/",
             "Jelix\\Core\\Infos\\": "jelix/core/Infos/",
