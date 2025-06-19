@@ -98,7 +98,7 @@ abstract class AbstractCommand extends Command
 
             return false;
         }
-        $tplpath = JELIX_SCRIPTS_PATH.'templates/'.$template;
+        $tplpath = __DIR__.'/templates/'.$template;
 
         if (!file_exists($tplpath)) {
             $this->output->writeln('<error>Warning:  to create '.$displayedFilename.', template file "'.$tplpath.'" doesn\'t exists.</error>');

@@ -21,6 +21,7 @@ namespace Jelix\Utilities;
  * @param mixed $value
  *
  * @return bool
+ * @deprecated use \Jelix\Core\Utilities\is_resource instead
  */
 function is_resource($value)
 {
@@ -45,6 +46,9 @@ function is_resource($value)
     return false;
 }
 
+/**
+ * @deprecated use \Jelix\Core\Utilities\utf8_decode instead
+ */
 function utf8_decode($str)
 {
    if (function_exists('mb_convert_encoding')) {
@@ -61,6 +65,9 @@ function utf8_decode($str)
 }
 
 
+/**
+ * @deprecated use \Jelix\Core\Utilities\utf8_encode instead
+ */
 function utf8_encode($str)
 {
     if (function_exists('mb_convert_encoding')) {

@@ -8,7 +8,7 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-use function \Jelix\Utilities\is_resource;
+use function \Jelix\Core\Utilities\is_resource;
 
 class dbaKVDriver extends jKVDriver implements jIKVPersistent
 {

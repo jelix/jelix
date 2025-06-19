@@ -39,15 +39,7 @@
             "jelix\\": "lib/"
         },
         "psr-4": {
-            "Jelix\\DevHelper\\": "lib/jelix-scripts/DevHelper/",
-            "Jelix\\Event\\" : "lib/jelix/events/",
-            "Jelix\\Routing\\UrlMapping\\": "lib/jelix/core/UrlMapping/",
-            "Jelix\\Installer\\": "lib/jelix/installer/Installer/",
-            "Jelix\\Scripts\\": "lib/jelix/Scripts/",
-            "Jelix\\Core\\Infos\\": "lib/jelix/core/Infos/",
-            "Jelix\\Dependencies\\" : "lib/jelix/Dependencies",
-            "Jelix\\WebAssets\\" : "lib/jelix/WebAssets",
-            "Jelix\\UnitTests\\" : "lib/jelix-tests/UnitTests"
+            "Jelix\\": "lib/JelixFramework/"
         },
         "classmap": [ ],
         "files": [ "lib/jelix/init.php" ]
