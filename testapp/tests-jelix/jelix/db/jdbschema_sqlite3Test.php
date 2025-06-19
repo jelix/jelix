@@ -284,6 +284,7 @@ class jDbSchema_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
             'jsessions',
             'products',
             'product_test',
+            'product_tags_test',
             'jacl2_group',
             'jacl2_rights',
             'jacl2_subject',
@@ -627,6 +628,7 @@ class jDbSchema_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
             'jsessions',
             'product_test',
             'products',
+            'product_tags_test',
             'sqlite_sequence',
             'test_prod',
             'jacl2_group',
@@ -796,6 +798,7 @@ class jDbSchema_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
         $goodList = array(
             'product_test',
             'products',
+            'product_tags_test',
             'sqlite_sequence',
             'test_prod',
             'jsessions',
