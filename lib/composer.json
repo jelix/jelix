@@ -26,7 +26,7 @@
             "Jelix\\DevHelper\\": "JelixFramework/DevHelper/",
             "Jelix\\Event\\" : "JelixFramework/Event/",
             "Jelix\\Routing\\UrlMapping\\": "JelixFramework/Routing/UrlMapping/",
-            "Jelix\\Installer\\": "jelix/installer/Installer/",
+            "Jelix\\Installer\\": "JelixFramework/Installer/",
             "Jelix\\Scripts\\": "JelixFramework/Scripts/",
             "Jelix\\Core\\Infos\\": "jelix/core/Infos/",
             "Jelix\\Dependencies\\" : "JelixFramework/Dependencies",
