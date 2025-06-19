@@ -90,9 +90,8 @@ require JELIX_LIB_CORE_PATH.'jIncluder.class.php';
 
 require JELIX_LIB_CORE_PATH.'jSession.class.php';
 
-require JELIX_LIB_CORE_PATH.'Services.php';
-
-require JELIX_LIB_UTILS_PATH.'Utilities.php';
+require __DIR__.'/../JelixFramework/Core/Utilities.php';
+require __DIR__.'/../JelixFramework/Utilities.php';
 
 /**
  * @deprecated use \Jelix\Routing\UrlMapping\CustomUrlHandlerInterface instead

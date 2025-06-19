@@ -4,18 +4,18 @@
  * @subpackage   core
  *
  * @author       Laurent Jouanneau
- * @copyright    2012 Laurent Jouanneau
+ * @copyright    2012-2025 Laurent Jouanneau
  *
  * @see         http://jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
-namespace Jelix\Core;
+namespace Jelix\Core\Config;
 
 /**
  * interface for plugins of jConfigCompiler.
  */
-interface ConfigCompilerPluginInterface
+interface CompilerPluginInterface
 {
     /**
      * lower number is higher priority. Numbers lower than 50 are reserved.
@@ -37,7 +37,7 @@ interface ConfigCompilerPluginInterface
      * @param object    $config     the configuration object
      * @param string    $moduleName the module name
      * @param string    $modulePath the path to the module directory
-     * @param SimpleXml $moduleXml  the xml object representing the content of module.xml of the module
+     * @param \SimpleXMLElement $moduleXml  the xml object representing the content of module.xml of the module
      */
     public function onModule($config, $moduleName, $modulePath, $moduleXml);
 

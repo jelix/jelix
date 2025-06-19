@@ -9,9 +9,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 use \Jelix\Installer\Migrator\UrlEngineUpgrader;
-require(LIB_PATH.'/jelix/installer/Installer/Migrator/UrlEngineUpgrader.php');
-
-
 
 class urlUpgradeTest extends \Jelix\UnitTests\UnitTestCase {
 

@@ -9,7 +9,7 @@
  * @see         http://jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-class localesConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface
+class localesConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginInterface
 {
     public function getPriority()
     {

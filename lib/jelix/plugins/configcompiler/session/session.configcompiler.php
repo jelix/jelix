@@ -9,7 +9,7 @@
  * @see         http://jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-class sessionConfigCompilerPlugin implements \jelix\core\ConfigCompilerPluginInterface
+class sessionConfigCompilerPlugin implements \Jelix\Core\Config\CompilerPluginInterface
 {
     public function getPriority()
     {

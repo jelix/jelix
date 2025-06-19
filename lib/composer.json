@@ -23,15 +23,7 @@
         "psr-0": { "jelix\\": "."
         },
         "psr-4": {
-            "Jelix\\DevHelper\\": "JelixFramework/DevHelper/",
-            "Jelix\\Event\\" : "JelixFramework/Event/",
-            "Jelix\\Routing\\UrlMapping\\": "JelixFramework/Routing/UrlMapping/",
-            "Jelix\\Installer\\": "JelixFramework/Installer/",
-            "Jelix\\Scripts\\": "JelixFramework/Scripts/",
-            "Jelix\\Core\\Infos\\": "JelixFramework/Core/Infos/",
-            "Jelix\\Dependencies\\" : "JelixFramework/Dependencies",
-            "Jelix\\WebAssets\\" : "JelixFramework/WebAssets",
-            "Jelix\\UnitTests\\" : "JelixFramework/UnitTests"
+            "Jelix\\": "JelixFramework/"
         },
         "classmap": [ ],
         "files": [ "jelix/init.php" ]
