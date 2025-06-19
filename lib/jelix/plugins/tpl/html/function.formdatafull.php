@@ -27,7 +27,7 @@ function jtpl_function_html_formdatafull($tpl, $form, $builder = '', $options = 
         $builder = jApp::config()->tplplugins['defaultJformsBuilder'];
     }
 
-    $formTplController = new \jelix\forms\HtmlWidget\TemplateController($form, $builder, $options);
+    $formTplController = new \Jelix\Forms\HtmlWidget\TemplateController($form, $builder, $options);
     $formTplController->startForm();
     $formTplController->outputAllControlsValues();
     $formTplController->endForm();

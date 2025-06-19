@@ -12,7 +12,7 @@
 
 /**
  */
-class password_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class password_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     /**
      * @var string javascript code to access, from the input element, to the parent element that encapsulate the whole

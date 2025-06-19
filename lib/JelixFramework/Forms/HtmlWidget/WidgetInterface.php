@@ -17,8 +17,8 @@ interface WidgetInterface
     /*
      * @param array $args array containing:
      *    jFormsControl,
-     *    \jelix\forms\Builder\HtmlBuilder,
-     *    \jelix\forms\HtmlWidget\ParentWidgetInterface,
+     *    \Jelix\Forms\Builder\HtmlBuilder,
+     *    \Jelix\Forms\HtmlWidget\ParentWidgetInterface,
      */
     public function __construct($args);
 

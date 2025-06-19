@@ -17,7 +17,7 @@
  *
  * ```
  * [forms]
- * captcha.recaptcha.validator = \jelix\forms\Captcha\ReCaptchaValidator
+ * captcha.recaptcha.validator = \Jelix\Forms\Captcha\ReCaptchaValidator
  * captcha.recaptcha.widgettype = recaptcha
  *
  * [recaptcha]
@@ -51,7 +51,7 @@
  * @package     jelix
  * @subpackage  forms_widget_plugin
  */
-class recaptcha_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class recaptcha_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {

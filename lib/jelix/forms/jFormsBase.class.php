@@ -816,7 +816,7 @@ abstract class jFormsBase
      *
      * @throws jExceptionForms
      *
-     * @return \jelix\forms\Builder\BuilderBase|jFormsBuilderBase
+     * @return \Jelix\Forms\Builder\BuilderBase|jFormsBuilderBase
      */
     public function getBuilder($buildertype)
     {

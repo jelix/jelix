@@ -18,14 +18,14 @@ abstract class WidgetBase implements WidgetInterface
     /**
      * The form builder.
      *
-     * @var \jelix\forms\Builder\HtmlBuilder
+     * @var \Jelix\Forms\Builder\HtmlBuilder
      */
     protected $builder;
 
     /**
      * the parent widget.
      *
-     * @var \jelix\forms\HtmlWidget\ParentWidgetInterface
+     * @var \Jelix\Forms\HtmlWidget\ParentWidgetInterface
      */
     protected $parentWidget;
 

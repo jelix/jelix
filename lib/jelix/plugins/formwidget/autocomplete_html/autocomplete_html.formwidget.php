@@ -45,7 +45,7 @@
  * {/formcontrols}
  * ```
  */
-class autocomplete_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class autocomplete_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {

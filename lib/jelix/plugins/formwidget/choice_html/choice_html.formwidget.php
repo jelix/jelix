@@ -38,7 +38,7 @@ use Jelix\Forms\HtmlWidget\WidgetInterface;
  * ch.activate('');
  * })(c);
  */
-class choice_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase implements \jelix\forms\HtmlWidget\ParentWidgetInterface
+class choice_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase implements \Jelix\Forms\HtmlWidget\ParentWidgetInterface
 {
     //------ ParentWidgetInterface
 

@@ -11,7 +11,7 @@
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
-class htmlFormWidget extends \jelix\forms\HtmlWidget\RootWidget
+class htmlFormWidget extends \Jelix\Forms\HtmlWidget\RootWidget
 {
     public function outputHeader($builder)
     {

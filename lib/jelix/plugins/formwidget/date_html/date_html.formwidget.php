@@ -21,7 +21,7 @@
  *
  * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
-class date_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class date_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     /**
      * @param \jResponseHtml $resp

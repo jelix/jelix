@@ -35,14 +35,14 @@ class RootWidget implements ParentWidgetInterface
     //------ Other methods
 
     /**
-     * @var \jelix\forms\Builder\HtmlBuilder
+     * @var \Jelix\Forms\Builder\HtmlBuilder
      *
      * @deprecated
      */
     protected $builder;
 
     /**
-     * @param \jelix\forms\Builder\HtmlBuilder $builder
+     * @param \Jelix\Forms\Builder\HtmlBuilder $builder
      */
     public function outputHeader($builder)
     {
@@ -58,7 +58,7 @@ class RootWidget implements ParentWidgetInterface
     }
 
     /**
-     * @param \jelix\forms\Builder\HtmlBuilder $builder
+     * @param \Jelix\Forms\Builder\HtmlBuilder $builder
      */
     public function outputFooter($builder)
     {

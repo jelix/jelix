@@ -21,7 +21,7 @@
  *
  * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
-class htmleditor_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class htmleditor_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     public function outputMetaContent($resp)
     {

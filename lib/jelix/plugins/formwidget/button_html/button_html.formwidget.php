@@ -24,7 +24,7 @@
  *
  * @see http://developer.jelix.org/wiki/rfc/jforms-controls-plugins
  */
-class button_htmlFormWidget extends \jelix\forms\HtmlWidget\WidgetBase
+class button_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
 {
     protected function getCSSClass()
     {
