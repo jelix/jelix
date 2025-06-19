@@ -51,20 +51,8 @@ class LegacyJelixAutoloader
 
     public static function loadClass($class)
     {
-        if (stripos($class, 'jelix') === 0) {
-            $class = str_replace(
-                array('Jelix', '\\'),
-                array('jelix-legacy', DIRECTORY_SEPARATOR),
-                $class);
-            if (strpos($class, '/Forms/') !== false) {
-                $f = LIB_PATH.str_replace( '/Forms/', '/forms/', $class).'.php';
-            }
-            else if (strpos($class, '/Core/') !== false) {
-                $f = LIB_PATH.str_replace( 'Core', 'core', $class).'.php';
-            }
-            else {
-                $f = LIB_PATH.$class.'.php';
-            }
+        if (strpos($class, 'jelix') === 0) {
+            $f = LIB_PATH.$class.'.php';
         } elseif (preg_match('/^j(Dao|Selector|Tpl|Event|Db|Controller|Forms(?:Control)?|Auth|Config|Installer|KV).*/i', $class, $m)) {
             $f = self::$libPath[$m[1]].$class.'.class.php';
         } elseif (preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)) {
