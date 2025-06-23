@@ -11,6 +11,7 @@
 
 namespace Jelix\DevHelper\Command;
 
+use Jelix\Dao\Generator\Compiler;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -108,24 +109,12 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
 
         \jApp::pushCurrentModule($module);
 
-        $tools = \jDb::getConnection($profileName)->tools();
-
         // we're going to parse the dao
         $selector = new \jSelectorDao($daoName, $profileName);
-
-        $doc = new \DOMDocument();
-        $daoPath = $selector->getPath();
-
-        if (!$doc->load($daoPath)) {
-            throw new \jException('jelix~daoxml.file.unknown', $daoPath);
-        }
-
-        if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0') {
-            throw new \jException('jelix~daoxml.namespace.wrong', array($daoPath, $doc->namespaceURI));
-        }
-
-        $parser = new \jDaoParser($selector);
-        $parser->parse(simplexml_import_dom($doc), $tools);
+        $cnt = \jDb::getConnection($profileName);
+        $context = new \jDaoContext($profileName, $cnt);
+        $compiler = new Compiler();
+        $parser = $compiler->parse($selector, $context);
 
         // now we generate the form file
         $properties = $parser->GetProperties();
