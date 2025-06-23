@@ -11,6 +11,8 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Core\Profiles;
+
 /**
  * LDAP authentification driver for authentification information stored in LDAP server.
  *
@@ -40,7 +42,7 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
             throw new jException('jelix~auth.ldap.profile.missing');
         }
 
-        $profile = jProfiles::get('authldap', $this->_params['profile']);
+        $profile = Profiles::get('authldap', $this->_params['profile']);
         $this->_params = array_merge($this->_params, $profile);
 
         // default ldap parameters

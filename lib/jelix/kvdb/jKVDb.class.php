@@ -12,6 +12,8 @@
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Core\Profiles;
+
 /**
  * main class to access to key-value storage databases.
  */
@@ -32,7 +34,7 @@ class jKVDb
      */
     public static function getConnection($name = null)
     {
-        return jProfiles::getOrStoreInPool('jkvdb', $name, array('jKVDb', '_createConnector'));
+        return Profiles::getConnectorFromCallback('jkvdb', $name, array('jKVDb', '_createConnector'));
     }
 
     /**

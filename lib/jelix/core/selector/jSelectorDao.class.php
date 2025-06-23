@@ -14,6 +14,8 @@
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+use Jelix\Core\Profiles;
+
 /**
  * Selector for dao file
  * syntax : "module~daoName".
@@ -46,7 +48,7 @@ class jSelectorDao extends jSelectorModule
 
     public function __construct($sel, $profile)
     {
-        $p = jProfiles::get('jdb', $profile);
+        $p = Profiles::get('jdb', $profile);
         if ($p['driver'] == 'pdo') {
             $this->driver = substr($p['dsn'], 0, strpos($p['dsn'], ':'));
         } else {

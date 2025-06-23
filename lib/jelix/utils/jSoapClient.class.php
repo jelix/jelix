@@ -10,6 +10,8 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+use Jelix\Core\Profiles;
+
 /**
  * class that handles a dump of a php value, for a logger.
  */
@@ -177,7 +179,7 @@ class jSoapClient
      */
     public static function get($profile = '')
     {
-        return jProfiles::getOrStoreInPool('jsoapclient', $profile, array('jSoapClient', '_getClient'));
+        return Profiles::getConnectorFromCallback('jsoapclient', $profile, array('jSoapClient', '_getClient'));
     }
 
     /**

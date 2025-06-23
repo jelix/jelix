@@ -182,9 +182,6 @@ cd lib/jelix/plugins/logger/
 cd lib/jelix/plugins/htmlresponse/
   __ALL_RECURSIVELY__
 
-cd lib/jelix/plugins/profiles/jdb/
-  __ALL_RECURSIVELY__
-
 cd lib/jelix/plugins/tpl/common
   __ALL__
 

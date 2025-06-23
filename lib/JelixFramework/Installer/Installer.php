@@ -20,6 +20,7 @@ require_once JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php';
 
 require_once JELIX_LIB_PATH.'core/jConfigCompiler.class.php';
 
+use Jelix\Core\Profiles;
 use Jelix\Dependencies\Item;
 use Jelix\Dependencies\ItemException;
 use Jelix\Dependencies\Resolver;
@@ -636,7 +637,7 @@ class Installer
         $profileIni = $this->globalSetup->getProfilesIni();
         if ($profileIni->isModified()) {
             $profileIni->save();
-            \jProfiles::clear();
+            Profiles::clear();
         }
     }
 

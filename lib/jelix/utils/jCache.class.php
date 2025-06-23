@@ -12,6 +12,7 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+use Jelix\Core\Profiles;
 use function \Jelix\Core\Utilities\is_resource;
 
 /**
@@ -441,7 +442,7 @@ class jCache
      */
     public static function getDriver($profile)
     {
-        return jProfiles::getOrStoreInPool('jcache', $profile, array('jCache', '_loadDriver'), true);
+        return Profiles::getConnectorFromCallback('jcache', $profile, array('jCache', '_loadDriver'), true);
     }
 
     /**

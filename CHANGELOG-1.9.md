@@ -65,6 +65,10 @@ Removes
 Deprecated API and features
 ---------------------------
 
+* `\Jelix\Core\Profiles` must be used instead of `jProfiles`. Same API, but it is now relied on the JelixProfiles library. `jProfiles` is deprecated.
+* If there are some plugins for jProfiles, they must inherit from `\Jelix\Profiles\ReaderPlugin` 
+  instead of `jProfilesCompilerPlugin`, or they must implement at least of the new
+  interface `\Jelix\Profiles\ProfilePluginInterface`.  `jProfilesCompilerPlugin` is deprecated.
 * `jClassBinding`
 * `jelix_read_ini`
 * jDao: method type `xml`. A PHP class should be used instead, that is declared
