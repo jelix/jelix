@@ -4,10 +4,12 @@
 * @subpackage  jelix_tests module
 * @author      Tahina Ramaroson
 * @contributor Sylvain de Vathaire, Laurent Jouanneau
-* @copyright   NEOV 2009, 2010 Laurent Jouanneau
+* @copyright   NEOV 2009, 2010-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
+use Jelix\Core\Profiles;
 
 /**
 * Tests API jKVDb
@@ -27,7 +29,7 @@ abstract class jKVDbTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected function _kvdbSetUp() {
         try {
-            $this->profileData = jProfiles::get('jkvdb', $this->profile);
+            $this->profileData = Profiles::get('jkvdb', $this->profile);
             return true;
         }
         catch(Exception $e) {

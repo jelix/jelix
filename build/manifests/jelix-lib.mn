@@ -113,9 +113,6 @@ cd lib/jelix/dao
 cd lib/jelix/db
   __ALL__
 
-cd lib/jelix/db/tools
-  __ALL__
-
 #if ENABLE_DEVELOPER
 cd lib/jelix/docs
   workflow_action.sxd
@@ -156,9 +153,6 @@ cd lib/jelix/plugins/coord/
   __ALL_RECURSIVELY__
 
 cd lib/jelix/plugins/daobuilder/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix/plugins/db/
   __ALL_RECURSIVELY__
 
 cd lib/jelix/plugins/debugbar/

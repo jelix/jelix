@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2011 Laurent Jouanneau
+* @copyright   2011-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -12,7 +12,6 @@
 require_once(__DIR__.'/daotests.lib.php');
 
 require_once(JELIX_LIB_PATH.'db/jDb.class.php');
-require_once(JELIX_LIB_PATH.'plugins/db/mysqli/mysqli.dbconnection.php');
 
 class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
@@ -26,7 +25,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb {
     }
 
     function setUp() : void  {
-        $this->conn = $this->getMockBuilder('mysqliDbConnection')
+        $this->conn = $this->getMockBuilder('\Jelix\Database\Connector\Mysqli\Connection')
                         ->disableOriginalConstructor()
                         ->setMethods(array('query', 'exec', 'limitQuery', 'disconnect', 'hasTablePrefix'))
                         ->getMock();

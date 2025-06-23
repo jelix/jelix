@@ -33,15 +33,30 @@ New features
 
 
 **jDb**
- 
+
+
+jDb is now relying on [JelixDatabase](https://github.com/jelix/JelixDatabase).
+The `jDb` class is still existing, but most of internal classes of jDb
+are gone and replaced by classes of JelixDatabase, although many of old classes
+are still existing (but can be empty) to not break typed parameters into your
+classes.
+
+It brings some new features:
+
+- support of schema names into table names, for some API
 - Support of generated column from Postgresql (contributor: Riccardo Beltrami)
 - Support of Identity column for Postgresql
-- Fix usage of `jDbPDOResulset` as an iterator (with `foreach` for example): the 
-  `jDbPDOResulset::fetch()` method is now called during iteration, so modifiers
-  are called on records.
+- Fix lastInsertId for SQLServer
+- Support of the mssql API removed. Only the connector using the sqlsrv API is available.
 - Minimum version of supported databases:
   - Mysql: 8.*
   - PostgreSQL: 13 
+
+Plugins for jDb (aka "drivers") implementing connectors etc, are not supported
+anymore. They have been replaced by classes provided directly by the 
+JelixDatabase package.
+
+
 
 **jDao**
  
@@ -77,6 +92,24 @@ Deprecated API and features
 * constant `JELIX_SCRIPTS_PATH` is now deprecated, as it becomes useless.
 * Functions declared into the namespace `Jelix\Utilities` are deprecated. Use them from the namespace `Jelix\Core\Utilities`.
 * Interface `\jelix\Core\ConfigCompilerPluginInterface` is deprecated. use `\Jelix\Core\Config\CompilerPluginInterface` instead.
+
+About jDb:
+
+- `jDbConnection` and `jDbPDOConnection` are deprecated and replaced by objects implementing `Jelix\Database\ConnectionInterface` and  `Jelix\Database\ConnectionConstInterface`
+    - constants `FETCH_*`, `ATTR_*` and `CURSOR_*` are moved to `ConnectionConstInterface`
+- `jDbResultSet` and `jDbPDOResultSet` are deprecated and replaced by objects implementing `Jelix\Database\ResultSetInterface`
+- `jDbParameters` is deprecated and replaced by `\Jelix\Database\AccessParameters`
+    - public methods are the same, however `getParameters()` is deprecated, `getNormalizedParameters()` should be used instead
+- `jDbTools` is deprecated and replaced by objects implementing `Jelix\Database\Schema\SqlToolsInterface`
+    - methods `getFieldList()` and `getTableList()` are deprecated
+    - constants `IBD_*` are moved to `SqlToolsInterface`
+- `jDbSchema` is deprecated and replaced by objects implementing `Jelix\Database\Schema\SchemaInterface`
+- `jDbIndex`, `jDbConstraint`, `jDbUniqueKey`, `jDbPrimaryKey`, `jDbReference`,
+  `jDbColumn`, `jDbTable` are replaced by some classes of the `Jelix\Database\Schema\` namespace.
+- `jDbUtils` and `jDbUtils::getTools()` is deprecated and is replaced by `\Jelix\Database\Connection::getTools()`
+- `jDbWidget` is deprecated and replaced by `Jelix\Database\Helpers`
+- `jDaoDbMapper::createTableFromDao()` returns an object `\Jelix\Database\Schema\TableInterface` instead of `jTable`
+
 
 Internal changes
 ----------------

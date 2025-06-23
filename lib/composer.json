@@ -13,6 +13,7 @@
         "jelix/inifile": "^3.4.0",
         "jelix/simplelocalization": "^1.7.2",
         "jelix/properties-file": "^1.2.3",
+        "jelix/database": "1.x-dev",
         "symfony/console":"^6.4.15",
         "jelix/file-utilities": "^1.8.5",
         "jelix/version": "^2.0.1",

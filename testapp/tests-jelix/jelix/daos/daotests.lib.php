@@ -4,15 +4,13 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009 Laurent Jouanneau
+* @copyright   2009-2025 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
 require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
 require_once(JELIX_LIB_PATH.'plugins/daobuilder/mysql/mysql.daobuilder.php');
-include_once (JELIX_LIB_PATH.'db/tools/jDbMysqlTools.php');
-include_once (JELIX_LIB_PATH.'db/tools/jDbPgsqlTools.php');
 
 
 class fakejSelectorDao extends jSelectorDao {

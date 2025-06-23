@@ -1,12 +1,17 @@
 <?php
+
+
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Florian Lonqueu-Brochard
-* @copyright   2012 Florian Lonqueu-Brochard
+* @contributor Laurent Jouanneau
+* @copyright   2012 Florian Lonqueu-Brochard, 2012-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Core\Profiles;
+use Jelix\Database\Connector\Mysqli\ResultSet;
 
 class jDb_MysqliTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
@@ -14,7 +19,7 @@ class jDb_MysqliTest extends \Jelix\UnitTests\UnitTestCaseDb {
         self::initJelixConfig();
         $this->dbProfile ='mysqli_profile';
         try{
-            $prof = jProfiles::get('jdb', $this->dbProfile, true);
+            $prof = Profiles::get('jdb', $this->dbProfile, true);
             $this->emptyTable('labels_test');
         }
         catch (Exception $e) {
@@ -78,7 +83,7 @@ class jDb_MysqliTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         //INSERT
         $stmt = $cnx->prepare('INSERT INTO `labels_test` (`key`,`lang` ,`label`) VALUES (:k, :lg, :lb)');
-        $this->assertTrue($stmt instanceof mysqliDbResultSet);
+        $this->assertTrue($stmt instanceof ResultSet);
 
         $key = 11; $lang = 'fr'; $label = "France";
         $bind = $stmt->bindParam('lg', $lang, 's');
@@ -102,7 +107,7 @@ class jDb_MysqliTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         //SELECT
         $stmt = $cnx->prepare('SELECT `key`,`lang` ,`label` FROM labels_test WHERE lang = :la ORDER BY `key` asc');
-        $this->assertTrue($stmt instanceof mysqliDbResultSet);
+        $this->assertTrue($stmt instanceof ResultSet);
         $lang = 'fr';
         $bind = $stmt->bindParam('la', $lang, 's');
         $this->assertTrue($bind);
