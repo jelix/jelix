@@ -87,6 +87,8 @@ Removes
 * Remove `jpref` and `jpref_admin` modules. There are still available into the `jelix/jpref-module` package.
   But you should consider it as an archive. You should develop an alternative to these modules.
 * Plugins for jDb and jDao don't exist anymore.
+* All error messages are now only in english. No more `jelix~db.*`, `jelix~daoxml.*` and `jelix~dao.*` locales.
+
 
 Broken API
 ----------
@@ -154,3 +156,5 @@ Contributors
 - Laurent Jouanneau
 - Raphael Martin
 - Riccardo Beltrami
+
+
