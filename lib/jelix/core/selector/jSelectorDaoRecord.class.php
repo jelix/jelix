@@ -7,11 +7,13 @@
  *
  * @author      Guillaume Dugas
  * @contributor Laurent Jouanneau
- * @copyright   2012 Guillaume Dugas, 2023 Laurent Jouanneau
+ * @copyright   2012 Guillaume Dugas, 2023-2025 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
+use Jelix\Dao\CustomRecordClassFileInterface;
 
 /**
  * Selector for dao file
@@ -21,7 +23,7 @@
  * @package    jelix
  * @subpackage core_selector
  */
-class jSelectorDaoRecord extends jSelectorModule
+class jSelectorDaoRecord extends jSelectorModule implements CustomRecordClassFileInterface
 {
     protected $type = 'daorecord';
     protected $_dirname = 'daos/';
@@ -59,5 +61,39 @@ class jSelectorDaoRecord extends jSelectorModule
     protected function _createCachePath()
     {
         $this->_cachePath = '';
+    }
+
+
+    /**
+     * A name that allow to identify easily the dao.
+     *
+     * @return string a filename, a URI or another identifier
+     */
+    function getName()
+    {
+        return $this->module . '~' . $this->resource;
+    }
+
+    /**
+     * The class name
+     * @return string
+     */
+    public function getClassName()
+    {
+        if ($this->_path == '') {
+            return $this->resource;
+        }
+        return $this->resource.'DaoRecord';
+    }
+
+    /**
+     * Path of the PHP file containing the class. It can be empty if the class
+     * can be autoloaded
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->_path;
     }
 }

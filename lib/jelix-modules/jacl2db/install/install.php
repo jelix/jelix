@@ -27,7 +27,7 @@ class jacl2dbModuleInstaller extends \Jelix\Installer\Module\Installer
     {
 
         /*
-        $mapper = new jDaoDbMapper('jacl2_profile');
+        $mapper = new \Jelix\dao\DbMapper('jacl2_profile');
         $mapper->createTableFromDao("jacl2db~jacl2group");
         $mapper->createTableFromDao("jacl2db~jacl2usergroup");
         $mapper->createTableFromDao("jacl2db~jacl2subjectgroup");

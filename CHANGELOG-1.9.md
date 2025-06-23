@@ -59,14 +59,24 @@ JelixDatabase package.
 
 
 **jDao**
- 
+
+jDao is now relying on [JelixDao](https://github.com/jelix/JelixDao).
+The `jDao` class is still the main class to use to load and use Dao.
+Most of internal classes of jDao are gone and replaced by classes of JelixDao, 
+although many of old classes are still existing (but can be empty) to not break 
+typed parameters into your classes.
+
+It brings some new features:
+
 - native support of JSON fields: dao properties having the datatype `json` 
   are automatically encoded during insert/update, or decoded during a select.
 - Possibility to indicate a class from which the generated factory class will inherit.
   The classname should be indicated into the `extends` attribute of `<factory>`.
   The class can be anywhere and should be autoloadable. The class must inherit
   from `jDaoFactoryBase` and it must be abstract.
-  
+
+
+Plugins for jDaoCompiler (type 'daobuilder'), are not supported anymore.
   
 Removes
 -------
@@ -76,6 +86,14 @@ Removes
   But you should consider it as an archive. You should migrate to jacl2 and jacl2db.
 * Remove `jpref` and `jpref_admin` modules. There are still available into the `jelix/jpref-module` package.
   But you should consider it as an archive. You should develop an alternative to these modules.
+* Plugins for jDb and jDao don't exist anymore.
+
+Broken API
+----------
+
+- Catching an exception about invalid/unknown profil (jProfile) must be done 
+  by catching `\Jelix\Profiles\Exception` instead of `jException` from now.
+
 
 Deprecated API and features
 ---------------------------
@@ -110,6 +128,19 @@ About jDb:
 - `jDbWidget` is deprecated and replaced by `Jelix\Database\Helpers`
 - `jDaoDbMapper::createTableFromDao()` returns an object `\Jelix\Database\Schema\TableInterface` instead of `jTable`
 
+About jDao:
+
+- `jDaoFactoryBase` is replaced by objects implementing `Jelix\Dao\DaoFactoryInterface`
+- `jDaoRecordBase` is replaced by objects implementing `Jelix\Dao\DaoRecordInterface`
+    - methods `getDbProfile` and `setDbProfile` don't exist on  `Jelix\Dao\DaoRecordInterface`.
+    - method  `getSelector()` is deprecated, `getDaoName()` should be used instead.
+- `jDaoConditions` and `jDaoCondition` are deprecated and replaced by
+  `\Jelix\Dao\DaoConditions` and `\Jelix\Dao\DaoCondition`.
+- `jDaoXmlException` is deprecated and not used anymore. The parser generates `Jelix\Dao\Parser\ParserException` instead.
+- `jDaoGenerator` and `jDaoParser` are removed
+- `jDaoMethod` is replaced by `Jelix\Dao\Parser\DaoMethod`
+- `jDaoProperty` is replaced by `Jelix\Dao\Parser\DaoProperty`
+- `jDaoDbMapper` is replaced by `Jelix\Dao\DbMapper`
 
 Internal changes
 ----------------

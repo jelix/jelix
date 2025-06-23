@@ -152,9 +152,6 @@ cd lib/jelix/plugins/configcompiler/
 cd lib/jelix/plugins/coord/
   __ALL_RECURSIVELY__
 
-cd lib/jelix/plugins/daobuilder/
-  __ALL_RECURSIVELY__
-
 cd lib/jelix/plugins/debugbar/
   __ALL_RECURSIVELY__
 

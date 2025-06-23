@@ -9,8 +9,6 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
-require_once(JELIX_LIB_PATH.'dao/jDaoCompiler.class.php');
-require_once(JELIX_LIB_PATH.'dao/jDaoConditions.class.php');
 
 
 class jdao_eventsTest extends \Jelix\UnitTests\UnitTestCaseDb {
