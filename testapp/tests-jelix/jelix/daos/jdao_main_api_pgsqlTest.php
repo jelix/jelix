@@ -4,10 +4,12 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2019 Laurent Jouanneau
+* @copyright   2019-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
+use Jelix\Core\Profiles;
 
 require_once(__DIR__.'/jdao_main_api.lib.php');
 /**
@@ -20,7 +22,7 @@ class jdao_main_api_pgsqlTest extends jdao_main_api_base {
     function setUp() : void  {
         parent::setUp();
         try {
-            jProfiles::get('jdb', 'testapp_pgsql', true);
+            Profiles::get('jdb', 'testapp_pgsql', true);
         }
         catch(Exception $e) {
             $this->markTestSkipped(get_class($this).' cannot be run: undefined testapp_pgsql profile');

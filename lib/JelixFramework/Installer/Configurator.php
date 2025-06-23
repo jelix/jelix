@@ -9,6 +9,7 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\Profiles;
 use Jelix\Dependencies\ItemException;
 
 use Jelix\IniFile\IniModifierInterface;
@@ -853,7 +854,7 @@ class Configurator
         $profileIni = $this->globalSetup->getProfilesIni();
         if ($profileIni->isModified()) {
             $profileIni->save();
-            \jProfiles::clear();
+            Profiles::clear();
         }
     }
 

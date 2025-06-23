@@ -4,57 +4,36 @@
  * @subpackage db
  *
  * @author     Laurent Jouanneau
- * @copyright  2019 Laurent Jouanneau
+ * @copyright  2019-2025 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
+/**
+ * @deprecated use \Jelix\Database\Connection instead
+ */
 class jDbUtils
 {
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_MYSQL instead */
     const DB_TYPE_MYSQL = 'mysql';
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_SQLITE instead */
     const DB_TYPE_SQLITE = 'sqlite';
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_PGSQL instead */
     const DB_TYPE_PGSQL = 'pgsql';
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_SQLSERVER instead */
     const DB_TYPE_SQLSERVER = 'sqlsrv';
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_ORACLE instead */
     const DB_TYPE_ORACLE = 'oci';
 
+    /**
+     * @param $dbType
+     * @param $connection
+     * @return
+     * @deprecated use \Jelix\Database\Connection::getTools() instead
+     */
     public static function getTools($dbType, $connection = null)
     {
-        switch ($dbType) {
-            case self::DB_TYPE_MYSQL:
-                require_once __DIR__.'/tools/jDbMysqlTools.php';
-                $tools = new jDbMysqlTools($connection);
-
-                break;
-
-            case self::DB_TYPE_SQLITE:
-                require_once __DIR__.'/tools/jDbSqliteTools.php';
-                $tools = new jDbSqliteTools($connection);
-
-                break;
-
-            case self::DB_TYPE_PGSQL:
-                require_once __DIR__.'/tools/jDbPgsqlTools.php';
-                $tools = new jDbPgsqlTools($connection);
-
-                break;
-
-            case self::DB_TYPE_SQLSERVER:
-                require_once __DIR__.'/tools/jDbSqlsrvTools.php';
-                $tools = new jDbSqlsrvTools($connection);
-
-                break;
-
-            case self::DB_TYPE_ORACLE:
-                require_once __DIR__.'/tools/jDbOciTools.php';
-                $tools = new jDbOciTools($connection);
-
-                break;
-
-            default:
-                // legacy tools
-                $tools = jApp::loadPlugin($dbType, 'db', '.dbtools.php', $dbType.'DbTools', $connection);
-        }
-
-        return $tools;
+        return \Jelix\Database\Connection::getTools($dbType, $connection);
     }
 }

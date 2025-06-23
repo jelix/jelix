@@ -16,6 +16,8 @@
 
 namespace Jelix\Installer\Checker;
 
+use Jelix\Database\AccessParameters;
+
 /**
  * base class for a jelix installation checker.
  *
@@ -163,10 +165,10 @@ class CheckerBase
         }
 
         if (count($this->databases)) {
-            $driversInfos = \jDbParameters::getDriversInfosList();
+            $driversInfos = AccessParameters::getDriversInfosList();
             $okdb = false;
 
-            array_combine($this->databases, array_fill(0, count($this->databases), false));
+            //array_combine($this->databases, array_fill(0, count($this->databases), false));
 
             $alreadyExtensionsChecked = array();
             $okdatabases = array();

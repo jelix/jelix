@@ -10,6 +10,8 @@
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Core\Profiles;
+
 /**
  * This class acts as a cache proxy during a request processing, for jForms
  * containers. It allows to get and store jForms containers data into an
@@ -49,7 +51,7 @@ class jFormsSession
     {
         // be sure we have a profile for jCache.
         try {
-            jProfiles::get('jcache', 'jforms', true);
+            Profiles::get('jcache', 'jforms', true);
         } catch (Exception $e) {
             // no profile, let's create a default profile
             $cacheDir = jApp::tempPath('jforms');
@@ -62,7 +64,7 @@ class jFormsSession
                 'cache_dir' => $cacheDir,
                 'directory_level' => 3,
             );
-            jProfiles::createVirtualProfile('jcache', 'jforms', $params);
+            Profiles::createVirtualProfile('jcache', 'jforms', $params);
         }
     }
 

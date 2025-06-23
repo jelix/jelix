@@ -3,11 +3,12 @@
  * @author      Laurent Jouanneau
  * @contributor Adrien Lagroy de Croutte
  *
- * @copyright   2017-2021 Laurent Jouanneau, 2020 Adrien Lagroy de Croutte
+ * @copyright   2017-2025 Laurent Jouanneau, 2020 Adrien Lagroy de Croutte
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+use Jelix\Core\Profiles;
 
 class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
 {
@@ -20,7 +21,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
     public function setUp() : void
     {
         jDao::releaseAll();
-        jProfiles::clear();
+        Profiles::clear();
         $this->preSetUpAcl();
         $this->setUpAcl();
     }
@@ -140,7 +141,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
     {
         $this->teardownAcl();
         jDao::releaseAll();
-        jProfiles::clear();
+        Profiles::clear();
         jAcl2DbUserGroup::clearCache();
 
     }

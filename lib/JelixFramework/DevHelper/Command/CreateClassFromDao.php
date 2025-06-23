@@ -11,6 +11,7 @@
 
 namespace Jelix\DevHelper\Command;
 
+use Jelix\Dao\Generator\Compiler;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -61,36 +62,18 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
 
         $modulePath = $this->getModulePath($module);
 
-        $sourceDaoPath = $modulePath.'daos/';
-        $sourceDaoPath .= strtolower($daoname).'.dao.xml';
-
-        if (!file_exists($sourceDaoPath)) {
-            throw new \Exception("The file {$sourceDaoPath} doesn't exist");
-        }
-
         $targetClassPath = $modulePath.'classes/';
         $targetClassPath .= strtolower($classname).'.class.php';
 
         // Parsing the dao xml file
 
         $selector = new \jSelectorDao($module.'~'.$daoname, $profileName);
-        $tools = \jDb::getConnection($profileName)->tools();
 
-        $doc = new \DOMDocument();
+        $cnt = \jDb::getConnection($profileName);
+        $context = new \jDaoContext($profileName, $cnt);
+        $compiler = new Compiler();
+        $parser = $compiler->parse($selector, $context);
 
-        if (!$doc->load($sourceDaoPath)) {
-            throw new \jException('jelix~daoxml.file.unknown', $sourceDaoPath);
-        }
-        if ($doc->documentElement->namespaceURI != JELIX_NAMESPACE_BASE.'dao/1.0') {
-            throw new \jException(
-                'jelix~daoxml.namespace.wrong',
-                array($sourceDaoPath, $doc->namespaceURI)
-            );
-        }
-
-        require_once JELIX_LIB_PATH.'dao/jDaoParser.class.php';
-        $parser = new \jDaoParser($selector);
-        $parser->parse(simplexml_import_dom($doc), $tools);
         $properties = $parser->getProperties();
 
         // Generating the class

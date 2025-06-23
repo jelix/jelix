@@ -4,10 +4,12 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2019 Laurent Jouanneau
+* @copyright   2019-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+
+use Jelix\Core\Profiles;
 
 require_once(__DIR__.'/jdao_main_api.lib.php');
 /**
@@ -23,7 +25,7 @@ class jdao_main_api_sqlite3Test extends jdao_main_api_base {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
         try {
-            jProfiles::get('jdb', 'testapp_sqlite3', true);
+            Profiles::get('jdb', 'testapp_sqlite3', true);
         }
         catch(Exception $e) {
             $this->markTestSkipped(get_class($this).' cannot be run: undefined testapp_sqlite3 profile');

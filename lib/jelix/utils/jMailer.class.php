@@ -19,6 +19,8 @@
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+use Jelix\Core\Profiles;
+
 /**
  * jMailer based on PHPMailer - PHP email transport class.
  *
@@ -137,7 +139,7 @@ class jMailer extends \PHPMailer\PHPMailer\PHPMailer
             if (isset($config->mailer['smtpProfile'])
                 && $config->mailer['smtpProfile'] != ''
             ) {
-                $smtp = jProfiles::get('smtp', $config->mailer['smtpProfile']);
+                $smtp = Profiles::get('smtp', $config->mailer['smtpProfile']);
                 $smtp = array_merge(array(
                     'host' => 'localhost',
                     'port' => 25,

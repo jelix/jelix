@@ -9,6 +9,9 @@
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
+use Jelix\Core\Profiles;
+
 require_once JELIX_LIB_PATH.'installer/jIInstallerComponent.iface.php';
 
 /**
@@ -556,7 +559,7 @@ class jInstallerModule implements jIInstallerComponent
             }
         }
         $profiles->save();
-        jProfiles::clear();
+        Profiles::clear();
 
         return true;
     }

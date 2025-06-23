@@ -1,5 +1,7 @@
 <?php
 
+use Jelix\Core\Profiles;
+
 class soapclientTest extends \Jelix\UnitTests\UnitTestCase
 {
     public static function setUpBeforeClass() : void {
@@ -9,7 +11,7 @@ class soapclientTest extends \Jelix\UnitTests\UnitTestCase
     function testCall() {
 
         try {
-            $profile = jProfiles::get("jsoapclient");
+            $profile = Profiles::get("jsoapclient");
             if (!isset($profile['wsdl']) || $profile['wsdl'] == '') {
                 $this->markTestSkipped('no wsdl specified in profile for jSoapClient. cannot test jSoapClient::get()');
                 return;

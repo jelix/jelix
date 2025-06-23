@@ -54,9 +54,6 @@ cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
 cch common.UTF-8.properties(common.%charset%.properties)
 cch crud.UTF-8.properties(crud.%charset%.properties)
-cch dao.UTF-8.properties(dao.%charset%.properties)
-cch daoxml.UTF-8.properties(daoxml.%charset%.properties)
-cch db.UTF-8.properties(db.%charset%.properties)
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cch format.UTF-8.properties(format.%charset%.properties)
 cch formserr.UTF-8.properties(formserr.%charset%.properties)
@@ -72,9 +69,6 @@ cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
 cch common.UTF-8.properties(common.%charset%.properties)
 cch crud.UTF-8.properties(crud.%charset%.properties)
-cch dao.UTF-8.properties(dao.%charset%.properties)
-cch daoxml.UTF-8.properties(daoxml.%charset%.properties)
-cch db.UTF-8.properties(db.%charset%.properties)
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cch format.UTF-8.properties(format.%charset%.properties)
 cch formserr.UTF-8.properties(formserr.%charset%.properties)
@@ -92,9 +86,6 @@ cch cache.UTF-8.properties(cache.%charset%.properties)
 cch captcha.UTF-8.properties(captcha.%charset%.properties)
 cch common.UTF-8.properties(common.%charset%.properties)
 cch crud.UTF-8.properties(crud.%charset%.properties)
-cch dao.UTF-8.properties(dao.%charset%.properties)
-cch daoxml.UTF-8.properties(daoxml.%charset%.properties)
-cch db.UTF-8.properties(db.%charset%.properties)
 cch errors.UTF-8.properties(errors.%charset%.properties)
 cch format.UTF-8.properties(format.%charset%.properties)
 cch formserr.UTF-8.properties(formserr.%charset%.properties)
@@ -111,9 +102,6 @@ cd lib/jelix/dao
   __ALL__
 
 cd lib/jelix/db
-  __ALL__
-
-cd lib/jelix/db/tools
   __ALL__
 
 #if ENABLE_DEVELOPER
@@ -155,12 +143,6 @@ cd lib/jelix/plugins/configcompiler/
 cd lib/jelix/plugins/coord/
   __ALL_RECURSIVELY__
 
-cd lib/jelix/plugins/daobuilder/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix/plugins/db/
-  __ALL_RECURSIVELY__
-
 cd lib/jelix/plugins/debugbar/
   __ALL_RECURSIVELY__
 
@@ -180,9 +162,6 @@ cd lib/jelix/plugins/logger/
   __ALL_RECURSIVELY__
 
 cd lib/jelix/plugins/htmlresponse/
-  __ALL_RECURSIVELY__
-
-cd lib/jelix/plugins/profiles/jdb/
   __ALL_RECURSIVELY__
 
 cd lib/jelix/plugins/tpl/common

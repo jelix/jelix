@@ -9,6 +9,9 @@
 
 namespace Jelix\Installer\Module\API;
 
+use Jelix\Database\AbstractConnection;
+use Jelix\Database\Schema\SqlToolsInterface;
+
 /**
  * Trait for installer/configurator classes.
  *
@@ -22,7 +25,7 @@ class DatabaseHelpers
     protected $dbProfile = '';
 
     /**
-     * @var \jDbConnection
+     * @var AbstractConnection|\jDbConnection
      */
     private $_dbConn;
 
@@ -60,7 +63,7 @@ class DatabaseHelpers
     }
 
     /**
-     * @return \jDbTools the tool class of jDb
+     * @return SqlToolsInterface|\jDbTools the tool class of jDb
      */
     public function dbTool()
     {
@@ -68,7 +71,7 @@ class DatabaseHelpers
     }
 
     /**
-     * @return \jDbConnection the connection to the database used for the module
+     * @return AbstractConnection|\jDbConnection the connection to the database used for the module
      */
     public function dbConnection()
     {
