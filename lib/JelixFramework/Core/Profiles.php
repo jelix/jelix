@@ -85,8 +85,8 @@ class Profiles
      *
      * @param string $category the profile category
      * @param string $name     the name of the profile  (value of _name in the retrieved profile)
-     * @param object $obj      the object to store
-     * @param mixed  $object
+     * @param object $object      the object to store
+     * @deprecated use storeConnectorInPool() instead
      */
     public static function storeInPool($category, $name, $object)
     {
@@ -94,7 +94,23 @@ class Profiles
             self::loadProfiles();
         }
 
-        self::$_profiles->storeInPool($category, $name, $object);
+        self::$_profiles->storeConnectorInPool($category, $name, $object);
+    }
+
+    /**
+     * Attach a connector to the given profile.
+     *
+     * @param string $category the profile category
+     * @param string $name     the name of the profile  (value of _name in the retrieved profile)
+     * @param object $object      the object to store
+     */
+    public static function storeConnectorInPool($category, $name, $object)
+    {
+        if (self::$_profiles === null) {
+            self::loadProfiles();
+        }
+
+        self::$_profiles->storeConnectorInPool($category, $name, $object);
     }
 
     /**
@@ -104,6 +120,7 @@ class Profiles
      * @param string $name     the name of the profile (value of _name in the retrieved profile)
      *
      * @return null|object the stored object
+     * @deprecated use getConnectorFromPool() instead
      */
     public static function getFromPool($category, $name)
     {
@@ -111,7 +128,26 @@ class Profiles
             self::loadProfiles();
         }
 
-        return self::$_profiles->getFromPool($category, $name);
+        return self::$_profiles->getConnectorFromPool($category, $name);
+    }
+
+    /**
+     * Returns the connector corresponding to the given profile.
+     *
+     * if it does not exists, null is returned.
+     *
+     * @param string $category the profile category
+     * @param string $name     the name of the profile (value of _name in the retrieved profile)
+     *
+     * @return null|object the stored object
+     */
+    public static function getConnectorFromPool($category, $name)
+    {
+        if (self::$_profiles === null) {
+            self::loadProfiles();
+        }
+
+        return self::$_profiles->getConnectorFromPool($category, $name);
     }
 
     /**
