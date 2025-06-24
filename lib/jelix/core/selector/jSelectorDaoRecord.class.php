@@ -71,6 +71,9 @@ class jSelectorDaoRecord extends jSelectorModule implements CustomRecordClassFil
      */
     function getName()
     {
+        if ($this->_path == '') {
+            return $this->resource;
+        }
         return $this->module . '~' . $this->resource;
     }
 

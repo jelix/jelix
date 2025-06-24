@@ -36,7 +36,9 @@ class jDb
      */
     public static function getConnection($name = '')
     {
-        return Profiles::getConnectorFromCallback('jdb', $name, array('jDb', '_createConnector'));
+        /** @var \Jelix\Database\ConnectionInterface|jDbConnection $conn */
+        $conn = Profiles::getConnector('jdb', $name);
+        return $conn;
     }
 
     /**
@@ -54,34 +56,20 @@ class jDb
     /**
      * call it to test a profile (during an install for example).
      *
-     * @param array $profile profile properties
+     * @param array $profile profile properties.
      *
      * @return bool true if properties are ok
      */
     public static function testProfile($profile)
     {
         try {
-            self::_createConnector($profile);
+            \Jelix\Database\Connection::createWithNormalizedParameters($profile);
             $ok = true;
         } catch (Exception $e) {
             $ok = false;
         }
 
         return $ok;
-    }
-
-    /**
-     * create a connector. internal use (callback method for jProfiles).
-     *
-     * @param array $profile profile properties
-     *
-     * @throws \Jelix\Database\Exception
-     *
-     * @return \Jelix\Database\ConnectionInterface|jDbConnection database connector
-     */
-    public static function _createConnector($profile)
-    {
-        return \Jelix\Database\Connection::createWithNormalizedParameters($profile);
     }
 
     /**
