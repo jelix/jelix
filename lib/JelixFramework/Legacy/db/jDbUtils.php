@@ -16,10 +16,15 @@
  */
 class jDbUtils
 {
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_MYSQL instead */
     const DB_TYPE_MYSQL = 'mysql';
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_SQLITE instead */
     const DB_TYPE_SQLITE = 'sqlite';
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_PGSQL instead */
     const DB_TYPE_PGSQL = 'pgsql';
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_SQLSERVER instead */
     const DB_TYPE_SQLSERVER = 'sqlsrv';
+    /** @deprecated use \Jelix\Database\Connection::DB_TYPE_ORACLE instead */
     const DB_TYPE_ORACLE = 'oci';
 
     /**
@@ -28,7 +33,6 @@ class jDbUtils
      */
     public static function getTools($dbType, $connection = null)
     {
-        $tools = \Jelix\Database\Connection::getTools($dbType, $connection);
-        return $tools;
+        return \Jelix\Database\Connection::getTools($dbType, $connection);
     }
 }

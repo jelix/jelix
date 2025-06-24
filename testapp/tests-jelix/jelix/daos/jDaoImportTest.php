@@ -1,6 +1,8 @@
 <?php
 use Jelix\Dao\Parser\DaoTable;
 
+use Jelix\Dao\Generator\Compiler;
+
 class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
 
     public function setUp () : void  {
@@ -54,15 +56,14 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $blogSel = new jSelectorDao('jelix_tests~post_blog', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
         $context = new jDaoContext('', jDb::getConnection(''));
-        $compiler = new \Jelix\Dao\Generator\Compiler();
-
+        $compiler = new Compiler();
         $postParser =  $compiler->parse($postSel, $context);
         $this->assertEquals(array('deletebefore'), $postParser->getEvents());
 
-       	$blogParser = $compiler->parse($blogSel, $context);
+        $blogParser = $compiler->parse($blogSel, $context);
         $this->assertEquals(array('deletebefore'), $blogParser->getEvents());
-       	
-       	$trackerParser = $compiler->parse($trackerSel, $context);
+
+        $trackerParser = $compiler->parse($trackerSel, $context);
         $this->assertEquals(array('deletebefore', 'insertbefore', 'updatebefore'), $trackerParser->getEvents());
     }
     
@@ -70,17 +71,19 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
         $context = new jDaoContext('', jDb::getConnection(''));
-        $compiler = new \Jelix\Dao\Generator\Compiler();
 
-        $postTrackerParser = $compiler->parse($trackerSel, $context);;
+        $compiler = new Compiler();
 
-        $postsTable = new DaoTable('posts', 'posts', array('id'), DaoTable::TYPE_PRIMARY);
-        $postsTable->fields = array('id', 'title', 'author', 'content', 'type', 'status', 'date');
-        $this->assertEquals(
-            array(
-                'posts'=> $postsTable
-            ),
-                            $postTrackerParser->getTables());
+        $postTrackerParser = $compiler->parse($trackerSel, $context);
+
+        $tables = $postTrackerParser->getTables();
+        $this->assertInstanceOf(DaoTable::class, $tables['posts']);
+        $table = $tables['posts'];
+        $this->assertEquals('posts', $table->name);
+        $this->assertEquals('posts', $table->realName);
+        $this->assertEquals(array('id'), $table->primaryKey);
+        $this->assertEquals(array('id', 'title', 'author', 'content', 'type', 'status', 'date'), $table->fields);
+
         $properties = '<?xml version="1.0"?>
         <array>
             <object key="id" class="\Jelix\Dao\Parser\DaoProperty">
@@ -446,19 +449,20 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $blogSel = new jSelectorDao($daoName, '');
 
-
         $context = new jDaoContext('', jDb::getConnection(''));
-        $compiler = new \Jelix\Dao\Generator\Compiler();
+        $compiler = new Compiler();
 
         $postBlogParser = $compiler->parse($blogSel, $context);
 
-        $postsTable = new DaoTable('posts', 'posts', array('id'), DaoTable::TYPE_PRIMARY);
-        $postsTable->fields = array('id', 'title', 'author', 'content', 'type', 'status', 'date', 'email');
-        $this->assertEquals(
-            array(
-                'posts'=> $postsTable
-            ),
-            $postBlogParser->getTables());
+
+        $tables = $postBlogParser->getTables();
+        $this->assertInstanceOf(DaoTable::class, $tables['posts']);
+        $table = $tables['posts'];
+        $this->assertEquals('posts', $table->name);
+        $this->assertEquals('posts', $table->realName);
+        $this->assertEquals(array('id'), $table->primaryKey);
+        $this->assertEquals(array('id', 'title', 'author', 'content', 'type', 'status', 'date', 'email'), $table->fields);
+
         $properties = '<?xml version="1.0"?>
         <array>
             <object key="id" class="\Jelix\Dao\Parser\DaoProperty">

@@ -7,6 +7,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Core\Profiles;
 
 class jelix_testsModuleUpgrader_jacl2db extends \Jelix\Installer\Module\Installer {
 
@@ -14,7 +15,7 @@ class jelix_testsModuleUpgrader_jacl2db extends \Jelix\Installer\Module\Installe
 
     function install(\Jelix\Installer\Module\API\InstallHelpers $helpers) {
         try {
-            $dbprofile = jProfiles::get('jdb', 'testapp_pgsql', true);
+            $dbprofile = Profiles::get('jdb', 'testapp_pgsql', true);
             $helpers->database()->useDbProfile('testapp_pgsql');
         }
         catch(Exception $e) {

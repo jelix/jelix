@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor
  *
- * @copyright   2009-2018 Laurent Jouanneau
+ * @copyright   2009-2025 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -27,7 +27,7 @@ class jacl2dbModuleInstaller extends \Jelix\Installer\Module\Installer
     {
 
         /*
-        $mapper = new jDaoDbMapper('jacl2_profile');
+        $mapper = new \Jelix\dao\DbMapper('jacl2_profile');
         $mapper->createTableFromDao("jacl2db~jacl2group");
         $mapper->createTableFromDao("jacl2db~jacl2usergroup");
         $mapper->createTableFromDao("jacl2db~jacl2subjectgroup");

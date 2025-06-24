@@ -6,10 +6,13 @@
 * @package     InstallWizard
 * @subpackage  pages
 * @author      Laurent Jouanneau
-* @copyright   2010-2015 Laurent Jouanneau
+* @copyright   2010-2025 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
 */
+
+use Jelix\Database\AccessParameters;
+use Jelix\Database\Connection;
 
 
 /**
@@ -60,7 +63,7 @@ class dbprofileWizPage extends installWizardPage {
     }
 
     protected function getDriversList(){
-        $driversInfos = \Jelix\Database\AccessParameters::getDriversInfosList();
+        $driversInfos = AccessParameters::getDriversInfosList();
 
         $drivers = isset($this->config['availabledDrivers'])?$this->config['availabledDrivers']:'mysqli,sqlite3,pgsql';
         $list = preg_split("/ *, */",$drivers);
@@ -177,16 +180,10 @@ class dbprofileWizPage extends installWizardPage {
 
             if (!count($errors)) {
                 $options = $ini->getValues($profile);
-                $dbparam = new \Jelix\Database\AccessParameters($options);
+                $dbparam = new AccessParameters($options);
                 $options = $dbparam->getNormalizedParameters();
                 try {
-                    if ($usepdo) {
-                        $m = 'check_PDO';
-                    }
-                    else {
-                        $m = 'check_'.$options['driver'];
-                    }
-                    $this->$m($options);
+                    $conn = Connection::createWithNormalizedParameters($options);
                 }
                 catch (Exception $e) {
                     $errors[] = $e->getMessage();
@@ -257,7 +254,7 @@ table_prefix=
                 continue;
             $dbprofileslist[] = $profile;
             $options = $ini->getValues($profile);
-            $dbparam = new \Jelix\Database\AccessParameters($options);
+            $dbparam = new AccessParameters($options);
             $options = $dbparam->getNormalizedParameters();
 
             $data['dbtype'][$profile] = $options['dbtype'];
@@ -308,153 +305,4 @@ table_prefix=
         $_SESSION['dbprofiles']['profiles'] = $dbprofileslist;
         $_SESSION['dbprofiles']['data'] = $data;
     }
-
-    protected function check_mssql($params) {
-        if(!function_exists('mssql_connect')) {
-            throw new Exception($this->locales['error.extension.mssql.not.installed']);
-        }
-        $host = $params['host'];
-        if(isset($params['port']) && $params['port']) {
-            if(DIRECTORY_SEPARATOR === '\\')
-                $host.=','.$params['port'];
-            else
-                $host.=':'.$params['port'];
-        }
-        if ($cnx = @mssql_connect ($host, $params['user'], $params['password'])) {
-            if(!mssql_select_db ($params['database'], $cnx))
-                throw new Exception($this->locales['error.no.database']);
-            mssql_close($cnx);
-        }
-        else {
-            throw new Exception($this->locales['error.no.connection']);
-        }
-        return true;
-    }
-
-    protected function check_mysql($params) {
-        if(!function_exists('mysql_connect')) {
-            throw new Exception($this->locales['error.extension.mysql.not.installed']);
-        }
-        $host = $params['host'];
-        if(isset($params['port']) && $params['port']) {
-            $host.=':'.$params['port'];
-        }
-        if ($cnx = @mysql_connect ($host, $params['user'], $params['password'])) {
-            if(!mysql_select_db ($params['database'], $cnx))
-                throw new Exception($this->locales['error.no.database']);
-            mysql_close($cnx);
-        }
-        else {
-            throw new Exception($this->locales['error.no.connection']);
-        }
-        return true;
-    }
-
-    protected function check_mysqli($params) {
-        $host = ($params['persistent']) ? 'p:'.$params['host'] : $params['host'];
-        $cnx = @new mysqli ($host, $params['user'], $params['password'], $params['database']);
-        if ($cnx->connect_errno) {
-            throw new Exception($this->locales['error.no.connection']);
-        }
-        $cnx->close();
-        return true;
-    }
-
-    protected function check_oci($params) {
-        throw new Exception('oci not supported');
-    }
-
-    protected function check_pgsql($params) {
-        if(!function_exists('pg_connect')) {
-            throw new Exception($this->locales['error.extension.pgsql.not.installed']);
-        }
-
-        $str = '';
-
-        // we do a distinction because if the host is given == TCP/IP connection else unix socket
-        if($params['host'] != '') {
-            $str = 'host=\''.$params['host'].'\''.$str;
-            if (isset($params['port']) && $params['port']) {
-                $str .= ' port=\''.$params['port'].'\'';
-            }
-        }
-
-        if ($params['database'] != '') {
-            $str .= ' dbname=\''.$params['database'].'\'';
-        }
-
-        // we do isset instead of equality test against an empty string, to allow to specify
-        // that we want to use configuration set in environment variables
-        if (isset($params['user'])) {
-            $str .= ' user=\''.$params['user'].'\'';
-        }
-
-        if (isset($params['password'])) {
-            $str .= ' password=\''.$params['password'].'\'';
-        }
-
-        if (isset($params['timeout']) && $params['timeout'] != '') {
-            $str .= ' connect_timeout=\''.$params['timeout'].'\'';
-        }
-
-        if ($cnx = @pg_connect ($str)) {
-            pg_close($cnx);
-        }
-        else {
-            throw new Exception($this->locales['error.no.connection']);
-        }
-        return true;
-    }
-
-    protected function check_sqlite($params) {
-        if(!function_exists('sqlite_open')) {
-            throw new Exception($this->locales['error.extension.sqlite.not.installed']);
-        }
-        if ($cnx = @sqlite_open (jApp::varPath('db/sqlite/'.$params['database']))) {
-            sqlite_close($cnx);
-        }
-        else {
-            throw new Exception($this->locales['error.no.connection']);
-        }
-        return true;
-    }
-
-    protected function check_sqlite3($params) {
-        $db = $params['database'];
-        if ($db[0] == '/') {
-            $path = $db;
-        }
-        else if (preg_match('/^(app|lib|var)\:/', $db)) {
-            $path = jFile::parseJelixPath( $db );
-        }
-        else {
-            $path = jApp::varPath('db/sqlite3/'.$db);
-        }
-
-        try {
-            $sqlite = new SQLite3($path, SQLITE3_OPEN_READWRITE | SQLITE3_OPEN_CREATE);
-            $sqlite->close();
-        }
-        catch(Exception $e) {
-            throw new Exception($this->locales['error.no.connection']);
-        }
-        return true;
-    }
-
-    protected function check_PDO($params) {
-        if ($params['dbtype'] == 'sqlite') {
-            $user = '';
-            $password = '';
-        }
-        else {
-            if (isset($params['port']) && $params['port'])
-                $dsn.= ';port='.$params['port'];
-            $user = $params['user'];
-            $password = $params['password'];
-        }
-
-        $pdo = new PDO($params['dsn'], $user, $password, $params['pdooptions']);
-        $pdo = null;
-    }
-
 }

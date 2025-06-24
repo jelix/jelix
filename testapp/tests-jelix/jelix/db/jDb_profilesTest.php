@@ -9,10 +9,11 @@ use Jelix\Services\Database\DbProfilePlugin;
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007-2011 Laurent Jouanneau
+* @copyright   2007-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Core\Profiles;
 
 class ProfilesReaderForTest extends \Jelix\Profiles\ProfilesReader {
 
@@ -30,12 +31,12 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
     }
 
     public function tearDown() : void  {
-        jProfiles::clear();
+        Profiles::clear();
         parent::tearDown();
     }
 
     function testProfile() {
-        $p = jProfiles::get('jdb', 'jelix_tests_mysql');
+        $p = Profiles::get('jdb', 'jelix_tests_mysql');
         $expected = array(
             'driver'=>"mysqli",
             'database'=>"testapp_mysql",
@@ -58,7 +59,7 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
 
         $this->assertEquals($expected, $p);
 
-        $p = jProfiles::get('jdb', 'forward');
+        $p = Profiles::get('jdb', 'forward');
         $expected= array(
             'driver'=>"mysqli",
             'database'=>"jelix_tests_forward",
@@ -81,12 +82,12 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
 
         $this->assertEquals($expected, $p);
 
-        $p = jProfiles::get('jdb', 'testapp');
+        $p = Profiles::get('jdb', 'testapp');
         $this->assertEquals('testapp', $p['_name']);
-        $p2 = jProfiles::get('jdb');
+        $p2 = Profiles::get('jdb');
         $this->assertEquals('testapp', $p2['_name']);
         $this->assertEquals($p, $p2);
-        $p = jProfiles::get('jdb', 'testapppdo');
+        $p = Profiles::get('jdb', 'testapppdo');
         $this->assertEquals('testapppdo', $p['_name']);
     }
 
@@ -98,12 +99,14 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
             'user'=> "v_mysql",
             'password'=> "vir_mysql",
             'persistent'=> '1',
-            'force_encoding'=>1
+            'force_encoding'=>1,
+            'charset' => 'UTF-8',
+            'filePathParser' => '\Jelix\Services\Database\DbProfilePlugin::parseSqlitePath'
         );
 
-        jProfiles::createVirtualProfile('jdb', 'foobar', $profile);
+        Profiles::createVirtualProfile('jdb', 'foobar', $profile);
 
-        $p = jProfiles::get('jdb', 'foobar');
+        $p = Profiles::get('jdb', 'foobar');
         $profile['_name'] = 'foobar';
         $profile['usepdo'] = false;
         $profile['dbtype'] = 'mysql';
@@ -128,16 +131,16 @@ class jDb_profilesTest  extends \Jelix\UnitTests\UnitTestCase
             'exceptions'=> 1
         );
 
-        jProfiles::createVirtualProfile('acme', '__common__', $profile);
+        Profiles::createVirtualProfile('acme', '__common__', $profile);
 
         $profile = array(
             'wsdl'=> "http://example.com/wsdl1",
             'connection_timeout'=>25
         );
 
-        jProfiles::createVirtualProfile('acme', 'foo', $profile);
+        Profiles::createVirtualProfile('acme', 'foo', $profile);
 
-        $p = jProfiles::get('acme', 'foo');
+        $p = Profiles::get('acme', 'foo');
         $expected = array(
             'trace'=> 1,
             'exceptions'=> 1,

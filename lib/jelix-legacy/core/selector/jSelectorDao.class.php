@@ -8,7 +8,7 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  *
- * @copyright   2005-2021 Laurent Jouanneau, 2007 Loic Mathaud
+ * @copyright   2005-2025 Laurent Jouanneau, 2007 Loic Mathaud
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -16,6 +16,8 @@
 
 use \Jelix\Core\App;
 use \Jelix\Core\Selector\Exception as ExceptionSelector;
+use Jelix\Core\Profiles;
+use Jelix\Dao\DaoFileInterface;
 
 /**
  * Selector for dao file
@@ -25,7 +27,7 @@ use \Jelix\Core\Selector\Exception as ExceptionSelector;
  * @package    jelix
  * @subpackage core_selector
  */
-class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements \Jelix\Dao\DaoFileInterface
+class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements DaoFileInterface
 {
     protected $type = 'dao';
 
@@ -50,7 +52,7 @@ class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements \Jelix
     public function __construct($sel, $profile)
     {
         $this->profile = $profile;
-        $p = \Jelix\Core\Profiles::get('jdb', $profile);
+        $p = Profiles::get('jdb', $profile);
         $this->driver = $p['driver'];
         $this->dbType = $p['dbtype'];
         $this->_compiler = 'jDaoCompiler';
@@ -135,7 +137,8 @@ class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements \Jelix
     }
 
     /**
-     * @deprecated
+     * @return string
+     * @deprecated use getCompiledFactoryClass() instead
      */
     public function getDaoClass()
     {
@@ -143,7 +146,8 @@ class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements \Jelix
     }
 
     /**
-     * @deprecated
+     * @return string
+     * @deprecated use getCompiledRecordClass() instead
      */
     public function getDaoRecordClass()
     {

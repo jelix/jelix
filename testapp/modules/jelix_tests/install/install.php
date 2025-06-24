@@ -9,6 +9,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Core\Profiles;
 
 class jelix_testsModuleInstaller extends \Jelix\Installer\Module\Installer {
 
@@ -24,7 +25,7 @@ class jelix_testsModuleInstaller extends \Jelix\Installer\Module\Installer {
 
         // install tables into pgsql
         try {
-            $dbprofile = jProfiles::get('jdb', 'testapp_pgsql', true);
+            $dbprofile = Profiles::get('jdb', 'testapp_pgsql', true);
 
         } catch (Exception $e) {
             // no profile for pgsql, don't install tables in pgsql
@@ -40,7 +41,7 @@ class jelix_testsModuleInstaller extends \Jelix\Installer\Module\Installer {
 
         // install tables into Sqlite
         try {
-            $dbprofile = jProfiles::get('jdb', 'testapp_sqlite3', true);
+            $dbprofile = Profiles::get('jdb', 'testapp_sqlite3', true);
         } catch (Exception $e) {
             // no profile for sqlite3, don't install tables in sqlite
         }

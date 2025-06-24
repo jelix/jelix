@@ -52,7 +52,7 @@ class FormsSession
         // be sure we have a profile for jCache.
         try {
             Profiles::get('jcache', 'jforms', true);
-        } catch (\Exception $e) {
+        } catch (\Jelix\Profiles\Exception $e) {
             // no profile, let's create a default profile
             $cacheDir = App::tempPath('jforms');
             \jFile::createDir($cacheDir);

@@ -1,45 +1,44 @@
 <?php
-
-use Jelix\Database\Schema\TableNameInterface;
-
 /**
 * @package     testapp
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2015-2022 Laurent Jouanneau
+* @copyright   2015-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Database\Schema\Mysql\TableName;
+use Jelix\Database\AbstractConnection;
+use Jelix\Database\Schema\TableNameInterface;
+use Psr\Log\LoggerInterface;
 
-
-class queryparseConnection extends \Jelix\Database\AbstractConnection {
+class queryparseConnection extends AbstractConnection {
     function __construct($profile) { }
+
     function parseQuery($sql, $reParam) {
         return $this->findParameters($sql, $reParam);
     }
 
-     public function beginTransaction () {}
-     public function commit () {}
-     public function rollback () {}
-     public function prepare ($query, $driverOptions = array()) {}
-     public function errorInfo() {}
-     public function errorCode() {}
-     public function lastInsertId($fromSequence='') {}
-     public function getAttribute($id) {}
-     public function setAttribute($id, $value) {}
-     protected function _autoCommitNotify ($state) {}
-     protected function _connect () {}
-     protected function _disconnect () {}
-     protected function _doQuery ($queryString) {}
-     protected function _doExec ($queryString) {}
-     protected function _doLimitQuery ($queryString, $offset, $number) {}
-    protected function _getSchema(){}
-
-    public function createTableName(string $name): TableNameInterface
-    {
-        // TODO: Implement createTableName() method.
+    public function beginTransaction () {}
+    public function commit () {}
+    public function rollback () {}
+    public function prepare ($query, $driverOptions = []) {}
+    public function errorInfo() {}
+    public function errorCode() {}
+    public function lastInsertId($fromSequence='') {}
+    public function getAttribute($id) {}
+    public function setAttribute($id, $value) {}
+    protected function _autoCommitNotify ($state) {}
+    protected function _connect () {}
+    protected function _disconnect () {}
+    protected function _doQuery ($queryString) {}
+    protected function _doExec ($queryString) {}
+    protected function _doLimitQuery ($queryString, $offset, $number) {}
+    public function createTableName(string $name): TableNameInterface {
+        return new TableName($name, '', $this->getTablePrefix());
     }
+    protected function _getSchema() {}
 }
 
 

@@ -3,7 +3,11 @@
  * @author      Laurent Jouanneau
  * @contributor Yannick Le Guédart, Julien Issler
  *
+<<<<<<< HEAD
  * @copyright   2011-2024 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
+=======
+ * @copyright   2011-2025 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
+>>>>>>> github/jelix-1.9.x
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -122,7 +126,7 @@ class Profiles
      * @param mixed        $nodefault
      *
      * @return null|object the stored object
-     * @deprecated
+     * @deprecated use getConnectorFromCallback instead
      */
     public static function getOrStoreInPool($category, $name, $function, $nodefault = false)
     {
@@ -130,9 +134,44 @@ class Profiles
             self::loadProfiles();
         }
 
-        return self::$_profiles->getOrStoreInPool($category, $name, $function, $nodefault);
+        return self::$_profiles->getConnectorFromCallback($category, $name, $function, $nodefault);
     }
 
+    /**
+     * Returns the connector corresponding to the given profile.
+     *
+     * If the connector does not exist yet, the object will be created by
+     * the given function. This function accepts a profile as parameter (array).
+     *
+     * @param string       $category  the profile category
+     * @param string       $name      the name of the profile (will be given to Profiles::get)
+     * @param array|string $function  the function name called to retrieved the object. It uses call_user_func.
+     * @param bool         $noDefault if true and if the profile doesn't exist, throw an error instead of getting the default profile
+     * @param mixed        $nodefault
+     *
+     * @return null|object the stored object
+     */
+    public static function getConnectorFromCallback($category, $name, $function, $nodefault = false)
+    {
+        if (self::$_profiles === null) {
+            self::loadProfiles();
+        }
+
+        return self::$_profiles->getConnectorFromCallback($category, $name, $function, $nodefault);
+    }
+
+    /**
+     * Returns the connector corresponding to the given profile.
+     *
+     * If the connector does not exist yet, the object will be created by the ProfilesReader plugin corresponding to the
+     * category of the profiles.
+     *
+     * @param string   $category  the profile category
+     * @param string   $name      the name of the profile (will be given to get())
+     * @param bool     $noDefault if true and if the profile doesn't exist, throw an error instead of getting the default profile
+     *
+     * @return null|object the connector object, or null if the plugin cannot create it.
+     */
     public static function getConnector($category, $name, $nodefault = false)
     {
         if (self::$_profiles === null) {

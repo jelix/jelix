@@ -11,6 +11,7 @@
 
 namespace Jelix\DevHelper\Command;
 
+use Jelix\Dao\Generator\Compiler;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -69,7 +70,7 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
         $selector = new \jSelectorDao($module.'~'.$daoname, $profileName);
         $cnt = \jDb::getConnection($profileName);
         $context = new \jDaoContext($profileName, $cnt);
-        $compiler = new \Jelix\Dao\Generator\Compiler();
+        $compiler = new Compiler();
         $parser = $compiler->parse($selector, $context);
 
         $properties = $parser->getProperties();

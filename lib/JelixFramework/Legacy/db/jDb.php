@@ -5,7 +5,7 @@
  *
  * @author      Laurent Jouanneau
  *
- * @copyright   2005-2024 Laurent Jouanneau
+ * @copyright   2005-2025 Laurent Jouanneau
  *
  * @see      http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -29,11 +29,13 @@ class jDb
      *
      * @param string $name profile name to use. if empty, use the default one
      *
-     * @return Jelix\Database\ConnectionInterface the connector
+     * @return \Jelix\Database\ConnectionInterface the connector
      */
     public static function getConnection($name = '')
     {
-        return Profiles::getConnector('jdb', $name);
+        /** @var \Jelix\Database\ConnectionInterface $conn */
+        $conn = Profiles::getConnector('jdb', $name);
+        return $conn;
     }
 
     /**
@@ -59,7 +61,7 @@ class jDb
     public static function testProfile($profile)
     {
         try {
-            $connector = \Jelix\Database\Connection::createWithNormalizedParameters($profile);
+            \Jelix\Database\Connection::createWithNormalizedParameters($profile);
             $ok = true;
         } catch (Exception $e) {
             $ok = false;
@@ -69,35 +71,12 @@ class jDb
     }
 
     /**
-     * @deprecated use \Jelix\Database\Utilities::floatToStr() instead
      * @param mixed $value
+     * @deprecated use \Jelix\Database\Utilities::floatToStr() instead
      * @see \Jelix\Database\Utilities::floatToStr()
      */
     public static function floatToStr($value)
     {
         return Utilities::floatToStr($value);
-    }
-
-    /**
-     * @param $path
-     *
-     * @return string
-     * @throws Exception
-     * @deprecated use \Jelix\Services\Database\DbProfilePlugin::parseSqlitePath() instead)
-     */
-    public static function parseSqlitePath($path)
-    {
-        if (preg_match('/^(app|lib|var|temp|www)\:/', $path)) {
-            $path = \jFile::parseJelixPath($path);
-        } elseif ($path[0] == '/' || // *nix path
-                  preg_match('!^[a-z]\\:(\\\\|/)[a-z]!i', $path) // windows path
-        ) {
-            if (!file_exists($path) && !file_exists(dirname($path))) {
-                throw new \Exception('sqlite3 connector: unknown database path scheme');
-            }
-        } else {
-            $path = \Jelix\Core\App::varPath('db/sqlite3/'.$path);
-        }
-        return $path;
     }
 }

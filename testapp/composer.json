@@ -36,6 +36,7 @@
     "autoload": {
     },
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "config": {
       "allow-plugins": {
         "jelix/composer-module-setup": true

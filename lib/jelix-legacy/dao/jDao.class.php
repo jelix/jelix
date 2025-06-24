@@ -4,11 +4,15 @@
  * @subpackage dao
  *
  * @author     Laurent Jouanneau
- * @copyright  2005-2023 Laurent Jouanneau
+ * @copyright   2005-2025 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
+use Jelix\Dao\DaoConditions;
+use Jelix\Dao\DaoFactoryInterface;
+use Jelix\Dao\DaoRecordInterface;
 
 /**
  * Factory to create DAO objects.
@@ -27,7 +31,7 @@ class jDao
      *                                     If empty, use the default profile
      * @param mixed               $DaoId
      *
-     * @return \Jelix\Dao\DaoFactoryInterface the dao object
+     * @return DaoFactoryInterface|jDaoFactoryBase the dao object
      */
     public static function create($DaoId, $profile = '')
     {
@@ -57,7 +61,7 @@ class jDao
      *                                     If empty, use the default profile
      * @param mixed               $DaoId
      *
-     * @return \Jelix\Dao\DaoFactoryInterface the dao object
+     * @return DaoFactoryInterface|jDaoFactoryBase the dao object
      */
     public static function get($DaoId, $profile = '')
     {
@@ -91,23 +95,24 @@ class jDao
     /**
      * creates a record object for the given dao.
      *
-     * See also jDaoFactoryBase::createRecord()
+     * See also DaoFactoryInterface::createRecord()
      *
      * @param string $Daoid   the dao selector
      * @param string $profile the db profile name to use for the connection.
      *                        If empty, use the default profile
      * @param mixed  $DaoId
      *
-     * @return \Jelix\Dao\DaoRecordInterface a dao record object
+     * @return DaoRecordInterface|jDaoRecordBase a dao record object
      */
     public static function createRecord($DaoId, $profile = '')
     {
         $sel = new jSelectorDao($DaoId, $profile);
         $factory = self::get($sel, $profile);
         $c = $sel->getCompiledRecordClass();
-        /** @var \Jelix\Dao\DaoRecordInterface $rec */
+        /** @var DaoRecordInterface $rec */
         $rec = new $c();
         $rec->setFactory($factory);
+
         return $rec;
     }
 
@@ -117,12 +122,12 @@ class jDao
      *
      * @param string $glueOp value should be AND or OR
      *
-     * @return \Jelix\Dao\DaoConditions
+     * @return DaoConditions
      *
-     * @see \Jelix\Dao\DaoFactoryInterface::findby()
+     * @see DaoFactoryInterface::findby()
      */
     public static function createConditions($glueOp = 'AND')
     {
-        return new \Jelix\Dao\DaoConditions($glueOp);
+        return new DaoConditions($glueOp);
     }
 }

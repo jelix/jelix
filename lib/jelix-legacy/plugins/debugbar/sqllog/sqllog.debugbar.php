@@ -4,7 +4,7 @@
  * @subpackage  debugbar_plugin
  *
  * @author      Laurent Jouanneau
- * @copyright   2011-2024 Laurent Jouanneau
+ * @copyright   2011-2025 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -57,7 +57,7 @@ class sqllogDebugbarPlugin implements jIDebugbarPlugin
                 $sqlDetailsContent = '<ul id="jxdb-sqllog" class="jxdb-list">';
                 $totalTime = 0;
                 foreach ($messages as $msg) {
-                    if (get_class($msg) != 'Jelix\Services\Database\SQLLogMessage') {
+                    if (get_class($msg) != '\\Jelix\\Database\\Log\\QueryMessage') {
                         continue;
                     }
                     $dao = $msg->getDao();

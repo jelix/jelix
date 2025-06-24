@@ -7,7 +7,7 @@
  *
  * @author      Guillaume Dugas
  * @contributor Laurent Jouanneau
- * @copyright   2012 Guillaume Dugas, 2023 Laurent Jouanneau
+ * @copyright   2012 Guillaume Dugas, 2023-2025 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -15,6 +15,7 @@
 
 use Jelix\Core\App as App;
 use Jelix\Core\Selector\Exception;
+use Jelix\Dao\CustomRecordClassFileInterface;
 
 /**
  * Selector for dao file
@@ -24,7 +25,7 @@ use Jelix\Core\Selector\Exception;
  * @package    jelix
  * @subpackage core_selector
  */
-class jSelectorDaoRecord extends \Jelix\Core\Selector\ModuleSelector implements \Jelix\Dao\CustomRecordClassFileInterface
+class jSelectorDaoRecord extends \Jelix\Core\Selector\ModuleSelector implements CustomRecordClassFileInterface
 {
     protected $type = 'daorecord';
     protected $_dirname = 'daos/';

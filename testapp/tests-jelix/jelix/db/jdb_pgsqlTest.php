@@ -4,11 +4,13 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2007-2022 Laurent Jouanneau
+* @copyright   2007-2025 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Core\Profiles;
+use Jelix\Database\ConnectionConstInterface;
 
 class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
@@ -19,7 +21,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->dbProfile = 'pgsql_profile';
         try{
             // check if we have profile
-            $prof = jProfiles::get('jdb', $this->dbProfile, true);
+            $prof = Profiles::get('jdb', $this->dbProfile, true);
         }
         catch (Exception $e) {
             $this->markTestSkipped('jDb_PgsqlTest cannot be run: '.$e->getMessage());
@@ -253,7 +255,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
     function testVersion() {
 
         $cnx = jDb::getConnection($this->dbProfile);
-        $version = $cnx->getAttribute(\Jelix\Database\ConnectionConstInterface::ATTR_CLIENT_VERSION);
+        $version = $cnx->getAttribute(ConnectionConstInterface::ATTR_CLIENT_VERSION);
 
         $this->assertNotEquals('', $version);
     }

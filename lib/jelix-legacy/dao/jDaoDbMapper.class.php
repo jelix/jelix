@@ -4,19 +4,21 @@
  * @subpackage  dao
  *
  * @author      Laurent Jouanneau
- * @copyright   2017-2021 Laurent Jouanneau
+ * @copyright   2017-2025 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
-use Jelix\Database\Schema\Reference;
+use Jelix\Dao\DbMapper;
+use Jelix\Database\Schema\TableInterface;
 
 
 /**
  * It allows to create tables corresponding to a dao file.
  *
  * @since 1.6.16
+ * @deprecated use Jelix\Dao\DbMapper instead
  */
 class jDaoDbMapper
 {
@@ -27,6 +29,7 @@ class jDaoDbMapper
 
     protected $profile;
 
+    protected DbMapper $dbMapper;
     /**
      * jDaoDbMapper constructor.
      *
@@ -36,6 +39,8 @@ class jDaoDbMapper
     {
         $this->connection = jDb::getConnection($profile);
         $this->profile = $profile;
+        $cnt = jDb::getConnection($profile);
+        $this->dbMapper = new DbMapper(new jDaoContext($profile, $cnt));
     }
 
     /**
@@ -44,46 +49,12 @@ class jDaoDbMapper
      * @param string $selector    the selector of the DAO file
      * @param mixed  $selectorStr
      *
-     * @return \Jelix\Database\Schema\TableInterface
+     * @return TableInterface|jDbTable
      */
     public function createTableFromDao($selectorStr)
     {
         $selector = new jSelectorDao($selectorStr, $this->profile);
-        $parser = $this->getParser($selector);
-
-        $schema = $this->connection->schema();
-
-        $tables = $parser->getTables();
-        $properties = $parser->getProperties();
-        $tableInfo = $tables[$parser->getPrimaryTable()];
-
-        // create the columns and the table
-        $columns = array();
-        foreach ($tableInfo->fields as $propertyName) {
-            $property = $properties[$propertyName];
-            $columns[] = $this->createColumnFromProperty($property);
-        }
-
-        $table = $schema->createTable($tableInfo->realName, $columns, $tableInfo->primaryKey);
-        if (!$table) {
-            $table = $schema->getTable($tableInfo->realName);
-            foreach ($columns as $column) {
-                $table->alterColumn($column);
-            }
-        }
-
-        // create foreign keys
-        foreach ($tables as $tableName => $info) {
-            if ($tableName == $tableInfo->realName) {
-                continue;
-            }
-            if (count($info->foreignKeys)) {
-                $ref = new Reference('', $info->foreignKeys, $info->realName, $info->primaryKey);
-                $table->addReference($ref);
-            }
-        }
-
-        return $table;
+        return $this->dbMapper->createTableFromDao($selector);
     }
 
     /**
@@ -98,72 +69,7 @@ class jDaoDbMapper
     public function insertDaoData($selectorStr, $properties, $data, $option)
     {
         $selector = new jSelectorDao($selectorStr, $this->profile);
-        $parser = $this->getParser($selector);
-        $tools = $this->connection->tools();
-        $allProperties = $parser->getProperties();
-        $tables = $parser->getTables();
-        $columns = array();
-        $primaryKey = array();
-        foreach ($properties as $name) {
-            if (!isset($allProperties[$name])) {
-                throw new Exception("insertDaoData: Unknown property {$name}");
-            }
-            $columns[] = $allProperties[$name]->fieldName;
-            if ($allProperties[$name]->isPK) {
-                $primaryKey[] = $allProperties[$name]->fieldName;
-            }
-        }
-        if (count($primaryKey) == 0) {
-            $primaryKey = null;
-        }
-
-        return $tools->insertBulkData(
-            $tables[$parser->getPrimaryTable()]->realName,
-            $columns,
-            $data,
-            $primaryKey,
-            $option
-        );
+        return $this->dbMapper->insertDaoData($selector, $properties, $data, $option);
     }
 
-    protected function getParser(jSelectorDao $selector)
-    {
-        $cnt = jDb::getConnection($selector->profile);
-        $context = new jDaoContext($selector->profile, $cnt);
-        $compiler = new \Jelix\Dao\Generator\Compiler();
-        return $compiler->parse($selector, $context);
-    }
-
-    protected function createColumnFromProperty(\Jelix\Dao\Parser\DaoProperty $property)
-    {
-        if ($property->autoIncrement) {
-            // it should match properties as readed by jDbSchema
-            $hasDefault = true;
-            $default = '';
-            $notNull = true;
-        } else {
-            $hasDefault = $property->defaultValue !== null || !$property->required;
-            $default = $hasDefault ? $property->defaultValue : null;
-            $notNull = $property->required;
-        }
-
-        $column = new \Jelix\Database\Schema\Column(
-            $property->fieldName,
-            $property->datatype,
-            0,
-            $hasDefault,
-            $default,
-            $notNull
-        );
-        $column->autoIncrement = $property->autoIncrement;
-        $column->sequence = $property->sequenceName ? $property->sequenceName : false;
-        if ($property->maxlength !== null) {
-            $column->maxLength = $column->length = $property->maxlength;
-        }
-        if ($property->minlength !== null) {
-            $column->minLength = $property->minlength;
-        }
-
-        return $column;
-    }
 }

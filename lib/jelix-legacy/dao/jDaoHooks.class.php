@@ -5,7 +5,7 @@
  * @subpackage dao
  *
  * @author      Laurent Jouanneau
- * @copyright   2021 Laurent Jouanneau
+ * @copyright   2021-2025 Laurent Jouanneau
  *
  * @see        https://www.jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -120,8 +120,6 @@ class jDaoHooks implements \Jelix\Dao\DaoHookInterface
                 'method'=> $methodName,
                 'params' => $parameters
             ));
-
         }
     }
-
 }

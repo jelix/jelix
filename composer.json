@@ -61,6 +61,7 @@
     },
     "bin": ["bin/create-jelix-app"],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "extra" : {
         "branch-alias": {
             "dev-master": "2.0-dev",

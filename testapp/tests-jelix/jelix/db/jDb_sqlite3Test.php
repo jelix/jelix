@@ -4,10 +4,11 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007-2012 Laurent Jouanneau
+* @copyright   2007-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Core\Profiles;
 
 class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
 
@@ -16,9 +17,9 @@ class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
     }
 
     function setUp () : void {
-        jProfiles::clear();
+        Profiles::clear();
         try {
-            jProfiles::get('jdb', 'testapp_sqlite3', true);
+            Profiles::get('jdb', 'testapp_sqlite3', true);
         }
         catch(Exception $e) {
             $this->markTestSkipped(get_class($this).' cannot be run: undefined testapp_sqlite3 profile');
@@ -36,7 +37,6 @@ class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
         jDb::getConnection('testapp_sqlite3')->close();
         jProfiles::clear();
     }
-
 
     function testSelectRowCount(){
         $db = jDb::getConnection('testapp_sqlite3');

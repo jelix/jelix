@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2011 Laurent Jouanneau
+* @copyright   2011-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -176,8 +176,8 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
     function testGetPrefix() {
-        $o = new stdClass();
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
+        $o = new stdClass();
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);
@@ -189,8 +189,8 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
     function testGetAlias() {
-        $o = new stdClass();
         list($conn, $rs) = $this->getConn(self::$unprefixProfile);
+        $o = new stdClass();
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);
@@ -202,8 +202,8 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
     }
 
     function testGetAliasPrefix() {
-        $o = new stdClass();
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
+        $o = new stdClass();
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);

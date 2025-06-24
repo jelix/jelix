@@ -4,11 +4,13 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2007-2012 Laurent Jouanneau
+* @copyright   2007-2025 Laurent Jouanneau
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+use Jelix\Database\ConnectionInterface;
+use Jelix\Database\ConnectionConstInterface;
 use Jelix\Database\ResultSetInterface;
 
 /**
@@ -30,7 +32,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
     function testConnection(){
         $cnx = jDb::getConnection($this->dbProfile);
         $this->assertNotNull($cnx, 'connection null !');
-        $this->assertTrue($cnx instanceof \Jelix\Database\ConnectionInterface, 'connection null !');
+        $this->assertTrue($cnx instanceof ConnectionInterface, 'connection null !');
     }
 
     /**
@@ -182,7 +184,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
 
         $obj = new MyProductContainer();
         $t = $obj->token = time();
-        $resultSet->setFetchMode(\Jelix\Database\ConnectionConstInterface::FETCH_INTO, $obj);
+        $resultSet->setFetchMode(ConnectionConstInterface::FETCH_INTO, $obj);
 
         $res = $resultSet->fetch();
         $structure = '<object class="MyProductContainer">
@@ -209,7 +211,6 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $this->assertComplexIdenticalStr($res, $structure, 'bad result');
         $this->assertFalse(!!$resultSet->fetch());
     }
-
 }
 
 
