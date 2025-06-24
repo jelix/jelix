@@ -9,7 +9,7 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
-
+use Jelix\Dao\DaoConditions;
 
 class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
 
@@ -192,7 +192,7 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
     function testEmptyRecursive(){
-        $cond = new jDaoConditions();
+        $cond = new DaoConditions();
         $cond->startGroup();
         $cond->startGroup('OR');
         $cond->endGroup();
@@ -202,7 +202,7 @@ class jDao_ConditionsTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
     function testNonEmptyRecursive(){
-        $cond = new jDaoConditions();
+        $cond = new DaoConditions();
         $cond->startGroup();
         $cond->startGroup('OR');
         $cond->addCondition('test','=',1);

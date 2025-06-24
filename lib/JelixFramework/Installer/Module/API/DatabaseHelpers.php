@@ -9,6 +9,7 @@
 
 namespace Jelix\Installer\Module\API;
 
+use Jelix\Dao\DbMapper;
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Schema\SqlToolsInterface;
 
@@ -25,7 +26,7 @@ class DatabaseHelpers
     protected $dbProfile = '';
 
     /**
-     * @var AbstractConnection|\jDbConnection
+     * @var AbstractConnection
      */
     private $_dbConn;
 
@@ -63,7 +64,7 @@ class DatabaseHelpers
     }
 
     /**
-     * @return SqlToolsInterface|\jDbTools the tool class of jDb
+     * @return SqlToolsInterface the tool class of jDb
      */
     public function dbTool()
     {
@@ -71,7 +72,7 @@ class DatabaseHelpers
     }
 
     /**
-     * @return AbstractConnection|\jDbConnection the connection to the database used for the module
+     * @return AbstractConnection the connection to the database used for the module
      */
     public function dbConnection()
     {
@@ -154,7 +155,8 @@ class DatabaseHelpers
      */
     public function createTableFromDao($selectorStr)
     {
-        $daoMapper = new \jDaoDbMapper($this->dbProfile);
+        $cnt = \jDb::getConnection($this->dbProfile);
+        $daoMapper = new DbMapper(new \jDaoContext($this->dbProfile, $cnt));
         $daoMapper->createTableFromDao($selectorStr);
     }
 
@@ -162,7 +164,7 @@ class DatabaseHelpers
      * Insert data into a database, from a json file, using a DAO mapping.
      *
      * @param string     $relativeSourcePath name of the json file into the install directory
-     * @param int        $option             one of jDbTools::IBD_* const
+     * @param int        $option             one of SqlToolsInterface::IBD_* const
      * @param null|mixed $module
      *
      * @throws \Exception
@@ -189,7 +191,8 @@ class DatabaseHelpers
         if (is_object($dataToInsert)) {
             $dataToInsert = array($dataToInsert);
         }
-        $daoMapper = new \jDaoDbMapper($this->dbProfile);
+        $cnt = \jDb::getConnection($this->dbProfile);
+        $daoMapper = new DbMapper(new \jDaoContext($this->dbProfile, $cnt));
         $count = 0;
         foreach ($dataToInsert as $daoData) {
             if (!isset($daoData['dao'])

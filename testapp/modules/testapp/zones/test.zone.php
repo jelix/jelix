@@ -1,4 +1,7 @@
 <?php
+
+use Jelix\Dao\DaoConditions;
+
 /**
 * @package     testapp
 * @subpackage  test app module
@@ -23,7 +26,7 @@ class testZone extends jZone {
         $this->_tpl->assign('nombre',$dao->countAll());
         $this->_tpl->assign('nombrevalue',$dao->getCountValue());
 
-        $cond = new jDaoConditions('or');
+        $cond = new DaoConditions('or');
         $cond->addCondition('ckey','=','foo');
         $cond->addCondition('ckey','=','bar');
 

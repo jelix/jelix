@@ -20,6 +20,7 @@
  * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Dao\DaoConditions;
 use Jelix\Forms\FormInstance;
 use Jelix\Forms\Forms;
 
@@ -334,7 +335,7 @@ class jControllerDaoCrud extends jController
      * redefine this method if you want to do additional conditions to the index's select
      * during the index action.
      *
-     * @param jDaoConditions $cond the conditions
+     * @param DaoConditions $cond the conditions
      */
     protected function _indexSetConditions($cond)
     {
@@ -419,7 +420,7 @@ class jControllerDaoCrud extends jController
      * FormInstance::prepareDaoFromControls method.
      *
      * @param FormInstance     $form        the form
-     * @param jDaoRecordBase $form_daorec
+     * @param \Jelix\Dao\AbstractDaoRecord $form_daorec
      *
      * @since 1.1
      */
@@ -440,8 +441,8 @@ class jControllerDaoCrud extends jController
 
         if ($form->check() && $this->_checkData($form, false)) {
             $results = $form->prepareDaoFromControls($this->dao, null, $this->dbProfile);
-            /* @var \jDaoRecordBase $form_daorec
-             * @var \jDaoFactoryBase $form_dao
+            /* @var \Jelix\Dao\AbstractDaoRecord $form_daorec
+             * @var \Jelix\Dao\DaoFactoryInterface $form_dao
              * @var boolean $form_toInsert
              */
             extract($results, EXTR_PREFIX_ALL, 'form'); //use a temp variable to avoid notices
@@ -570,7 +571,7 @@ class jControllerDaoCrud extends jController
      * FormInstance::prepareDaoFromControls method.
      *
      * @param FormInstance     $form        the form
-     * @param jDaoRecordBase $form_daorec
+     * @param \Jelix\Dao\AbstractDaoRecord $form_daorec
      * @param mixed          $id          the new id of the updated record
      *
      * @since 1.1
@@ -600,8 +601,8 @@ class jControllerDaoCrud extends jController
 
         if ($form->check() && $this->_checkData($form, true)) {
             $results = $form->prepareDaoFromControls($this->dao, $id, $this->dbProfile);
-            /* @var \jDaoRecordBase $form_daorec
-             * @var \jDaoFactoryBase $form_dao
+            /* @var \Jelix\Dao\AbstractDaoRecord $form_daorec
+             * @var \Jelix\Dao\DaoFactoryInterface $form_dao
              * @var boolean $form_toInsert
              */
             extract($results, EXTR_PREFIX_ALL, 'form'); //use a temp variable to avoid notices

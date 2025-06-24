@@ -81,23 +81,6 @@ class Profiles
     }
 
     /**
-     * add an object in the objects pool, corresponding to a profile.
-     *
-     * @param string $category the profile category
-     * @param string $name     the name of the profile  (value of _name in the retrieved profile)
-     * @param object $object      the object to store
-     * @deprecated use storeConnectorInPool() instead
-     */
-    public static function storeInPool($category, $name, $object)
-    {
-        if (self::$_profiles === null) {
-            self::loadProfiles();
-        }
-
-        self::$_profiles->storeConnectorInPool($category, $name, $object);
-    }
-
-    /**
      * Attach a connector to the given profile.
      *
      * @param string $category the profile category
@@ -111,24 +94,6 @@ class Profiles
         }
 
         self::$_profiles->storeConnectorInPool($category, $name, $object);
-    }
-
-    /**
-     * get an object from the objects pool, corresponding to a profile.
-     *
-     * @param string $category the profile category
-     * @param string $name     the name of the profile (value of _name in the retrieved profile)
-     *
-     * @return null|object the stored object
-     * @deprecated use getConnectorFromPool() instead
-     */
-    public static function getFromPool($category, $name)
-    {
-        if (self::$_profiles === null) {
-            self::loadProfiles();
-        }
-
-        return self::$_profiles->getConnectorFromPool($category, $name);
     }
 
     /**
@@ -148,29 +113,6 @@ class Profiles
         }
 
         return self::$_profiles->getConnectorFromPool($category, $name);
-    }
-
-    /**
-     * add an object in the objects pool, corresponding to a profile
-     * or store the object retrieved from the function, which accepts a profile
-     * as parameter (array).
-     *
-     * @param string       $category  the profile category
-     * @param string       $name      the name of the profile (will be given to Profiles::get)
-     * @param array|string $function  the function name called to retrieved the object. It uses call_user_func.
-     * @param bool         $noDefault if true and if the profile doesn't exist, throw an error instead of getting the default profile
-     * @param mixed        $nodefault
-     *
-     * @return null|object the stored object
-     * @deprecated use getConnectorFromCallback instead
-     */
-    public static function getOrStoreInPool($category, $name, $function, $nodefault = false)
-    {
-        if (self::$_profiles === null) {
-            self::loadProfiles();
-        }
-
-        return self::$_profiles->getConnectorFromCallback($category, $name, $function, $nodefault);
     }
 
     /**

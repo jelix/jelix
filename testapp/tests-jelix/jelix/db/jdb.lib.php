@@ -70,7 +70,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a jDbResultSet');
+        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a ResultSetInterface');
 
         $list = array();
         //foreach($resultSet as $res){
@@ -111,7 +111,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id, name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a jDbResultSet');
+        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a ResultSetInterface');
 
         $resultSet->addModifier(array($this, '_callbackTest'));
 
@@ -145,7 +145,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a jDbResultSet');
+        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a ResultSetInterface');
 
         $resultSet->setFetchMode(8, 'MyProductContainer');
 
@@ -180,7 +180,7 @@ abstract class jDb_queryBase extends \Jelix\UnitTests\UnitTestCase {
         $db = jDb::getConnection($this->dbProfile);
         $resultSet = $db->query('SELECT id,name,price FROM product_test');
         $this->assertNotNull($resultSet, 'a query return null !');
-        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a jDbResultSet');
+        $this->assertTrue($resultSet instanceof ResultSetInterface, 'resultset is not a ResultSetInterface');
 
         $obj = new MyProductContainer();
         $t = $obj->token = time();

@@ -1,6 +1,6 @@
 <?php 
 
-abstract class postDaoRecord extends jDaoRecordBase {
+abstract class postDaoRecord extends \Jelix\Dao\AbstractDaoRecord {
     
     function getAuthorObject() {
         if ($this->author) {

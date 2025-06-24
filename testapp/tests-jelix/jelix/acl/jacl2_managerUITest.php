@@ -136,7 +136,7 @@ class jacl2_managerUITest extends \Jelix\UnitTests\UnitTestCaseDb
             unset(jApp::coord()->plugins['auth'], $_SESSION[self::$coordAuthPlugin->config['session_name']]);
         }
         jDao::releaseAll();
-        jProfiles::clear();
+        Profiles::clear();
         jAcl2DbUserGroup::clearCache();
     }
 

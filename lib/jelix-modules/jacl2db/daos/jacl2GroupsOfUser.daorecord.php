@@ -9,7 +9,7 @@
  */
 
 
-abstract class jacl2GroupsOfUserDaoRecord extends jDaoRecordBase
+abstract class jacl2GroupsOfUserDaoRecord extends \Jelix\Dao\AbstractDaoRecord
 {
     public $type = '';
 

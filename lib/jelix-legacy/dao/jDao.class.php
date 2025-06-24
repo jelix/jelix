@@ -31,7 +31,7 @@ class jDao
      *                                     If empty, use the default profile
      * @param mixed               $DaoId
      *
-     * @return DaoFactoryInterface|jDaoFactoryBase the dao object
+     * @return DaoFactoryInterface the dao object
      */
     public static function create($DaoId, $profile = '')
     {
@@ -61,7 +61,7 @@ class jDao
      *                                     If empty, use the default profile
      * @param mixed               $DaoId
      *
-     * @return DaoFactoryInterface|jDaoFactoryBase the dao object
+     * @return DaoFactoryInterface the dao object
      */
     public static function get($DaoId, $profile = '')
     {
@@ -102,7 +102,7 @@ class jDao
      *                        If empty, use the default profile
      * @param mixed  $DaoId
      *
-     * @return DaoRecordInterface|jDaoRecordBase a dao record object
+     * @return DaoRecordInterface a dao record object
      */
     public static function createRecord($DaoId, $profile = '')
     {
@@ -117,8 +117,8 @@ class jDao
     }
 
     /**
-     * return an instance of a jDaoConditions object, to use with
-     * a findby method of a jDaoFactoryBase object.
+     * return an instance of a DaoConditions object, to use with
+     * a findby method of a Jelix\Dao\DaoFactoryInterface object.
      *
      * @param string $glueOp value should be AND or OR
      *

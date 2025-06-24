@@ -446,7 +446,7 @@ class jCache
     }
 
     /**
-     * callback method for jProfiles. internal use.
+     * callback method for Profiles. internal use.
      *
      * @param mixed $profile
      */

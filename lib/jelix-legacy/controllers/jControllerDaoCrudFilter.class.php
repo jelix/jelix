@@ -10,6 +10,7 @@
  * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Dao\DaoConditions;
 use Jelix\Forms\FormInstance;
 use Jelix\Forms\Forms;
 
@@ -103,7 +104,7 @@ class jControllerDaoCrudFilter extends jControllerDaoCrud
      * this method set conditions according to the form filter submit.
      *
      * @param FormInstance $form
-     * @param jDaoConditions $cond the conditions
+     * @param DaoConditions $cond the conditions
      */
     protected function _filterSetConditions($form, $cond)
     {

@@ -18,6 +18,7 @@
  * @licence      http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Dao\DaoConditions;
 use Jelix\Forms\FormInstance;
 use Jelix\Forms\Forms;
 
@@ -308,7 +309,7 @@ class jControllerDaoCrudDfk extends jController
      * overload this method if you wan to do additionnal conditions to the index's select
      * during the index action.
      *
-     * @param jDaoConditions $cond the conditions
+     * @param DaoConditions $cond the conditions
      */
     protected function _indexSetConditions($cond)
     {
@@ -452,7 +453,7 @@ class jControllerDaoCrudDfk extends jController
      * FormInstance::prepareDaoFromControls method.
      *
      * @param FormInstance     $form        the form
-     * @param jDaoRecordBase $form_daorec
+     * @param \Jelix\Dao\AbstractDaoRecord $form_daorec
      */
     protected function _beforeSaveCreate($form, $form_daorec)
     {
@@ -613,7 +614,7 @@ class jControllerDaoCrudDfk extends jController
      * FormInstance::prepareDaoFromControls method.
      *
      * @param FormInstance     $form        the form
-     * @param jDaoRecordBase $form_daorec
+     * @param \Jelix\Dao\AbstractDaoRecord $form_daorec
      * @param mixed          $id          the new id of the updated record
      */
     protected function _beforeSaveUpdate($form, $form_daorec, $id)

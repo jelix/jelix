@@ -183,13 +183,13 @@ class jSoapClient
     }
 
     /**
-     * callback method for jProfiles. Internal use.
+     * callback method for Profiles. Internal use.
      *
      * @param array $profile profile parameters
      *
      * @return SoapClient
      *
-     * @see jProfiles
+     * @see Profiles
      */
     public static function _getClient($profile)
     {

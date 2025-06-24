@@ -106,14 +106,14 @@ abstract class UnitTestCase extends TestCase {
         <string property="type" value="" />
         <string property="distinct" value="" />
 
-        <object method="getConditions()" class="jDaoConditions">
+        <object method="getConditions()" class="\Jelix\Dao\DaoConditions">
             <array property="order">array()</array>
             <array property="fields">array()</array>
-            <object property="condition" class="jDaoCondition">
+            <object property="condition" class="\Jelix\Dao\DaoCondition">
                 <null property="parent"/>
                 <array property="conditions"> array(...)</array>
                 <array property="group">
-                    <object key="" class="jDaoConditions" test="#foo" />
+                    <object key="" class="\Jelix\Dao\DaoConditions" test="#foo" />
                  </array>
             </object>
 

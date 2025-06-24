@@ -8,6 +8,8 @@
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
+use Jelix\Dao\DaoConditions;
+
 
 
 class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
@@ -217,7 +219,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
     function testFindBy() {
         list($conn, $rs) = $this->getConn(self::$unprefixProfile);
         $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
-        $cond = new jDaoConditions ('AND');
+        $cond = new DaoConditions('AND');
         $cond->addItemOrder('price', 'asc');
         // note: in the order clause, names are note enclosed between quotes because of the mock
         $conn->expects($this->once())
@@ -229,7 +231,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
     function testFindByPrefix() {
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
         $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
-        $cond = new jDaoConditions ('AND');
+        $cond = new DaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');
         // note: in the order clause, names are note enclosed between quotes because of the mock
         $conn->expects($this->once())
@@ -241,7 +243,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
     function testFindByAlias() {
         list($conn, $rs) = $this->getConn(self::$unprefixProfile);
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
-        $cond = new jDaoConditions ('AND');
+        $cond = new DaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');
         // note: in the order clause, names are note enclosed between quotes because of the mock
         $conn->expects($this->once())
@@ -253,7 +255,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
     function testFindByAliasPrefix() {
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
         $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
-        $cond = new jDaoConditions ('AND');
+        $cond = new DaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');
         // note: in the order clause, names are note enclosed between quotes because of the mock
         $conn->expects($this->once())

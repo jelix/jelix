@@ -211,7 +211,7 @@ class userCtrl extends jController
         }
 
         $dao = jDao::create($this->dao, $this->dbProfile);
-        /** @var jDaoRecordBase $daoUser */
+        /** @var \Jelix\Dao\AbstractDaoRecord $daoUser */
         $daoUser = $dao->getByLogin($login);
         if (!$daoUser) {
             jMessage::add(jLocale::get('crud.message.bad.id', $login), 'error');

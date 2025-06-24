@@ -149,7 +149,7 @@ class jAcl2DbUserGroup
      *
      * @param string $code The code
      *
-     * @return false|jDaoRecordBase the dao object r false if it doesn't exist
+     * @return false|\Jelix\Dao\AbstractDaoRecord the dao object r false if it doesn't exist
      *
      * @since 1.2
      */
@@ -365,7 +365,7 @@ class jAcl2DbUserGroup
      *
      * @param string $login an optional login
      *
-     * @return jDbResultSet a list of groups object (dao records)
+     * @return Jelix\Database\ResultSetInterface a list of groups object (dao records)
      */
     public static function getGroupList($login = '', $withAnonymous = false)
     {

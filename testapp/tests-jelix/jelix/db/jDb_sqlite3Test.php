@@ -35,7 +35,7 @@ class jDb_sqlite3Test extends \Jelix\UnitTests\UnitTestCase {
     public function tearDown(): void
     {
         jDb::getConnection('testapp_sqlite3')->close();
-        jProfiles::clear();
+        Profiles::clear();
     }
 
     function testSelectRowCount(){

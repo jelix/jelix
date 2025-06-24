@@ -31,7 +31,7 @@ class jacl2_main_api_pgsqlTest extends jacl2APITest {
 
     public function tearDown() : void {
         parent::tearDown();
-        jProfiles::getFromPool('jdb','testapp_pgsql')->close();
+        Profiles::getConnectorFromPool('jdb','testapp_pgsql')->close();
         jDao::releaseAll();
         Profiles::clear();
         jAcl2DbUserGroup::clearCache();

@@ -96,7 +96,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
         $prod = $dao->get(self::$prod1->id);
 
-        $this->assertTrue($prod instanceof \Jelix\Dao\DaoRecordInterface, 'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertTrue($prod instanceof \Jelix\Dao\DaoRecordInterface, 'jDao::get doesn\'t return a DaoRecordInterface object');
         $this->assertEquals(self::$prod1->id, $prod->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette', $prod->name, 'jDao::get : bad name property on record');
         $this->assertEquals(3.87, $prod->price, 'jDao::get : bad price property on record');
@@ -117,7 +117,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $dao->update($prod);
 
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertTrue($prod2 instanceof \Jelix\Dao\DaoRecordInterface,'jDao::get doesn\'t return a jDaoRecordBase object');
+        $this->assertTrue($prod2 instanceof \Jelix\Dao\DaoRecordInterface,'jDao::get doesn\'t return a DaoRecordInterface object');
         $this->assertEquals(self::$prod1->id, $prod2->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette nouvelle', $prod2->name,'jDao::get : bad name property on record');
         $this->assertEquals(5.90, $prod2->price,'jDao::get : bad price property on record');

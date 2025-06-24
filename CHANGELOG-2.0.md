@@ -119,7 +119,14 @@ class TestAttrEventsListener
 - `jClassBinding`, `jClasses::createBinded()`, `jClasses::getBindedService()`, `jClasses::bind()`, `jClasses::resetBindings()`  
 - Functions declared into the namespace `Jelix\Utilities`. Use those which are into the namespace `Jelix\Core\Utilities`
 - interface `Jelix\Core\ConfigCompilerPluginInterface`. Use `Jelix\Core\Config\CompilerPluginInterface` instead.
- 
+- `jProfiles` and methods of `Profiles`: `storeInPool`, `getFromPool`, `getOrStoreInPool`.
+- `jDbConnection`, `jDbPDOConnection`, `jDbResultSet`, `jDbPDOResultSet`,
+  `jDbParameters`, `jDbTools`, `jDbSchema`, `jDbIndex`, `jDbConstraint`,
+  `jDbUniqueKey`, `jDbPrimaryKey`, `jDbReference`,`jDbColumn`, `jDbTable`,
+  `jDbUtils`, `jDbWidget`
+- `jDaoFactoryBase`, `jDaoRecordBase`, `jDaoConditions`, `jDaoCondition`,
+  `jDaoXmlException`, `jDaoDbMapper`
+
 Internal classes and methods, you did not supposed to use, except for complex plugins:
 
 - `jIUrlSignificantHandler`

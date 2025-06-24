@@ -31,7 +31,7 @@ class jacl2_main_api_sqliteTest extends jacl2APITest {
 
     public function tearDown() : void {
         parent::tearDown();
-        jProfiles::getFromPool('jdb','testapp_sqlite3')->close();
+        Profiles::getConnectorFromPool('jdb','testapp_sqlite3')->close();
         jDao::releaseAll();
         Profiles::clear();
         jAcl2DbUserGroup::clearCache();

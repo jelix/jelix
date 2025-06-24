@@ -70,8 +70,6 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
         $daoName = $input->getArgument('dao');
         $profileName = $input->getOption('profile');
 
-        require_once JELIX_LIB_PATH.'dao/jDaoParser.class.php';
-
         $path = $this->getModulePath($module);
 
         $formdir = $path.'forms/';

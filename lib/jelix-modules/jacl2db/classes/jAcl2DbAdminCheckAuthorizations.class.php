@@ -90,7 +90,7 @@ class jAcl2DbAdminCheckAuthorizations
     /**
      * initialize some properties and do a query on rights.
      *
-     * @return bool|jDbResultSet the resultset of the SQL query
+     * @return bool|\Jelix\Database\ResultSetInterface the resultset of the SQL query
      */
     protected function initChecks()
     {

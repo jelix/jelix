@@ -33,7 +33,7 @@ class soapclientTest extends \Jelix\UnitTests\UnitTestCase
 
     /*function testRedirection() {
         try {
-            $profile = jProfiles::get("jsoapclient");
+            $profile = Profiles::get("jsoapclient");
             if (!isset($profile['wsdl']) || $profile['wsdl'] == '') {
                 $this->markTestSkipped('no wsdl specified in profile for jSoapClient. cannot test jSoapClient::get()');
                 return;
