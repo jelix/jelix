@@ -173,11 +173,9 @@ class classAuthDriver extends jAuthDriverBase implements jIAuthDriver
 
         if (isset($this->_params['authenticateWith']) &&
             $this->_params['authenticateWith'] == 'login-email' &&
-            method_exists($class, 'getByLoginOrEmail'))
-        {
+            method_exists($class, 'getByLoginOrEmail')) {
             $user = $class->getByLoginOrEmail($login);
-        }
-        else {
+        } else {
             $user = $class->getByLogin($login);
         }
 
@@ -197,5 +195,16 @@ class classAuthDriver extends jAuthDriverBase implements jIAuthDriver
         }
 
         return $user;
+    }
+
+    public function areEmailUnique()
+    {
+        $class = jClasses::create($this->_params['class']);
+        if (method_exists($class, 'areEmailUnique')) {
+
+            return $class->areEmailUnique();
+        }
+
+        return false;
     }
 }

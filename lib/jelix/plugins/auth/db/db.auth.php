@@ -128,4 +128,13 @@ class dbAuthDriver extends jAuthDriverBase implements jIAuthDriver
     {
         return jDao::get($this->_params['dao'], $this->_params['profile']);
     }
+
+    public function areEmailUnique()
+    {
+        $daoFactory = $this->getDao();
+        $countEmail = $daoFactory->countDistinctEmail();
+        $countLogin = $daoFactory->countDistinctLogin();
+
+        return ($countEmail == $countLogin);
+    }
 }
