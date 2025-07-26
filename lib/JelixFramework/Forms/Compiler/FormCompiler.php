@@ -14,6 +14,9 @@
  */
 namespace Jelix\Forms\Compiler;
 
+use Jelix\Installer\WarmUp\FilePlace;
+use Jelix\Installer\WarmUp\FilePlaceEnum;
+
 /**
  * Generates form class from an xml file describing the form.
  *
@@ -100,6 +103,12 @@ class FormCompiler
         }
     }
 
+    public function compileSingleFile(FilePlace $file)
+    {
+        if ($this->isPriorityPath($file)) {
+            $this->compileFile($file->module, $file->filePath, str_replace('forms/', '', $file->subPath));
+        }
+    }
 
     /**
      * Gives the path of the file that is the result of the compilation of a form file.
@@ -128,7 +137,7 @@ class FormCompiler
      * @return true
      * @throws \jException
      */
-    public function compileFile($module, $sourceFile, $sourceFileName)
+    protected function compileFile($module, $sourceFile, $sourceFileName)
     {
         $cachePath = $this->getCachePath($module, $sourceFileName);
 
@@ -168,5 +177,41 @@ class FormCompiler
         \jFile::write($cachePath, implode("\n", $source));
 
         return true;
+    }
+
+    /**
+     * @param FilePlace $file
+     * @return boolean
+     */
+    protected function isPriorityPath(FilePlace $file)
+    {
+
+        if ($file->place == FilePlaceEnum::VarOverloads) {
+            return true;
+        }
+
+        $module = $file->module;
+
+        // the file is not into var/overloads, but if there is a copy in
+        // var/overloads, so we won't compile the file
+        if (file_exists($this->varPath.'overloads/'.$module.'/'.$file->subPath)) {
+            return false;
+        }
+
+        if ($file->place == FilePlaceEnum::AppOverloads) {
+            return true;
+        }
+
+        // the file is not into app/overloads, but if there is a copy in
+        // app/overloads, so we won't compile the file
+        if (file_exists($this->appPath.'overloads/'.$module.'/'.$file->subPath)) {
+            return false;
+        }
+
+        if ($file->place == FilePlaceEnum::Module) {
+            return true;
+        }
+
+        return false;
     }
 }
