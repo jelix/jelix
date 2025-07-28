@@ -10,6 +10,9 @@ timeZone="Europe/Paris"
 
 theme=default
 
+availableLocales=en_US,fr_FR
+fallbackLocale=en_US
+
 [modules]
 
 jelix_tests.enabled=on

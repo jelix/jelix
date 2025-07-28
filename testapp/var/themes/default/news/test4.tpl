@@ -1,0 +1,1 @@
+test4 in var default theme

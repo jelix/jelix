@@ -92,6 +92,9 @@ class jApp
         return self::$_currentApp !== null;
     }
 
+    /**
+     * @return jAppInstance
+     */
     public static function app()
     {
         return self::$_currentApp;

@@ -6,11 +6,11 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler, Brice Tence
  *
- * @copyright   2005-2015 Laurent Jouanneau
+ * @copyright   2005-2025 Laurent Jouanneau
  * @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
  * @copyright   2010 Julien Issler, 2010 Brice Tence
  *
- * @see        http://www.jelix.org
+ * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -74,9 +74,31 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
         return true;
     }
 
-    protected function _saveCompiledString($cachefile, $result)
+    public function compileModuleFile($module, $sourceTemplateFile, $compiledTemplateFile)
     {
-        jFile::write($cachefile, $result);
+        $this->_sourceFile = $sourceTemplateFile;
+        $this->outputType = 'html';
+        $this->trusted = true;
+        $md5 = md5($sourceTemplateFile.'_html_t');
+
+        jApp::pushCurrentModule($module);
+
+        $this->compileString(
+            file_get_contents($sourceTemplateFile),
+            $compiledTemplateFile,
+            [],
+            [],
+            $md5,
+        );
+
+        jApp::popCurrentModule();
+
+    }
+
+
+    protected function _saveCompiledString($cacheFile, $result)
+    {
+        jFile::write($cacheFile, $result);
     }
 
     protected function getCompiledLocaleRetriever($locale)
