@@ -87,6 +87,7 @@ class WarmUp
         foreach($this->warmUpLaunchers as $warmUpLauncher){
             if ($warmUpLauncher->doesItSupportFile($filePlace)) {
                 $launcher = $warmUpLauncher;
+                echo get_class($warmUpLauncher)." is launched on given file\n";
                 break;
             }
             echo get_class($warmUpLauncher)." dont support file\n";

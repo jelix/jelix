@@ -47,16 +47,16 @@ class TemplateWarmup implements WarmUpLauncherInterface
     public function doesItSupportFile(FilePlace $file) : bool
     {
         if ($file->place != FilePlaceEnum::Module
-            && $file->place != FilePlaceEnum::AppOverloads
-            && $file->place != FilePlaceEnum::VarOverloads) {
+            && $file->place != FilePlaceEnum::App
+            && $file->place != FilePlaceEnum::Var) {
             return false;
         }
-        return str_ends_with($file->filePath, '.form.xml');
+        return str_ends_with($file->filePath, '.tpl');
     }
 
     public function launchOnFile(FilePlace $file) : void
     {
-        //$compiler = ...;
-        //$compiler->compileFile($file->module, $file->filePath,  $file->subPath));
+        $compiler = new TemplateWarmupCompiler($this->app);
+        $compiler->compileSingleFile($file);
     }
 }

@@ -13,18 +13,18 @@ use Jelix\Template\TemplateWarmupCompiler;
 
 class templateWarmupCompilerForTests extends TemplateWarmupCompiler
 {
-    function testReadModuleTemplateFlavors($moduleName, $modulePath)
+    function testReadModuleTemplateFlavors($moduleName, $modulePath, $tplName = '')
     {
         $this->allFileFlavors = [];
         $this->localesList = ['en_US', 'fr_FR'];
-        $this->readModuleTemplateFlavors($moduleName, $modulePath);
+        $this->readModuleTemplateFlavors($moduleName, $modulePath, $tplName);
         return $this->allFileFlavors;
     }
 
-    function testConsolidateTemplateFlavors($moduleName, $modulePath)
+    function testConsolidateTemplateFlavors($moduleName, $modulePath, $tplName = '')
     {
         $this->reset();
-        $this->readModuleTemplateFlavors($moduleName, $modulePath);
+        $this->readModuleTemplateFlavors($moduleName, $modulePath, $tplName);
         $this->consolidateAllFilesPath();
         return $this->allFileFlavors;
     }
@@ -40,13 +40,12 @@ class jtpl_resolverTest extends \Jelix\UnitTests\UnitTestCase
     function tearDown() : void {
     }
 
-    function testFlavorsReader()
+
+    protected function getExpectedFlavors()
     {
-        $resolver = new templateWarmupCompilerForTests(jApp::app());
-        $result = $resolver->testReadModuleTemplateFlavors('news', \jApp::getModulePath('news'));
         $appPath = jApp::appPath();
 
-        $expected = array(
+        return array(
             'test1.tpl' => array (
                 'default' => array(
                     '_' => $appPath.'modules/news/templates/test1.tpl',
@@ -86,16 +85,12 @@ class jtpl_resolverTest extends \Jelix\UnitTests\UnitTestCase
                 )
             ),
         );
-        $this->assertEquals($expected, $result);
     }
 
-    function testConsolidating()
+    protected function getExpectedConsolidatedFlavors()
     {
-        $resolver = new templateWarmupCompilerForTests(jApp::app());
-        $result = $resolver->testConsolidateTemplateFlavors('news', \jApp::getModulePath('news'));
         $appPath = jApp::appPath();
-
-        $expected = array(
+        return array(
             'test1.tpl' => array (
                 'default' => array(
                     'en_US' => $appPath.'modules/news/templates/test1.tpl',
@@ -158,6 +153,42 @@ class jtpl_resolverTest extends \Jelix\UnitTests\UnitTestCase
                 )
             ),
         );
+    }
+
+    function testFlavorsReader()
+    {
+        $resolver = new templateWarmupCompilerForTests(jApp::app());
+        $result = $resolver->testReadModuleTemplateFlavors('news', \jApp::getModulePath('news'));
+        $expected = $this->getExpectedFlavors();
         $this->assertEquals($expected, $result);
+    }
+
+
+    function testSingleTemplateFlavorsReader()
+    {
+        $resolver = new templateWarmupCompilerForTests(jApp::app());
+        $expected = $this->getExpectedFlavors();
+        foreach($expected as $tplName => $expectedFlavors) {
+            $result = $resolver->testReadModuleTemplateFlavors('news', \jApp::getModulePath('news'), $tplName);
+            $this->assertEquals([$tplName => $expectedFlavors], $result);
+        }
+    }
+
+    function testConsolidating()
+    {
+        $resolver = new templateWarmupCompilerForTests(jApp::app());
+        $result = $resolver->testConsolidateTemplateFlavors('news', \jApp::getModulePath('news'));
+        $expected = $this->getExpectedConsolidatedFlavors();
+        $this->assertEquals($expected, $result);
+    }
+
+    function testSingleTemplateConsolidating()
+    {
+        $resolver = new templateWarmupCompilerForTests(jApp::app());
+        $expected = $this->getExpectedConsolidatedFlavors();
+        foreach($expected as $tplName => $expectedFlavors) {
+            $result = $resolver->testConsolidateTemplateFlavors('news', \jApp::getModulePath('news'), $tplName);
+            $this->assertEquals([$tplName => $expectedFlavors], $result);
+        }
     }
 }
