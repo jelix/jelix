@@ -159,10 +159,6 @@ cd lib/jelix/docs
 cd lib/jelix/docs/ns
   __ALL__
 
-
-cd lib/jelix/events
-  __ALL__
-
 cd lib/jelix/forms
   __ALL_RECURSIVELY__
 
