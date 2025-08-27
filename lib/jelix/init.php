@@ -38,7 +38,9 @@ define('LIB_PATH', dirname(JELIX_LIB_PATH).'/');
 
 define('BYTECODE_CACHE_EXISTS', function_exists('opcache_compile_file') || function_exists('apc_cache_info') || function_exists('eaccelerator_info') || function_exists('xcache_info'));
 
-error_reporting(E_ALL | E_STRICT);
+// PHP8.4 deprecated E_STRICT
+$e_strict = defined(E_STRICT) ? E_STRICT : 0;
+error_reporting(E_ALL | $e_strict);
 
 require JELIX_LIB_CORE_PATH.'jApp.class.php';
 
