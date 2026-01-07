@@ -46,6 +46,7 @@ class sampleFormCtrl extends jController {
       $tpl->assign('form', $form);
 
       $tpl->assign('builder', $this->param('builder','html'));
+      $tpl->assign('autocompleteurl', jUrl::get('testapp~sampleform:searchAutocomplete'));
 
       if($this->param('full')) 
           $rep->body->assign('MAIN',$tpl->fetch('sampleformfull'));
@@ -143,6 +144,30 @@ class sampleFormCtrl extends jController {
         }
 
         $rep->setForm($form);
+        return $rep;
+    }
+
+    /**
+     * Use for the autocomplete feature on the inputautocompleteajax control
+     * @return jResponseJson
+     * @throws jException
+     */
+    function searchAutocomplete()
+    {
+        $rep = $this->getResponse('json');
+        $term = $this->param('term');
+        if (strlen($term) < 2) {
+            $rep->data = array();
+            return $rep;
+        }
+
+        $dao = jDao::get('towns');
+        $list = $dao->searchTerm('%'.$term.'%');
+        $towns = array();
+        foreach ($list as $prop) {
+            $towns[] = ['label' => $prop->name, 'id' => $prop->postalcode];
+        }
+        $rep->data = $towns;
         return $rep;
     }
 }

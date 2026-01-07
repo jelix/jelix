@@ -15,6 +15,16 @@
              <eq property="department" expr="$dep" />
          </conditions>
      </method>
+     <method name="searchTerm" type="select">
+         <parameter name="term" />
+          <conditions>
+              <like property="name" expr="$term" />
+          </conditions>
+          <order>
+              <orderitem property="name" way="asc" />
+          </order>
+      </method>
+
    </factory>
 </dao>
 

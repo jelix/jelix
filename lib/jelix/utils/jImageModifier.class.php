@@ -360,7 +360,7 @@ class jImageModifier
             $image = imagecreatetruecolor($finalwidth, $finalheight);
             imagesavealpha($image, true);
             $tp = imagecolorallocatealpha($image, 0, 0, 0, 127);
-            imagecopyresampled($image, $ancienimage, 0, 0, (int) $posx, (int) $posy, imagesx($image), imagesy($image), $resamplewidth, $resampleheight);
+            imagecopyresampled($image, $ancienimage, 0, 0, (int) $posx, (int) $posy, imagesx($image), imagesy($image), (int)$resamplewidth, (int)$resampleheight);
             imagefill($image, 0, 0, $tp); // Because of a strange behavior (ticket #1486), we must fill the background AFTER imagecopyresampled
         }
 

@@ -6,7 +6,7 @@
  * @author     Julien Issler
  * @contributor Laurent Jouanneau
  *
- * @copyright  2007-2009 Julien Issler, 2008-2020 Laurent Jouanneau
+ * @copyright  2007-2009 Julien Issler, 2008-2025 Laurent Jouanneau
  *
  * @see       http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -104,7 +104,21 @@ class jSession
         }
 
         session_start();
-
+        if (isset($_SESSION['_destroyed'])) {
+            if ($_SESSION['_destroyed'] < time()-180) {
+                // Should not happen usually. This could be attack or due to unstable network.
+                session_destroy();
+                session_start();
+            }
+            else if (isset($_SESSION['_new_session_id'])) {
+                // Not fully expired yet. Could be lost cookie by unstable network.
+                // Try again to set proper session ID cookie.
+                session_write_close();
+                session_id($_SESSION['_new_session_id']);
+                // New session ID should exist
+                session_start();
+            }
+        }
         return true;
     }
 
@@ -116,6 +130,48 @@ class jSession
         session_write_close();
 
         return true;
+    }
+
+    public static function regenerateId($keepSessionData)
+    {
+        // New session ID is required to set proper session ID
+        // when session ID is not set due to unstable network.
+        $newSessionId = session_create_id();
+        $_SESSION['_new_session_id'] = $newSessionId;
+
+        // Set destroy timestamp
+        $_SESSION['_destroyed'] = time();
+
+        // Write and close current session;
+        self::end();
+
+        // We have to turn off strict mode here
+        // because new session_id won't be on file
+        // and we'll get another session_id
+        // from session_start()
+        $wasInStrictMode = false;
+        if (1 == ini_get('session.use_strict_mode')) {
+            ini_set('session.use_strict_mode', 0);
+            $wasInStrictMode = true;
+        }
+
+        $sessionVars = $_SESSION;
+
+        // Start session with new session ID
+        session_id($newSessionId);
+        self::start();
+
+        // New session does not need them
+        unset($sessionVars['_destroyed']);
+        unset($sessionVars['_new_session_id']);
+
+        if ($keepSessionData) {
+            $_SESSION = $sessionVars;
+        }
+
+        if ($wasInStrictMode) {
+            @ini_set('session.use_strict_mode', 1);
+        }
     }
 
     public static function isStarted()

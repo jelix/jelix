@@ -4,6 +4,30 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix regeneration of session id: support of unstable network and keep session data during login
+- fix jforms: form cache must not rely on session id, else forms could not be retrieved from cache
+  after a regeneration of session id.
+
+1.8.21
+------
+
+- Fix security issue with PHP session: session id must be changed after authentication
+  to avoid session fixation attacks
+- Fix security issue with the cookie for persistance: allow it only on https connections.
+
+1.8.20
+------
+
+- Remove warning for php 8.4 about `E_STRICT` (contribution of Joel Kociolek)
+- Fix PhpMailer version: 6.11 has unexpected breaking changes
+- Fix a notice into jImageModifier
+- Fix deprecation notice into jDbPDOConnection and tests for PHP 8.5
+
+1.8.19
+------
+
+- fix the cache filename of configuration in the case where opcache is disabled
+
 1.8.18
 ------
 

@@ -11,8 +11,8 @@
  */
 
 /**
- * interface for classes used as reporter for installation or check etc...
- * This classes are responsible to show informations to the user.
+ * Interface for classes used as a reporter for installation or check etc...
+ * These classes are responsible for showing information to the user.
  *
  * @package     jelix
  * @subpackage  installer

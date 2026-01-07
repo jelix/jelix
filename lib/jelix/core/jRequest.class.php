@@ -308,7 +308,7 @@ abstract class jRequest
                 $ip = trim($ip);
                 if (preg_match('/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/', $ip, $m)) {
                     if ($m[1] == '10' || $m[1] == '010'
-                        || ($m[1] == '172' && (intval($m[2]) & 240 == 16))
+                        || ($m[1] == '172' && ((intval($m[2]) & 240) == 16))
                         || ($m[1] == '192' && $m[2] == '168')) {
                         break;
                     } // stop at first private address. we just want the last public address
@@ -520,11 +520,11 @@ abstract class jRequest
     private function _generateHeaders()
     {
         if (is_null($this->_headers)) {
-            if (function_exists('apache_response_headers')) {
+            if (function_exists('apache_request_headers')) {
                 $this->_headers = apache_request_headers();
             } else {
                 $this->_headers = array();
-
+                // FIXME PHP 7.4 : use getallheaders()
                 foreach ($_SERVER as $key => $value) {
                     if (substr($key, 0, 5) == 'HTTP_') {
                         $key = str_replace(

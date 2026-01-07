@@ -37,9 +37,12 @@ class jFormsSession
 {
     const DEFAULT_ID = 0;
 
+    protected $sessionId;
+
     public function __construct()
     {
         $this->loadProfile();
+        $this->sessionId = sha1(session_id().microtime());
     }
 
     /**
@@ -78,7 +81,7 @@ class jFormsSession
         $this->save();
         // returns an empty array, to say that no properties (so no containers data) are serialized
         // into the PHP session
-        return array();
+        return array('sessionId');
     }
 
     /**
@@ -118,7 +121,7 @@ class jFormsSession
 
         $fid = is_array($formId) ? serialize($formId) : $formId;
 
-        return array($sel, $formId, $sel->module.':'.$sel->resource.':'.session_id().':'.sha1($fid));
+        return array($sel, $formId, $sel->module.':'.$sel->resource.':'.$this->sessionId.':'.sha1($fid));
     }
 
     public function getFormInstance($formSel, $formId)

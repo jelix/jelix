@@ -39,7 +39,12 @@ define('LIB_PATH', dirname(JELIX_LIB_PATH).'/');
 
 define('BYTECODE_CACHE_EXISTS', function_exists('opcache_compile_file') && !!ini_get('opcache.enable'));
 
-error_reporting(E_ALL | E_STRICT);
+if (version_compare(phpversion(), '8.4.0', '<')) {
+    $err_level = E_ALL | E_STRICT;
+} else {
+    $err_level = E_ALL;
+}
+error_reporting($err_level);
 
 require JELIX_LIB_CORE_PATH.'jApp.class.php';
 

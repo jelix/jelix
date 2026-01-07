@@ -31,6 +31,9 @@ Create a directory and a composer.json file :
 }
 ```
 
+**Warning**: Jelix does not follow yet [semantic versioning](https://semver.org). Minor versions (1.8, 1.9, 1.10 etc) 
+may have some tiny breaking changes. So you must not use the `^` version constraint (ex: use `~1.8.19` instead of `^1.8.19` ).
+
 Then you run:
 
 ```
