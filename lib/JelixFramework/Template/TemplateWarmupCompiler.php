@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2025 Laurent Jouanneau
+ * @copyright  2025-2026 Laurent Jouanneau
  *
  * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -25,6 +25,9 @@ class TemplateWarmupCompiler
      * @var array [templatename][theme][locale] = file path
      */
     protected $allFileFlavors = [];
+
+    /** @var CompiledTemplateInfo[]  */
+    protected $templatesInfos = [];
 
     protected $compiledTemplates = [];
 
@@ -58,11 +61,13 @@ class TemplateWarmupCompiler
         $this->reset();
         $this->readModuleTemplateFlavors($module, $modulePath);
         $this->consolidateAllFilesPath();
-        $this->compileModuleTemplates($module);
+        $this->compileModuleTemplates();
     }
 
-    protected function compileModuleTemplates($module, $onlyTplPath = '')
+    protected function compileModuleTemplates($onlyTplPath = '')
     {
+        $compiler = new \jTplCompiler();
+
         foreach($this->allFileFlavors as $tplName => $flavors) {
             foreach($flavors as $theme => $themeFlavors) {
                 foreach($themeFlavors as $locale => $tplPath) {
@@ -72,29 +77,39 @@ class TemplateWarmupCompiler
                     if ($onlyTplPath != '' && $onlyTplPath != $tplPath) {
                         continue;
                     }
-                    $compiledTemplatePath = $this->createCompiledTemplatePath($module, $theme, $locale, $tplName);
-                    \jFile::createDir(dirname($compiledTemplatePath));
-                    if (isset($this->compiledTemplates[$tplPath])) {
-                        $compiledTemplatePathTarget = $this->compiledTemplates[$tplPath][0];
-                        if (file_exists($compiledTemplatePath)) {
-                            unlink($compiledTemplatePath);
-                        }
-                        symlink($compiledTemplatePathTarget, $compiledTemplatePath);
+
+                    $tplInfos = $this->templatesInfos[$tplPath];
+                    \jFile::createDir(dirname($tplInfos->compiledTemplatePath));
+
+                    if ($tplInfos->theme != $theme || $tplInfos->locale != $locale) {
+                        // the template for the given theme and locale is a template of another theme or locale
+                         $tplInfos = new CompiledTemplateInfo(
+                            $this->app->varLibPath,
+                            $tplInfos->templatePath,
+                            $tplInfos->module,
+                            $tplInfos->templateFileName,
+                            $theme,
+                            $locale,
+                            $tplInfos
+                         );
                     }
-                    else {
-                        if (file_exists($compiledTemplatePath) && is_link($compiledTemplatePath)) {
-                            unlink($compiledTemplatePath);
-                        }
-                        $this->compileTemplate($module, $tplPath, $compiledTemplatePath);
-                        $this->compiledTemplates[$tplPath] = [
-                            $compiledTemplatePath
-                        ];
+
+                    if (!isset($this->compiledTemplates[$tplInfos->compiledTemplatePath])) {
+                        $compiler->compileModuleCtplFile($tplInfos);
+                        $this->compiledTemplates[$tplInfos->compiledTemplatePath] = true;
                     }
                 }
             }
         }
     }
 
+    /**
+     * Retrieve all the template files of the given module from all directories containing templates.
+     *
+     * @param string $moduleName
+     * @param string $modulePath
+     * @param string $templateName the template name when we want to retrieve only files of a template
+     */
     protected function readModuleTemplateFlavors($moduleName, $modulePath, $templateName='')
     {
         // retrieve list of files from module
@@ -122,7 +137,8 @@ class TemplateWarmupCompiler
                 if ($fileinfo->isDir() && !$fileinfo->isDot()) {
                     $this->themeList[$fileinfo->getFilename()] = true;
                     if (file_exists($fileinfo->getPathname().'/'.$moduleName)) {
-                        $this->readTemplatesList($fileinfo->getPathname().'/'.$moduleName, $moduleName, $fileinfo->getFilename(), $templateName);
+                        $this->readTemplatesList($fileinfo->getPathname().'/'.$moduleName, $moduleName,
+                            $fileinfo->getFilename(), $templateName);
                     }
                 }
             }
@@ -147,8 +163,8 @@ class TemplateWarmupCompiler
      * Generate a list of template from the given directory
      *
      * Expected content of the directory:
-     * - `<locale>/<template>.tpl`
-     * - `<template>.tpl`
+     * - `<locale>/<template>.ctpl`
+     * - `<template>.ctpl`
      *
      * @param $directory
      * @return void
@@ -171,16 +187,20 @@ class TemplateWarmupCompiler
             else if ($fileinfo->isFile() && $template) {
                 if ($fileinfo->getFilename() == $template) {
                     $this->allFileFlavors[$template][$theme][$locale] = $fileinfo->getRealPath();
+                    $this->templatesInfos[$fileinfo->getRealPath()] = new CompiledTemplateInfo($this->app->varLibPath, $fileinfo->getRealPath(), $moduleName, $template, $theme, $locale);
                 }
             }
-            else if ($fileinfo->isFile() && $fileinfo->getExtension() == 'tpl') {
+            else if ($fileinfo->isFile() && $fileinfo->getExtension() == 'ctpl') {
                 $this->allFileFlavors[$fileinfo->getFilename()][$theme][$locale] = $fileinfo->getRealPath();
+                $this->templatesInfos[$fileinfo->getRealPath()] = new CompiledTemplateInfo($this->app->varLibPath, $fileinfo->getRealPath(), $moduleName, $fileinfo->getFilename(), $theme, $locale);
             }
         }
     }
 
     /**
-     * check
+     * Determines an alternative file corresponding to the template when there is no explicit file
+     * in a given theme and/or locale.
+     *
      * @return void
      */
     protected function consolidateAllFilesPath()
@@ -188,6 +208,8 @@ class TemplateWarmupCompiler
         $themeList = array_keys($this->themeList);
         $fallbackLocale = $this->app->config->fallbackLocale;
         foreach($this->allFileFlavors as $template => $flavors) {
+
+            // we suppose that the default theme is the first one in the list
             foreach ($themeList as $theme) {
                 if (!isset($flavors[$theme])) {
                     $flavors[$theme] = [];
@@ -196,6 +218,7 @@ class TemplateWarmupCompiler
                     }
                     else {
                         $flavors[$theme] = $flavors['default'];
+                        unset($flavors[$theme]['_']);
                     }
                     continue;
                 }
@@ -216,22 +239,9 @@ class TemplateWarmupCompiler
                         }
                     }
                 }
-                unset($flavors[$theme]['_']);
             }
             $this->allFileFlavors[$template] = $flavors;
         }
-    }
-
-
-    protected function createCompiledTemplatePath($module, $theme, $locale, $templateName)
-    {
-        return $this->app->varLibPath.'Templates/'.ucfirst($module).'/'.ucfirst($theme).'/'.ucfirst(str_replace('_', '', $locale)).'/'.str_replace('.tpl', '.php', $templateName);
-    }
-
-    protected function compileTemplate($module, $sourceTemplateFile, $compiledTemplateFile)
-    {
-        $compiler = new \jTplCompiler();
-        $compiler->compileModuleFile($module, $sourceTemplateFile, $compiledTemplateFile);
     }
 
     public function compileSingleFile(FilePlace $file)
@@ -243,7 +253,7 @@ class TemplateWarmupCompiler
 
         list($module, $theme, $locale, $tplName) = $moduleThemeLocale;
         // $locale == '_' means it is a template for any locales.
-        if (!preg_match('/\.tpl$/', $tplName)) {
+        if (!preg_match('/\.ctpl$/', $tplName)) {
             return;
         }
 
@@ -257,7 +267,7 @@ class TemplateWarmupCompiler
         $this->readModuleTemplateFlavors($module, $modulePath, $tplName);
 
         $this->consolidateAllFilesPath();
-        $this->compileModuleTemplates($module, $file->filePath);;
+        $this->compileModuleTemplates($file->filePath);
     }
 
     /**
@@ -275,8 +285,8 @@ class TemplateWarmupCompiler
         if ($file->place == FilePlaceEnum::Var ||
             $file->place == FilePlaceEnum::App
         ) {
-            // [app|var]/themes/<theme>/<module>/<locale>/<tpl>.tpl
-            // [app|var]/themes/<theme>/<module>/<tpl>.tpl
+            // [app|var]/themes/<theme>/<module>/<locale>/<tpl>.ctpl
+            // [app|var]/themes/<theme>/<module>/<tpl>.ctpl
             if ($nbItems < 4 || $nbItems > 5 || $path[0] != 'themes') {
                 return false;
             }
@@ -286,10 +296,10 @@ class TemplateWarmupCompiler
             return [$path[2], $path[1], '_', $path[3]];
         }
         else if ($file->place == FilePlaceEnum::Module) {
-            // <module>/templates/themes/<theme>/<locale>/<tpl>.tpl
-            // <module>/templates/themes/<theme>/<tpl>.tpl
-            // <module>/templates/<locale>/<tpl>.tpl
-            // <module>/templates/<tpl>.tpl
+            // <module>/templates/themes/<theme>/<locale>/<tpl>.ctpl
+            // <module>/templates/themes/<theme>/<tpl>.ctpl
+            // <module>/templates/<locale>/<tpl>.ctpl
+            // <module>/templates/<tpl>.ctpl
             if ($nbItems < 2 || $nbItems > 5 || $path[0] != 'templates') {
                 return false;
             }

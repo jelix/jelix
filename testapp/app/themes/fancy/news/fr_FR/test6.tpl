@@ -1,1 +1,0 @@
-test6 in a theme for fr_Fr locale

@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau
  * @contributor Dominique Papin
  *
- * @copyright   2005-2025 Laurent Jouanneau, 2007 Dominique Papin
+ * @copyright   2005-2026 Laurent Jouanneau, 2007 Dominique Papin
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -92,7 +92,7 @@ class jTpl extends \Jelix\Castor\CastorCore
      * process all meta instruction of a template.
      *
      * @param string $tpl        template selector
-     * @param string $outputType the type of output (html, text etc..)
+     * @param string $outputType the type of output (html, text, etc.)
      * @param bool   $trusted    says if the template file is trusted or not
      *
      * @return array
@@ -104,16 +104,14 @@ class jTpl extends \Jelix\Castor\CastorCore
 
         if (in_array($tpl, $this->processedMeta)) {
             // we want to process meta only one time, when a template is included
-            // several time in an other template, or, more important, when a template
+            // several times in another template, or more important, when a template
             // is included in a recursive manner (in this case, it did cause infinite loop, see #1396).
             return $this->_meta;
         }
 
         $this->processedMeta[] = $tpl;
         $md = $this->getTemplate($sel, $outputType, $trusted);
-
-        $fct = 'template_meta_'.$md;
-        $fct($this);
+        $this->_callMeta($sel, $md);
 
         return $this->_meta;
     }
@@ -122,7 +120,7 @@ class jTpl extends \Jelix\Castor\CastorCore
      * display the generated content from the given template.
      *
      * @param string $tpl        template selector
-     * @param string $outputType the type of output (html, text etc..)
+     * @param string $outputType the type of output (html, text, etc..)
      * @param bool   $trusted    says if the template file is trusted or not
      */
     public function display($tpl, $outputType = '', $trusted = true)
@@ -136,16 +134,47 @@ class jTpl extends \Jelix\Castor\CastorCore
 
         $md = $this->getTemplate($sel, $outputType, $trusted);
 
-        $fct = 'template_'.$md;
-        $fct($this);
+        $this->_callContent($sel, $md);
         array_pop($this->recursiveTpl);
         $this->_templateName = $previousTpl;
     }
 
     /**
+     * @param jSelectorTpl $tplInfo
+     */
+    protected function _callMeta($tplInfo, $md)
+    {
+        if ($tplInfo->isWarmupTemplate()) {
+            $class = $tplInfo->getWarmupTemplateInfo()->getFullClassName();
+            $template = new $class();
+            $template->meta($this);
+        }
+        else {
+            $fct = 'template_meta_' . $md;
+            $fct($this);
+        }
+    }
+
+    /**
+     * @param jSelectorTpl $tplInfo
+     */
+    protected function _callContent($tplInfo, $md)
+    {
+        if ($tplInfo->isWarmupTemplate()) {
+            $class = $tplInfo->getWarmupTemplateInfo()->getFullClassName();
+            $template = new $class();
+            $template->content($this);
+        }
+        else {
+            $fct = 'template_' . $md;
+            $fct($this);
+        }
+    }
+
+    /**
      * include the compiled template file and call one of the generated function.
      *
-     * @param jSelectorTpl|string $tpl        template selector
+     * @param jSelectorTpl        $tpl        template selector
      * @param string              $outputType the type of output (html, text etc..)
      * @param bool                $trusted    says if the template file is trusted or not
      *
@@ -157,7 +186,11 @@ class jTpl extends \Jelix\Castor\CastorCore
     {
         $tpl->userModifiers = $this->userModifiers;
         $tpl->userFunctions = $this->userFunctions;
-        jIncluder::inc($tpl);
+        if ($tpl->isWarmupTemplate()) {
+            require_once($tpl->getCompiledFilePath());
+        } else {
+            jIncluder::inc($tpl);
+        }
 
         return md5($tpl->module.'_'.$tpl->resource.'_'.$tpl->outputType.($trusted ? '_t' : ''));
     }

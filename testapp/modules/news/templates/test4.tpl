@@ -1,1 +1,0 @@
-redefined in var default theme

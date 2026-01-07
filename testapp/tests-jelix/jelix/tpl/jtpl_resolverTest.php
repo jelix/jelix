@@ -4,7 +4,7 @@
  * @package     testapp
  * @subpackage  jelix_tests module
  * @author      Laurent Jouanneau
- * @copyright   2025 Laurent Jouanneau
+ * @copyright   2025-2026 Laurent Jouanneau
  * @link        https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
@@ -46,42 +46,49 @@ class jtpl_resolverTest extends \Jelix\UnitTests\UnitTestCase
         $appPath = jApp::appPath();
 
         return array(
-            'test1.tpl' => array (
+            // only defined into the module
+            'test1.ctpl' => array (
                 'default' => array(
-                    '_' => $appPath.'modules/news/templates/test1.tpl',
+                    '_' => $appPath.'modules/news/templates/test1.ctpl',
                 )
             ),
-            'test3.tpl' => array (
+            // redefined into the app theme directory
+            'test3.ctpl' => array (
                 'default' => array(
-                    '_' => $appPath.'app/themes/default/news/test3.tpl',
+                    '_' => $appPath.'app/themes/default/news/test3.ctpl',
                 )
             ),
-            'test2locale.tpl' => array (
+            // only defined into the module, for each locale
+            'test2locale.ctpl' => array (
                 'default' => array(
-                    'en_US' => $appPath.'modules/news/templates/en_US/test2locale.tpl',
-                    'fr_FR' => $appPath.'modules/news/templates/fr_FR/test2locale.tpl',
+                    'en_US' => $appPath.'modules/news/templates/en_US/test2locale.ctpl',
+                    'fr_FR' => $appPath.'modules/news/templates/fr_FR/test2locale.ctpl',
                 )
             ),
-            'test4.tpl' => array (
+            // redefined into the var theme directory for the default theme
+            // redefined into the app theme directory for the fancy theme
+            'test4.ctpl' => array (
                 'default' => array(
-                    '_' => $appPath.'var/themes/default/news/test4.tpl',
+                    '_' => $appPath.'var/themes/default/news/test4.ctpl',
 
                 ),
                 'fancy' => array(
-                    '_' => $appPath.'app/themes/fancy/news/test4.tpl',
+                    '_' => $appPath.'app/themes/fancy/news/test4.ctpl',
                 )
             ),
-            'test5.tpl' => array (
+            // only defined into the module for the fancy theme
+            'test5.ctpl' => array (
                 'fancy' => array(
-                    '_' => $appPath.'modules/news/templates/themes/fancy/test5.tpl',
+                    '_' => $appPath.'modules/news/templates/themes/fancy/test5.ctpl',
                 )
             ),
-            'test6.tpl' => array (
+            // redefined into the app theme directory for the fancy theme and the fr_FR locale
+            'test6.ctpl' => array (
                 'default' => array(
-                    '_' => $appPath.'modules/news/templates/test6.tpl',
+                    '_' => $appPath.'modules/news/templates/test6.ctpl',
                 ),
                 'fancy' => array(
-                    'fr_FR' => $appPath.'app/themes/fancy/news/fr_FR/test6.tpl',
+                    'fr_FR' => $appPath.'app/themes/fancy/news/fr_FR/test6.ctpl',
                 )
             ),
         );
@@ -91,65 +98,70 @@ class jtpl_resolverTest extends \Jelix\UnitTests\UnitTestCase
     {
         $appPath = jApp::appPath();
         return array(
-            'test1.tpl' => array (
+            'test1.ctpl' => array (
                 'default' => array(
-                    'en_US' => $appPath.'modules/news/templates/test1.tpl',
-                    'fr_FR' => $appPath.'modules/news/templates/test1.tpl',
+                    'en_US' => $appPath.'modules/news/templates/test1.ctpl',
+                    'fr_FR' => $appPath.'modules/news/templates/test1.ctpl',
+                    '_' => $appPath.'modules/news/templates/test1.ctpl',
                 ),
                 'fancy' => array(
-                    'en_US' => $appPath.'modules/news/templates/test1.tpl',
-                    'fr_FR' => $appPath.'modules/news/templates/test1.tpl',
+                    'en_US' => $appPath.'modules/news/templates/test1.ctpl',
+                    'fr_FR' => $appPath.'modules/news/templates/test1.ctpl',
                 )
             ),
-            'test3.tpl' => array (
+            'test3.ctpl' => array (
                 'default' => array(
-                    'en_US' => $appPath.'app/themes/default/news/test3.tpl',
-                    'fr_FR' => $appPath.'app/themes/default/news/test3.tpl',
+                    'en_US' => $appPath.'app/themes/default/news/test3.ctpl',
+                    'fr_FR' => $appPath.'app/themes/default/news/test3.ctpl',
+                    '_' => $appPath.'app/themes/default/news/test3.ctpl',
                 ),
                 'fancy' => array(
-                    'en_US' => $appPath.'app/themes/default/news/test3.tpl',
-                    'fr_FR' => $appPath.'app/themes/default/news/test3.tpl',
+                    'en_US' => $appPath.'app/themes/default/news/test3.ctpl',
+                    'fr_FR' => $appPath.'app/themes/default/news/test3.ctpl',
                 )
-
             ),
-            'test2locale.tpl' => array (
+            'test2locale.ctpl' => array (
                 'default' => array(
-                    'en_US' => $appPath.'modules/news/templates/en_US/test2locale.tpl',
-                    'fr_FR' => $appPath.'modules/news/templates/fr_FR/test2locale.tpl',
+                    'en_US' => $appPath.'modules/news/templates/en_US/test2locale.ctpl',
+                    'fr_FR' => $appPath.'modules/news/templates/fr_FR/test2locale.ctpl',
                 ),
                 'fancy' => array(
-                    'en_US' => $appPath.'modules/news/templates/en_US/test2locale.tpl',
-                    'fr_FR' => $appPath.'modules/news/templates/fr_FR/test2locale.tpl',
+                    'en_US' => $appPath.'modules/news/templates/en_US/test2locale.ctpl',
+                    'fr_FR' => $appPath.'modules/news/templates/fr_FR/test2locale.ctpl',
                 )
             ),
-            'test4.tpl' => array (
+            'test4.ctpl' => array (
                 'default' => array(
-                    'en_US' => $appPath.'var/themes/default/news/test4.tpl',
-                    'fr_FR' => $appPath.'var/themes/default/news/test4.tpl',
+                    'en_US' => $appPath.'var/themes/default/news/test4.ctpl',
+                    'fr_FR' => $appPath.'var/themes/default/news/test4.ctpl',
+                    '_' => $appPath.'var/themes/default/news/test4.ctpl',
                 ),
                 'fancy' => array(
-                    'en_US' => $appPath.'app/themes/fancy/news/test4.tpl',
-                    'fr_FR' => $appPath.'app/themes/fancy/news/test4.tpl',
+                    'en_US' => $appPath.'app/themes/fancy/news/test4.ctpl',
+                    'fr_FR' => $appPath.'app/themes/fancy/news/test4.ctpl',
+                    '_' => $appPath.'app/themes/fancy/news/test4.ctpl',
                 )
             ),
-            'test5.tpl' => array (
+            'test5.ctpl' => array (
                 'default' => array(
                     'en_US' => '',
                     'fr_FR' => '',
                 ),
                 'fancy' => array(
-                    'en_US' => $appPath.'modules/news/templates/themes/fancy/test5.tpl',
-                    'fr_FR' => $appPath.'modules/news/templates/themes/fancy/test5.tpl',
+                    'en_US' => $appPath.'modules/news/templates/themes/fancy/test5.ctpl',
+                    'fr_FR' => $appPath.'modules/news/templates/themes/fancy/test5.ctpl',
+                    '_' => $appPath.'modules/news/templates/themes/fancy/test5.ctpl',
                 )
             ),
-            'test6.tpl' => array (
+            'test6.ctpl' => array (
                 'default' => array(
-                    'en_US' => $appPath.'modules/news/templates/test6.tpl',
-                    'fr_FR' => $appPath.'modules/news/templates/test6.tpl',
+                    'en_US' => $appPath.'modules/news/templates/test6.ctpl',
+                    'fr_FR' => $appPath.'modules/news/templates/test6.ctpl',
+                    '_' => $appPath.'modules/news/templates/test6.ctpl',
                 ),
                 'fancy' => array(
-                    'en_US' => $appPath.'modules/news/templates/test6.tpl',
-                    'fr_FR' => $appPath.'app/themes/fancy/news/fr_FR/test6.tpl',
+                    'en_US' => $appPath.'modules/news/templates/test6.ctpl',
+                    'fr_FR' => $appPath.'app/themes/fancy/news/fr_FR/test6.ctpl',
                 )
             ),
         );

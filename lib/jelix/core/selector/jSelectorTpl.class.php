@@ -4,17 +4,20 @@
  * @subpackage  core_selector
  *
  * @author      Laurent Jouanneau
- * @copyright   2005-2019 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  *
- * @see        http://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
+use Jelix\Locale\Locale;
+use Jelix\Template\CompiledTemplateInfo;
 
 /**
  * Template selector.
  *
  * syntax : "module~tplName".
- * file : templates/tplName.tpl .
+ * file : <module>/templates/<tplName>.tpl .
  *
  * @package    jelix
  * @subpackage core_selector
@@ -29,6 +32,12 @@ class jSelectorTpl extends jSelectorModule
     public $trusted = true;
     public $userModifiers = array();
     public $userFunctions = array();
+
+    protected $wantedTheme = 'default';
+
+    protected $wantedLocale = '';
+
+    protected ?CompiledTemplateInfo $compiledTemplateInfo = null;
 
     /**
      * @param string $sel        the template selector
@@ -51,7 +60,20 @@ class jSelectorTpl extends jSelectorModule
         $this->trusted = $trusted;
         $this->_compiler = 'jTplCompiler';
         $this->_compilerPath = JELIX_LIB_PATH.'tpl/jTplCompiler.class.php';
+        $this->wantedTheme = jApp::config()->theme;
+        $this->wantedLocale = Locale::getCurrentLocale();
+
         parent::__construct($sel);
+    }
+
+    public function isWarmupTemplate()
+    {
+        return $this->compiledTemplateInfo !== null;
+    }
+
+    public function getWarmupTemplateInfo()
+    {
+        return $this->compiledTemplateInfo;
     }
 
     /**
@@ -63,19 +85,38 @@ class jSelectorTpl extends jSelectorModule
             throw new \Jelix\Core\Selector\Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
         $config = jApp::config();
-        $locale = $config->locale;
-        $lpath = $locale.'/'.$this->resource;
+
+        // is it a ctpl template ?
+        $ctplInfo = new CompiledTemplateInfo(
+            jApp::app()->varLibPath,
+            '',
+            $this->module,
+            $this->resource.'.ctpl',
+            $this->wantedTheme,
+            $this->wantedLocale
+        );
+        $ctplPath = $ctplInfo->compiledTemplatePath;
+
+        if (is_readable($ctplPath) && $this->trusted) {
+            //$this->_path =
+            // $this->_cachePrefix =
+            $this->_cachePath = $ctplPath;
+            $this->compiledTemplateInfo = $ctplInfo;
+            return;
+        }
+
+        $lpath = $this->wantedLocale.'/'.$this->resource;
         $flpath = '';
         $fallbackLocale = $config->fallbackLocale;
-        if ($locale != $fallbackLocale && $fallbackLocale) {
+        if ($this->wantedLocale != $fallbackLocale && $fallbackLocale) {
             $flpath = $fallbackLocale.'/'.$this->resource;
         }
 
         $resolutionInCache = $config->compilation['sourceFileResolutionInCache'];
 
         if ($resolutionInCache) {
-            $resolutionPath = jApp::tempPath('resolved/'.$this->module.'/'.$this->_dirname.$config->theme.'/'.$lpath.'.tpl');
-            $resolutionCachePath = 'resolved/'.$this->module.'/'.$config->theme.'/'.$lpath;
+            $resolutionPath = jApp::tempPath('resolved/'.$this->module.'/'.$this->_dirname.$this->wantedTheme.'/'.$lpath.'.tpl');
+            $resolutionCachePath = 'resolved/'.$this->module.'/'.$this->wantedTheme.'/'.$lpath;
             if (file_exists($resolutionPath)) {
                 $this->_path = $resolutionPath;
                 $this->_cachePrefix = $resolutionCachePath;
@@ -227,6 +268,9 @@ class jSelectorTpl extends jSelectorModule
 
     protected function _createCachePath()
     {
+        if ($this->compiledTemplateInfo) {
+            return;
+        }
         // don't share the same cache for all the possible dirs
         // in case of overload removal
         $this->_cachePath = jApp::tempPath('compiled/templates/'.$this->_cachePrefix.'_'.$this->outputType.($this->trusted ? '_t' : '').'_15'.$this->_cacheSuffix);
