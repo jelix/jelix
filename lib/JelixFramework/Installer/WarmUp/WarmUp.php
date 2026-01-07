@@ -17,6 +17,7 @@ use Jelix\FileUtilities\Directory;
 use Jelix\Forms\Compiler\FormsWarmup;
 use Jelix\Locale\LocaleWarmUp;
 use Jelix\Routing\UrlMapping\UrlMapWarmup;
+use Jelix\Template\TemplateWarmup;
 
 /**
  * @internal
@@ -51,6 +52,7 @@ class WarmUp
         $this->warmUpLaunchers[] = new EventWarmup($app);
         $this->warmUpLaunchers[] = new UrlMapWarmup($app);
         $this->warmUpLaunchers[] = new FormsWarmup($app);
+        $this->warmUpLaunchers[] = new TemplateWarmup($app);
     }
 
     /**
@@ -85,6 +87,7 @@ class WarmUp
         foreach($this->warmUpLaunchers as $warmUpLauncher){
             if ($warmUpLauncher->doesItSupportFile($filePlace)) {
                 $launcher = $warmUpLauncher;
+                echo get_class($warmUpLauncher)." is launched on given file\n";
                 break;
             }
             echo get_class($warmUpLauncher)." dont support file\n";

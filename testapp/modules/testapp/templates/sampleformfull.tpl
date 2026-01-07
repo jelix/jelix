@@ -11,6 +11,8 @@
 
 {formfull $form,'sampleform:save', array(), $builder, array(
 'plugins'=>array(
-'explanation' => 'textarea_as_input_html',
-'pwd2' => 'passwordeditor_html'
+    'explanation' => 'textarea_as_input_html',
+    'pwd' => 'password_html',
+    'pwd2' => 'passwordeditor_html',
+    'inputautocomplete' => 'autocomplete_html'
 ))}

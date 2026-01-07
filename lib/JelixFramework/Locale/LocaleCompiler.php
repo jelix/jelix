@@ -240,6 +240,9 @@ class LocaleCompiler
 
 
     /**
+     * Get the module name, the locale, and the filename corresponding
+     * to the sub-path of the file
+     *
      * @param FilePlace $file
      * @return array|false  [module, locale, filename]
      */
@@ -266,8 +269,6 @@ class LocaleCompiler
     }
 
     /**
-     * @param string $module
-     * @param string $locale
      * @param FilePlace $file
      * @return array|null  [module, locale, filename]
      */

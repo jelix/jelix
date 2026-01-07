@@ -25,17 +25,13 @@ cd lib/JelixFramework/Core/Selector
   __ALL__
 
 cd lib/JelixFramework/Dependencies
-  Exception.php
-  Item.php
-  ItemException.php
-  LICENCE
-  Resolver.php
+  __ALL_RECURSIVELY__
 
 cd lib/JelixFramework/DevHelper
   __ALL_RECURSIVELY__
 
 cd lib/JelixFramework/Event
-  __ALL__
+  __ALL_RECURSIVELY__
 
 cd lib/JelixFramework/Forms
   __ALL_RECURSIVELY__

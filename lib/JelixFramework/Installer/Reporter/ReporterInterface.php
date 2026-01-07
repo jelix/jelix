@@ -10,8 +10,8 @@
 namespace Jelix\Installer\Reporter;
 
 /**
- * interface for classes used as reporter for installation or check etc...
- * This classes are responsible to show informations to the user.
+ * Interface for classes used as a reporter for installation or check etc...
+ * This class is responsible for showing information to the user.
  *
  * @since 1.7
  */

@@ -144,7 +144,7 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertEquals('assiette', $prod->name,'jDao::get : bad name property on record');
         $this->assertEquals(3.87, $prod->price,'jDao::get : bad price property on record');
         $this->assertEquals(static::$falseValue, $prod->promo,'jDao::get : bad promo property on record');
-        $this->assertEquals( (object)['tears'=>'for fears'], $prod->metadata);
+        $this->assertEquals(['tears'=>'for fears'], $prod->metadata);
     }
 
     /**

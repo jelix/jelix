@@ -8,7 +8,7 @@
  * @author   Laurent Jouanneau
  * @contributor Loic Mathaud, Julien Issler
  *
- * @copyright 2005-2024 Laurent Jouanneau
+ * @copyright 2005-2025 Laurent Jouanneau
  * @copyright 2007 Julien Issler
  *
  * @see      https://www.jelix.org
@@ -38,7 +38,12 @@ define('LIB_PATH', dirname(JELIX_LIB_PATH).'/');
 
 define('BYTECODE_CACHE_EXISTS', function_exists('opcache_compile_file') && !!ini_get('opcache.enable'));
 
-error_reporting(E_ALL | E_STRICT);
+if (version_compare(phpversion(), '8.4.0', '<')) {
+    $err_level = E_ALL | E_STRICT;
+} else {
+    $err_level = E_ALL;
+}
+error_reporting($err_level);
 
 /**
  * Jelix Autoloader.

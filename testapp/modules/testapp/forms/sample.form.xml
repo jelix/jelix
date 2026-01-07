@@ -92,6 +92,21 @@
       <label>List using user datasource </label>
   </checkboxes>
 
+  <menulist ref="inputautocomplete">
+     <label>french town (autocomplete)</label>
+     <item value="pa">Paris</item>
+     <item value="ma">Marseille</item>
+     <item value="ly">Lyon</item>
+     <item value="br">Brest</item>
+     <item value="li">Lille</item>
+     <item value="bo">Bordeaux</item>
+  </menulist>
+
+  <menulist ref="inputautocompleteajax">
+     <label> towns (ajax autocomplete)</label>
+     <datasource dao="testapp~towns" labelproperty="name" valueproperty="postalcode" method="findAll" />
+  </menulist>
+
 
   <!--<input ref="datenaissance" type="localedate">
       <label>Your birthday</label>

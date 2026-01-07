@@ -136,7 +136,7 @@ class autocomplete_htmlFormWidget extends \Jelix\Forms\HtmlWidget\WidgetBase
                <input type="text" ';
         $this->_outputAttr($attrAutoComplete);
         echo '> <span class="autocomplete-no-search-results" style="display:none">'.Locale::get('jelix~jforms.autocomplete.no.results').'</span> 
-                <button class="autocomplete-trash btn btn-mini" title="'.Locale::get('jelix~ui.buttons.erase').'" type="button"><i class="icon-trash"></i></button> 
+                <button class="autocomplete-trash btn btn-mini" title="'.Locale::get('jelix~ui.buttons.erase').'" type="button"><i class="ui-icon ui-icon-trash icon-trash"></i></button> 
             ';
         $this->displaySelectChoices($attrSelect, $value, $emptyLabel);
         echo "</div>\n";

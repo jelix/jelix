@@ -2,6 +2,8 @@
 ;for security reasons , don't remove or modify the first line
 
 locale=en_US
+availableLocales=en_US,fr_FR
+fallbackLocale=en_US
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
 ; if empty, jelix will try to get the default timezone

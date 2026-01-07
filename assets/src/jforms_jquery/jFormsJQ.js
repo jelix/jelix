@@ -105,7 +105,7 @@ const jFormsJQ = {
     declareForm : function(aForm){
         this._forms[aForm.name] = aForm;
         $('#'+aForm.name).bind('submit', jFormsJQ._submitListener);
-        const event = new Event("jformsready");
+        const event = new CustomEvent("jformsready", {form: aForm});
         document.getElementById(aForm.name).dispatchEvent(event);
         if (aForm.name in this._onReadyCallback) {
             this._onReadyCallback[aForm.name](aForm);

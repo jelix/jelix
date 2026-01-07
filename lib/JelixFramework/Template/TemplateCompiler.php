@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud (standalone version), Dominique Papin, DSDenes, Christophe Thiriot, Julien Issler, Brice Tence
  *
- * @copyright   2005-2023 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  * @copyright   2006 Loic Mathaud, 2007 Dominique Papin, 2009 DSDenes, 2010 Christophe Thiriot
  * @copyright   2010 Julien Issler, 2010 Brice Tence
  *
@@ -48,6 +48,9 @@ class TemplateCompiler extends \Jelix\Castor\CompilerCore implements SimpleCompi
         $this->_sourceFile = $selector->getPath();
         $this->outputType = $selector->outputType;
         $this->trusted = $selector->trusted;
+        // FIXME this is the same md5 as for the same template but from a different theme/locale.
+        // FIXME so there is a collision when we try to use the same template several time during the
+        // FIXME same request, but for different locale
         $md5 = md5($selector->module.'_'.$selector->resource.'_'.$this->outputType.($this->trusted ? '_t' : ''));
 
         App::pushCurrentModule($selector->module);
@@ -74,6 +77,43 @@ class TemplateCompiler extends \Jelix\Castor\CompilerCore implements SimpleCompi
 
         return true;
     }
+
+    public function compileModuleCtplFile(CompiledTemplateInfo $tplInfos)
+    {
+        $this->_sourceFile = $tplInfos->templatePath;
+        $this->outputType = 'html';
+        $this->trusted = true;
+        $this->setSyntaxVersion(2);
+
+        App::pushCurrentModule($tplInfos->module);
+
+        $header = "<?php \n";
+        $header .= "namespace ".$tplInfos->classNamespace.";\n";
+
+        foreach ($this->_pluginPath as $path => $ok) {
+            $header .= ' require_once(\''.$path."');\n";
+        }
+
+        $body = '';
+        if ($tplInfos->substituteTemplate !== null) {
+            $body .= "class ".$tplInfos->className." extends \\".$tplInfos->substituteTemplate->classNamespace.
+                "\\".$tplInfos->substituteTemplate->className." {\n}\n";
+            $this->_saveCompiledString($tplInfos->compiledTemplatePath, $header.$body);
+        }
+        else {
+            $body .= "class ".$tplInfos->className." {\n";
+            $body .= 'public function meta($t) {'."\n";
+            $body .= "\n".$this->_metaBody."\n}\n";
+
+            $body .= 'public function content($t) {'."\n?>";
+            $body .= $this->compileContent(file_get_contents($this->_sourceFile))."<"."?php \n}\n}\n";
+            $this->_saveCompiledString($tplInfos->compiledTemplatePath, $header.$body);
+        }
+
+
+        App::popCurrentModule();
+    }
+
 
     protected function _saveCompiledString($cacheFile, $result)
     {

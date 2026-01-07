@@ -8,15 +8,24 @@
         <a href="{jurl 'testapp~sampleform:show', array('builder'=>$newbuilder)}">click here</a></li>
 </ul>
 
-{*, array('errorDecorator'=>'myErrorDecorator')*}
 {form $form,'sampleform:save', array(), $builder, array(
 'plugins'=>array(
    'explanation' => 'textarea_as_input_html',
     'pwd' => 'password_html',
-    'pwd2' => 'passwordeditor_html'
+    'pwd2' => 'passwordeditor_html',
+    'inputautocomplete' => 'autocomplete_html',
+    'inputautocompleteajax' => 'autocompleteajax_html'
 ))}
     {formcontrols}
-    <div>{ctrl_label '', '%s: '} {ctrl_control}</div>
+        {ifctrl 'inputautocompleteajax'}
+            <div class="row">{ctrl_label '', '%s: '}
+                {ctrl_control  '', array(
+                        'attr-autocomplete'=>array(
+                            'source'=>$autocompleteurl
+                ))}</div>
+        {else}
+             <div class="row">{ctrl_label '', '%s: '} {ctrl_control}</div>
+        {/ifctrl}
     {/formcontrols}
 <p>{formreset} {formsubmit}</p>
 {/form}

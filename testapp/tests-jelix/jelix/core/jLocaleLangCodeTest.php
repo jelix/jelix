@@ -40,7 +40,7 @@ class jLocaleLangCodeTest extends \Jelix\UnitTests\UnitTestCase {
     function testGetCorrespondingLocale() {
         jApp::config()->availableLocales = array('en_US');
 
-        $this->assertEquals(array('locale'=>array('en'=>'en_US')), jApp::config()->langToLocale);
+        $this->assertEquals(array('locale'=>array('en'=>'en_US', 'fr' => 'fr_FR')), jApp::config()->langToLocale);
         $this->assertEquals('en_US', Locale::getCorrespondingLocale('en'));
 
         jApp::config()->langToLocale = array('locale'=>array('en'=>'en_EN'));

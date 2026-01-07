@@ -240,7 +240,7 @@ Default option value: "'.$this->defaultRuleForComposerJson.'"
                 if ($output->isVerbose()) {
                     $output->writeln('Create main template');
                 }
-                $this->createFile($appPath.'modules/'.$param['modulename'].'/templates/main.tpl', 'module/main.tpl.tpl', $param, 'Main template');
+                $this->createFile($appPath.'modules/'.$param['modulename'].'/templates/main.ctpl', 'module/main.ctpl.tpl', $param, 'Main template');
             } catch (\Exception $e) {
                 $output->writeln('<error>The module has not been created because of this error: '.$e->getMessage().'</error>');
                 $output->writeln('However the application has been created');

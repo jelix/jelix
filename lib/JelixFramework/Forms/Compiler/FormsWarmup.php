@@ -49,7 +49,9 @@ class FormsWarmup implements WarmUpLauncherInterface
 
     public function doesItSupportFile(FilePlace $file) : bool
     {
-        if ($file->place != FilePlaceEnum::Module) {
+        if ($file->place != FilePlaceEnum::Module
+            && $file->place != FilePlaceEnum::AppOverloads
+            && $file->place != FilePlaceEnum::VarOverloads) {
             return false;
         }
         return str_ends_with($file->filePath, '.form.xml');
@@ -62,6 +64,6 @@ class FormsWarmup implements WarmUpLauncherInterface
             $this->app->varPath,
             $this->app->varLibPath,
         );
-        $compiler->compileFile($file->module, $file->filePath, str_replace('forms/', '', $file->subPath));
+        $compiler->compileSingleFile($file);
     }
 }
