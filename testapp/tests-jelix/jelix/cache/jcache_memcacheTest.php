@@ -33,7 +33,7 @@ class jCache_MemcacheTest extends AbstractCacheAPI {
             $this->markTestSkipped('jCache_MemcacheTest cannot be run because version of memcache is wrong (should be >= 3.0.1)');
         }
         // temporary check
-        if (version_compare(phpversion(), "8.2.0") >= 0 && version_compare(phpversion('memcache'), '4.0.6') < 0) {
+        if (version_compare(phpversion('memcache'), '4.0.6') < 0) {
             $this->markTestSkipped('jCache_MemcacheTest cannot be run because the version of memcache is buggy with PHP 8.2 (Creation of dynamic property Memcache::$connection is deprecated)');
         }
         parent::setUp();

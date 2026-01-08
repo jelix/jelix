@@ -122,7 +122,7 @@ else
     $LIB_VERSION_MAX = $LIB_VERSION;
 
 if ($PHP_VERSION_TARGET) {
-    if (version_compare($PHP_VERSION_TARGET, '7.4') == -1) {
+    if (version_compare($PHP_VERSION_TARGET, '8.2') == -1) {
         die("PHP VERSION ".$PHP_VERSION_TARGET." is not supported");
     }
 }

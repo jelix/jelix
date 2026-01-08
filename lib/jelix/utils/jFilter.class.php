@@ -139,19 +139,8 @@ class jFilter
         $pathRequired = false,
         $queryRequired = false
     ) {
-        /*
-         FIXME php 5.3
-         because of a bug in filter_var (error when no scheme even if there isn't
-         FILTER_FLAG_SCHEME_REQUIRED flag), we don't use filter_var here
-        $flag=0;
-        if($schemeRequired) $flag |= FILTER_FLAG_SCHEME_REQUIRED;
-        if($hostRequired) $flag |= FILTER_FLAG_HOST_REQUIRED;
-        if($pathRequired) $flag |= FILTER_FLAG_PATH_REQUIRED;
-        if($queryRequired) $flag |= FILTER_FLAG_QUERY_REQUIRED;
-        return filter_var($url, FILTER_VALIDATE_URL, $flag);
-        */
-        // php filter use in fact parse_url, so we use the same function to have same result.
-        // however, note that it doesn't validate all bad url...
+        // We don't use filter_var here because it requires scheme and host.
+        // let's use parse_url instead, although it doesn't validate bad url...
         $res = @parse_url($url);
         if ($res === false) {
             return false;

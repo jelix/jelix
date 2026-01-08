@@ -19,11 +19,9 @@ class jdao_main_api_pdoTest extends jdao_main_api_base {
         parent::setUp();
         $this->dbProfile ='testapppdo';
         $this->needPDO =  true;
-        if (version_compare(PHP_VERSION, '8.1', '>=')) {
-            static::$productIdType = 'integer';
-            static::$productPriceType = 'float';
-            static::$productPromoType = 'integer';
-        }
+        static::$productIdType = 'integer';
+        static::$productPriceType = 'float';
+        static::$productPromoType = 'integer';
     }
 }
 

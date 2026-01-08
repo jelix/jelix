@@ -28,7 +28,7 @@ class jkvdb_memcacheTest extends jKVDbTest {
             $this->markTestSkipped('jkvdb_memcacheTest cannot be run because memcache is not installed');
         }
         // temporary check
-        if (version_compare(phpversion(), "8.2.0") >= 0 && version_compare(phpversion('memcache'), '4.0.6') < 0) {
+        if (version_compare(phpversion('memcache'), '4.0.6') < 0) {
             $this->markTestSkipped('jkvdb_memcacheTest cannot be run because the version of memcache is buggy with PHP 8.2 (Creation of dynamic property Memcache::$connection is deprecated)');
         }
 

@@ -100,9 +100,6 @@ class httpcacheTest extends \Jelix\UnitTests\UnitTestCase
             $rep = jApp::coord()->request->getResponse('html');
 
             $method = new ReflectionMethod('jResponse', '_normalizeDate');
-            if (version_compare(phpversion(), '8.1.0', '<')) {
-                $method->setAccessible(TRUE);
-            }
 
             //case jDateTime
             $date1 = "2011-10-26 13:00:00";
@@ -130,9 +127,6 @@ class httpcacheTest extends \Jelix\UnitTests\UnitTestCase
         $rep = jApp::coord()->request->getResponse('html');
 
         $method = new ReflectionMethod('jResponse', '_checkRequestType');
-        if (version_compare(phpversion(), '8.1.0', '<')) {
-            $method->setAccessible(TRUE);
-        }
 
         $_SERVER['REQUEST_METHOD'] = 'GET';
         $this->assertTrue($method->invoke($rep));

@@ -520,22 +520,7 @@ abstract class jRequest
     private function _generateHeaders()
     {
         if (is_null($this->_headers)) {
-            if (function_exists('apache_request_headers')) {
-                $this->_headers = apache_request_headers();
-            } else {
-                $this->_headers = array();
-                // FIXME PHP 7.4 : use getallheaders()
-                foreach ($_SERVER as $key => $value) {
-                    if (substr($key, 0, 5) == 'HTTP_') {
-                        $key = str_replace(
-                            ' ',
-                            '-',
-                            ucwords(strtolower(str_replace('_', ' ', substr($key, 5))))
-                        );
-                        $this->_headers[$key] = $value;
-                    }
-                }
-            }
+            $this->_headers = getallheaders();
         }
     }
 

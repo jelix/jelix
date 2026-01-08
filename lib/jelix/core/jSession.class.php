@@ -50,14 +50,10 @@ class jSession
             $cookieOptions['path'] = jApp::urlBasePath();
         }
 
-        if (PHP_VERSION_ID < 70300) {
-            session_set_cookie_params($cookieOptions['lifetime'], $cookieOptions['path'], '', $cookieOptions['secure'], $cookieOptions['httponly']);
-        } else {
-            if ($params['cookieSameSite'] != '') {
-                $cookieOptions['samesite'] = $params['cookieSameSite'];
-            }
-            session_set_cookie_params($cookieOptions);
+        if ($params['cookieSameSite'] != '') {
+            $cookieOptions['samesite'] = $params['cookieSameSite'];
         }
+        session_set_cookie_params($cookieOptions);
 
         if ($params['storage'] != '') {
 
