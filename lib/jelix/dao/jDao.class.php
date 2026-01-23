@@ -4,7 +4,7 @@
  * @subpackage dao
  *
  * @author     Laurent Jouanneau
- * @copyright   2005-2025 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -13,6 +13,7 @@
 use Jelix\Dao\DaoConditions;
 use Jelix\Dao\DaoFactoryInterface;
 use Jelix\Dao\DaoRecordInterface;
+use Jelix\DaoUtils\DaoHooks;
 
 require_once JELIX_LIB_PATH.'db/jDb.class.php';
 
@@ -47,7 +48,7 @@ class jDao
         }
         $conn = jDb::getConnection($profile);
         $dao = new $c($conn);
-        $dao->setHook(new jDaoHooks());
+        $dao->setHook(new DaoHooks());
         return $dao;
     }
 
