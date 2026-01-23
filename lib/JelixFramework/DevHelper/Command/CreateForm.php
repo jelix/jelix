@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  *
- * @copyright   2007-2016 Laurent Jouanneau, 2008 Loic Mathaud, 2009 Bastien Jaillot
+ * @copyright   2007-2026 Laurent Jouanneau, 2008 Loic Mathaud, 2009 Bastien Jaillot
  *
  * @see        http://www.jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -111,8 +111,8 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
 
         // we're going to parse the dao
         $selector = new \jSelectorDao($daoName, $profileName);
-        $cnt = \jDb::getConnection($profileName);
-        $context = new \jDaoContext($profileName, $cnt);
+        $profile = \jProfiles::get('jdb', $profileName);
+        $context = new \Jelix\DaoUtils\DaoContext($profileName, $profile['dbtype']);
         $compiler = new Compiler();
         $parser = $compiler->parse($selector, $context);
 

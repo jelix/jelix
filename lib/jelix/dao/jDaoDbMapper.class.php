@@ -4,7 +4,7 @@
  * @subpackage  dao
  *
  * @author      Laurent Jouanneau
- * @copyright   2017-2025 Laurent Jouanneau
+ * @copyright   2017-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -12,6 +12,7 @@
 
 use Jelix\Dao\DbMapper;
 use Jelix\Database\Schema\TableInterface;
+use Jelix\DaoUtils\DaoContext;
 
 
 /**
@@ -40,7 +41,7 @@ class jDaoDbMapper
         $this->connection = jDb::getConnection($profile);
         $this->profile = $profile;
         $cnt = jDb::getConnection($profile);
-        $this->dbMapper = new DbMapper(new jDaoContext($profile, $cnt));
+        $this->dbMapper = new DbMapper(new DaoContext($profile, $this->connection->getSQLType()), $cnt);
     }
 
     /**

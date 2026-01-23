@@ -4,11 +4,13 @@
  * @subpackage dao
  *
  * @author      Laurent Jouanneau
- * @copyright   2005-2025 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
+
+use Jelix\DaoUtils\DaoContext;
 
 /**
  * The compiler for the DAO xml files. it is used by jIncluder
@@ -26,9 +28,8 @@ class jDaoCompiler implements jISimpleCompiler
      */
     public function compile($selector)
     {
-
-        $cnt = jDb::getConnection($selector->profile);
-        $context = new jDaoContext($selector->profile, $cnt);
+        $profile = \jProfiles::get('jdb', $selector->profile);
+        $context = new DaoContext($selector->profile, $profile['dbtype']);
         $compiler = new \Jelix\Dao\Generator\Compiler();
         return $compiler->compile($selector, $context);
     }

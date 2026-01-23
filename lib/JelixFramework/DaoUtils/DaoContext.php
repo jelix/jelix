@@ -4,16 +4,23 @@
  * @subpackage dao
  *
  * @author      Laurent Jouanneau
- * @copyright   2021-2025 Laurent Jouanneau
+ * @copyright   2021-2026 Laurent Jouanneau
  *
  * @see        https://www.jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+namespace Jelix\DaoUtils;
+
+use jApp;
 use Jelix\Dao\CustomRecordClassFileInterface;
 use Jelix\Dao\DaoFileInterface;
+use Jelix\Database\Connection;
 use Jelix\Database\ConnectionInterface;
+use Jelix\Database\Schema\SQLSyntaxHelpersInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
+use Jelix\Dao\ContextInterface;
+use Jelix\Dao\ContextInterface2;
 
 /**
  * Context for the DAO compiler
@@ -21,27 +28,31 @@ use Jelix\Database\Schema\SqlToolsInterface;
  * @package  jelix
  * @subpackage dao
  */
-class jDaoContext implements \Jelix\Dao\ContextInterface
+class DaoContext implements ContextInterface, ContextInterface2
 {
 
-    protected $profile;
+    protected $profileName;
+    protected $sqlType;
 
     /**
-     * @var ConnectionInterface
+     * @var SQLSyntaxHelpersInterface
      */
-    protected $connection;
+    protected $syntaxHelpers;
 
-    function __construct($profile, ConnectionInterface $connection) {
-        $this->profile = $profile;
-        $this->connection = $connection;
+    function __construct($profileName, $sqlType)
+    {
+        $this->profileName = $profileName;
+        $this->sqlType = $sqlType;
+        $this->syntaxHelpers = Connection::getSqlSyntaxHelpers($this->sqlType);
     }
 
     /**
      * @return ConnectionInterface
+     * @deprecated
      */
     public function getConnector()
     {
-        return $this->connection;
+        return null;
     }
 
     /**
@@ -49,7 +60,23 @@ class jDaoContext implements \Jelix\Dao\ContextInterface
      */
     function getDbTools()
     {
-        return $this->connection->tools();
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSqlType(): string
+    {
+        return $this->sqlType;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSqlSyntaxHelpers(): SQLSyntaxHelpersInterface
+    {
+        return $this->syntaxHelpers;
     }
 
     /**
@@ -59,7 +86,7 @@ class jDaoContext implements \Jelix\Dao\ContextInterface
      */
     function resolveDaoPath($path)
     {
-        return new \jSelectorDao($path, $this->profile);
+        return new \jSelectorDao($path, $this->profileName);
     }
 
     /**

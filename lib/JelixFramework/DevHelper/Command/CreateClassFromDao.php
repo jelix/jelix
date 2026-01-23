@@ -3,7 +3,7 @@
  * @author      Bisse Romain
  * @contributor Laurent Jouanneau
  *
- * @copyright   2009 Bisse Romain, 2016 Laurent Jouanneau
+ * @copyright   2009 Bisse Romain, 2016-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -69,8 +69,8 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
 
         $selector = new \jSelectorDao($module.'~'.$daoname, $profileName);
 
-        $cnt = \jDb::getConnection($profileName);
-        $context = new \jDaoContext($profileName, $cnt);
+        $profile = \jProfiles::get('jdb', $profileName);
+        $context = new \Jelix\DaoUtils\DaoContext($profileName, $profile['dbtype']);
         $compiler = new Compiler();
         $parser = $compiler->parse($selector, $context);
 
