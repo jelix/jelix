@@ -3,11 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Yannick Le Guédart, Julien Issler
  *
-<<<<<<< HEAD
- * @copyright   2011-2024 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
-=======
  * @copyright   2011-2025 Laurent Jouanneau, 2007 Yannick Le Guédart, 2011 Julien Issler
->>>>>>> github/jelix-1.9.x
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html

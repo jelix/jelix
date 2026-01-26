@@ -1,11 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
-<<<<<<< HEAD
- * @copyright  2011-2024 Laurent Jouanneau
-=======
  * @copyright  2011-2025 Laurent Jouanneau
->>>>>>> github/jelix-1.9.x
  *
  * @see        https://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
