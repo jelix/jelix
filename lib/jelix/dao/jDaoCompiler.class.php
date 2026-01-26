@@ -11,6 +11,7 @@
  */
 
 use Jelix\DaoUtils\DaoContext;
+use Jelix\DaoUtils\DaoSelector;
 
 /**
  * The compiler for the DAO xml files. it is used by jIncluder
@@ -24,7 +25,7 @@ class jDaoCompiler implements jISimpleCompiler
     /**
      * compile the given class id.
      *
-     * @param jSelectorDao $selector
+     * @param DaoSelector $selector
      */
     public function compile($selector)
     {

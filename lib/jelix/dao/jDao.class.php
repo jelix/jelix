@@ -14,6 +14,7 @@ use Jelix\Dao\DaoConditions;
 use Jelix\Dao\DaoFactoryInterface;
 use Jelix\Dao\DaoRecordInterface;
 use Jelix\DaoUtils\DaoHooks;
+use Jelix\DaoUtils\DaoSelector;
 
 require_once JELIX_LIB_PATH.'db/jDb.class.php';
 
@@ -39,7 +40,7 @@ class jDao
     public static function create($DaoId, $profile = '')
     {
         if (is_string($DaoId)) {
-            $DaoId = new jSelectorDao($DaoId, $profile);
+            $DaoId = new DaoSelector($DaoId, $profile);
         }
 
         $c = $DaoId->getCompiledFactoryClass();
@@ -68,7 +69,7 @@ class jDao
     public static function get($DaoId, $profile = '')
     {
         if (is_string($DaoId)) {
-            $sel = new jSelectorDao($DaoId, $profile);
+            $sel = new DaoSelector($DaoId, $profile);
         }
         else {
             $sel = $DaoId;
@@ -108,7 +109,7 @@ class jDao
      */
     public static function createRecord($DaoId, $profile = '')
     {
-        $sel = new jSelectorDao($DaoId, $profile);
+        $sel = new DaoSelector($DaoId, $profile);
         $factory = self::get($sel, $profile);
         $c = $sel->getCompiledRecordClass();
         /** @var DaoRecordInterface $rec */

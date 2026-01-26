@@ -12,6 +12,7 @@
 namespace Jelix\DevHelper\Command;
 
 use Jelix\Dao\Generator\Compiler;
+use Jelix\DaoUtils\DaoSelector;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -110,7 +111,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
         \jApp::pushCurrentModule($module);
 
         // we're going to parse the dao
-        $selector = new \jSelectorDao($daoName, $profileName);
+        $selector = new DaoSelector($daoName, $profileName);
         $profile = \jProfiles::get('jdb', $profileName);
         $context = new \Jelix\DaoUtils\DaoContext($profileName, $profile['dbtype']);
         $compiler = new Compiler();

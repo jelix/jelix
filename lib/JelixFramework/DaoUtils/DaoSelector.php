@@ -6,25 +6,31 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  *
- * @copyright   2005-2025 Laurent Jouanneau, 2007 Loic Mathaud
+ * @copyright   2005-2026 Laurent Jouanneau, 2007 Loic Mathaud
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+namespace Jelix\DaoUtils;
+
+use jApp;
 use Jelix\Core\Profiles;
+use Jelix\Core\Selector\ModuleSelector;
 use Jelix\Dao\DaoFileInterface;
+
 /**
  * Selector for dao file
  * syntax : "module~daoName".
- * file : daos/daoName.dao.xml.
+ * file : daos/<daoName>.dao.xml.
  *
- * @package    jelix
- * @subpackage core_selector
  */
-class jSelectorDao extends jSelectorModule implements DaoFileInterface
+class DaoSelector extends ModuleSelector implements DaoFileInterface
 {
     protected $type = 'dao';
+    protected $_dirname = 'daos/';
+    protected $_suffix = '.dao.xml';
+    protected $_where;
 
     public $profile;
 
@@ -39,10 +45,6 @@ class jSelectorDao extends jSelectorModule implements DaoFileInterface
      * name of the database type used by the connection.
      */
     public $dbType;
-
-    protected $_dirname = 'daos/';
-    protected $_suffix = '.dao.xml';
-    protected $_where;
 
     public function __construct($sel, $profile)
     {
@@ -72,7 +74,7 @@ class jSelectorDao extends jSelectorModule implements DaoFileInterface
 
                 return;
             }
-            jFile::createDir(dirname($resolutionPath));
+            \jFile::createDir(dirname($resolutionPath));
         }
 
         $this->findPath();

@@ -6,12 +6,15 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  *
- * @copyright   2005-2012 Laurent Jouanneau, 2007 Loic Mathaud
+ * @copyright   2005-2026 Laurent Jouanneau, 2007 Loic Mathaud
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
-class jSelectorDaoDb extends jSelectorDao
+namespace Jelix\DaoUtils;
+use Jelix\Core\Selector\ModuleSelector;
+
+class DaoSelectorDbType extends DaoSelector
 {
     public function __construct($sel, $driver, $dbType = null)
     {
@@ -19,6 +22,6 @@ class jSelectorDaoDb extends jSelectorDao
         $this->dbType = ($dbType ? $dbType : $driver);
         $this->_compiler = 'jDaoCompiler';
         $this->_compilerPath = JELIX_LIB_PATH.'dao/jDaoCompiler.class.php';
-        jSelectorModule::__construct($sel);
+        ModuleSelector::__construct($sel);
     }
 }

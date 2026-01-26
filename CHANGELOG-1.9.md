@@ -221,6 +221,7 @@ About jDao:
 - `jDaoMethod` is replaced by `Jelix\Dao\Parser\DaoMethod`
 - `jDaoProperty` is replaced by `Jelix\Dao\Parser\DaoProperty`
 - `jDaoDbMapper` is replaced by `Jelix\Dao\DbMapper`
+- `jDaoSelector*` classes are replaced by `Jelix\Dao\DaoSelector*` classes
 
 Internal changes
 ----------------

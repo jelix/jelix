@@ -86,7 +86,7 @@ class DaoContext implements ContextInterface, ContextInterface2
      */
     function resolveDaoPath($path)
     {
-        return new \jSelectorDao($path, $this->profileName);
+        return new DaoSelector($path, $this->profileName);
     }
 
     /**
@@ -96,7 +96,7 @@ class DaoContext implements ContextInterface, ContextInterface2
      */
     function resolveCustomRecordClassPath($path)
     {
-        return new \jSelectorDaoRecord($path);
+        return new DaoRecordSelector($path);
     }
 
     function shouldCheckCompiledClassCache()

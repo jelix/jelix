@@ -137,6 +137,9 @@ $GLOBALS['gLibClassPath'] = array(
     'jEvent' => JELIX_LIB_PATH.'legacy/jEvent.php',
     'jEventListener' => JELIX_LIB_PATH.'legacy/jEventListener.php',
     'jSelectorForm' => JELIX_LIB_PATH.'legacy/jSelectorForm.php',
+    'jSelectorDao' => JELIX_LIB_PATH.'legacy/jSelectorDao.php',
+    'jSelectorDaoRecord' => JELIX_LIB_PATH.'legacy/jSelectorDaoRecord.php',
+    'jSelectorDaoDb' => JELIX_LIB_PATH.'legacy/jSelectorDaoDb.php',
 );
 
 /**

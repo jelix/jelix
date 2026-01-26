@@ -11,8 +11,9 @@
  */
 
 use Jelix\Dao\DbMapper;
-use Jelix\Database\Schema\TableInterface;
 use Jelix\DaoUtils\DaoContext;
+use Jelix\DaoUtils\DaoSelector;
+use Jelix\Database\Schema\TableInterface;
 
 
 /**
@@ -54,7 +55,7 @@ class jDaoDbMapper
      */
     public function createTableFromDao($selectorStr)
     {
-        $selector = new jSelectorDao($selectorStr, $this->profile);
+        $selector = new DaoSelector($selectorStr, $this->profile);
         return $this->dbMapper->createTableFromDao($selector);
     }
 
@@ -69,7 +70,7 @@ class jDaoDbMapper
      */
     public function insertDaoData($selectorStr, $properties, $data, $option)
     {
-        $selector = new jSelectorDao($selectorStr, $this->profile);
+        $selector = new DaoSelector($selectorStr, $this->profile);
         return $this->dbMapper->insertDaoData($selector, $properties, $data, $option);
     }
 
