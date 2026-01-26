@@ -113,7 +113,7 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
         // we're going to parse the dao
         $selector = new DaoSelector($daoName, $profileName);
         $profile = \jProfiles::get('jdb', $profileName);
-        $context = new \Jelix\DaoUtils\DaoContext($profileName, $profile['dbtype']);
+        $context = new \Jelix\DaoUtils\DaoContext($profile['dbtype']);
         $compiler = new Compiler();
         $parser = $compiler->parse($selector, $context);
 

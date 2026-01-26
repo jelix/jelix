@@ -37,16 +37,16 @@ class jdao_main_api_sqlite3Test extends jdao_main_api_base {
 
     function testInstanciation() {
         $dao = jDao::create ('products', $this->dbProfile);
-        $this->assertInstanceOf('cDao_jelix_tests_Jx_products_Jx_sqlite', $dao);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsSqliteFactory', $dao);
 
         $dao = jDao::get ('products', $this->dbProfile);
-        $this->assertInstanceOf('cDao_jelix_tests_Jx_products_Jx_sqlite', $dao);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsSqliteFactory', $dao);
 
         $daorec = jDao::createRecord ('products', $this->dbProfile);
-        $this->assertInstanceOf('cDaoRecord_jelix_tests_Jx_products_Jx_sqlite', $daorec);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsSqliteRecord', $daorec);
 
         $daorec = $dao->createRecord();
-        $this->assertInstanceOf('cDaoRecord_jelix_tests_Jx_products_Jx_sqlite', $daorec);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsSqliteRecord', $daorec);
     }
     function testBinaryField() {
         // FIXME sqlite3 driver does not support binary field

@@ -8,7 +8,7 @@
  * @author   Laurent Jouanneau
  * @contributor Loic Mathaud, Julien Issler
  *
- * @copyright 2005-2025 Laurent Jouanneau
+ * @copyright 2005-2026 Laurent Jouanneau
  * @copyright 2007 Julien Issler
  *
  * @see      https://www.jelix.org
@@ -155,29 +155,6 @@ function jelix_autoload($class)
         $f = $GLOBALS['gLibClassPath'][$class];
     } elseif (preg_match('/^j(Dao|Selector|Tpl|Db|Controller|Forms(?:Control)?|Auth|Installer|KV).*/i', $class, $m)) {
         $f = $GLOBALS['gLibPath'][$m[1]].$class.'.class.php';
-    } elseif (preg_match('/^cDao(?:Record)?_(.+)_Jx_(.+)_Jx_(.+)$/', $class, $m)) {
-        // for DAO which are stored in sessions for example
-        if (!jApp::isModuleEnabled($m[1])) {
-            //this may happen if we have several entry points, but the current one does not have this module accessible
-            return;
-        }
-        $s = new jSelectorDaoDb($m[1].'~'.$m[2], '', $m[3]);
-        if (jApp::config()->compilation['checkCacheFiletime']) {
-            // if it is needed to check the filetime, then we use jIncluder
-            // because perhaps we will have to recompile the dao before the include
-            jIncluder::inc($s);
-        } else {
-            $f = $s->getCompiledFilePath();
-            // we should verify that the file is here and if not, we recompile
-            // (case where the temp has been cleaned, see bug #6062 on berlios.de)
-            if (!file_exists($f)) {
-                jIncluder::inc($s);
-            } else {
-                require $f;
-            }
-        }
-
-        return;
     } else {
         $f = JELIX_LIB_UTILS_PATH.$class.'.class.php';
     }

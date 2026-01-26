@@ -71,7 +71,7 @@ class CreateClassFromDao extends \Jelix\DevHelper\AbstractCommandForApp
         $selector = new DaoSelector($module.'~'.$daoname, $profileName);
 
         $profile = \jProfiles::get('jdb', $profileName);
-        $context = new \Jelix\DaoUtils\DaoContext($profileName, $profile['dbtype']);
+        $context = new \Jelix\DaoUtils\DaoContext($profile['dbtype']);
         $compiler = new Compiler();
         $parser = $compiler->parse($selector, $context);
 

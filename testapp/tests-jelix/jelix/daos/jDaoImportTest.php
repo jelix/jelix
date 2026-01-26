@@ -57,7 +57,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
         $blogSel = new jSelectorDao('jelix_tests~post_blog', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
 
-        $context = new DaoContext('', 'mysql');
+        $context = new DaoContext('mysql');
         $compiler = new Compiler();
         $postParser =  $compiler->parse($postSel, $context);
         $this->assertEquals(array('deletebefore'), $postParser->getEvents());
@@ -72,7 +72,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
     public function testImportWithRedefinedMethods() {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
-        $context = new DaoContext('', 'mysql');
+        $context = new DaoContext('mysql');
         $compiler = new Compiler();
 
         $postTrackerParser = $compiler->parse($trackerSel, $context);
@@ -445,7 +445,7 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
     {
         $postSel = new jSelectorDao('jelix_tests~posts', '');
         $blogSel = new jSelectorDao($daoName, '');
-        $context = new DaoContext('', 'mysql');
+        $context = new DaoContext('mysql');
         $compiler = new Compiler();
 
         $postBlogParser = $compiler->parse($blogSel, $context);

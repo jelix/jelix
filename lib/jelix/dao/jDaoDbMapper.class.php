@@ -42,7 +42,7 @@ class jDaoDbMapper
         $this->connection = jDb::getConnection($profile);
         $this->profile = $profile;
         $cnt = jDb::getConnection($profile);
-        $this->dbMapper = new DbMapper(new DaoContext($profile, $this->connection->getSQLType()), $cnt);
+        $this->dbMapper = new DbMapper(new DaoContext($this->connection->getSQLType()), $cnt);
     }
 
     /**

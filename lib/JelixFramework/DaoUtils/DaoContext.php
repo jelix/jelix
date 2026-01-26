@@ -13,14 +13,14 @@
 namespace Jelix\DaoUtils;
 
 use jApp;
-use Jelix\Dao\CustomRecordClassFileInterface;
+use Jelix\Dao\ContextInterface;
+use Jelix\Dao\ContextInterface2;
+use Jelix\Dao\CustomClassFileInterface;
 use Jelix\Dao\DaoFileInterface;
 use Jelix\Database\Connection;
 use Jelix\Database\ConnectionInterface;
 use Jelix\Database\Schema\SQLSyntaxHelpersInterface;
 use Jelix\Database\Schema\SqlToolsInterface;
-use Jelix\Dao\ContextInterface;
-use Jelix\Dao\ContextInterface2;
 
 /**
  * Context for the DAO compiler
@@ -31,7 +31,6 @@ use Jelix\Dao\ContextInterface2;
 class DaoContext implements ContextInterface, ContextInterface2
 {
 
-    protected $profileName;
     protected $sqlType;
 
     /**
@@ -39,9 +38,8 @@ class DaoContext implements ContextInterface, ContextInterface2
      */
     protected $syntaxHelpers;
 
-    function __construct($profileName, $sqlType)
+    function __construct($sqlType)
     {
-        $this->profileName = $profileName;
         $this->sqlType = $sqlType;
         $this->syntaxHelpers = Connection::getSqlSyntaxHelpers($this->sqlType);
     }
@@ -86,13 +84,13 @@ class DaoContext implements ContextInterface, ContextInterface2
      */
     function resolveDaoPath($path)
     {
-        return new DaoSelector($path, $this->profileName);
+        return new DaoSelectorDbType($path, $this->sqlType);
     }
 
     /**
      * @param string $path
      *
-     * @return CustomRecordClassFileInterface
+     * @return CustomClassFileInterface
      */
     function resolveCustomRecordClassPath($path)
     {
@@ -102,5 +100,15 @@ class DaoContext implements ContextInterface, ContextInterface2
     function shouldCheckCompiledClassCache()
     {
         return jApp::config()->compilation['checkCacheFiletime'];
+    }
+
+    /**
+     * @param string $path
+     *
+     * @return CustomClassFileInterface
+     */
+    public function resolveCustomFactoryClassPath($path)
+    {
+        return new DaoFactorySelector($path);
     }
 }

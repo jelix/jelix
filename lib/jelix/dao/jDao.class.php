@@ -44,9 +44,6 @@ class jDao
         }
 
         $c = $DaoId->getCompiledFactoryClass();
-        if (!class_exists($c, false)) {
-            jIncluder::inc($DaoId);
-        }
         $conn = jDb::getConnection($profile);
         $dao = new $c($conn);
         $dao->setHook(new DaoHooks());

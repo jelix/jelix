@@ -37,16 +37,16 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
 
     function testInstanciation() {
         $dao = jDao::create ('products', $this->dbProfile);
-        $this->assertInstanceOf('cDao_jelix_tests_Jx_products_Jx_mysql', $dao);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsMysqlFactory', $dao);
 
         $dao = jDao::get ('products', $this->dbProfile);
-        $this->assertInstanceOf('cDao_jelix_tests_Jx_products_Jx_mysql', $dao);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsMysqlFactory', $dao);
 
         $daorec = jDao::createRecord ('products', $this->dbProfile);
-        $this->assertInstanceOf('cDaoRecord_jelix_tests_Jx_products_Jx_mysql', $daorec);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsMysqlRecord', $daorec);
 
         $daorec = $dao->createRecord();
-        $this->assertInstanceOf('cDaoRecord_jelix_tests_Jx_products_Jx_mysql', $daorec);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsMysqlRecord', $daorec);
     }
 
     /**

@@ -15,7 +15,7 @@ namespace Jelix\DaoUtils;
 
 use jApp;
 use Jelix\Core\Selector\ModuleSelector;
-use Jelix\Dao\CustomRecordClassFileInterface;
+use Jelix\Dao\CustomClassFileInterface;
 
 /**
  * Selector for dao file
@@ -25,7 +25,7 @@ use Jelix\Dao\CustomRecordClassFileInterface;
  * @package    jelix
  * @subpackage core_selector
  */
-class DaoRecordSelector extends ModuleSelector implements CustomRecordClassFileInterface
+class DaoRecordSelector extends ModuleSelector implements CustomClassFileInterface
 {
     protected $type = 'daorecord';
     protected $_dirname = 'daos/';
@@ -65,7 +65,6 @@ class DaoRecordSelector extends ModuleSelector implements CustomRecordClassFileI
         $this->_cachePath = '';
     }
 
-
     /**
      * A name that allow to identify easily the dao.
      *
@@ -88,7 +87,7 @@ class DaoRecordSelector extends ModuleSelector implements CustomRecordClassFileI
         if ($this->_path == '') {
             return $this->resource;
         }
-        return $this->resource.'DaoRecord';
+        return '\\'.$this->resource.'DaoRecord';
     }
 
     /**
