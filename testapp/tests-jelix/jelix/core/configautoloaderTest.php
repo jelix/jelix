@@ -88,10 +88,10 @@ foobar = "'.__DIR__.'/autoload/ns/bar3/foobar|.php"
 psr0[]="'.__DIR__.'/autoload/some|.php"
 ', true));
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/myclass.php', $autoloader->test_get_path('\foo\bar\myclass'));
-        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/my/class.php', $autoloader->test_get_path('\foo\bar\my_class'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/bar/my_class.php', $autoloader->test_get_path('\foo\bar\my_class'));
         $this->assertEquals(__DIR__.'/autoload/ns/bar/foo/myclass2.php', $autoloader->test_get_path('\foo\myclass2'));
         $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar/bar/myclass.php', $autoloader->test_get_path('\foobar\bar\myclass'));
-        $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar/bar/my/class.php', $autoloader->test_get_path('\foobar\bar\my_class'));
+        $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar/bar/my_class.php', $autoloader->test_get_path('\foobar\bar\my_class'));
         $this->assertEquals(__DIR__.'/autoload/ns/bar3/foobar/myclass2.php', $autoloader->test_get_path('\foobar\myclass2'));
         $this->assertEquals(__DIR__.'/autoload/some/bateau.php',$autoloader->test_get_path('bateau'));
         $this->assertEquals(__DIR__.'/autoload/some/foo/bateau.php',$autoloader->test_get_path('foo\bateau'));
