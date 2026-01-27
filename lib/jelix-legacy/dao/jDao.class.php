@@ -4,7 +4,7 @@
  * @subpackage dao
  *
  * @author     Laurent Jouanneau
- * @copyright   2005-2025 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -13,6 +13,8 @@
 use Jelix\Dao\DaoConditions;
 use Jelix\Dao\DaoFactoryInterface;
 use Jelix\Dao\DaoRecordInterface;
+use Jelix\DaoUtils\DaoHooks;
+use Jelix\DaoUtils\DaoSelector;
 
 /**
  * Factory to create DAO objects.
@@ -26,7 +28,7 @@ class jDao
      * creates a new instance of a DAO.
      * If no dao is founded, try to compile a DAO from the dao xml file.
      *
-     * @param jSelectorDao|string $Daoid   the dao selector
+     * @param DaoSelector|string $Daoid   the dao selector
      * @param string              $profile the db profile name to use for the connection.
      *                                     If empty, use the default profile
      * @param mixed               $DaoId
@@ -36,17 +38,14 @@ class jDao
     public static function create($DaoId, $profile = '')
     {
         if (is_string($DaoId)) {
-            $DaoId = new jSelectorDao($DaoId, $profile);
+            $DaoId = new DaoSelector($DaoId, $profile);
         }
 
         $c = $DaoId->getCompiledFactoryClass();
-        if (!class_exists($c, false)) {
-            \Jelix\Core\Includer\Includer::inc($DaoId);
-        }
         $conn = jDb::getConnection($profile);
 
         $dao = new $c($conn);
-        $dao->setHook(new jDaoHooks());
+        $dao->setHook(new DaoHooks());
         return $dao;
     }
 
@@ -66,7 +65,7 @@ class jDao
     public static function get($DaoId, $profile = '')
     {
         if (is_string($DaoId)) {
-            $sel = new jSelectorDao($DaoId, $profile);
+            $sel = new DaoSelector($DaoId, $profile);
         }
         else {
             $sel = $DaoId;
@@ -106,7 +105,7 @@ class jDao
      */
     public static function createRecord($DaoId, $profile = '')
     {
-        $sel = new jSelectorDao($DaoId, $profile);
+        $sel = new DaoSelector($DaoId, $profile);
         $factory = self::get($sel, $profile);
         $c = $sel->getCompiledRecordClass();
         /** @var DaoRecordInterface $rec */

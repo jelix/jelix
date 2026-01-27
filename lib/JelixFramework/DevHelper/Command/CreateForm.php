@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  *
- * @copyright   2007-2023 Laurent Jouanneau, 2008 Loic Mathaud, 2009 Bastien Jaillot
+ * @copyright   2007-2026 Laurent Jouanneau, 2008 Loic Mathaud, 2009 Bastien Jaillot
  *
  * @see        http://www.jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -12,6 +12,7 @@
 namespace Jelix\DevHelper\Command;
 
 use Jelix\Dao\Generator\Compiler;
+use Jelix\DaoUtils\DaoSelector;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -108,10 +109,9 @@ class CreateForm extends \Jelix\DevHelper\AbstractCommandForApp
         \Jelix\Core\App::pushCurrentModule($module);
 
         // we're going to parse the dao
-        $selector = new \jSelectorDao($daoName, $profileName);
-
-        $cnt = \jDb::getConnection($profileName);
-        $context = new \jDaoContext($profileName, $cnt);
+        $selector = new DaoSelector($daoName, $profileName);
+        $profile = \Jelix\Core\Profiles::get('jdb', $profileName);
+        $context = new \Jelix\DaoUtils\DaoContext($profile['dbtype']);
         $compiler = new Compiler();
         $parser = $compiler->parse($selector, $context);
 

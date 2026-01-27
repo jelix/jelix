@@ -10,6 +10,7 @@
 namespace Jelix\Installer\Module\API;
 
 use Jelix\Dao\DbMapper;
+use Jelix\DaoUtils\DaoContext;
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Schema\SqlToolsInterface;
 
@@ -156,7 +157,7 @@ class DatabaseHelpers
     public function createTableFromDao($selectorStr)
     {
         $cnt = \jDb::getConnection($this->dbProfile);
-        $daoMapper = new DbMapper(new \jDaoContext($this->dbProfile, $cnt));
+        $daoMapper = new DbMapper(new DaoContext($cnt->getSQLType()), $cnt);
         $daoMapper->createTableFromDao($selectorStr);
     }
 
@@ -192,8 +193,8 @@ class DatabaseHelpers
             $dataToInsert = array($dataToInsert);
         }
         $cnt = \jDb::getConnection($this->dbProfile);
-        $context = new \jDaoContext($this->dbProfile, $cnt);
-        $daoMapper = new DbMapper($context);
+        $context = new DaoContext($cnt->getSQLType());
+        $daoMapper = new DbMapper($context, $cnt);
         $count = 0;
         foreach ($dataToInsert as $daoData) {
             if (!isset($daoData['dao'])

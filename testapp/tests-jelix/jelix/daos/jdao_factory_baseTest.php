@@ -71,7 +71,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
 
     function testFindAll() {
         list($conn, $rs) = $this->getConn(self::$unprefixProfile);
-        $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT `products`.`id`, `products`.`name`, `products`.`price`, `products`.`promo`, `products`.`publish_date` FROM `products` AS `products`'));
@@ -80,7 +80,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
 
     function testFindAllPrefix() {
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
-        $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT `products`.`id`, `products`.`name`, `products`.`price`, `products`.`promo`, `products`.`publish_date` FROM `foo_products` AS `products`'));
@@ -89,7 +89,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
 
     function testFindAllAlias() {
         list($conn, $rs) = $this->getConn(self::$unprefixProfile);
-        $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsaliasMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `p`.`promo` FROM `products` AS `p`'));
@@ -98,7 +98,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
 
     function testFindAllAliasPrefix() {
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
-        $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsaliasMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `p`.`promo` FROM `foo_products` AS `p`'));
@@ -113,7 +113,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
                     ->method('fetch')
                     ->willReturn($o);
 
-        $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT COUNT(*) as c  FROM `products` AS `products`'));
@@ -127,7 +127,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);
-        $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT COUNT(*) as c  FROM `foo_products` AS `products`'));
@@ -141,7 +141,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);
-        $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsaliasMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT COUNT(*) as c  FROM `products` AS `p`'));
@@ -156,7 +156,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);
-        $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsaliasMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT COUNT(*) as c  FROM `foo_products` AS `p`'));
@@ -170,7 +170,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);
-        $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT `products`.`id`, `products`.`name`, `products`.`price`, `products`.`promo`, `products`.`publish_date` FROM `products` AS `products` WHERE  `products`.`id` = 32'));
@@ -183,7 +183,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);
-        $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT `products`.`id`, `products`.`name`, `products`.`price`, `products`.`promo`, `products`.`publish_date` FROM `foo_products` AS `products` WHERE  `products`.`id` = 32'));
@@ -196,7 +196,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);
-        $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsaliasMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `p`.`promo` FROM `products` AS `p` WHERE  `p`.`id` = 32'));
@@ -209,7 +209,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
         $rs->expects($this->any())
                     ->method('fetch')
                     ->willReturn($o);
-        $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsaliasMysqlFactory($conn);
         $conn->expects($this->once())
                     ->method('query')
                     ->with($this->equalTo('SELECT `p`.`id`, `p`.`name`, `p`.`price`, `p`.`promo` FROM `foo_products` AS `p` WHERE  `p`.`id` = 32'));
@@ -218,7 +218,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
 
     function testFindBy() {
         list($conn, $rs) = $this->getConn(self::$unprefixProfile);
-        $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsMysqlFactory($conn);
         $cond = new DaoConditions('AND');
         $cond->addItemOrder('price', 'asc');
         // note: in the order clause, names are note enclosed between quotes because of the mock
@@ -230,7 +230,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
 
     function testFindByPrefix() {
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
-        $dao = new cDao_testapp_Jx_products_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsMysqlFactory($conn);
         $cond = new DaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');
         // note: in the order clause, names are note enclosed between quotes because of the mock
@@ -242,7 +242,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
 
     function testFindByAlias() {
         list($conn, $rs) = $this->getConn(self::$unprefixProfile);
-        $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsaliasMysqlFactory($conn);
         $cond = new DaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');
         // note: in the order clause, names are note enclosed between quotes because of the mock
@@ -254,7 +254,7 @@ class jdao_factory_baseTest extends \Jelix\UnitTests\UnitTestCaseDb
 
     function testFindByAliasPrefix() {
         list($conn, $rs) = $this->getConn(self::$prefixProfile);
-        $dao = new cDao_testapp_Jx_productsalias_Jx_mysql($conn);
+        $dao = new \Jelix\BuiltComponents\Daos\Testapp\ProductsaliasMysqlFactory($conn);
         $cond = new DaoConditions ('AND');
         $cond->addItemOrder('price', 'asc');
         // note: in the order clause, names are note enclosed between quotes because of the mock

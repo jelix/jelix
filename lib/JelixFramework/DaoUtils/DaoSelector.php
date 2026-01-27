@@ -6,35 +6,40 @@
  * @author      Laurent Jouanneau
  * @contributor Loic Mathaud
  *
- * @copyright   2005-2025 Laurent Jouanneau, 2007 Loic Mathaud
+ * @copyright   2005-2026 Laurent Jouanneau, 2007 Loic Mathaud
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+namespace Jelix\DaoUtils;
 
-use \Jelix\Core\App;
-use \Jelix\Core\Selector\Exception as ExceptionSelector;
+use Jelix\Core\App;
 use Jelix\Core\Profiles;
-use Jelix\Dao\DaoFileInterface;
+use Jelix\Core\Selector\ModuleSelector;
+use Jelix\Core\Selector\Exception;
+use Jelix\Dao\DaoFileInterface2;
 
 /**
  * Selector for dao file
  * syntax : "module~daoName".
- * file : daos/daoName.dao.xml.
+ * file : daos/<daoName>.dao.xml.
  *
- * @package    jelix
- * @subpackage core_selector
  */
-class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements DaoFileInterface
+class DaoSelector extends ModuleSelector implements DaoFileInterface2
 {
     protected $type = 'dao';
+    protected $_dirname = 'daos/';
+    protected $_suffix = '.dao.xml';
+    protected $_where;
 
-    public $profile;
+    protected $escapedModule;
+    protected $escapedName;
 
     /**
      * the name of the jDb driver used for the connection.
      *
      * @var string
+     * @deprecated
      */
     public $driver;
 
@@ -43,52 +48,24 @@ class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements DaoFil
      */
     public $dbType;
 
-    protected $_dirname = 'daos/';
-    protected $_suffix = '.dao.xml';
-    protected $_where;
+    protected $buildPath;
 
     public function __construct($sel, $profile)
     {
-        $this->profile = $profile;
         $p = Profiles::get('jdb', $profile);
         $this->driver = $p['driver'];
         $this->dbType = $p['dbtype'];
-        $this->_compiler = 'jDaoCompiler';
-        $this->_compilerPath = JELIX_LIB_PATH.'dao/jDaoCompiler.class.php';
         parent::__construct($sel);
+        $this->escapedName = ucfirst($this->resource);
+        $this->escapedModule = ucfirst($this->module);
+        $this->buildPath =  App::varLibPath();
     }
 
     protected function _createPath()
     {
         if (!App::isModuleEnabled($this->module)) {
-            throw new ExceptionSelector('jelix~errors.selector.module.unknown', $this->toString());
+            throw new Exception('jelix~errors.selector.module.unknown', $this->toString());
         }
-
-        $resolutionInCache = App::config()->compilation['sourceFileResolutionInCache'];
-
-        if ($resolutionInCache) {
-            $resolutionPath = App::tempPath('resolved/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);
-            $resolutionCachePath = 'resolved/';
-            if (file_exists($resolutionPath)) {
-                $this->_path = $resolutionPath;
-                $this->_where = $resolutionCachePath;
-
-                return;
-            }
-            jFile::createDir(dirname($resolutionPath));
-        }
-
-        $this->findPath();
-
-        if ($resolutionInCache) {
-            symlink($this->_path, $resolutionPath);
-            $this->_path = $resolutionPath;
-            $this->_where = $resolutionCachePath;
-        }
-    }
-
-    protected function findPath()
-    {
 
         // check if the dao was redefined (overloaded) in var/
         $overloadedPath = App::varPath('overloads/'.$this->module.'/'.$this->_dirname.$this->resource.$this->_suffix);
@@ -112,16 +89,14 @@ class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements DaoFil
         $this->_path = App::getModulePath($this->module).$this->_dirname.$this->resource.$this->_suffix;
 
         if (!is_readable($this->_path)) {
-            throw new ExceptionSelector('jelix~errors.selector.invalid.target', array($this->toString(), 'dao'));
+            throw new Exception('jelix~errors.selector.invalid.target', array($this->toString(), 'dao'));
         }
         $this->_where = 'modules/';
     }
 
     protected function _createCachePath()
     {
-        // don't share the same cache for all the possible dirs
-        // in case of overload removal
-        $this->_cachePath = App::tempPath('compiled/daos/'.$this->_where.$this->module.'/'.$this->resource.'~'.$this->dbType.'_15'.$this->_cacheSuffix);
+        // nothing, useless
     }
 
     /**
@@ -157,7 +132,7 @@ class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements DaoFil
      */
     function getCompiledFactoryClass()
     {
-        return 'cDao_'.$this->module.'_Jx_'.$this->resource.'_Jx_'.$this->dbType;
+        return 'Jelix\\BuiltComponents\\Daos\\' . $this->escapedModule . '\\' . $this->escapedName . ucfirst($this->dbType) . 'Factory';
     }
 
     /**
@@ -165,6 +140,16 @@ class jSelectorDao extends \Jelix\Core\Selector\ModuleSelector implements DaoFil
      */
     function getCompiledRecordClass()
     {
-        return 'cDaoRecord_'.$this->module.'_Jx_'.$this->resource.'_Jx_'.$this->dbType;
+        return 'Jelix\\BuiltComponents\\Daos\\' . $this->escapedModule . '\\' . $this->escapedName . ucfirst($this->dbType) . 'Record';
+    }
+
+    public function getCompiledRecordFilePath()
+    {
+        return $this->buildPath.'/Daos/'.$this->escapedModule.'/'.$this->escapedName.ucfirst($this->dbType).'Record.php';
+    }
+
+    public function getCompiledFactoryFilePath()
+    {
+        return $this->buildPath.'/Daos/'.$this->escapedModule.'/'.$this->escapedName.ucfirst($this->dbType).'Factory.php';
     }
 }

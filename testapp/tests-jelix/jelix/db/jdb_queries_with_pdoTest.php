@@ -20,9 +20,7 @@ class jdb_queries_with_pdoTest extends jDb_queryBase {
     function setUp() : void
     {
         parent::setUp();
-        if (version_compare(PHP_VERSION, '8.1', '>=')) {
-            static::$productPriceType = 'float';
-        }
+        static::$productPriceType = 'float';
 
     }
 

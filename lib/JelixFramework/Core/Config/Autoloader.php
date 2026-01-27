@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2012-2025 Laurent Jouanneau
+ * @copyright  2012-2026 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -22,7 +22,7 @@ class Autoloader
     /**
      * @var object a configuration object readed from an ini file
      *
-     * @see Compiler
+     * @see AppConfig
      */
     protected $config;
 
@@ -75,7 +75,8 @@ class Autoloader
             $class = &$className;
             // the given class name does not contains namespace
         }
-        $fileName = str_replace('_', DIRECTORY_SEPARATOR, $class);
+        $fileName = $class;
+        $fileNamePsr0 = str_replace('_', DIRECTORY_SEPARATOR, $class);
 
         /*
         [_autoload_namespacepsr0]
@@ -86,14 +87,14 @@ class Autoloader
                 if (is_array($info)) {
                     foreach ($info as $inf) {
                         list($incPath, $ext) = explode('|', $inf);
-                        $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+                        $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileNamePsr0.$ext;
                         if (file_exists($file)) {
                             return $file;
                         }
                     }
                 } else {
                     list($incPath, $ext) = explode('|', $info);
-                    $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+                    $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileNamePsr0.$ext;
                     if (file_exists($file)) {
                         return $file;
                     }
@@ -146,7 +147,7 @@ class Autoloader
         if (isset($this->config->_autoload_fallback['psr0'])) {
             foreach ($this->config->_autoload_fallback['psr0'] as $info) {
                 list($incPath, $ext) = explode('|', $info);
-                $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+                $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileNamePsr0.$ext;
                 if (file_exists($file)) {
                     return $file;
                 }
@@ -174,11 +175,10 @@ class Autoloader
         [_autoload_includepath]
         path[]="/path|.ext"
         */
-        $pathList = array();
         if (isset($this->config->_autoload_includepath['path'])) {
             foreach ($this->config->_autoload_includepath['path'] as $info) {
                 list($incPath, $ext) = explode('|', $info);
-                $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileName.$ext;
+                $file = $incPath.DIRECTORY_SEPARATOR.$path.$fileNamePsr0.$ext;
                 if (file_exists($file)) {
                     return $file;
                 }
@@ -192,7 +192,7 @@ class Autoloader
         if (isset($this->config->_autoload_includepathmap['path'])) {
             foreach ($this->config->_autoload_includepathmap['path'] as $info) {
                 list($incPath, $ext) = explode('|', $info);
-                $file = $incPath.DIRECTORY_SEPARATOR.$fileName.$ext;
+                $file = $incPath.DIRECTORY_SEPARATOR.$fileNamePsr0.$ext;
                 if (file_exists($file)) {
                     return $file;
                 }

@@ -3,7 +3,7 @@ Changes into Jelix 1.9.0
 
 Not released yet.
 
-Minimum version of PHP is 8.1.
+Minimum version of PHP is 8.2.
 
 New features
 ------------
@@ -25,6 +25,7 @@ New features
   - url mapping
   - forms
   - template files having the `ctpl` extension (syntax v2 of Castor)
+  - Daos
 
 
 - The `charset` configuration property is deprecated. You should keep the default value
@@ -43,7 +44,7 @@ These templates are compiled during the installation.
 As, by default, they are considered as trusted and HTML templates, compilation 
 of a template may fail if the format is not HTML.
 
-It is highly recommended to use the pragma instructions `{! output-type = ... !}` 
+Into templates, it is highly recommended to use the pragma instructions `{! output-type = ... !}` 
 to specify a content type other than HTML, and to use `{! trusted = false!}`, 
 if it is not a trusted template. So compilation during installation 
 will be done correctly.
@@ -62,9 +63,9 @@ will be done correctly.
 - Locales can be in a directory outside an application, like into a Composer package.
   The directory should be declared with the new API `jApp::declareLocalesDir()`.
 
-** Events **
+**Events**
 
-- classe `jEvent` and `jEventListener` are deprecated and replaced by `\Jelix\Event\Event`
+- classes `jEvent` and `jEventListener` are deprecated and replaced by `\Jelix\Event\Event`
   and `\Jelix\Event\EventListener`.
 - Declaration of event listener can now be done into the listener class with PHP attributes
   In this case, the listener class can be any classes, not only classes inheriting
@@ -92,7 +93,8 @@ class TestAttrEventsListener
 **jForms**
 
 - support of `<placeholder>` into `<input>`, `<textarea>`, `<htmleditor>`, `<wikieditor>`,
-
+- Forms are compiled during the installation of the application to improve performance 
+  at runtime
 
 **jDb**
 
@@ -137,13 +139,18 @@ It brings some new features:
   The class can be anywhere and should be autoloadable. The class must inherit
   from `jDaoFactoryBase` and it must be abstract.
 
+Other changes:
 
-Plugins for jDaoCompiler (type 'daobuilder'), are not supported anymore.
-  
+- Plugins for jDao compiler (type 'daobuilder'), are not supported anymore.
+- Daos files are compiled during the installation of the application to improve performance at runtime
+- Classes generated from daos files have new names and are autoloaded
+- `jSelectorDao`, `jSelectorDaoDb` and `jSelectorDaoRecord` are deprecated and exists under new names.
+
+
 Removes
 -------
 
-* remove support of bytecode cache other than opcache.
+* Remove support of bytecode cache other than opcache.
 * Remove `jacl` and `jacldb` modules. There are still available into the `jelix/jacl-module` package.
   But you should consider it as an archive. You should migrate to jacl2 and jacl2db.
 * Remove `jpref` and `jpref_admin` modules. There are still available into the `jelix/jpref-module` package.
@@ -221,6 +228,7 @@ About jDao:
 - `jDaoMethod` is replaced by `Jelix\Dao\Parser\DaoMethod`
 - `jDaoProperty` is replaced by `Jelix\Dao\Parser\DaoProperty`
 - `jDaoDbMapper` is replaced by `Jelix\Dao\DbMapper`
+- `jDaoSelector*` classes are replaced by `Jelix\Dao\DaoSelector*` classes
 
 Internal changes
 ----------------

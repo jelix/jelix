@@ -12,6 +12,7 @@ namespace Jelix\Installer\WarmUp;
 
 use Jelix\Core\AppInstance;
 use Jelix\Core\Config\ConfigurationWarmUp;
+use Jelix\DaoUtils\DaoWarmup;
 use Jelix\Event\EventWarmup;
 use Jelix\FileUtilities\Directory;
 use Jelix\Forms\Compiler\FormsWarmup;
@@ -53,6 +54,7 @@ class WarmUp
         $this->warmUpLaunchers[] = new UrlMapWarmup($app);
         $this->warmUpLaunchers[] = new FormsWarmup($app);
         $this->warmUpLaunchers[] = new TemplateWarmup($app);
+        $this->warmUpLaunchers[] = new DaoWarmup($app);
     }
 
     /**

@@ -33,16 +33,16 @@ class jdao_main_api_pgsqlTest extends jdao_main_api_base {
 
     function testInstanciation() {
         $dao = jDao::create ('products', $this->dbProfile);
-        $this->assertInstanceOf('cDao_jelix_tests_Jx_products_Jx_pgsql', $dao);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsPgsqlFactory', $dao);
 
         $dao = jDao::get ('products', $this->dbProfile);
-        $this->assertInstanceOf('cDao_jelix_tests_Jx_products_Jx_pgsql', $dao);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsPgsqlFactory', $dao);
 
         $daorec = jDao::createRecord ('products', $this->dbProfile);
-        $this->assertInstanceOf('cDaoRecord_jelix_tests_Jx_products_Jx_pgsql', $daorec);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsPgsqlRecord', $daorec);
 
         $daorec = $dao->createRecord();
-        $this->assertInstanceOf('cDaoRecord_jelix_tests_Jx_products_Jx_pgsql', $daorec);
+        $this->assertInstanceOf('\Jelix\BuiltComponents\Daos\Jelix_tests\ProductsPgsqlRecord', $daorec);
     }
 
 }

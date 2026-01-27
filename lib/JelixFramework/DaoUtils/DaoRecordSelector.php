@@ -5,15 +5,17 @@
  *
  * @author      Guillaume Dugas
  * @contributor Laurent Jouanneau
- * @copyright   2012 Guillaume Dugas, 2023-2025 Laurent Jouanneau
+ * @copyright   2012 Guillaume Dugas, 2023-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
+namespace Jelix\DaoUtils;
+
 use Jelix\Core\App as App;
-use Jelix\Core\Selector\Exception;
-use Jelix\Dao\CustomRecordClassFileInterface;
+use Jelix\Core\Selector\ModuleSelector;
+use Jelix\Dao\CustomClassFileInterface;
 
 /**
  * Selector for dao file
@@ -23,7 +25,7 @@ use Jelix\Dao\CustomRecordClassFileInterface;
  * @package    jelix
  * @subpackage core_selector
  */
-class jSelectorDaoRecord extends \Jelix\Core\Selector\ModuleSelector implements CustomRecordClassFileInterface
+class DaoRecordSelector extends ModuleSelector implements CustomClassFileInterface
 {
     protected $type = 'daorecord';
     protected $_dirname = 'daos/';
@@ -40,7 +42,7 @@ class jSelectorDaoRecord extends \Jelix\Core\Selector\ModuleSelector implements 
             $this->_path = '';
             $this->resource = $sel;
         } else {
-            throw new Exception('jelix~errors.selector.invalid.syntax', array($sel, $this->type));
+            throw new \Jelix\Core\Selector\Exception('jelix~errors.selector.invalid.syntax', array($sel, $this->type));
         }
         $this->_createCachePath();
     }
@@ -86,7 +88,7 @@ class jSelectorDaoRecord extends \Jelix\Core\Selector\ModuleSelector implements 
         if ($this->_path == '') {
             return $this->resource;
         }
-        return $this->resource.'DaoRecord';
+        return '\\'.$this->resource.'DaoRecord';
     }
 
     /**
