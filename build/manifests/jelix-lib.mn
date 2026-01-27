@@ -50,9 +50,6 @@ cd lib/JelixFramework/Legacy/core
 cd lib/JelixFramework/Legacy/db
   __ALL__
 
-cd lib/JelixFramework/Legacy/events
-  __ALL__
-
 cd lib/JelixFramework/Legacy/forms
   __ALL_RECURSIVELY__
 
