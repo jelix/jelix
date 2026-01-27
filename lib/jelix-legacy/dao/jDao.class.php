@@ -55,7 +55,7 @@ class jDao
      * return a DAO instance. It Handles a singleton of the DAO.
      * If no dao is founded, try to compile a DAO from the dao xml file.
      *
-     * @param jSelectorDao|string $Daoid   the dao selector
+     * @param DaoSelector|string $Daoid   the dao selector
      * @param string              $profile the db profile name to use for the connection.
      *                                     If empty, use the default profile
      * @param mixed               $DaoId

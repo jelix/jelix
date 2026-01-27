@@ -112,6 +112,7 @@ class TestAttrEventsListener
   `jDbUtils`, `jDbWidget`
 - `jDaoFactoryBase`, `jDaoRecordBase`, `jDaoConditions`, `jDaoCondition`,
   `jDaoXmlException`, `jDaoDbMapper`
+- `jSelectorDao`, `jSelectorDaoDb` and `jSelectorDaoRecord`
 - `jLocale`, `jBundle`, `jExceptionSelector`
 - `jConfig`, `jConfigCompiler`, `jConfigAutoloader`
 - `jEvent`, `jEventListener`, `Jelix\Event\Event::clearCache()`

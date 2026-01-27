@@ -3,6 +3,7 @@
 use Jelix\Dao\Generator\Compiler;
 use Jelix\Dao\Parser\DaoTable;
 use Jelix\DaoUtils\DaoContext;
+use Jelix\DaoUtils\DaoSelector;
 
 class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
 
@@ -53,9 +54,9 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
     public function testImportedEvents() {
-        $postSel = new jSelectorDao('jelix_tests~posts', '');
-        $blogSel = new jSelectorDao('jelix_tests~post_blog', '');
-        $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
+        $postSel = new DaoSelector('jelix_tests~posts', '');
+        $blogSel = new DaoSelector('jelix_tests~post_blog', '');
+        $trackerSel = new DaoSelector('jelix_tests~post_tracker', '');
 
         $context = new DaoContext('mysql');
         $compiler = new Compiler();
@@ -70,8 +71,8 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
     }
     
     public function testImportWithRedefinedMethods() {
-        $postSel = new jSelectorDao('jelix_tests~posts', '');
-        $trackerSel = new jSelectorDao('jelix_tests~post_tracker', '');
+        $postSel = new DaoSelector('jelix_tests~posts', '');
+        $trackerSel = new DaoSelector('jelix_tests~post_tracker', '');
         $context = new DaoContext('mysql');
         $compiler = new Compiler();
 
@@ -448,8 +449,8 @@ class jDaoImportTest extends \Jelix\UnitTests\UnitTestCase {
     
     protected function launchTestImportWithRedefinedProperties($daoName)
     {
-        $postSel = new jSelectorDao('jelix_tests~posts', '');
-        $blogSel = new jSelectorDao($daoName, '');
+        $postSel = new DaoSelector('jelix_tests~posts', '');
+        $blogSel = new DaoSelector($daoName, '');
         $context = new DaoContext('mysql');
         $compiler = new Compiler();
 
