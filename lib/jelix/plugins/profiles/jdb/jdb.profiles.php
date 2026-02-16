@@ -38,7 +38,7 @@ class jdbProfilesCompiler extends jProfilesCompilerPlugin
 
         // parameters that are used for a connection and that identify a unique connection
         $connectionParameters = array( 'service', 'host', 'port', 'user', 'password', 'database',
-            'timeout', 'pg_options', 'force_new');
+            'timeout', 'pg_options', 'force_new', 'usepdo');
 
         // parameters used to change some properties using the connection, and if there
         // are different between two profiles having same connection parameters, we should
