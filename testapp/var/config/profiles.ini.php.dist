@@ -50,6 +50,16 @@ user=test_user
 password=jelix
 sslmode=allow
 
+[jdb:testapp_pgsql_pdo]
+driver="pgsql"
+host=pgsql
+database=testapp
+user=test_user
+password=jelix
+sslmode=allow
+usepdo=1
+
+
 ; to run tests with sqlite
 [jdb:testapp_sqlite3]
 driver=sqlite3

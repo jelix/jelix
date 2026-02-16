@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2007-2025 Laurent Jouanneau
+* @copyright   2007-2026 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -16,12 +16,21 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected $records;
 
+    protected $dbProfile ='pgsql_profile';
+    protected $needPDO = false;
+
+    protected $pgTrueValue = 't';
+    protected $pgFalseValue = 'f';
+
     function setUp() : void  {
         self::initJelixConfig();
-        $this->dbProfile = 'pgsql_profile';
         try{
             // check if we have profile
             $prof = Profiles::get('jdb', $this->dbProfile, true);
+            if ($this->needPDO) {
+                $this->pgFalseValue = false;
+                $this->pgTrueValue = true;
+            }
         }
         catch (Exception $e) {
             $this->markTestSkipped('jDb_PgsqlTest cannot be run: '.$e->getMessage());
@@ -74,15 +83,15 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
             array('id'=>self::$prod1->id,
             'name'=>'assiette',
             'price'=>3.87,
-            'promo'=>'f'),
+            'promo'=>$this->pgFalseValue),
             array('id'=>self::$prod2->id,
             'name'=>'fourchette',
             'price'=>1.54,
-            'promo'=>'t'),
+            'promo'=>$this->pgTrueValue),
             array('id'=>self::$prod3->id,
             'name'=>'verre',
             'price'=>2.43,
-            'promo'=>'f'),
+            'promo'=>$this->pgFalseValue),
         );
         $this->assertTableContainsRecords('product_test', $this->records);
 
@@ -100,7 +109,7 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertEquals(self::$prod1->id, $prod->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette', $prod->name, 'jDao::get : bad name property on record');
         $this->assertEquals(3.87, $prod->price, 'jDao::get : bad price property on record');
-        $this->assertEquals('f', $prod->promo, 'jDao::get : bad promo property on record');
+        $this->assertEquals($this->pgFalseValue, $prod->promo, 'jDao::get : bad promo property on record');
     }
 
     /**
@@ -121,33 +130,33 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertEquals(self::$prod1->id, $prod2->id, 'jDao::get : bad id on record');
         $this->assertEquals('assiette nouvelle', $prod2->name,'jDao::get : bad name property on record');
         $this->assertEquals(5.90, $prod2->price,'jDao::get : bad price property on record');
-        $this->assertEquals('t', $prod2->promo,'jDao::get : bad promo property on record');
+        $this->assertEquals($this->pgTrueValue, $prod2->promo,'jDao::get : bad promo property on record');
 
 
         $prod->promo = 't';
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals('t', $prod2->promo,'jDao::get : bad promo property on record : %');
+        $this->assertEquals($this->pgTrueValue, $prod2->promo,'jDao::get : bad promo property on record : %');
 
         $prod->promo = 1;
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals('t', $prod2->promo, 'jDao::get : bad promo property on record : %');
+        $this->assertEquals($this->pgTrueValue, $prod2->promo, 'jDao::get : bad promo property on record : %');
 
         $prod->promo = 'f';
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals('f', $prod2->promo, 'jDao::get : bad promo property on record : %');
+        $this->assertEquals($this->pgFalseValue, $prod2->promo, 'jDao::get : bad promo property on record : %');
 
         $prod->promo = false;
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals('f',$prod2->promo, 'jDao::get : bad promo property on record : %');
+        $this->assertEquals($this->pgFalseValue,$prod2->promo, 'jDao::get : bad promo property on record : %');
 
         $prod->promo = 0;
         $dao->update($prod);
         $prod2 = $dao->get(self::$prod1->id);
-        $this->assertEquals('f', $prod2->promo, 'jDao::get : bad promo property on record : %');
+        $this->assertEquals($this->pgFalseValue, $prod2->promo, 'jDao::get : bad promo property on record : %');
 
     }
 
@@ -171,7 +180,13 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $sess2 = $dao->get('sess_02939873A32B');
 
         $this->assertEquals($sess1->id, $sess2->id, 'jDao::get : bad id on record');
-        $this->assertEquals(bin2hex($sess1->data), bin2hex($sess2->data), 'jDao::get : bad binary data');
+        if ($this->needPDO) {
+            $data = bin2hex(stream_get_contents($sess2->data));
+        }
+        else {
+            $data = bin2hex($sess2->data);
+        }
+        $this->assertEquals(bin2hex($sess1->data), $data, 'jDao::get : bad binary data');
     }
 
     /**
@@ -210,15 +225,15 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
             array('id'=>1,
             'name'=>'assiettes',
             'price'=>3.87,
-            'promo'=>'f'),
+            'promo'=>$this->pgFalseValue),
             array('id'=>2,
             'name'=>'fourchettes',
             'price'=>1.54,
-            'promo'=>'t'),
+            'promo'=>$this->pgTrueValue),
             array('id'=>3,
             'name'=>'verres',
             'price'=>2.43,
-            'promo'=>'f'),
+            'promo'=>$this->pgFalseValue),
         );
         $this->assertTableContainsRecords('product_test', $this->records);
     }
@@ -230,7 +245,12 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->emptyTable('product_test');
         $cnx = jDb::getConnection($this->dbProfile);
 
-        $stmt = $cnx->prepare('INSERT INTO product_test (id, name, price, promo) VALUES($1, $2, $3, $4)');
+        if ($this->needPDO) {
+            $stmt = $cnx->prepare('INSERT INTO product_test (id, name, price, promo) VALUES(?, ?, ?, ?)');
+        }
+        else {
+            $stmt = $cnx->prepare('INSERT INTO product_test (id, name, price, promo) VALUES($1, $2, $3, $4)');
+        }
         $stmt->execute(array(
             1, 'assiettes' , 3.87, 'f'
         ));
@@ -243,11 +263,11 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
             array('id'=>1,
             'name'=>'assiettes',
             'price'=>3.87,
-            'promo'=>'f'),
+            'promo'=>$this->pgFalseValue),
             array('id'=>2,
             'name'=>'fourchettes',
             'price'=>1.54,
-            'promo'=>'t'),
+            'promo'=>$this->pgTrueValue),
         );
         $this->assertTableContainsRecords('product_test', $this->records);
     }
