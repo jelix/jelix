@@ -369,16 +369,15 @@ class jDbPDOConnection extends PDO
      * @return string escaped string
      *
      * @since 1.2
-     *
-     * @todo $binary parameter is not really supported, check if PDOConnection::quote supports binary strings
      */
     public function quote2($text, $checknull = true, $binary = false)
     {
+        $type = $binary ? PDO::PARAM_LOB : PDO::PARAM_STR;
         if ($checknull) {
-            return is_null($text) ? 'NULL' : $this->quote($text);
+            return is_null($text) ? 'NULL' : $this->quote($text, $type);
         }
 
-        return $this->quote($text);
+        return $this->quote($text, $type);
     }
 
     /**
