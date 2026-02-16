@@ -6,7 +6,7 @@
  * @author      Laurent Jouanneau, Gerald Croes
  * @contributor Julien Issler
  *
- * @copyright   2005-2024 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  * @copyright   2007-2009 Julien Issler
  * @copyright 2001-2005 CopixTeam
  * This class was get originally from the Copix project (CopixDbConnection, Copix 2.3dev20050901, http://www.copix.org)
@@ -591,5 +591,20 @@ abstract class jDbConnection
         $this->foundParameters[] = $matches[2];
 
         return $this->parameterMarker;
+    }
+
+    protected $serverVersion = 0;
+
+    public function getServerMajorVersion()
+    {
+        if ($this->serverVersion === 0) {
+            $version = $this->getAttribute($this::ATTR_SERVER_VERSION);
+            if ($version != '') {
+                $version = explode('.', $version);
+                $this->serverVersion = intval($version[0]);
+            }
+        }
+
+        return $this->serverVersion;
     }
 }

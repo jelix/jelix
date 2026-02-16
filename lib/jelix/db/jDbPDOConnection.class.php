@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor Gwendal Jouannic, Thomas, Julien Issler, Vincent Herr
  *
- * @copyright  2005-2012 Laurent Jouanneau
+ * @copyright  2005-2026 Laurent Jouanneau
  * @copyright  2008 Gwendal Jouannic, 2009 Thomas
  * @copyright  2009 Julien Issler
  * @copyright  2011 Vincent Herr
@@ -430,5 +430,20 @@ class jDbPDOConnection extends PDO
         }
 
         return parent::lastInsertId($fromSequence);
+    }
+
+    protected $serverVersion = 0;
+
+    public function getServerMajorVersion()
+    {
+        if ($this->serverVersion === 0) {
+            $version = $this->getAttribute($this::ATTR_SERVER_VERSION);
+            if ($version != '') {
+                $version = explode('.', $version);
+                $this->serverVersion = intval($version[0]);
+            }
+        }
+
+        return $this->serverVersion;
     }
 }

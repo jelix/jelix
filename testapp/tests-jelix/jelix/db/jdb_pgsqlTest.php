@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor Julien Issler
-* @copyright   2007-2022 Laurent Jouanneau
+* @copyright   2007-2026 Laurent Jouanneau
 * @copyright   2009 Julien Issler
 * @link        http://www.jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -14,9 +14,11 @@ class jDb_PgsqlTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     protected $records;
 
+    protected $dbProfile ='pgsql_profile';
+    protected $needPDO = false;
+
     function setUp() : void  {
         self::initJelixConfig();
-        $this->dbProfile = 'pgsql_profile';
         try{
             // check if we have profile
             $prof = jProfiles::get('jdb', $this->dbProfile, true);

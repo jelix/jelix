@@ -10,7 +10,7 @@
  * @contributor Julien Issler
  * @contributor Alexandre Zanelli
  *
- * @copyright  2001-2005 CopixTeam, 2005-2023 Laurent Jouanneau, 2007-2008 Laurent Raufaste
+ * @copyright  2001-2005 CopixTeam, 2005-2026 Laurent Jouanneau, 2007-2008 Laurent Raufaste
  * @copyright  2009 Julien Issler
  * This class was get originally from the Copix project (CopixDBConnectionPostgreSQL, Copix 2.3dev20050901, http://www.copix.org)
  * Few lines of code are still copyrighted 2001-2005 CopixTeam (LGPL licence).
@@ -308,20 +308,6 @@ class pgsqlDbConnection extends jDbConnection
     {
     }
 
-    protected $serverVersion = 0;
-
-    public function getServerMajorVersion()
-    {
-        if ($this->serverVersion === 0) {
-            $version = $this->getAttribute($this::ATTR_SERVER_VERSION);
-            if ($version != '') {
-                $version = explode('.', $version);
-                $this->serverVersion = intval($version[0]);
-            }
-        }
-
-        return $this->serverVersion;
-    }
 
     public function getSearchPath()
     {
