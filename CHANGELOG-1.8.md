@@ -4,6 +4,9 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix deprecation error about inexisting `version` property on `Uninstaller`
+
+
 1.8.22
 ------
 
