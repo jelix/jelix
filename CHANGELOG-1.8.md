@@ -4,8 +4,14 @@ Changes into Jelix 1.8
 Next
 ----
 
-- fix deprecation error about inexisting `version` property on `Uninstaller`
 
+1.8.23
+------
+
+- fix deprecation error about inexisting `version` property on `Uninstaller`
+- fix(jdb/pdo) error "undefined method `getServerMajorVersion()`"
+- fix(jdb) pdo connection on Postgresql was made without pdo in some case
+- fix(jdb) implementation of jDbPDOConnection::quote2 supports binary values from now.
 
 1.8.22
 ------
