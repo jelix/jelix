@@ -4,6 +4,8 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix(jdb) `jDbPDOConnection::unprefixTable()` was missing
+
 
 1.8.23
 ------
