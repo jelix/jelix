@@ -6,7 +6,7 @@
  * @author     Laurent Jouanneau
  * @contributor Aurélien Marcel
  *
- * @copyright  2017-2018 Laurent Jouanneau, 2011 Aurélien Marcel
+ * @copyright  2017-2026 Laurent Jouanneau, 2011 Aurélien Marcel
  *
  * @see        http://jelix.org
  * @licence     http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -18,17 +18,20 @@ require_once JELIX_LIB_PATH.'db/jDbColumn.class.php';
 abstract class jDbSchema
 {
     /**
-     * @var jDbConnection
+     * @var jDbConnection|jDbPDOConnection
      */
     protected $conn;
 
-    public function __construct(jDbConnection $conn)
+    /**
+     * @param jDbConnection|jDbPDOConnection $conn
+     */
+    public function __construct($conn)
     {
         $this->conn = $conn;
     }
 
     /**
-     * @return jDbConnection
+     * @return jDbConnection|jDbPDOConnection
      */
     public function getConn()
     {

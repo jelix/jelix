@@ -5,7 +5,7 @@ Next
 ----
 
 - fix(jdb) `jDbPDOConnection::unprefixTable()` was missing
-
+- fix(jdb) `jDbSchema` must accept `jDbPDOConnection` objects on the constructor
 
 1.8.23
 ------
