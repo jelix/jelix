@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="art" realname="article3serial" primarykey="id" />
+   </datasources>
+   <record>
+      <property name="id"   fieldname="id" datatype="serial"/>
+      <property name="category_id"   fieldname="category_id" datatype="integer" required="true"/>
+      <property name="title" fieldname="title" datatype="varchar"  maxlength="255" required="true"/>
+      <property name="content" fieldname="content" datatype="text" required="true"/>
+   </record>
+   <factory>
+   </factory>
+</dao>

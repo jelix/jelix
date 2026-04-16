@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="art" realname="article3" primarykey="id" />
+      <foreigntable name="cat" realname="article3_category" primarykey="catid" onforeignkey="category_id"/>
+   </datasources>
+   <record>
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
+      <property name="category_id"   fieldname="category_id" datatype="integer" required="true"/>
+      <property name="title" fieldname="title" datatype="varchar"  maxlength="200" required="true"/>
+      <property name="content" fieldname="content" datatype="text" required="true"/>
+      <property name="catname" fieldname="label" table="cat" datatype="string"/>
+   </record>
+   <factory>
+   </factory>
+</dao>

@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="cat" realname="article3_category" primarykey="catid" />
+   </datasources>
+   <record>
+      <property name="catid"   fieldname="catid" datatype="autoincrement"/>
+      <property name="label" fieldname="label" datatype="varchar" maxlength="200"  required="true"/>
+   </record>
+   <factory>
+   </factory>
+</dao>
