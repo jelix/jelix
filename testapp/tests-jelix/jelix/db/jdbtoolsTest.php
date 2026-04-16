@@ -4,7 +4,7 @@
 * @subpackage  jelix_tests module
 * @author      Laurent Jouanneau
 * @contributor
-* @copyright   2009-2015 Laurent Jouanneau
+* @copyright   2009-2026 Laurent Jouanneau
 * @link        http://jelix.org
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
@@ -15,7 +15,7 @@ include_once (JELIX_LIB_PATH.'db/tools/jDbOciTools.php');
 include_once (JELIX_LIB_PATH.'db/tools/jDbSqliteTools.php');
 
 
-class jdbToolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
+class jdbtoolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
 
     public static function setUpBeforeClass() : void {
         self::initJelixConfig();
@@ -518,4 +518,3 @@ class jdbToolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         $this->assertTableHasNRecords('labels_test', 3);
     }
 }
-

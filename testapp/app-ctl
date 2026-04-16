@@ -54,6 +54,9 @@ case $COMMAND in
     pgsql)
        docker exec -it --user postgres -e PGPASSWORD="jelix" jelix_${JLX_BRANCH}_test_pgsql psql --username=test_user testapp
        ;;
+    pgsql-root)
+       docker exec -it jelix_${JLX_BRANCH}_test_pgsql /bin/bash  -l
+       ;;
     redis)
       docker exec -it jelix_${JLX_BRANCH}_test_redis redis-cli
       ;;
@@ -68,4 +71,3 @@ case $COMMAND in
         exit 2
         ;;
 esac
-

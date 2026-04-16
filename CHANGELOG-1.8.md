@@ -4,6 +4,7 @@ Changes into Jelix 1.8
 Next
 ----
 
+- new(jdb) Support of identity column for Postgresql
 - fix(jdb) `jDbPDOConnection::unprefixTable()` was missing
 - fix(jdb) `jDbSchema` must accept `jDbPDOConnection` objects on the constructor
 
