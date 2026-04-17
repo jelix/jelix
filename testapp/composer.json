@@ -22,7 +22,7 @@
         }
     ],
     "require": {
-        "phpunit/phpunit": "10.4.*",
+        "phpunit/phpunit": "10.5.*",
         "jelix/jelix-essential" : "@dev",
         "jelix/soap-server-module": "2.0.x-dev",
         "jelix/minify-module": "2.0.x-dev",

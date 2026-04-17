@@ -21,7 +21,7 @@ if [ ! -f $basedir/.env ]; then
   fi
 
   if [ "$PHP_VERSION" == "" ]; then
-    PHP_VERSION=8.3
+    PHP_VERSION=8.5
   fi
 
   cat <<-EOF > $basedir/.env
