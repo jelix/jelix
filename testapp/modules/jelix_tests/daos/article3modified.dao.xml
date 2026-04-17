@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<dao xmlns="http://jelix.org/ns/dao/1.0">
+   <datasources>
+      <primarytable name="art" realname="article3" primarykey="id" />
+   </datasources>
+   <record>
+      <property name="id"   fieldname="id" datatype="autoincrement"/>
+      <property name="category_id"   fieldname="category_id" datatype="integer" required="true"/>
+       <!-- modified length -->
+      <property name="title" fieldname="title" datatype="varchar"  maxlength="255" required="true"/>
+      <property name="content" fieldname="content" datatype="text" required="true"/>
+       <!-- new field -->
+      <property name="create_date" fieldname="create_date" datatype="string"  maxlength="20"/>
+   </record>
+   <factory>
+   </factory>
+</dao>

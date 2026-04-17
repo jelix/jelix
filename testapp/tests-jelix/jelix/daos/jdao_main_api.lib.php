@@ -9,6 +9,10 @@
 * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
 */
 
+use Jelix\Dao\DbMapper;
+use Jelix\DaoUtils\DaoContext;
+use Jelix\Database\Schema\SqlToolsInterface;
+
 /**
  * CAREFULL ! DON'T CHANGE THE ORDER OF METHODS
  */
@@ -22,6 +26,8 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
     static protected $productPromoType = 'string';
 
     protected $jsonSpace = ' ';
+
+    protected $schemaClass = '\Jelix\Database\Schema\Mysql\Schema';
 
     function setUp() : void  {
         self::initJelixConfig();
@@ -652,5 +658,88 @@ abstract class jdao_main_api_base extends \Jelix\UnitTests\UnitTestCaseDb {
     </object>
 </array>';
         $this->assertComplexIdenticalStr($list, $verif);
+    }
+
+    function testDbMapperCreate()
+    {
+        $cn = jDb::getConnection($this->dbProfile);
+        $cn->exec('DROP TABLE IF EXISTS article3');
+        $cn->exec('DROP TABLE IF EXISTS article3_category');
+
+        $context = new DaoContext($cn->getSQLType());
+        $mapper = new DbMapper($context, $cn);
+        $mapper->createTableFromDao($context->resolveDaoPath('article3_category'));
+        $mapper->createTableFromDao($context->resolveDaoPath('article3'));
+
+        $rs = $cn->query('SELECT * FROM article3');
+        $this->assertNotFalse($rs);
+        unset($rs);
+        $rs = $cn->query('SELECT * FROM article3_category');
+        $this->assertNotFalse($rs);
+        unset($rs);
+    }
+
+    /**
+     * @depends testDbMapperCreate
+     * @return void
+     */
+    function testDbMapperModified()
+    {
+        $db = jDb::getConnection($this->dbProfile);
+        // we want a new instance of the schema object
+        $schema = new $this->schemaClass($db);
+
+        $table = $schema->getTable('article3');
+        $this->assertNotNull($table);
+
+        $columns = $table->getColumns();
+        $this->assertEquals(['id', 'category_id', 'title', 'content'], array_keys($columns));
+        $this->assertEquals(200, $columns['title']->length);
+
+        $context = new DaoContext($db->getSQLType());
+        $mapper = new DbMapper($context, $db);
+        $mapper->createTableFromDao($context->resolveDaoPath('article3modified'));
+
+        $db = jDb::getConnection($this->dbProfile);
+        // we want a new instance of the schema object
+        $schema = new $this->schemaClass($db);
+
+        $table = $schema->getTable('article3');
+        $this->assertNotNull($table);
+
+        $columns = $table->getColumns();
+        $this->assertEquals(['id', 'category_id', 'title', 'content', 'create_date'], array_keys($columns));
+        $this->assertEquals(255, $columns['title']->length);
+    }
+
+    /**
+     * @depends testDbMapperModified
+     * @return void
+     */
+    function testDbMapperInsertDaoData()
+    {
+        $db = jDb::getConnection($this->dbProfile);
+        $context = new DaoContext($db->getSQLType());
+        $mapper = new DbMapper($context, $db);
+
+        $properties = [ 'catid', 'label'];
+        $data = [
+            [ 1, 'first'],
+            [ 2, 'second'],
+            [ 3, 'third'],
+            [ 4, 'fourth'],
+        ];
+        $mapper->insertDaoData($context->resolveDaoPath('article3_category'), $properties, $data, SqlToolsInterface::IBD_EMPTY_TABLE_BEFORE);
+
+        $expected   = [
+            [ 'catid' => 1, 'label'=>'first'],
+            [ 'catid' => 2, 'label'=>'second'],
+            [ 'catid' => 3, 'label'=>'third'],
+            [ 'catid' => 4, 'label'=>'fourth'],
+        ];
+        $this->assertTableContainsRecords('article3_category', $expected);
+        $db = jDb::getConnection($this->dbProfile);
+        $db->exec('DROP TABLE IF EXISTS article3');
+        $db->exec('DROP TABLE IF EXISTS article3_category');
     }
 }
