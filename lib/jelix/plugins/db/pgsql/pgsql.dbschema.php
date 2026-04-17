@@ -166,6 +166,20 @@ class pgsqlDbTable extends jDbTable
             $conn->exec($sql);
         }
 
+        if (!$new->autoIncrement && $new->autoIncrement != $old->autoIncrement) {
+            $new->autoIncrementFlavor = '';
+
+            if ($old->sequence) {
+                $conn->exec('ALTER SEQUENCE '.$conn->encloseName($old->sequence).' OWNED BY NONE');
+                $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
+                    ' ALTER COLUMN '.$conn->encloseName($new->name).
+                    ' DROP DEFAULT';
+                $conn->exec($sql);
+                $conn->exec('DROP SEQUENCE '.$conn->encloseName($old->sequence));
+            }
+            $new->sequence = '';
+        }
+
         if ($new->hasDefault !== $old->hasDefault) {
             if ($new->hasDefault && $new->default !== null) {
                 $sql = 'ALTER TABLE '.$conn->encloseName($this->name).
@@ -227,10 +241,13 @@ class pgsqlDbTable extends jDbTable
         $recSeq = $conn->query('SELECT pc.relname FROM pg_class pc JOIN pg_sequence ps ON pc.oid = ps.seqrelid WHERE pc.relname='.$conn->quote($new->sequence))->fetch();
         if (!$recSeq) {
 
-            $max = 0;
+            $max = 1;
             $rec = $conn->query('SELECT MAX('.$columnName.') as mx FROM '.$tableName)->fetch();
             if ($rec) {
-                $max = $rec->mx;
+                $max = intval($rec->mx);
+                if ($max < 1) {
+                    $max = 1;
+                }
             }
             $conn->exec('CREATE SEQUENCE '.$seq);
             $conn->exec('ALTER SEQUENCE '.$seq.' START WITH '.$max);

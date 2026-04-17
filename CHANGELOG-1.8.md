@@ -6,6 +6,7 @@ Next
 
 - new(jdb) Support of identity column for Postgresql
 - fix(jdb) fix SQL error when changing an identity column to serial with jDbSchema and Postgresql  
+- fix(jdb) fix SQL error when changing a autoincremented column to integer with jDbSchema and Postgresql  
 - fix(jdb) `jDbPDOConnection::unprefixTable()` was missing
 - fix(jdb) `jDbSchema` must accept `jDbPDOConnection` objects on the constructor
 
