@@ -156,9 +156,10 @@ class DatabaseHelpers
      */
     public function createTableFromDao($selectorStr)
     {
-        $cnt = \jDb::getConnection($this->dbProfile);
-        $daoMapper = new DbMapper(new DaoContext($cnt->getSQLType()), $cnt);
-        $daoMapper->createTableFromDao($selectorStr);
+        $cnt = $this->dbConnection();
+        $context = new DaoContext($cnt->getSQLType());
+        $daoMapper = new DbMapper($context, $cnt);
+        $daoMapper->createTableFromDao($context->resolveDaoPath($selectorStr));
     }
 
     /**
