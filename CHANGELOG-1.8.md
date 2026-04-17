@@ -4,6 +4,20 @@ Changes into Jelix 1.8
 Next
 ----
 
+- new(jdb) Support of identity column for Postgresql
+- fix(jdb) fix SQL error when changing an identity column to serial with jDbSchema and Postgresql  
+- fix(jdb) fix SQL error when changing a autoincremented column to integer with jDbSchema and Postgresql  
+- fix(jdb) `jDbPDOConnection::unprefixTable()` was missing
+- fix(jdb) `jDbSchema` must accept `jDbPDOConnection` objects on the constructor
+
+1.8.23
+------
+
+- fix deprecation error about inexisting `version` property on `Uninstaller`
+- fix(jdb/pdo) error "undefined method `getServerMajorVersion()`"
+- fix(jdb) pdo connection on Postgresql was made without pdo in some case
+- fix(jdb) implementation of jDbPDOConnection::quote2 supports binary values from now.
+
 1.8.22
 ------
 

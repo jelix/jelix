@@ -24,6 +24,7 @@ class jdao_main_api_sqlite3Test extends jdao_main_api_base {
     function setUp() : void  {
         self::initJelixConfig();
         jApp::pushCurrentModule('jelix_tests');
+        $this->schemaClass = '\Jelix\Database\Schema\Sqlite\Schema';
         try {
             Profiles::get('jdb', 'testapp_sqlite3', true);
         }
@@ -53,4 +54,3 @@ class jdao_main_api_sqlite3Test extends jdao_main_api_base {
         $this->assertTrue(true);
     }
 }
-

@@ -17,7 +17,7 @@
         "jelix/dao": "1.x-dev",
         "symfony/console":"^6.4.22",
         "jelix/file-utilities": "^1.8.5",
-        "jelix/version": "^2.0.1",
+        "jelix/version": "^2.0.2",
         "defuse/php-encryption": "^2.4.0",
         "google/recaptcha": "~1.3.0",
         "psr/event-dispatcher": "~1.0.0"
