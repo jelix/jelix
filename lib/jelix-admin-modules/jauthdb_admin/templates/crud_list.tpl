@@ -50,6 +50,9 @@
 {/foreach}
 </tbody>
 </table>
+{if $allowLoginWithEmail}
+{@jauthdb_admin~crud.list.allow.login.with.email@}
+{/if}
 {if $recordCount > $listPageSize}
 <div class="record-pages-list">Pages : {pagelinks 'jauthdb_admin~default:index', array('filter'=>$filter),  $recordCount, $page, $listPageSize, 'offset' }</div>
 {/if}
