@@ -381,6 +381,11 @@ abstract class jRequest
         return false;
     }
 
+    public function getHttpMethod()
+    {
+        return $_SERVER['REQUEST_METHOD'];
+    }
+
     /**
      * return the application domain name.
      *

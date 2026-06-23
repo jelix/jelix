@@ -36,6 +36,12 @@ New features
   You can set a directory without a namespace. This directory will be a root
   for namespaces that are not matched by other rules.
 
+**Responses**
+
+- jResponseBinary supports from now http range requests: it can send part of files if needed
+- jResponseBinary does not send anymore file content for HEAD HTTP requests  
+
+
 **Templates**
 
 Castor syntax v2 is now supported in template files having the `ctpl` extension.
@@ -79,6 +85,9 @@ will be done correctly.
 ```
 
 ```php
+use Jelix\Event\Attribute\ListenEvent;
+use Jelix\Event\Attribute\ListenEventClass;
+
 class TestAttrEventsListener
 {
     #[ListenEvent('TestEvent')]
@@ -242,5 +251,3 @@ Contributors
 - Laurent Jouanneau
 - Raphael Martin
 - Riccardo Beltrami
-
-

@@ -7,7 +7,7 @@
  * @contributor Julien Issler, Brice Tence
  * @contributor Florian Lonqueu-Brochard
  *
- * @copyright   2005-2023 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  * @copyright   2010 Julien Issler, 2011 Brice Tence
  * @copyright   2011 Florian Lonqueu-Brochard
  *
@@ -75,7 +75,7 @@ abstract class jResponse
     }
 
     /**
-     * Send the response in the correct format. If errors or exceptions appears
+     * Send the response in the correct format. If errors or exceptions appear
      * during this method, outputErrors will be called. So the
      * the content should be generated using the output buffer if errors can
      * be appeared during this generation. Be care of http headers.
@@ -167,6 +167,23 @@ abstract class jResponse
         $this->_httpHeaders = array();
         $this->_httpStatusCode = '200';
         $this->_httpStatusMsg = 'OK';
+    }
+
+    /**
+     * @param string $header
+     * @return mixed|null
+     */
+    protected function getRequestHeader($header)
+    {
+        return jApp::coord()->request->header($header);
+    }
+
+    /**
+     * @return jRequest
+     */
+    protected function getRequest()
+    {
+        return jApp::coord()->request;
     }
 
     /**
@@ -317,7 +334,7 @@ abstract class jResponse
 
         if ($dateLastModified != null) {
             $dateLastModified = $this->_normalizeDate($dateLastModified);
-            $lastModified = jApp::coord()->request->header('If-Modified-Since');
+            $lastModified = $this->getRequestHeader('If-Modified-Since');
             if ($lastModified !== null && $lastModified == $dateLastModified) {
                 $notModified = true;
             } else {
@@ -326,7 +343,7 @@ abstract class jResponse
         }
 
         if ($etag != null) {
-            $headerEtag = jApp::coord()->request->header('If-None-Match');
+            $headerEtag = $this->getRequestHeader('If-None-Match');
             if ($headerEtag !== null && $etag == $headerEtag) {
                 $notModified = true;
             } else {
