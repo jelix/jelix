@@ -4,6 +4,7 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix(jlocale) getLangName: remove extra name from language names
 
 1.8.24
 ------
@@ -26,7 +27,7 @@ Other fixes:
 - fix(jdb) fix SQL error when changing a autoincremented column to integer with `jDbSchema` and Postgresql  
 - fix(jdb) `jDbPDOConnection::unprefixTable()` was missing
 - fix(jdb) `jDbSchema` must accept `jDbPDOConnection` objects on the constructor
-- fix(jAuth) `canBePersistent()` is renammed to `isPersistant()` (which is deprecated from now)
+- fix(jAuth) `canBePersistent()` is replacing `isPersistant()` (which is deprecated from now)
 - fix(jauthdb_admin) performance issue on the autocomplete search of the list of accounts
 - fix(installer) `execSQLScript` should check if the SQL file exists before executing
 

@@ -4,6 +4,16 @@ use Jelix\IniFile\IniModifier;
 
 require(__DIR__.'/../testapp/vendor/autoload.php');
 
+
+function removeExtra($name) {
+    $p = strpos($name, ';');
+    if ($p !== false) {
+        $name = trim(substr($name, 0, $p));
+    }
+    return $name;
+}
+
+
 $names = array();
 $englishName = array();
 $frenchNames = array();
@@ -16,9 +26,9 @@ while (!feof($f)) {
     }
     $l = preg_split("/\t/u", $line);
     $code = trim($l[0]);
-    $names[$code] = $l[4];
-    $englishName[$code] = mb_substr($l[5], 0, -1);
-    $frenchNames[$code] =$l[3];
+    $names[$code] = removeExtra($l[4]);
+    $englishName[$code] = removeExtra(mb_substr($l[5], 0, -1));
+    $frenchNames[$code] = removeExtra($l[3]);
 }
 
 file_put_contents(__DIR__.'/../lib/jelix/core/lang_names__.ini', "; ISO 639-1\n");
@@ -58,4 +68,3 @@ Jelix\IniFile\Util::write(
     ), __DIR__.'/../lib/jelix/core/lang_names_fr.ini', '; ISO 639-1 - french');
 
 */
-
