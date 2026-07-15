@@ -5,6 +5,7 @@ Next
 ----
 
 - fix(jlocale) getLangName: remove extra name from language names
+- fix(jUrl) bad support of the `controller` attribute into urls.xml files of modules.
 
 1.8.24
 ------
