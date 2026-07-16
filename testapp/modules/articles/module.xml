@@ -10,7 +10,7 @@
         <homepageURL>http://jelix.org</homepageURL>
     </info>
     <dependencies>
-        <jelix minversion="1.8.25-pre" maxversion="1.8.25"/>
-        <module name="jelix_tests" minversion="1.8.25-pre" maxversion="1.8.25-pre"/>
+        <jelix minversion="1.8.25" maxversion="1.8.26"/>
+        <module name="jelix_tests" minversion="1.8.25" maxversion="1.8.25"/>
     </dependencies>
 </module>
