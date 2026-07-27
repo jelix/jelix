@@ -4,6 +4,12 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix(jForms) password editor was not disabled within a choice control 
+
+
+1.8.25
+-------
+
 - fix(jlocale) getLangName: remove extra name from language names
 - fix(jUrl) bad support of the `controller` attribute into urls.xml files of modules.
 
