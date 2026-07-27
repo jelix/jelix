@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler, Dominique Papin, Claudio Bernardes
  *
- * @copyright   2006-2020 Laurent Jouanneau
+ * @copyright   2006-2026 Laurent Jouanneau
  * @copyright   2008-2011 Julien Issler, 2008 Dominique Papin
  * @copyright   2012 Claudio Bernardes
  *
@@ -252,7 +252,7 @@ abstract class WidgetBase implements WidgetInterface
     protected function _outputAttr(&$attributes)
     {
         foreach ($attributes as $name => $val) {
-            echo ' '.$name.'="'.htmlspecialchars($val, ENT_COMPAT | ENT_SUBSTITUTE).'"';
+            echo ' '.$name.'="'.htmlspecialchars((string) $val, ENT_COMPAT | ENT_SUBSTITUTE).'"';
         }
     }
 
