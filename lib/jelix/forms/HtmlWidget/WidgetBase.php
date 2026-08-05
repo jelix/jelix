@@ -119,6 +119,7 @@ abstract class WidgetBase implements WidgetInterface
     public function setDefaultAttributes($attr)
     {
         $this->defaultAttributes = $attr;
+        $this->attributes = $attr;
     }
 
     public function setAttributes($attr)

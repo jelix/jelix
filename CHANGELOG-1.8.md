@@ -6,6 +6,7 @@ Next
 
 - fix(jForms) password editor was not disabled within a choice control
 - fix(jforms) PHP deprecation notice into `WidgetBase::_outputAttr`
+- fix(jForms) widget attributes given to `{form}` were not applied on child controls of a "choice" or a "group" control
 
 1.8.25
 -------
