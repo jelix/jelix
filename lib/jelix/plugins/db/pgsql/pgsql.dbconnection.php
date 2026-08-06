@@ -142,11 +142,11 @@ class pgsqlDbConnection extends jDbConnection
             // we do isset instead of equality test against an empty string, to allow to specify
             // that we want to use configuration set in environment variables
             if (isset($this->profile['user'])) {
-                $str .= ' user=\''.$this->profile['user'].'\'';
+                $str .= ' user=\''.str_replace("'", "\\'", $this->profile['user']).'\'';
             }
 
             if (isset($this->profile['password'])) {
-                $str .= ' password=\''.$this->profile['password'].'\'';
+                $str .= ' password=\''.str_replace("'", "\\'", $this->profile['password']).'\'';
             }
         }
 
