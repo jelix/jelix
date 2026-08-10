@@ -7,7 +7,7 @@ Next
 - fix(jForms) password editor was not disabled within a choice control
 - fix(jforms) PHP deprecation notice into `WidgetBase::_outputAttr`
 - fix(jForms) widget attributes given to `{form}` were not applied on child controls of a "choice" or a "group" control
-- fix(jdb) error with a postgresql connection when a password contains a quote. The character was not escaped. 
+- fix(jdb) error with a postgresql connection when a password contains a quote or an anti-slash character. They were not escaped. 
 
 1.8.25
 -------

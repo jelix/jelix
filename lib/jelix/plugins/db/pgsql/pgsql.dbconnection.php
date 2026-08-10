@@ -108,6 +108,12 @@ class pgsqlDbConnection extends jDbConnection
         return pg_last_error($this->_connection);
     }
 
+    protected function escapeValueConnection($str)
+    {
+        $str = str_replace("\\", "\\\\", $str);
+        return str_replace("'", "\\'", $str);
+    }
+
     protected function _connect()
     {
         $funcconnect = (isset($this->profile['persistent']) && $this->profile['persistent'] ? 'pg_pconnect' : 'pg_connect');
@@ -142,11 +148,11 @@ class pgsqlDbConnection extends jDbConnection
             // we do isset instead of equality test against an empty string, to allow to specify
             // that we want to use configuration set in environment variables
             if (isset($this->profile['user'])) {
-                $str .= ' user=\''.str_replace("'", "\\'", $this->profile['user']).'\'';
+                $str .= ' user=\''.$this->escapeValueConnection($this->profile['user']).'\'';
             }
 
             if (isset($this->profile['password'])) {
-                $str .= ' password=\''.str_replace("'", "\\'", $this->profile['password']).'\'';
+                $str .= ' password=\''.$this->escapeValueConnection($this->profile['password']).'\'';
             }
         }
 
@@ -159,7 +165,7 @@ class pgsqlDbConnection extends jDbConnection
         }
 
         if (isset($this->profile['pg_options']) && $this->profile['pg_options'] != '') {
-            $str .= ' options=\''.$this->profile['pg_options'].'\'';
+            $str .= ' options=\''.$this->escapeValueConnection($this->profile['pg_options']).'\'';
         }
 
         if (isset($this->profile['force_new']) && $this->profile['force_new']) {
