@@ -4,6 +4,12 @@ Changes into Jelix 1.8
 Next
 ----
 
+- new(WebAssets) support of jsmodule and importmap
+  ```
+  example.jsmodule= "js/mymodule.js"
+  example.importmap[]="path/to/carre.js|mapname=carre"
+  example.importmap[]="path/to/triangle.js|mapname=triangle|integrity=ABCDEF0123456789"
+  ```
 - fix(jForms) password editor was not disabled within a choice control
 - fix(jforms) PHP deprecation notice into `WidgetBase::_outputAttr`
 - fix(jForms) widget attributes given to `{form}` were not applied on child controls of a "choice" or a "group" control
