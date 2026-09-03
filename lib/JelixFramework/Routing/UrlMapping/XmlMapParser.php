@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Thibault Piront (nuKs)
  *
- * @copyright   2005-2025 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  * @copyright   2007 Thibault Piront
  *
  * @see         https://www.jelix.org
@@ -920,6 +920,7 @@ class XmlMapParser
                 if (isset($url['action'])) {
                     throw new MapParserException($this->getErrorMsg($url, 'It cannot have a controller and an action attributes at the same time'));
                 }
+                $u->action = $url['controller'].':*';
                 $this->newWholeController($u, $url, $pathinfo);
 
                 continue;

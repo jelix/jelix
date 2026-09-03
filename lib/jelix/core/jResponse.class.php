@@ -236,7 +236,7 @@ abstract class jResponse
     }
 
     /**
-     * Clean the differents caches headers.
+     * Clean the different caches headers.
      */
     public function cleanCacheHeaders()
     {

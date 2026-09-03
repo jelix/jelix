@@ -271,8 +271,8 @@ class UrlActionMapper
      *               - array(0,'entrypoint', https true/false, 'handler selector', 'basepathinfo')
      *               - array(1,'entrypoint', https true/false,
      *               array('year','month',), // list of dynamic values included in the url
-     *               array(true, false..), // list of integers which indicates for each
-     *               // dynamic value: 0: urlencode, 1:urlencode except '/', 2:escape
+     *               array(0, 1..), // list of integer which indicates for each
+     *                              // dynamic value: 0: urlencode, 1:urlencode except '/', 2:escape, 4: lang, 8: locale
      *               "/news/%1/%2/", // the url
      *               true/false, // false : this is a secondary action
      *               array('bla'=>'whatIWant' ) // list of static values

@@ -4,6 +4,25 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.26
+------
+
+- new(WebAssets) support of jsmodule and importmap
+  ```
+  example.jsmodule= "js/mymodule.js"
+  example.importmap[]="path/to/carre.js|mapname=carre"
+  example.importmap[]="path/to/triangle.js|mapname=triangle|integrity=ABCDEF0123456789"
+  ```
+- fix(jForms) password editor was not disabled within a choice control
+- fix(jforms) PHP deprecation notice into `WidgetBase::_outputAttr`
+- fix(jForms) widget attributes given to `{form}` were not applied on child controls of a "choice" or a "group" control
+- fix(jdb) error with a postgresql connection when a password contains a quote or an anti-slash character. They were not escaped. 
+
+1.8.25
+-------
+
+- fix(jlocale) getLangName: remove extra name from language names
+- fix(jUrl) bad support of the `controller` attribute into urls.xml files of modules.
 
 1.8.24
 ------
@@ -26,7 +45,7 @@ Other fixes:
 - fix(jdb) fix SQL error when changing a autoincremented column to integer with `jDbSchema` and Postgresql  
 - fix(jdb) `jDbPDOConnection::unprefixTable()` was missing
 - fix(jdb) `jDbSchema` must accept `jDbPDOConnection` objects on the constructor
-- fix(jAuth) `canBePersistent()` is renammed to `isPersistant()` (which is deprecated from now)
+- fix(jAuth) `canBePersistent()` is replacing `isPersistant()` (which is deprecated from now)
 - fix(jauthdb_admin) performance issue on the autocomplete search of the list of accounts
 - fix(installer) `execSQLScript` should check if the SQL file exists before executing
 

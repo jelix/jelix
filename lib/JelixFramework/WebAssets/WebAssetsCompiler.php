@@ -70,13 +70,13 @@ namespace Jelix\WebAssets;
  * example.icon[]= "favicon-64x64.png|sizes=64x64"
  *
  * importmap definitions allow to generate the content of a `<script type="importmap">`.
- * The content of a declaration is: `<pathofthemodule>|mapto=<importname>|integrity=<integrity_value>`. The integrity value
+ * The content of a declaration is: `<pathofthemodule>|mapname=<importname>|integrity=<integrity_value>`. The integrity value
  * is optional.
  *
- * example.importmap="path/to/carre.js|mapto=carre|integrity=xxxxxx"
+ * example.importmap="path/to/carre.js|mapname=carre|integrity=xxxxxx"
  * or
- * example.importmap[]="path/to/carre.js|mapto=carre"
- * example.importmap[]="path/to/triangle.js|mapto=triangle"
+ * example.importmap[]="path/to/carre.js|mapname=carre"
+ * example.importmap[]="path/to/triangle.js|mapname=triangle|integrity=ABCDEF0123456789"
  *
  *
  * A group can be included into an other group. For example, the assets group "mygroup"
