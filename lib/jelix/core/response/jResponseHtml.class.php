@@ -7,7 +7,7 @@
  * @contributor Yann, Dominique Papin
  * @contributor Warren Seine, Alexis Métaireau, Julien Issler, Olivier Demah, Brice Tence
  *
- * @copyright   2005-2025 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
+ * @copyright   2005-2026 Laurent Jouanneau, 2006 Yann, 2007 Dominique Papin
  * @copyright   2008 Warren Seine, Alexis Métaireau
  * @copyright   2009 Julien Issler, Olivier Demah
  * @copyright   2010 Brice Tence
@@ -159,6 +159,12 @@ class jResponseHtml extends jResponseBasicHtml
      * @var string[] list of js source code
      */
     protected $_JSCode = array();
+
+
+    /**
+     * @var array structure for the importmap script tag
+     */
+    protected $_importMap = array();
 
     /**
      * list of keywords to add into a meta keyword tag.
@@ -419,6 +425,20 @@ class jResponseHtml extends jResponseBasicHtml
             if (!isset($this->_JSLink[$src])) {
                 $this->_JSLink[$src] = $params;
             }
+        }
+    }
+
+    public function addImportMap($url, $mapName='', $integrity='')
+    {
+        if (!preg_match('!^https?://!', $url) && !preg_match('!\\.m?js$!', $url)) {
+            $url = $this->appendRevisionToUrl($url);
+        }
+
+        if ($mapName != '') {
+            $this->_importMap['imports'][$mapName] = $url;
+        }
+        if ($integrity != '') {
+            $this->_importMap['integrity'][$url] = $integrity;
         }
     }
 
@@ -764,6 +784,14 @@ class jResponseHtml extends jResponseBasicHtml
         echo ">\n";
     }
 
+    protected function outputImportMap($importMap)
+    {
+        if ((isset($importMap['imports']) && is_array($importMap['imports'])) ||
+            (isset($importMap['integrity']) && is_array($importMap['integrity'])) ) {
+            echo '<script type="importmap">', json_encode($importMap), '</script>', "\n";
+        }
+    }
+
     protected function outputJsScriptTag($fileUrl, $scriptParams)
     {
         $params = '';
@@ -941,7 +969,20 @@ class jResponseHtml extends jResponseBasicHtml
 </script>';
         }
 
+        // Import map
+        $importMap = $this->webAssetsSelection->getImportmap();
+        $this->outputImportMap($importMap);
+        $this->outputImportMap($this->_importMap);
+
         // js link
+        foreach ($this->webAssetsSelection->getJsModuleLinks() as $jsUrl) {
+            $attrsJsm = $jsUrl[1];
+            $attrsJsm['type'] = 'module';
+            $this->outputJsScriptTag($jsUrl[0], $attrsJsm);
+            if (isset($this->_JSLink[$jsUrl[0]])) {
+                unset($this->_JSLink[$jsUrl[0]]);
+            }
+        }
         foreach ($this->webAssetsSelection->getJsLinks() as $jsUrl) {
             $this->outputJsScriptTag($jsUrl[0], $jsUrl[1]);
             if (isset($this->_JSLink[$jsUrl[0]])) {

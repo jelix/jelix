@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2019-2023 Laurent Jouanneau
+ * @copyright   2019-2026 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -20,7 +20,9 @@ class WebAssetsSelection
 
     protected $cssAssets = array();
     protected $jsAssets = array();
+    protected $jsmoduleAssets = array();
     protected $iconAssets = array();
+    protected $importmap = array();
 
     protected $variables;
     protected $urlBasePath;
@@ -31,7 +33,9 @@ class WebAssetsSelection
         $this->urlBasePath = $urlBasePath;
         $this->cssAssets = array();
         $this->jsAssets = array();
+        $this->jsmoduleAssets = array();
         $this->iconAssets = array();
+        $this->importmap = $importmap = array();
         if (!count($this->_assetsGroups)) {
             return;
         }
@@ -55,6 +59,14 @@ class WebAssetsSelection
                 $this->jsAssets,
                 $collectionAssets['webassets_'.$group.'.js']
             );
+            $this->jsmoduleAssets = array_merge(
+                $this->jsmoduleAssets,
+                $collectionAssets['webassets_'.$group.'.jsmodule']
+            );
+            $importmap = array_merge(
+                $importmap,
+                $collectionAssets['webassets_'.$group.'.importmap']
+            );
             $this->cssAssets = array_merge(
                 $this->cssAssets,
                 $collectionAssets['webassets_'.$group.'.css']
@@ -68,6 +80,19 @@ class WebAssetsSelection
         $this->jsAssets = array_map(function ($js) use ($me) {
             return $me->parseAssetUrl($js);
         }, $this->jsAssets);
+        $this->jsmoduleAssets = array_map(function ($js) use ($me) {
+            return $me->parseAssetUrl($js);
+        }, $this->jsmoduleAssets);
+
+        foreach($importmap as $js) {
+            list($url, $attributes) = $this->parseAssetUrl($js);
+            if (isset($attributes['mapname'])) {
+                $this->importmap['imports'][$attributes['mapname']] = $url;
+            }
+            if (isset($attributes['integrity'])) {
+                $this->importmap['integrity'][$url] = $attributes['integrity'];
+            }
+        }
         $this->cssAssets = array_map(function ($css) use ($me) {
             return $me->parseAssetUrl($css);
         }, $this->cssAssets);
@@ -84,6 +109,26 @@ class WebAssetsSelection
     public function getJsLinks()
     {
         return $this->jsAssets;
+    }
+
+    /**
+     * List of modules urls for the script element.
+     *
+     * @return array[] list of array(url, attributes)
+     */
+    public function getJsModuleLinks()
+    {
+        return $this->jsmoduleAssets;
+    }
+
+    /**
+     * List of importmap values
+     *
+     * @return array[] list of array(url, attributes)
+     */
+    public function getImportmap()
+    {
+        return $this->importmap;
     }
 
     /**

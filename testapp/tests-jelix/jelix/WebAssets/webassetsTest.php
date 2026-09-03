@@ -63,6 +63,8 @@ a.js = a.js
                       'webassets_a.js' => array('k>a.js>'),
                       'webassets_a.css' => array(),
                       'webassets_a.icon' => array(),
+                      'webassets_a.jsmodule' => Array (),
+                      'webassets_a.importmap' => Array ()
                   ))
           ),
 
@@ -97,6 +99,10 @@ a.js = a.js
                       'webassets_b.js' => array('k>b.js>'),
                       'webassets_b.css' => array(),
                       'webassets_b.icon' => array(),
+                      'webassets_b.jsmodule' => Array (),
+                      'webassets_b.importmap' => Array (),
+                      'webassets_a.jsmodule' => Array (),
+                      'webassets_a.importmap' => Array ()
                   ))
           ),
 
@@ -131,6 +137,10 @@ a.js = a.js
                       'webassets_b.js' => array('k>b.js?_r=234>'),
                       'webassets_b.css' => array(),
                       'webassets_b.icon' => array(),
+                      'webassets_b.jsmodule' => Array (),
+                      'webassets_b.importmap' => Array (),
+                      'webassets_a.jsmodule' => Array (),
+                      'webassets_a.importmap' => Array ()
                   ))
           ),
 
@@ -172,6 +182,12 @@ c.require = a
                       'webassets_c.js' => array('k>c.js>'),
                       'webassets_c.css' => array(),
                       'webassets_c.icon' => array(),
+                      'webassets_b.jsmodule' => Array (),
+                      'webassets_b.importmap' => Array (),
+                      'webassets_a.jsmodule' => Array (),
+                      'webassets_a.importmap' => Array (),
+                      'webassets_c.jsmodule' => Array (),
+                      'webassets_c.importmap' => Array ()
 
                   ))
           ),
@@ -223,6 +239,14 @@ c.include = b
                       'webassets_c.js' => array('k>c.js>'),
                       'webassets_c.css' => array(),
                       'webassets_c.icon' => array('k>favicon.ico>'),
+                      'webassets_b.jsmodule' => Array (),
+                      'webassets_b.importmap' => Array (),
+                      'webassets_a.jsmodule' => Array (),
+                      'webassets_a.importmap' => Array (),
+                      'webassets_a2.jsmodule' => Array (),
+                      'webassets_a2.importmap' => Array (),
+                      'webassets_c.jsmodule' => Array (),
+                      'webassets_c.importmap' => Array ()
 
                   ))
           ),
@@ -274,6 +298,14 @@ c.require = a
                       'webassets_d.js' => array('k>d.js>'),
                       'webassets_d.css' => array(),
                       'webassets_d.icon' => array(),
+                      'webassets_b.jsmodule' => Array (),
+                      'webassets_b.importmap' => Array (),
+                      'webassets_a.jsmodule' => Array (),
+                      'webassets_a.importmap' => Array (),
+                      'webassets_d.jsmodule' => Array (),
+                      'webassets_d.importmap' => Array (),
+                      'webassets_c.jsmodule' => Array (),
+                      'webassets_c.importmap' => Array ()
                   ),
                   'compiled_webassets_foo' => array(
                       'dependencies_order' => array('a', 'c', 'b', 'd'),
@@ -293,6 +325,14 @@ c.require = a
                       'webassets_d.js' => array('k>d.js>'),
                       'webassets_d.css' => array(),
                       'webassets_d.icon' => array(),
+                      'webassets_c.jsmodule' => Array (),
+                      'webassets_c.importmap' => Array (),
+                      'webassets_b.jsmodule' => Array (),
+                      'webassets_b.importmap' => Array (),
+                      'webassets_a.jsmodule' => Array (),
+                      'webassets_a.importmap' => Array (),
+                      'webassets_d.jsmodule' => Array (),
+                      'webassets_d.importmap' => Array (),
                   )
               )
           ),
@@ -384,6 +424,24 @@ r.js = r.js
                       'webassets_r.js' => array('k>r.js>'),
                       'webassets_r.css' => array(),
                       'webassets_r.icon' => array(),
+                      'webassets_a.jsmodule' => Array (),
+                      'webassets_a.importmap' => Array (),
+                      'webassets_b.jsmodule' => Array (),
+                      'webassets_b.importmap' => Array (),
+                      'webassets_c.jsmodule' => Array (),
+                      'webassets_c.importmap' => Array (),
+                      'webassets_d.jsmodule' => Array (),
+                      'webassets_d.importmap' => Array (),
+                      'webassets_e.jsmodule' => Array (),
+                      'webassets_e.importmap' => Array (),
+                      'webassets_f.jsmodule' => Array (),
+                      'webassets_f.importmap' => Array (),
+                      'webassets_g.jsmodule' => Array (),
+                      'webassets_g.importmap' => Array (),
+                      'webassets_k.jsmodule' => Array (),
+                      'webassets_k.importmap' => Array (),
+                      'webassets_r.jsmodule' => Array (),
+                      'webassets_r.importmap' => Array (),
                   ),
               )
           ),
