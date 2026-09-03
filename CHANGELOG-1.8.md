@@ -4,6 +4,9 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.26
+------
+
 - new(WebAssets) support of jsmodule and importmap
   ```
   example.jsmodule= "js/mymodule.js"
