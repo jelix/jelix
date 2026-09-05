@@ -132,6 +132,22 @@ class defaultCtrl extends jController
         foreach ($listOrder as $name => $order) {
             $cond->addItemOrder($name, $order);
         }
+        $authPlugin = jApp::coord()->getPlugin('auth', false);
+        $driverName = $authPlugin->config['driver'];
+        $driver = jAuth::getDriver();
+        $currentAuthenticationConf = ($authPlugin->config[$driverName]['authenticateWith'] ?? 'login') ;
+        $allowLoginWithEmail = false;
+        if($currentAuthenticationConf == 'login' && method_exists($driver, "areEmailUnique") && $driver->areEmailUnique())
+        {
+            /**
+             * authentication use login only, but email are unique,
+             * notify app, does it allow to authenticate with e-mail ?
+             */
+            $eventResp = jEvent::notify('AuthAllowLoginWithUniqueEmail');
+            if (($eventResp->getResponseByKey('AllowLoginWithUniqueEmail') ?? false)) {
+                $allowLoginWithEmail = true;
+            }
+        }
 
         $filter = trim($this->param('filter', ''));
         if ($filter && count($this->filteredProperties)) {
@@ -162,6 +178,7 @@ class defaultCtrl extends jController
         $tpl->assign('recordCount', $dao->countAll());
         $tpl->assign('cancreate', jAcl2::check('auth.users.create'));
         $tpl->assign('canview', jAcl2::check('auth.users.view'));
+        $tpl->assign('allowLoginWithEmail', $allowLoginWithEmail);
         $rep->body->assign('MAIN', $tpl->fetch('crud_list'));
         $rep->body->assign('selectedMenuItem', 'users');
         jForms::destroy($this->form, '___$$$___');
