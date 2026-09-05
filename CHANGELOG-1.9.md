@@ -146,6 +146,10 @@ Other changes:
 - Classes generated from daos files have new names and are autoloaded
 - `jSelectorDao`, `jSelectorDaoDb` and `jSelectorDaoRecord` are deprecated and exists under new names.
 
+**Installer**
+
+New classes `ActionUrl`, `ControllerUrl` and `UrlHandler` to use into the `declareUrls` method of your configurator.
+
 
 Removes
 -------
