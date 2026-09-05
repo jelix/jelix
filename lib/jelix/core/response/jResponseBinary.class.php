@@ -7,7 +7,7 @@
  * @contributor Nicolas Lassalle <nicolas@beroot.org> (ticket #188), Julien Issler
  * @contributor René-Luc Dhont
  *
- * @copyright   2005-2023 Laurent Jouanneau
+ * @copyright   2005-2026 Laurent Jouanneau
  * @copyright   2007 Nicolas Lassalle
  * @copyright   2009-2016 Julien Issler
  * @copyright   2023 René-Luc Dhont
@@ -82,6 +82,9 @@ class jResponseBinary extends jResponse
      */
     public $deleteFileAfterSending = false;
 
+
+    public $processPartialContent = false;
+
     /**
      * Sends the content or the file to the browser.
      *
@@ -97,6 +100,8 @@ class jResponseBinary extends jResponse
             return true;
         }
 
+        $reponseForHeadRequest = $this->getRequest()->getHttpMethod() == 'HEAD';
+
         if ($this->outputFileName === '' && $this->fileName !== '') {
             $f = explode('/', str_replace('\\', '/', $this->fileName));
             $this->outputFileName = $f[count($f) - 1];
@@ -104,23 +109,38 @@ class jResponseBinary extends jResponse
 
         $this->addHttpHeader('Content-Type', $this->mimeType, $this->doDownload);
 
-        if ($this->doDownload) {
-            $this->_downloadHeader();
-        } else {
-            $this->addHttpHeader('Content-Disposition', 'inline; filename="'.str_replace('"', '\"', $this->outputFileName).'"', false);
-        }
-
         $hasFileToDelete = false;
         if ($this->fileName) {
             if (is_readable($this->fileName) && is_file($this->fileName)) {
-                $this->_httpHeaders['Content-Length'] = filesize($this->fileName);
+                $fileSize = filesize($this->fileName);
+                $this->_httpHeaders['Content-Length'] = $fileSize;
                 if ($this->deleteFileAfterSending) {
                     $hasFileToDelete = true;
                 }
-                $f = $this->fileName;
-                $this->content = function () use ($f) {
-                    readfile($f);
-                };
+                $fileName = $this->fileName;
+
+                if ($this->processPartialContent) {
+                    if ($reponseForHeadRequest) {
+                        $this->addHttpHeader('Accept-Ranges', 'bytes');
+                    }
+                    else {
+                        $rangeHeader = $this->getRequestHeader('Range');
+                        if ($rangeHeader !== false) {
+                            $this->prepareRanges($rangeHeader, $fileName, $fileSize);
+                        }
+                        else {
+                            $this->processPartialContent = false;
+                            $this->content = function () use ($fileName) {
+                                readfile($fileName);
+                            };
+                        }
+                    }
+                }
+                else {
+                    $this->content = function () use ($fileName) {
+                        readfile($fileName);
+                    };
+                }
             }
             else {
                 throw new jException('jelix~errors.repbin.unknown.file', $this->fileName);
@@ -130,11 +150,27 @@ class jResponseBinary extends jResponse
             $this->_httpHeaders['Content-Length'] = strlen($this->content);
         }
 
-        if ($this->content === null || is_bool($this->content)) {
+        if (!$this->processPartialContent) {
+            if ($this->doDownload) {
+                $this->_downloadHeader();
+            } else {
+                $this->addHttpHeader('Content-Disposition', 'inline; filename="' . str_replace('"', '\"', $this->outputFileName) . '"', false);
+            }
+        }
+
+
+        if (!$reponseForHeadRequest && ($this->content === null || is_bool($this->content))) {
             throw new \Exception("Missing content to output");
         }
 
         $this->sendHttpHeaders();
+
+        if ($reponseForHeadRequest) {
+            if ($hasFileToDelete) {
+                unlink($this->fileName);
+            }
+            return true;
+        }
 
         if ($hasFileToDelete) {
             // ignore user abort, to be able to delete the file
@@ -198,5 +234,129 @@ class jResponseBinary extends jResponse
                 echo $line;
             }
         };
+    }
+
+
+    protected function readRanges($rangeHeader, $fileSize)
+    {
+        $ranges = array();
+        if (preg_match('/^bytes=(.+)$/', $rangeHeader, $bytesMatches)) {
+            $rangeList = preg_split('/\s*,\s*/', $bytesMatches[1]);
+            foreach($rangeList as $rangeHeader) {
+                if (!preg_match('/^(\d*)?-(\d*)?$/', $rangeHeader, $matches)) {
+                    return false;
+                }
+                $startByte = ($matches[1] === ''? -1 : intval($matches[1]));
+                $endByte = ($matches[2] === ''? -1 : intval($matches[2]));
+                if ($endByte > $fileSize || $startByte === $endByte || ($startByte === -1 && $endByte === -1)) {
+                    return false;
+                }
+
+                if ($startByte == -1) {
+                    // $endByte is the number of bytes to read from the end of the file.
+                    $startByte = $fileSize - $endByte;
+                    $endByte = $fileSize - 1;
+                }
+                else if ($endByte == -1) {
+                    $endByte = $fileSize - 1;
+                }
+
+                if ($startByte > $endByte) {
+                    return false;
+                }
+
+                $ranges[] = array($startByte, $endByte);
+            }
+        }
+
+        if (count($ranges) === 0) {
+            return false;
+        }
+        if (count($ranges) === 1) {
+            return $ranges;
+        }
+
+        // check that ranges don't overlap
+        usort($ranges, function($a, $b) {
+            return ($a[1] < $b[1] ? -1 : ($a[1] < $b[1] ? -1 : 0));
+        });
+
+        foreach($ranges as $k => $range) {
+            if (isset($ranges[$k + 1])) {
+                if ($range[1] >= $ranges[$k + 1][0]) {
+                    return false;
+                }
+            }
+        }
+        return $ranges;
+    }
+
+    protected function prepareRanges($rangeHeader, $fileName, $fileSize)
+    {
+        $ranges = $this->readRanges($rangeHeader, $fileSize);
+        if ($ranges === false) {
+            $this->setHttpStatus('416', 'Requested Range Not Satisfiable');
+            $this->addHttpHeader('Content-Range', 'bytes */'.$fileSize);
+            $this->mimeType = 'text/plain';
+            $this->content = '416 - Requested Range Not Satisfiable';
+            $this->processPartialContent = false;
+        }
+        else if (count($ranges) == 1 ) {
+            $startByte = $ranges[0][0];
+            $endByte = $ranges[0][1];
+            $this->setHttpStatus('206', 'Partial Content');
+            $this->addHttpHeader('Content-Range', 'bytes '.$startByte.'-'.$endByte.'/'.$fileSize);
+            $this->addHttpHeader('Content-Length', $fileSize);
+            $this->content = function () use ($fileName, $startByte, $endByte) {
+                $fh = fopen($fileName, 'rb');
+                $output = fopen('php://output', 'wb');
+                fseek($fh, $startByte);
+                stream_copy_to_stream($fh, $output , $endByte - $startByte + 1);
+                fclose($fh);
+                fclose($output);
+            };
+        }
+        else {
+
+            $boundary =  md5(microtime());
+
+            // prepare chunks
+            $contentSize = 0;
+            foreach ($ranges as $k => $range) {
+                $startByte = $range[0];
+                $endByte = $range[1];
+                $chunkSize = $endByte - $startByte + 1;
+
+                $boundaryString = sprintf("\r\n--%s\r\nContent-type: %s\r\nContent-Range: bytes %d-%d/%d\r\n\r\n", $boundary, $this->mimeType, $startByte, $endByte, $fileSize);
+                $ranges[$k][2] = $boundaryString;
+                $ranges[$k][3] = $chunkSize;
+
+                $contentSize += $chunkSize + strlen($boundaryString);
+            }
+
+            $contentEnd = sprintf("\r\n--%s--\r\n", $boundary);
+            $contentSize += strlen($contentEnd);
+
+            $this->setHttpStatus('206', 'Partial Content');
+            $this->addHttpHeader('Content-Type', 'multipart/byteranges; boundary='.$boundary);
+            $this->addHttpHeader('Content-Length', $contentSize);
+
+            $this->content = function () use ($fileName, $ranges, $contentEnd) {
+                $fh = fopen($fileName, 'rb');
+                $output = fopen('php://output', 'wb');
+
+                foreach ($ranges as $range) {
+                    list($startByte, $endByte, $boundaryString, $chunkSize) = $range;
+
+                    fwrite($output, $boundaryString);
+                    fseek($fh, $startByte);
+                    stream_copy_to_stream($fh, $output , $chunkSize);
+                }
+
+                fwrite($output, $contentEnd);
+                fclose($fh);
+                fclose($output);
+            };
+        }
     }
 }
