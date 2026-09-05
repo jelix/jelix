@@ -11,6 +11,8 @@
 
 namespace Jelix\Installer\Migrator;
 
+use Jelix\Core\Config\AppConfig;
+
 class Jelix19
 {
     /**
@@ -28,7 +30,7 @@ class Jelix19
     public function __construct(\Jelix\Installer\Reporter\ReporterInterface $reporter)
     {
         $this->reporter = $reporter;
-        $this->defaultConfigIni = new \Jelix\IniFile\IniReader(LIB_PATH.'jelix/core/defaultconfig.ini.php');
+        $this->defaultConfigIni = new \Jelix\IniFile\IniReader(AppConfig::getDefaultConfigFile());
     }
 
     public function migrate()
