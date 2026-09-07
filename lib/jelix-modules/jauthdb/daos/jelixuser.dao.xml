@@ -74,6 +74,9 @@
              <orderitem property="login" way="asc" />
          </order>
      </method>
-
+    <method name='countDistinctEmail' type="count"  distinct='email'>
+    </method>
+    <method name='countDistinctLogin' type="count" distinct='login'>
+    </method>
    </factory>
 </dao>
