@@ -173,6 +173,35 @@ class jFile
     }
 
     /**
+     * @param string $filePath the file for which we want to check the mime type
+     * @param string|array $allowedMimeTypes list of allowed mime types
+     * @param string $baseFileName the base filename if the filepath does not contain the real base filename (like uploaded files)
+     * @return false|string false if the file does not meet requirements, else the mime type of the file
+     */
+    public static function verifyFileMimeType($filePath, $allowedMimeTypes, $baseFileName = '')
+    {
+        if ($baseFileName == '') {
+            $baseFileName = basename(str_replace('\\', '/', $filePath));
+        }
+        if (!is_array($allowedMimeTypes)) {
+            $allowedMimeTypes = array($allowedMimeTypes);
+        }
+
+        $mimetypeFromExtension = \jFile::getMimeTypeFromFilename($baseFileName);
+        $mimetypeFromFile = File::getMimeType($filePath);
+        if ($mimetypeFromFile == 'application/octet-stream') {
+            $mimetypeFromFile = $mimetypeFromExtension;
+        }
+        // we don't authorize files having the wrong mime type, and files for which the extension filename
+        // does not correspond to the expected type mime, to avoid security issue like php file disguised as an image.
+        if (!in_array($mimetypeFromFile, $allowedMimeTypes) || $mimetypeFromFile != $mimetypeFromExtension) {
+            return false;
+        }
+
+        return $mimetypeFromFile;
+    }
+
+    /**
      * parse a path replacing Jelix shortcuts parts (var:, temp:, www:, app:, lib:).
      *
      * @param string $path the path with parts to replace

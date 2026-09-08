@@ -217,13 +217,11 @@ class jFormsControlUpload2 extends jFormsControl
         }
 
         if ($this->error === null && count($this->mimetype)) {
-            $this->fileInfo['type'] = \Jelix\FileUtilities\File::getMimeType($this->fileInfo['tmp_name']);
-            if ($this->fileInfo['type'] == 'application/octet-stream') {
-                // let's try with the name
-                $this->fileInfo['type'] = jFile::getMimeTypeFromFilename($this->fileInfo['name']);
+            $mimeType = \jFile::verifyFileMimeType($this->fileInfo['tmp_name'], $this->mimetype, $this->fileInfo['name']);
+            if ($mimeType) {
+                $this->fileInfo['type'] = $mimeType;
             }
-
-            if (!in_array($this->fileInfo['type'], $this->mimetype)) {
+            else {
                 $this->error = jForms::ERRDATA_INVALID_FILE_TYPE;
             }
         }
@@ -394,5 +392,25 @@ class jFormsControlUpload2 extends jFormsControl
     public function getWidgetType()
     {
         return 'upload2';
+    }
+
+    protected function verifyMimeType($filePath, $fileName)
+    {
+        if (count($this->mimetype)) {
+            return true;
+        }
+
+        $mimetypeFromExtension = \jFile::getMimeTypeFromFilename($fileName);
+        $mimetypeFromFile = \Jelix\FileUtilities\File::getMimeType($filePath);
+        if ($mimetypeFromFile == 'application/octet-stream') {
+            $mimetypeFromFile = $mimetypeFromExtension;
+        }
+        // we don't authorize files having the wrong mime type, and files for which the extension filename
+        // does not correspond to the expected type mime, to avoid security issue like php file disguised as an image.
+        if (!in_array($mimetypeFromFile, $this->mimetype) || $mimetypeFromFile != $mimetypeFromExtension) {
+            return false;
+        }
+        $this->fileInfo['type'] = $mimetypeFromFile;
+        return true;
     }
 }
