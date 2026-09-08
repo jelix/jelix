@@ -180,25 +180,18 @@ class jFile
      */
     public static function verifyFileMimeType($filePath, $allowedMimeTypes, $baseFileName = '')
     {
-        if ($baseFileName == '') {
-            $baseFileName = basename(str_replace('\\', '/', $filePath));
-        }
-        if (!is_array($allowedMimeTypes)) {
-            $allowedMimeTypes = array($allowedMimeTypes);
-        }
-
-        $mimetypeFromExtension = \jFile::getMimeTypeFromFilename($baseFileName);
-        $mimetypeFromFile = File::getMimeType($filePath);
-        if ($mimetypeFromFile == 'application/octet-stream') {
-            $mimetypeFromFile = $mimetypeFromExtension;
-        }
-        // we don't authorize files having the wrong mime type, and files for which the extension filename
-        // does not correspond to the expected type mime, to avoid security issue like php file disguised as an image.
-        if (!in_array($mimetypeFromFile, $allowedMimeTypes) || $mimetypeFromFile != $mimetypeFromExtension) {
-            return false;
+        if (jApp::config()
+            && !property_exists(jApp::config(), 'FileMimeTypeRegistered')
+        ) {
+            jApp::config()->FileMimeTypeRegistered = true;
+            if (property_exists(jApp::config(), 'mimeTypes')
+                && is_array(jApp::config()->mimeTypes)
+            ) {
+                File::registerMimeTypes(jApp::config()->mimeTypes);
+            }
         }
 
-        return $mimetypeFromFile;
+        return File::verifyFileMimeType($filePath, $allowedMimeTypes, $baseFileName);
     }
 
     /**
