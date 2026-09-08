@@ -327,7 +327,7 @@ class jConfigCompiler
     }
 
     /**
-     * Analyse and check the "lib:" and "app:" path.
+     * Load information about modules, either installed or not
      *
      * @param object $config        the config object
      * @param bool   $allModuleInfo may be true for the installer, which needs all informations
