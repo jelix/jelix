@@ -2,6 +2,8 @@
 require_once (JELIX_LIB_PATH.'installer/jInstallerApplication.class.php');
 
 
+use Jelix\Core\Infos\ModuleStatusDeclaration;
+
 class moduleParametersTest extends \PHPUnit\Framework\TestCase
 {
 
@@ -77,7 +79,7 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
     function testUnserialize($serialized, $expected) {
         $this->assertEquals(
             $expected,
-            \Jelix\Installer\ModuleStatus::unserializeParameters($serialized)
+            ModuleStatusDeclaration::unserializeParameters($serialized)
         );
     }
 
@@ -132,7 +134,7 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
     function testSerializeAsString($data, $expectedSerialized) {
         $this->assertEquals(
             $expectedSerialized,
-            \Jelix\Installer\ModuleStatus::serializeParametersAsString($data)
+            ModuleStatusDeclaration::serializeParametersAsString($data)
         );
     }
 
@@ -232,7 +234,7 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
     function testSerializeAsStringWithDefParam($data, $defaultValues, $expectedSerialized) {
         $this->assertEquals(
             $expectedSerialized,
-            \Jelix\Installer\ModuleStatus::serializeParametersAsString($data, $defaultValues)
+            ModuleStatusDeclaration::serializeParametersAsString($data, $defaultValues)
         );
     }
 
@@ -287,7 +289,7 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
     function testSerializeAsArray($data, $expectedSerialized) {
         $this->assertEquals(
             $expectedSerialized,
-            \Jelix\Installer\ModuleStatus::serializeParametersAsArray($data)
+            ModuleStatusDeclaration::serializeParametersAsArray($data)
         );
     }
 
@@ -392,7 +394,7 @@ class moduleParametersTest extends \PHPUnit\Framework\TestCase
     function testSerializeAsArrayWithDefParam($defaultParam, $data, $expectedSerialized) {
         $this->assertEquals(
             $expectedSerialized,
-            \Jelix\Installer\ModuleStatus::serializeParametersAsArray($data, $defaultParam)
+            ModuleStatusDeclaration::serializeParametersAsArray($data, $defaultParam)
         );
     }
 }

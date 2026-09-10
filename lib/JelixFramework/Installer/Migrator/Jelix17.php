@@ -12,9 +12,14 @@
 namespace Jelix\Installer\Migrator;
 
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\IniFile\IniModifier;
-use Jelix\Installer\ModuleStatus;
 
+/**
+ * Migration from Jelix 1.6 to 1.7/1.8
+ *
+ * The process should be idempotent
+ */
 class Jelix17
 {
     /**
@@ -471,7 +476,7 @@ class Jelix17
 
         $jelixInstallParams = $masterConfigIni->getValue('jelix.installparam', 'modules');
         if ($jelixInstallParams) {
-            $jelixInstallParams = $originalJelixInstallParams = ModuleStatus::unserializeParameters($jelixInstallParams);
+            $jelixInstallParams = $originalJelixInstallParams = ModuleStatusDeclaration::unserializeParameters($jelixInstallParams);
             if (!isset($jelixInstallParams['wwwfiles'])) {
                 $jelixInstallParams['wwwfiles'] = $wwwfiles;
             }
@@ -479,8 +484,8 @@ class Jelix17
             $originalJelixInstallParams = array();
             $jelixInstallParams = array('wwwfiles' => $wwwfiles);
         }
-        $jelixInstallParams = ModuleStatus::serializeParametersAsArray($jelixInstallParams);
-        $originalJelixInstallParams = ModuleStatus::serializeParametersAsArray($originalJelixInstallParams);
+        $jelixInstallParams = ModuleStatusDeclaration::serializeParametersAsArray($jelixInstallParams);
+        $originalJelixInstallParams = ModuleStatusDeclaration::serializeParametersAsArray($originalJelixInstallParams);
         if ($jelixInstallParams != $originalJelixInstallParams) {
             $this->reporter->message('Update installer parameters for the jelix : '.json_encode($jelixInstallParams), 'notice');
             $masterConfigIni->setValue('jelix.installparam', $jelixInstallParams, 'modules');
@@ -525,6 +530,7 @@ class Jelix17
             } else {
                 $upgraderUrl->upgrade();
             }
+
             $ep['config']->save();
             $urlMapModifier->save();
         }

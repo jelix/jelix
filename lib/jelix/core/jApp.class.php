@@ -4,20 +4,20 @@
  * @author     Laurent Jouanneau
  * @contributor  Olivier Demah
  *
- * @copyright  2011-2025 Laurent Jouanneau, 2012 Olivier Demah
+ * @copyright  2011-2026 Laurent Jouanneau, 2012 Olivier Demah
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Infos\FrameworkInfos;
 
 /**
  * @method static void setConfig($config)
  * @method static void declareModulesDir($basePath, $modules = null)
  * @method static string[] getDeclaredModulesDir()
  * @method static void declareModule($modulePath)
- * @method static void declareModulesFromConfig($config)
  * @method static void clearModulesPluginsPath()
  * @method static void declarePluginsDir($basePath)
  * @method static string[] getEnabledModulesPaths()
@@ -30,6 +30,7 @@ use Jelix\Core\Config\AppConfig;
  * @method static void pushCurrentModule($module)
  * @method static string popCurrentModule()
  * @method static string getCurrentModule()
+ * @method static FrameworkInfos getFrameworkInfo()
  * @method static \Jelix\Core\Services services()
  * @method static reloadServices()
  * @method static void declareLocalesDir($basePath)

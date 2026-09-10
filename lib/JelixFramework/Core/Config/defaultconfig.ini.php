@@ -52,8 +52,8 @@ disableInstallers=off
 enableAllModules=off
 
 [modules]
-jelix.enabled=off
-jelix.path="lib:jelix/core-modules/jelix"
+; filled by the configuration compiler. All values predefined in this
+; section are ignored.
 
 [coordplugins]
 

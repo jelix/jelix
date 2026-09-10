@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2017-2025 Laurent Jouanneau
+ * @copyright   2017-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -312,7 +312,7 @@ class GlobalSetup
 
     protected function readModuleInfos()
     {
-        // now let's read all modules properties
+        // now let's read all module properties
         $modulesList = $this->mainEntryPoint->getModulesList();
 
         foreach ($modulesList as $name => $path) {
@@ -419,18 +419,14 @@ class GlobalSetup
     protected function createComponentModule($name, $path)
     {
         $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
-        $enabledLocally = $this->localConfigIni->getValue($name.'.enabled', 'modules');
-        $enabledGlobally = $this->mainConfigIni->getValue($name.'.enabled', 'modules');
 
-        if ($enabledLocally === null && $enabledGlobally === null) {
+        $moduleDecl = $this->frameworkInfos->getModule($name);
+        if (!$moduleDecl) {
             // module not installed yet
             $isNativeModule = !$this->forLocalConfiguration;
         }
-        else if ($enabledLocally && !$enabledGlobally) {
-            $isNativeModule = false;
-        }
         else {
-            $isNativeModule = ($enabledGlobally === true);
+            $isNativeModule =  $moduleDecl->isNative;
         }
 
         $moduleStatus = new ModuleStatus($name, $path, $moduleSetupList, $isNativeModule);
@@ -509,6 +505,14 @@ class GlobalSetup
                 $component->getModuleStatus()
             );
         }
+    }
+
+    /**
+     * @return \Jelix\Core\Infos\FrameworkInfos
+     */
+    public function getFrameworkInfos()
+    {
+        return $this->frameworkInfos;
     }
 
     /**
@@ -705,7 +709,7 @@ class GlobalSetup
         $targetPath .= $moduleStatus->getName();
         \jFile::createDir($targetPath);
         copy($moduleStatus->getPath().'module.xml', $targetPath.'/module.xml');
-        $moduleStatus->saveInfos($uninstallerIni);
+        $moduleStatus->registerToUninstall($uninstallerIni);
 
         if (file_exists($moduleStatus->getPath().'install/uninstall.php')) {
             \jFile::createDir($targetPath.'/install');

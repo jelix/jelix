@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2024 Laurent Jouanneau
+ * @copyright   2008-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -224,22 +224,13 @@ class ModuleInstallerLauncher
      */
     public function saveModuleStatus()
     {
-        if ($this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL
-            || $this->globalSetup->forLocalConfiguration()
-        ) {
-            $defaultParameters = ($this->moduleConfigurator ? $this->moduleConfigurator->getDefaultParameters() : array());
-            $conf = $this->globalSetup->getSystemConfigIni(true);
-            $mainParameters = $conf->getValue($this->name.'.installparam', 'modules');
-            if ($mainParameters) {
-                $defaultParameters = array_merge($defaultParameters, ModuleStatus::unserializeParameters($mainParameters));
-            }
-            $conf['local'] = $this->globalSetup->getLocalConfigIni();
-        } else {
-            $this->moduleStatus->clearInfos($this->globalSetup->getLocalConfigIni());
-            $conf = $this->globalSetup->getSystemConfigIni();
-            $defaultParameters = ($this->moduleConfigurator ? $this->moduleConfigurator->getDefaultParameters() : array());
-        }
-        $this->moduleStatus->saveInfos($conf, $defaultParameters);
+        $installParameters = ($this->moduleConfigurator ?
+            $this->moduleConfigurator->getDefaultParameters() :
+            array());
+
+        $this->moduleStatus->saveInfos(
+            $this->globalSetup->getFrameworkInfos(),
+            $installParameters);
     }
 
     /**
