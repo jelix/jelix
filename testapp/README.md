@@ -100,6 +100,21 @@ export PHP_VERSION=8.4
 Working with Xdebug
 ===================
 
+First, incoming connection to port 9003 must be allowed on your host. On ubuntu or other distro, it may be blocked.
+Check this by executing this command: `sudo ufw status verbose`. If results is like this:
+
+```
+Status : enabled
+[...]
+By default : reject (incoming), allow (outgoing), deny (routed)
+
+[ no rules here ]
+```
+
+It indicates that every incoming connection is rejected or denied. So you must add a rule to open the port 9003.
+Run `docker network inspect bridge | grep Subnet` to know the subnet used by docker, for instance `172.17.0.0/16`.
+Then run `sudo ufw allow from 172.17.0.0/16 to any port 9003 proto tcp`.
+
 Into PhpStorm
 -------------
 
