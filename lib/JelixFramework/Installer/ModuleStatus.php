@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2009-2023 Laurent Jouanneau
+ * @copyright   2009-2026 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -199,7 +199,7 @@ class ModuleStatus
      * @param array|string $parameters
      *
      * @return array
-     * @deprecated since 2.0
+     * @deprecated since 1.9
      * @see ModuleStatusDeclaration::unserializeParameters
      */
     public static function unserializeParameters($parameters)
@@ -217,7 +217,7 @@ class ModuleStatus
      * @param array $defaultParameters
      *
      * @return string
-     * @deprecated since 2.0
+     * @deprecated since 1.9
      * @see ModuleStatusDeclaration::serializeParametersAsString
      */
     public static function serializeParametersAsString($parameters, $defaultParameters = array())
@@ -236,7 +236,7 @@ class ModuleStatus
      * @param array $defaultParameters
      *
      * @return array
-     * @deprecated since 2.0
+     * @deprecated since 1.9
      * @see ModuleStatusDeclaration::serializeParametersAsArray
      */
     public static function serializeParametersAsArray($parameters, $defaultParameters = array())

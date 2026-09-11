@@ -138,7 +138,7 @@
      <label>A document (&lt; 500ko)</label>
   </upload2>
 
-  <image ref="image" mimetype="image/jpg;image/png;" maxWidth="1024" maxHeight="860">
+  <image ref="image" mimetype="image/jpeg;image/png;" maxWidth="1024" maxHeight="860">
      <label>A photo</label>
   </image>
 

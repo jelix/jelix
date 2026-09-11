@@ -1,9 +1,9 @@
 <?php
 /**
  * @author       Laurent Jouanneau
- * @copyright    2012-2013 Laurent Jouanneau
+ * @copyright    2012-2026 Laurent Jouanneau
  *
- * @see         http://jelix.org
+ * @see          https://jelix.org
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -15,14 +15,16 @@ namespace Jelix\Core\Config;
 interface CompilerPluginInterface
 {
     /**
-     * lower number is higher priority. Numbers lower than 50 are reserved.
+     * Return the priority of the plugin.
+     *
+     * A lower number is a higher priority. Numbers lower than 50 are reserved.
      *
      * @return int the level of priority
      */
     public function getPriority();
 
     /**
-     * called before processing module informations.
+     * called before processing module information.
      *
      * @param object $config the configuration object
      */
@@ -37,7 +39,7 @@ interface CompilerPluginInterface
     public function onModule($config, \Jelix\Core\Infos\ModuleInfos $module);
 
     /**
-     * called after processing module informations.
+     * called after processing module information.
      *
      * @param object $config the configuration object
      */

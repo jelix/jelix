@@ -10,10 +10,12 @@ class fakeConfigCompiler extends \Jelix\Core\Config\Compiler {
 class fakeConfig {
     public $modules = array();
     public $_allModulesPathList = array();
-    public $_externalModulesPathList = array();
     public $_modulesPathList = array();
+    public $_externalModulesPathList = array();
     public $pluginsPath = '';
     public $modulesPath = '';
+    public $disableInstallers = false;
+    public $enableAllModules = false;
 }
 
 
@@ -39,6 +41,7 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
     {
         jApp::restoreContext();
     }
+
 
     /**
      */
@@ -77,7 +80,7 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
         $compiler = new fakeConfigCompiler();
         $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(array(
-                                'simple.enabled' => 0
+                                'simple.enabled' => false,
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -93,7 +96,7 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
         $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(array('simple.installed' => 0), $installation['modules']);
         $this->assertEquals(array(
-                                'simple.enabled' => 0
+                                'simple.enabled' => false,
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -129,21 +132,24 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
                                 'simple.version' => '',
                                 'simple.dataversion' => '',
                                 'simple.installed' => 1,
-                                'simple.installparam' => [ 'foo' => 'bar']
+                                'simple.installparam' => Array (
+                                    'foo' => 'bar'
+                                )
                                 ), $config->modules);
         $this->assertEquals(array('simple'=>$modulePath), $config->_allModulesPathList);
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
 
     }
 
-    function testReadModuleInfoNewModuleNotActivated() {
+    function testReadModuleInfoNewModuleNotActivated()
+    {
         $config = new fakeConfig();
         $modulePath = realpath(__DIR__.'/app/modules/package').'/';
         $installation = array('modules'=>array());
         $compiler = new fakeConfigCompiler();
         $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(array(
-                                'thepackage.enabled' => 0
+                                'thepackage.enabled' => false
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -159,7 +165,7 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
         $compiler->test_read_module_info($config, false, $modulePath, $installation);
         $this->assertEquals(array('thepackage.installed' => 0), $installation['modules']);
         $this->assertEquals(array(
-                                'thepackage.enabled' => 0
+                                'thepackage.enabled' => false
                                 ), $config->modules);
         $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
         $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
@@ -176,7 +182,7 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
             ),
             true
         );
-        $fmk = \Jelix\Core\App::getFrameworkInfo();
+        $fmk =  \Jelix\Core\App::getFrameworkInfo();
         $fmk->updateModule($module);
 
         $config = new fakeConfig();

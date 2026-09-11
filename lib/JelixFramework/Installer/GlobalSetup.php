@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2017-2025 Laurent Jouanneau
+ * @copyright   2017-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -313,7 +313,7 @@ class GlobalSetup
 
     protected function readModuleInfos()
     {
-        // now let's read all modules properties
+        // now let's read all module properties
         $modulesList = $this->mainEntryPoint->getModulesList();
 
         foreach ($modulesList as $name => $path) {

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2019-2023 Laurent Jouanneau
+ * @copyright   2019-2026 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -19,13 +19,16 @@ namespace Jelix\WebAssets;
  * In each section there can be several group of assets.
  * A group is often corresponding to a list of CSS and JS links used by a specific component.
  *
- * To declare JS files of a group, you have to use the name of the group, following by .js.
+ * To declare JS files of a group, you have to use the name of the group, following by `.js`.
+ * To declare JS modules of a group, you have to use the name of the group, following by `.jsmodule`.
  * To declare CSS files, use the suffix `.css`.
  * To declare icon files, use the suffix `.icon`.
+ * To declare importmap definition, use the suffix `.importmap`.
  *
  * For example, to declare CSS and JS links for the group `mygroup`:
  *
  * mygroup.js= "js/scripts.js"
+ * mygroup.jsmodule= "js/esmodule.js"
  * mygroup.css= "design/super.css"
  * mygroup.icon= "favicon.png"
  *
@@ -36,7 +39,7 @@ namespace Jelix\WebAssets;
  * mygroup2.js[]= "js/bla.js"
  * mygroup2.js[]= "js/baz.js"
  *
- * The path for JS and CSS links, can be:
+ * The path for JS/JS modules and CSS links, can be:
  *
  * - an absolute path, starting with /, or a full URL (starting with http:// )
  * - a path relative to the base path (so it doesn't start with /)
@@ -60,11 +63,20 @@ namespace Jelix\WebAssets;
  *
  * example.js[]= "myscript.js|defer"
  * example.js[]= "https://popular.com/script.js.js|defer|integrity=sha384-oqVuAfXRKap7fdgcCY5uykM6+R9GqQ8K|crossorigin=anonymous"
- * example.js[]= "mymodule.mjs|type=module"
+ * example.js[]= "mymodule.mjs|type=module" (deprecated, use example.jsmodule instead)
  * example.css[]= "mystyle.css|media=screen and (max-width: 600px)"
  * example.css[]= "fancy.css|rel=alternate stylesheet|title=Fancy"
  * example.icon[]= "favicon-32x32.png|sizes=32x32"
  * example.icon[]= "favicon-64x64.png|sizes=64x64"
+ *
+ * importmap definitions allow to generate the content of a `<script type="importmap">`.
+ * The content of a declaration is: `<pathofthemodule>|mapname=<importname>|integrity=<integrity_value>`. The integrity value
+ * is optional.
+ *
+ * example.importmap="path/to/carre.js|mapname=carre|integrity=xxxxxx"
+ * or
+ * example.importmap[]="path/to/carre.js|mapname=carre"
+ * example.importmap[]="path/to/triangle.js|mapname=triangle|integrity=ABCDEF0123456789"
  *
  *
  * A group can be included into an other group. For example, the assets group "mygroup"
@@ -149,9 +161,11 @@ class WebAssetsCompiler
             );
 
             foreach ($collection as $groupName => $assets) {
-                list($deps, $js, $css, $icon) = $this->getGroupProperties($name, $groupName);
+                list($deps, $js, $jsmodule, $importmap, $css, $icon) = $this->getGroupProperties($name, $groupName);
                 $compilation->{$collectionName}['webassets_'.$groupName.'.deps'] = $deps;
                 $compilation->{$collectionName}['webassets_'.$groupName.'.js'] = $js;
+                $compilation->{$collectionName}['webassets_'.$groupName.'.jsmodule'] = $jsmodule;
+                $compilation->{$collectionName}['webassets_'.$groupName.'.importmap'] = $importmap;
                 $compilation->{$collectionName}['webassets_'.$groupName.'.css'] = $css;
                 $compilation->{$collectionName}['webassets_'.$groupName.'.icon'] = $icon;
             }
@@ -175,6 +189,8 @@ class WebAssetsCompiler
                 $assetsGroups[$groupName] = array(
                     'css' => array(),
                     'js' => array(),
+                    'jsmodule' => array(),
+                    'importmap' => array(),
                     'icon' => array(),
                     'include' => array(),
                     'require' => array(),
@@ -184,7 +200,7 @@ class WebAssetsCompiler
             }
 
             $values = array();
-            if ($property == 'css' || $property == 'js' || $property == 'icon') {
+            if ($property == 'css' || $property == 'js' || $property == 'jsmodule' || $property == 'importmap' || $property == 'icon') {
                 if (!is_array($val)) {
                     $val = array($val);
                 }
@@ -278,7 +294,7 @@ class WebAssetsCompiler
         $attributes = '>'.$attributes;
 
         $isHttp = preg_match('!^https?://!', $asset);
-        if (!$isHttp) {
+        if (!$isHttp && ($type != 'importmap' || preg_match('!\\.m?js$!', $asset))) {
             $asset = $this->appendRevisionToUrl($asset);
         }
 
@@ -358,6 +374,8 @@ class WebAssetsCompiler
         return array(
             $this->getGroupDependencies($groupName),
             $this->assets[$groupName]['js'],
+            $this->assets[$groupName]['jsmodule'],
+            $this->assets[$groupName]['importmap'],
             $this->assets[$groupName]['css'],
             $this->assets[$groupName]['icon'],
         );

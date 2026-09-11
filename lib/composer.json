@@ -15,7 +15,7 @@
         "jelix/database": "dev-master",
         "jelix/dao": "dev-main",
         "symfony/console":"^6.4.22",
-        "jelix/file-utilities": "^1.8.5",
+        "jelix/file-utilities": "^1.8.7",
         "jelix/version": "^2.0.2",
         "jelix/fakeserverconf": "^1.0.0",
         "defuse/php-encryption": "^2.4.0",

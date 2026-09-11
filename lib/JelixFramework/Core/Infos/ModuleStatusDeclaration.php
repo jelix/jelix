@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2009-2023 Laurent Jouanneau
+ * @copyright   2009-2026 Laurent Jouanneau
  *
- * @see        http://jelix.org
+ * @see         https://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 namespace Jelix\Core\Infos;
@@ -49,19 +49,9 @@ class ModuleStatusDeclaration
     public function __construct($name, $config, $isNativeModule = true)
     {
         $this->name = $name;
-        if (isset($config['enabled'])) {
-            $this->isEnabled = $config['enabled'];
-        }
-        else {
-            $this->isEnabled = false;
-        }
+        $this->isEnabled = (bool) ($config['enabled'] ?? false);
 
-        if (isset($config['dbprofile'])) {
-            $this->dbProfile = $config['dbprofile'];
-        }
-        else {
-            $this->dbProfile = '';
-        }
+        $this->dbProfile = $config['dbprofile'] ?? '';
 
         if (isset($config['installparam'])) {
             $this->parameters = self::unserializeParameters($config['installparam']);
@@ -70,12 +60,7 @@ class ModuleStatusDeclaration
             $this->parameters = array();
         }
 
-        if (isset($config['path'])) {
-            $this->path = (string) $config['path'];
-        }
-        else {
-            $this->path = '';
-        }
+        $this->path = (string) ($config['path'] ?? '');
 
         if (isset($config['skipinstaller']) && $config['skipinstaller'] == 'skip') {
             $this->skipInstaller = true;
@@ -93,7 +78,7 @@ class ModuleStatusDeclaration
     }
 
     /**
-     * Return list of configuration parameters as stored into the ini file.
+     * Returns a list of configuration parameters as stored into the ini file.
      *
      * @return array
      */

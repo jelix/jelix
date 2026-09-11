@@ -380,8 +380,6 @@ class infosreaderTest extends \Jelix\UnitTests\UnitTestCase {
             </object>
         </array>';
         $this->assertComplexIdenticalStr($result, $expected);
-
-
     }
 
     function testLocalFrameworkInfo() {

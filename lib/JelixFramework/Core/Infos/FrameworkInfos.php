@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2014-2018 Laurent Jouanneau
+ * @copyright  2014-2026 Laurent Jouanneau
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -53,7 +53,9 @@ class FrameworkInfos
      */
     protected $localModules = array();
 
-
+    /**
+     * @var array list of modules having a specific path
+     */
     protected $allDeclaredModulePaths = array();
 
     /**
@@ -279,12 +281,13 @@ class FrameworkInfos
             return new ModuleStatusDeclaration(
                 $name,
                 $combinedValues,
+                // the module is considered as native if it is enabled
+                // into the framework.ini.php.
                 $nativeModule->isEnabled
             );
         }
         return null;
     }
-
 
     public function removeModule($name)
     {
@@ -304,7 +307,10 @@ class FrameworkInfos
         return array_merge($this->modules, $this->localModules);
     }
 
-    public function getDeclaredModulePaths()
+    /**
+     * @return array list of module having a specific path. keys are module names, values are paths
+     */
+    public function getSpecifiedModulePaths()
     {
         return $this->allDeclaredModulePaths;
     }

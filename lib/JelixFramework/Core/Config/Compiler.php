@@ -2,7 +2,7 @@
 /**
  * @author       Laurent Jouanneau
  *
- * @copyright    2006-2025 Laurent Jouanneau
+ * @copyright    2006-2026 Laurent Jouanneau
  * @copyright    2007 Thibault Piront, 2008 Christophe Thiriot, 2008 Philippe Schelté
  *
  * @see          https://www.jelix.org
@@ -59,7 +59,7 @@ class Compiler
     /**
      * Read and merge all configuration files.
      *
-     * Merge of configuration files are made in this order:
+     * Merge of configuration files is made in this order:
      * - core/defaultconfig.ini.php
      * - app/system/mainconfig.ini.php
      * - app/system/$configFile
@@ -349,12 +349,12 @@ class Compiler
     }
 
     /**
-     * Find all activated modules and check their status.
+     * Load information about modules, either installed or not
      *
-     * @param object $config        the config object
-     * @param bool   $allModuleInfo may be true for the installer, which needs all informations
-     *                              else should be false, these extra informations are
-     *                              not needed to run the application
+     * @param object $config         the config object
+     * @param bool $installationMode may be true for the installer, which needs all informations
+     *                               else should be false, these extra informations are
+     *                               not needed to run the application
      *
      * @throws Exception
      *
@@ -383,7 +383,7 @@ class Compiler
         $modules = array();
         $list = App::getAllModulesPath();
         $config->modules = [];
-        foreach ($list as $k => $path) {
+        foreach ($list as $moduleName => $path) {
             $module = $this->_readModuleInfo($config, $installationMode, $path, $installation);
             if ($module !== null) {
                 $modules[$module->name] = $module;
@@ -394,6 +394,7 @@ class Compiler
     }
 
     /**
+     *
      * @param mixed $config
      * @param mixed $installationMode
      * @param mixed $path
@@ -415,51 +416,49 @@ class Compiler
             $installation['modules'][$f.'.installed'] = 0;
         }
 
+        $moduleStatus = $declaredModules[$f] ?? null;
+
         if ($f == 'jelix') {
-            $config->modules['jelix.enabled'] = true; // the jelix module should always be public
-            $moduleStatus = $declaredModules[$f] ?? null;
+            $config->modules['jelix.enabled'] = true; // the jelix module should always be enabled
         } else if (isset($declaredModules[$f])) {
-            $moduleStatus = $declaredModules[$f];
-            $config->modules[$f.'.enabled'] = $moduleStatus->isEnabled;
-            if (!$installation['modules'][$f.'.installed']) {
+            $config->modules[$f . '.enabled'] = $moduleStatus->isEnabled;
+            if (!$installation['modules'][$f . '.installed']) {
                 // module is not installed.
-                // outside installation context, we force the access to 0
+                // Outside an installation context, we force the disabling
                 // so the module is unusable until it is installed
                 if (!$installationMode) {
-                    $config->modules[$f.'.enabled'] = false;
+                    $config->modules[$f . '.enabled'] = false;
                 }
             }
         }
         else {
-            $config->modules[$f.'.enabled'] = false;
+            $config->modules[$f . '.enabled'] = false;
         }
 
-        if (!$config->modules[$f.'.enabled']) {
-            return null;
-        }
-
-        if (!isset($installation['modules'][$f.'.dbprofile'])) {
-            $config->modules[$f.'.dbprofile'] = 'default';
-        } else {
-            $config->modules[$f.'.dbprofile'] = $installation['modules'][$f.'.dbprofile'];
+        if ($config->modules[$f . '.enabled'] || $installationMode) {
+            if (!isset($installation['modules'][$f . '.dbprofile'])) {
+                $config->modules[$f . '.dbprofile'] = 'default';
+            } else {
+                $config->modules[$f . '.dbprofile'] = $installation['modules'][$f . '.dbprofile'];
+            }
         }
 
         if ($installationMode) {
-            if (!isset($installation['modules'][$f.'.version'])) {
-                $installation['modules'][$f.'.version'] = '';
+            if (!isset($installation['modules'][$f . '.version'])) {
+                $installation['modules'][$f . '.version'] = '';
             }
 
-            if (!isset($installation['modules'][$f.'.dataversion'])) {
-                $installation['modules'][$f.'.dataversion'] = '';
+            if (!isset($installation['modules'][$f . '.dataversion'])) {
+                $installation['modules'][$f . '.dataversion'] = '';
             }
 
-            if (!isset($installation['__modules_data'][$f.'.contexts'])) {
-                $installation['__modules_data'][$f.'.contexts'] = '';
+            if (!isset($installation['__modules_data'][$f . '.contexts'])) {
+                $installation['__modules_data'][$f . '.contexts'] = '';
             }
 
-            $config->modules[$f.'.version'] = (string) $installation['modules'][$f.'.version'];
-            $config->modules[$f.'.dataversion'] = $installation['modules'][$f.'.dataversion'];
-            $config->modules[$f.'.installed'] = $installation['modules'][$f.'.installed'];
+            $config->modules[$f . '.version'] = (string)$installation['modules'][$f . '.version'];
+            $config->modules[$f . '.dataversion'] = $installation['modules'][$f . '.dataversion'];
+            $config->modules[$f . '.installed'] = $installation['modules'][$f . '.installed'];
 
             if ($moduleStatus) {
                 if ($moduleStatus->parameters) {
@@ -473,8 +472,9 @@ class Compiler
             $config->_allModulesPathList[$f] = $path;
         }
 
-        $config->_modulesPathList[$f] = $path;
-
+        if ($config->modules[$f . '.enabled']) {
+            $config->_modulesPathList[$f] = $path;
+        }
         return $moduleInfo;
     }
 
@@ -489,19 +489,23 @@ class Compiler
         foreach ($list as $k => $p) {
             if ($handle = opendir($p)) {
                 while (($f = readdir($handle)) !== false) {
-                    if ($f[0] != '.' && is_dir($p.$f)) {
-                        if ($subdir = opendir($p.$f)) {
+                    if ($f[0] != '.' && is_dir($p . $f)) {
+                        if ($subdir = opendir($p . $f)) {
+                            // @deprecated
+                            if ($k != 0 && $config->compilation['checkCacheFiletime']) {
+                                $config->_allBasePath[] = $p . $f . '/';
+                            }
                             while (($subf = readdir($subdir)) !== false) {
-                                if ($subf[0] != '.' && is_dir($p.$f.'/'.$subf)) {
+                                if ($subf[0] != '.' && is_dir($p . $f . '/' . $subf)) {
                                     if ($f == 'tpl') {
-                                        $prop = '_tplpluginsPathList_'.$subf;
+                                        $prop = '_tplpluginsPathList_' . $subf;
                                         if (!isset($config->{$prop})) {
                                             $config->{$prop} = array();
                                         }
-                                        array_unshift($config->{$prop}, $p.$f.'/'.$subf.'/');
+                                        array_unshift($config->{$prop}, $p . $f . '/' . $subf . '/');
                                     } else {
-                                        $prop = '_pluginsPathList_'.$f;
-                                        $config->{$prop}[$subf] = $p.$f.'/'.$subf.'/';
+                                        $prop = '_pluginsPathList_' . $f;
+                                        $config->{$prop}[$subf] = $p . $f . '/' . $subf . '/';
                                     }
                                 }
                             }
@@ -515,8 +519,8 @@ class Compiler
     }
 
     /**
-     * calculate miscellaneous path, depending on the server configuration and other information
-     * in the given array : script path, script name, documentRoot ..
+     * calculate miscellaneous paths, depending on the server configuration and other information
+     * in the given array: script path, script name, documentRoot, etc
      *
      * @param array  $urlconf          urlengine configuration. scriptNameServerVariable, basePath,
      *                                 and jelixWWWPath should be present
@@ -527,9 +531,9 @@ class Compiler
      */
     public function getPaths(&$urlconf, $pseudoScriptName = '', $isCli = false)
     {
-        // retrieve the script path+name.
-        // for cli, it will be the path from the directory were we execute the script (given to the php exec).
-        // for web, it is the path from the root of the url
+        // Retrieve the script path+name.
+        // For cli, it will be the path from the directory where we execute the script (given to the php exec).
+        // For web, it is the path from the root of the url.
 
         if ($pseudoScriptName) {
             $urlconf['urlScript'] = $pseudoScriptName;

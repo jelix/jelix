@@ -1,5 +1,8 @@
 ;---
 
+disableInstallers = on
+;enableAllModules = on
+
 [urlengine]
 multiview = off
 scriptNameServerVariable =
@@ -9,4 +12,3 @@ backendBasePath =
 checkHttpsOnParsing = on
 jelixWWWPath = "jelix/"
 significantFile = "urls.xml"
-

@@ -67,8 +67,11 @@ class sampleFormCtrl extends jController {
       $form = Forms::get('sample');
       $this->prepareForm($form);
       $form->initFromRequest();
-      if($form->check())
+      if($form->check()) {
+          $form->saveFile('file1');
+          $form->saveFile('image', jApp::wwwPath('cache/images/'));
           $rep->action="sampleform:ok";
+      }
       else
           $rep->action="sampleform:show";
       return $rep;

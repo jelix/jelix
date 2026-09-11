@@ -2,7 +2,7 @@
 /**
  * @author     Laurent Jouanneau
  *
- * @copyright  2011-2025 Laurent Jouanneau, 2012 Olivier Demah
+ * @copyright  2011-2026 Laurent Jouanneau, 2012 Olivier Demah
  *
  * @see       http://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -18,7 +18,6 @@ use Jelix\Core\Infos\FrameworkInfos;
  * @method static void declareModulesDir($basePath, $modules = null)
  * @method static string[] getDeclaredModulesDir()
  * @method static void declareModule($modulePath)
- * @method static void declareModulesFromConfig($config)
  * @method static void clearModulesPluginsPath()
  * @method static void declarePluginsDir($basePath)
  * @method static string[] getEnabledModulesPaths()

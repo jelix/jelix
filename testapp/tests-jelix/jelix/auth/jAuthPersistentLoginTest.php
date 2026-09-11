@@ -63,7 +63,7 @@ class jAuthPersistentLoginTest extends \Jelix\UnitTests\UnitTestCaseDb
     {
         parent::setUp();
         try {
-            jProfiles::get('jdb', '', true);
+            \Jelix\Core\Profiles::get('jdb', '', true);
         } catch (Exception $e) {
             $this->markTestSkipped(get_class($this).' cannot be run: '.$e->getMessage());
             return;

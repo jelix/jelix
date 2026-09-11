@@ -240,7 +240,7 @@ abstract class ServerResponse
     }
 
     /**
-     * Clean the differents caches headers.
+     * Clean the different caches headers.
      */
     public function cleanCacheHeaders()
     {

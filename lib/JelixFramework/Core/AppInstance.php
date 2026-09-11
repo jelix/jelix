@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2015-2025 Laurent Jouanneau
+ * @copyright  2015-2026 Laurent Jouanneau
  *
  * @see        https://jelix.org
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
@@ -98,6 +98,7 @@ class AppInstance
         $this->router = null;
         $this->config = null;
         $this->configAutoloader = null;
+        $this->_framework = null;
     }
 
     /**
@@ -294,10 +295,16 @@ class AppInstance
         }
     }
 
-    protected function getModulesPathsFromFramework()
+    /**
+     * Fills _modulesPath with the path of modules declared into the framework.ini.php file
+     *
+     * @return void
+     * @throws \Exception
+     */
+    protected function loadSpecifiedModulesPaths()
     {
         $frameworkInfo = $this->getFrameworkInfo();
-        foreach($frameworkInfo->getDeclaredModulePaths() as $name => $path) {
+        foreach($frameworkInfo->getSpecifiedModulePaths() as $module => $path) {
             $p = \jFile::parseJelixPath($path);
             if (!file_exists($p)) {
                 throw new \Exception('Error in the configuration file -- The module path, '.$path.', given in the configuration, doesn\'t exist', 10);
@@ -383,7 +390,7 @@ class AppInstance
     }
 
     /**
-     * returns all modules path, even those are not used by the application.
+     * returns all module paths, even those are not used by the application.
      *
      * @return string[] keys are module name, values are paths
      */
@@ -393,7 +400,7 @@ class AppInstance
             $this->_allModulesPath = array();
             $this->_allModulesPath['jelix'] = realpath(__DIR__.'/../../jelix-legacy/core-modules/jelix/').DIRECTORY_SEPARATOR;
 
-            $this->getModulesPathsFromFramework();
+            $this->loadSpecifiedModulesPaths();
 
             foreach ($this->_modulesPath as $modulePath) {
                 $this->_allModulesPath[basename($modulePath)] = $modulePath.DIRECTORY_SEPARATOR;

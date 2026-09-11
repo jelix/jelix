@@ -13,6 +13,7 @@ namespace Jelix\Installer\Migrator;
 
 use Jelix\Core\App;
 use Jelix\Core\Infos\ModuleStatusDeclaration;
+use Jelix\Core\Config\AppConfig;
 use Jelix\IniFile\IniModifier;
 use Jelix\Installer\ModuleStatus;
 
@@ -38,7 +39,7 @@ class Jelix17
     public function __construct(\Jelix\Installer\Reporter\ReporterInterface $reporter)
     {
         $this->reporter = $reporter;
-        $this->defaultConfigIni = new \Jelix\IniFile\IniReader(\Jelix\Core\Config\AppConfig::getDefaultConfigFile());
+        $this->defaultConfigIni = new \Jelix\IniFile\IniReader(AppConfig::getDefaultConfigFile());
     }
 
     public function migrate()
@@ -531,6 +532,7 @@ class Jelix17
             } else {
                 $upgraderUrl->upgrade();
             }
+
             $ep['config']->save();
             $urlMapModifier->save();
         }
