@@ -286,7 +286,7 @@ class FrameworkInfos
                 $nativeModule->isEnabled
             );
         }
-        return null;
+        return $nativeModule;
     }
 
     public function removeModule($name)
@@ -304,7 +304,27 @@ class FrameworkInfos
      */
     public function getModules()
     {
-        return array_merge($this->modules, $this->localModules);
+        $modules = $this->modules;
+
+        foreach($this->localModules as $name => $localModule) {
+            if (isset($modules[$name])) {
+                $combinedValues = array_merge(
+                    $modules[$name]->getValuesForIni(),
+                    $localModule->getValuesForIni()
+                );
+                $modules[$name] = new ModuleStatusDeclaration(
+                    $name,
+                    $combinedValues,
+                    // the module is considered as native if it is enabled
+                    // into the framework.ini.php.
+                    $modules[$name]->isEnabled
+                );
+            }
+            else {
+                $modules[$name] = $localModule;
+            }
+        }
+        return $modules;
     }
 
     /**
