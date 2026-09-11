@@ -394,23 +394,4 @@ class jFormsControlUpload2 extends jFormsControl
         return 'upload2';
     }
 
-    protected function verifyMimeType($filePath, $fileName)
-    {
-        if (count($this->mimetype)) {
-            return true;
-        }
-
-        $mimetypeFromExtension = \jFile::getMimeTypeFromFilename($fileName);
-        $mimetypeFromFile = \Jelix\FileUtilities\File::getMimeType($filePath);
-        if ($mimetypeFromFile == 'application/octet-stream') {
-            $mimetypeFromFile = $mimetypeFromExtension;
-        }
-        // we don't authorize files having the wrong mime type, and files for which the extension filename
-        // does not correspond to the expected type mime, to avoid security issue like php file disguised as an image.
-        if (!in_array($mimetypeFromFile, $this->mimetype) || $mimetypeFromFile != $mimetypeFromExtension) {
-            return false;
-        }
-        $this->fileInfo['type'] = $mimetypeFromFile;
-        return true;
-    }
 }
