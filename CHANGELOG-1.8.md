@@ -4,6 +4,12 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.27
+------
+
+Fix a vulnerability into the saving of uploaded files by jForms. A PHP file could be disguised as an image for
+example, and saved with the `php` extension, so it could be remotely executed if it is saved in the www directory.
+
 1.8.26
 ------
 

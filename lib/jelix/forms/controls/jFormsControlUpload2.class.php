@@ -217,13 +217,11 @@ class jFormsControlUpload2 extends jFormsControl
         }
 
         if ($this->error === null && count($this->mimetype)) {
-            $this->fileInfo['type'] = \Jelix\FileUtilities\File::getMimeType($this->fileInfo['tmp_name']);
-            if ($this->fileInfo['type'] == 'application/octet-stream') {
-                // let's try with the name
-                $this->fileInfo['type'] = jFile::getMimeTypeFromFilename($this->fileInfo['name']);
+            $mimeType = \jFile::verifyFileMimeType($this->fileInfo['tmp_name'], $this->mimetype, $this->fileInfo['name']);
+            if ($mimeType) {
+                $this->fileInfo['type'] = $mimeType;
             }
-
-            if (!in_array($this->fileInfo['type'], $this->mimetype)) {
+            else {
                 $this->error = jForms::ERRDATA_INVALID_FILE_TYPE;
             }
         }

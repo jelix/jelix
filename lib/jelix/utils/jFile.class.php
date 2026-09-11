@@ -174,6 +174,28 @@ class jFile
     }
 
     /**
+     * @param string $filePath the file for which we want to check the mime type
+     * @param string|array $allowedMimeTypes list of allowed mime types
+     * @param string $baseFileName the base filename if the filepath does not contain the real base filename (like uploaded files)
+     * @return false|string false if the file does not meet requirements, else the mime type of the file
+     */
+    public static function verifyFileMimeType($filePath, $allowedMimeTypes, $baseFileName = '')
+    {
+        if (jApp::config()
+            && !property_exists(jApp::config(), 'FileMimeTypeRegistered')
+        ) {
+            jApp::config()->FileMimeTypeRegistered = true;
+            if (property_exists(jApp::config(), 'mimeTypes')
+                && is_array(jApp::config()->mimeTypes)
+            ) {
+                File::registerMimeTypes(jApp::config()->mimeTypes);
+            }
+        }
+
+        return File::verifyFileMimeType($filePath, $allowedMimeTypes, $baseFileName);
+    }
+
+    /**
      * parse a path replacing Jelix shortcuts parts (var:, temp:, www:, app:, lib:).
      *
      * @param string $path the path with parts to replace

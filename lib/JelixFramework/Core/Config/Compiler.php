@@ -351,7 +351,7 @@ class Compiler
     }
 
     /**
-     * Find all activated modules and check their status.
+     * Load information about modules, either installed or not
      *
      * @param object $config the config object
      * @param bool $installationMode may be true for the installer, which needs all informations
