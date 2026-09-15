@@ -330,7 +330,7 @@ class FrameworkInfos
     /**
      * @return array list of module having a specific path. keys are module names, values are paths
      */
-    public function getSpecifiedModulePaths()
+    public function getDeclaredModulePaths()
     {
         return $this->allDeclaredModulePaths;
     }

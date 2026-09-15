@@ -4,7 +4,7 @@
  * @contributor Loic Mathaud
  * @contributor Bastien Jaillot
  *
- * @copyright   2005-2018 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
+ * @copyright   2005-2026 Laurent Jouanneau, 2007 Loic Mathaud, 2008 Bastien Jaillot
  *
  * @see        http://jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -189,7 +189,7 @@ class CreateModule extends \Jelix\DevHelper\AbstractCommandForApp
         // Configure the module. We don't launch the configurator,
         // as there is nothing to configure for the module.
         // just enabling it.
-        \Jelix\Installer\Configurator::setModuleAsConfigured($module, $iniDefault);
+        \Jelix\Installer\Configurator::setModuleAsConfigured($module, $this->getFrameworkInfos(), $iniDefault);
         $iniDefault->save();
 
         // Install the module into the application instance

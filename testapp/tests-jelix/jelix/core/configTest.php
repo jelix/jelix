@@ -1,5 +1,7 @@
 <?php
 
+use Jelix\Core\Infos\FrameworkInfos;
+
 class fakeConfigCompiler extends \Jelix\Core\Config\Compiler {
 
     function test_read_module_info($config, $allModuleInfo, $path, &$installation) {
@@ -182,7 +184,7 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
             ),
             true
         );
-        $fmk = jApp::getFrameworkInfo();
+        $fmk = FrameworkInfos::load();
         $fmk->updateModule($module);
 
         $config = new fakeConfig();

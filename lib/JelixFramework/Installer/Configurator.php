@@ -11,6 +11,7 @@ namespace Jelix\Installer;
 
 use \jApp as App;
 use Jelix\Core\Config\Compiler;
+use Jelix\Core\Infos\FrameworkInfos;
 use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\Core\Profiles;
 use Jelix\Dependencies\ItemException;
@@ -134,12 +135,11 @@ class Configurator
         $this->moduleParameters[$moduleName] = $parameters;
     }
 
-    public static function setModuleAsConfigured($moduleName, IniModifierInterface $configIni)
+    public static function setModuleAsConfigured($moduleName, FrameworkInfos $frameworkInfos, IniModifierInterface $configIni)
     {
         $module = new ModuleStatusDeclaration($moduleName, ['enabled' => true], true);
-        $framework = App::getFrameworkInfo();
-        $framework->addModule($module);
-        $framework->save();
+        $frameworkInfos->addModule($module);
+        $frameworkInfos->save();
     }
 
     /**

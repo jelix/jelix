@@ -276,6 +276,14 @@ class jAppInstance
     }
 
     /**
+     * @return array list of path (keys) where to find modules, and modules names (values).
+     */
+    public function getDeclaredModulesDirAndModules()
+    {
+        return $this->_modulesDirPath;
+    }
+
+    /**
      * declare a module.
      *
      * This method must be called before loading the configuration with `jApp::loadConfig()`
@@ -299,26 +307,12 @@ class jAppInstance
         }
     }
 
-    /**
-     * Fills _modulesPath with the path of modules declared into the framework.ini.php file
-     *
-     * @return void
-     * @throws Exception
-     */
-    protected function loadSpecifiedModulesPaths()
+
+    public function getDeclaredModulePaths()
     {
-        $frameworkInfo = $this->getFrameworkInfo();
-        foreach($frameworkInfo->getSpecifiedModulePaths() as $module => $path) {
-            $p = \jFile::parseJelixPath($path);
-            if (!file_exists($p)) {
-                throw new \Exception('Error in the configuration file -- The module path, '.$path.', given in the configuration, doesn\'t exist', 10);
-            }
-            if (!is_dir($p)) {
-                throw new \Exception('Error in the configuration file -- The module path, '.$path.', given in the configuration, is not a directory', 10);
-            }
-            $this->_modulesPath[] = rtrim($p, '/');
-        }
+        return $this->_modulesPath;
     }
+
 
     public function clearModulesPluginsPath()
     {
@@ -374,63 +368,51 @@ class jAppInstance
     public function getAllModulesPath()
     {
         if ($this->_allModulesPath === null) {
-            $this->_allModulesPath = array();
-            $this->_allModulesPath['jelix'] = realpath(__DIR__.'/../core-modules/jelix/').DIRECTORY_SEPARATOR;
+            $frameworkInfo = FrameworkInfos::load();
+            $config = jApp::config();
+            $compiler = new Config\FrameworkConfigCompiler(
+                $this,
+                $frameworkInfo,
+                jApp::varConfigPath('installer.ini.php'),
+                $config->enableAllModules,
+                $config->disableInstallers,
+                $config->compilation['checkCacheFiletime']
+            );
 
-            $this->loadSpecifiedModulesPaths();
-
-            foreach ($this->_modulesPath as $modulePath) {
-                $this->_allModulesPath[basename($modulePath)] = $modulePath.DIRECTORY_SEPARATOR;
-            }
-
-            foreach ($this->_modulesDirPath as $basePath => $names) {
-                $path = $basePath.DIRECTORY_SEPARATOR;
-                if (is_array($names)) {
-                    foreach ($names as $name) {
-                        $this->_allModulesPath[$name] = $path.$name.DIRECTORY_SEPARATOR;
-                    }
-                } elseif ($names == '*' || $names === null) {
-                    if ($handle = opendir($path)) {
-                        while (($name = readdir($handle)) !== false) {
-                            if ($name[0] != '.' && is_dir($path.$name)) {
-                                $this->_allModulesPath[$name] = $path.$name.DIRECTORY_SEPARATOR;
-                            }
-                        }
-                        closedir($handle);
-                    }
-                }
-            }
+            $frameworkConfig = $compiler->compile(true);
+            $this->_allModulesPath = $frameworkConfig->getAllModulePathsList();
         }
-
         return $this->_allModulesPath;
+    }
+
+    public function getDeclaredPluginPaths()
+    {
+        return $this->_pluginsDirPath;
     }
 
     /**
      * return all paths of directories containing plugins, even those which are
-     * in disabled modules.
+     * in enabled modules.
      *
      * @return string[]
+     * @deprecated internal use only, it will disappear in the next version
      */
     public function getAllPluginsPath()
     {
         if ($this->_allPluginsPath === null) {
-            $this->_allPluginsPath = array_map(function ($path) {
-                return rtrim($path, '/\\').DIRECTORY_SEPARATOR;
-            }, $this->_pluginsDirPath);
+            $frameworkInfo = FrameworkInfos::load();
+            $config = jApp::config();
+            $compiler = new Config\FrameworkConfigCompiler(
+                $this,
+                $frameworkInfo,
+                jApp::varConfigPath('installer.ini.php'),
+                $config->enableAllModules,
+                $config->disableInstallers,
+                $config->compilation['checkCacheFiletime']
+            );
 
-            foreach ($this->getAllModulesPath() as $name => $path) {
-                $p = $path.'plugins'.DIRECTORY_SEPARATOR;
-                if (file_exists($p)
-                    && is_dir($p)
-                    && !in_array($p, $this->_allPluginsPath)) {
-                    $this->_allPluginsPath[] = $p;
-                }
-            }
-
-            $bundled = realpath(__DIR__.'/../plugins/').DIRECTORY_SEPARATOR;
-            if (file_exists($bundled) && !in_array($bundled, $this->_allPluginsPath)) {
-                array_unshift($this->_allPluginsPath, $bundled);
-            }
+            $frameworkConfig = $compiler->compile(true);
+            $this->_allPluginsPath = $frameworkConfig->getEnabledPluginPathsList();
         }
 
         return $this->_allPluginsPath;
