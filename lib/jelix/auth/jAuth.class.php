@@ -829,4 +829,32 @@ class jAuth
 
         return jUrl::isUrlFromApp($url, $config['url_return_external_allowed_domains']);
     }
+
+    /**
+     * check if current auth driver allow users to auth with email (ie unique), and if app allow it.
+     * Note : if `authenticateWith` conf  is already to 'login-email', the method return false
+     *
+     * @return boolean
+     */
+    public static function isAuthenticationWithEmailAllowed()
+    {
+        $authPlugin = jApp::coord()->getPlugin('auth', false);
+        $driverName = $authPlugin->config['driver'];
+        $driver = jAuth::getDriver();
+        $currentAuthenticationConf = ($authPlugin->config[$driverName]['authenticateWith'] ?? 'login') ;
+        $allowLoginWithEmail = false;
+        if($currentAuthenticationConf == 'login' && method_exists($driver, "areEmailUnique") && $driver->areEmailUnique())
+        {
+            /**
+             * authentication use login only, but email are unique,
+             * notify app, does it allow to authenticate with e-mail ?
+             */
+            $eventResp = jEvent::notify('AuthAllowLoginWithUniqueEmail');
+            if (($eventResp->getResponseByKey('AllowLoginWithUniqueEmail') ?? false)) {
+                $allowLoginWithEmail = true;
+            }
+        }
+
+        return $allowLoginWithEmail;
+    }
 }
