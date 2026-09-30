@@ -240,7 +240,7 @@ class jApp
      *
      * Call it after initPaths
      *
-     * @param object|string $configFile         name of the ini file to configure the framework or a configuration object
+     * @param object|string $configFile         name of the ini file to configure the framework or a configuration object (deprecated, only filename will be supported in the future)
      * @param bool          $enableErrorHandler enable the error handler of jelix.
      *                                          keep it to true, unless you have something to debug
      *                                          and really have to use the default handler or an other handler
@@ -250,7 +250,12 @@ class jApp
         if ($enableErrorHandler) {
             jBasicErrorHandler::register();
         }
+
+        self::$_currentApp->checkEnvironment();
+
+        // load application configuration
         if (is_object($configFile)) {
+            trigger_error("calling jApp::loadConfig() with object is deprecated", E_USER_DEPRECATED);
             self::setConfig($configFile);
         } else {
             self::setConfig(AppConfig::load($configFile));

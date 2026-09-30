@@ -140,6 +140,23 @@ class jAppInstance
         $this->unregisterAutoload();
     }
 
+    public function checkEnvironment()
+    {
+        if ($this->tempBasePath == '/') {
+            // if it equals to '/', this is because realpath has returned false in the application.init.php
+            // so this is because the path doesn't exist.
+            throw new Exception('Application temp directory doesn\'t exist !', 3);
+        }
+
+        if (!is_writable($this->tempBasePath)) {
+            throw new Exception('Application temp base directory is not writable -- (' . $this->tempBasePath . ')', 4);
+        }
+
+        if (!is_writable($this->logPath)) {
+            throw new Exception('Application log directory is not writable -- (' . $this->logPath . ')', 4);
+        }
+    }
+
     protected function unregisterAutoload()
     {
         if ($this->configAutoloader) {

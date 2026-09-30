@@ -4,7 +4,7 @@
  * @subpackage core
  *
  * @author   Laurent Jouanneau
- * @copyright 2005-2025 Laurent Jouanneau
+ * @copyright 2005-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence  GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -58,8 +58,6 @@ class jConfig
      */
     public static function load($configFile)
     {
-        AppConfig::checkEnvironment();
-
         $config = array();
         $file = jConfigCompiler::getCacheFilename($configFile);
 
@@ -109,15 +107,6 @@ class jConfig
         }
 
         return $config;
-    }
-
-    /**
-     * @deprecated use AppConfig::checkEnvironment() instead
-     * @return void
-     */
-    public static function checkEnvironment()
-    {
-        AppConfig::checkEnvironment();
     }
 
     /**
