@@ -59,6 +59,18 @@ class FrameworkInfos
     protected $allDeclaredModulePaths = array();
 
     /**
+     * @var null|bool indicate if all modules are enabled by default
+     *                  null=not set into the ini file
+     */
+    protected $enableAllModules = null;
+
+    /**
+     * @var null|bool indicate if all installers are disabled
+     *                  null=not set into the ini file
+     */
+    protected $disableInstallers = null;
+
+    /**
      * FrameworkInfos constructor.
      *
      * @param string $frameworkFile      the path to the framework.ini.php file
@@ -95,6 +107,12 @@ class FrameworkInfos
                     $module = new ModuleStatusDeclaration($name, $values, !$isLocal);
                     $this->addModule($module);
                 }
+                continue;
+            }
+
+            if ($section == 'installation') {
+                $this->enableAllModules = $iniFile->getValue('enableAllModules', $section);
+                $this->disableInstallers = $iniFile->getValue('disableInstallers', $section);
                 continue;
             }
 
@@ -335,6 +353,16 @@ class FrameworkInfos
         return $this->allDeclaredModulePaths;
     }
 
+    public function isAllModulesEnabled()
+    {
+        return (bool) $this->enableAllModules;
+    }
+
+    public function isInstallersDisabled()
+    {
+        return (bool) $this->disableInstallers;
+    }
+
     public function save()
     {
         $this->updateIni();
@@ -352,6 +380,20 @@ class FrameworkInfos
 
         foreach ($this->modules as $module) {
             $this->updateModuleSection($this->iniFile, $module);
+        }
+
+        if ($this->enableAllModules !== null) {
+            $this->iniFile->setValue('enableAllModules', $this->enableAllModules, 'installation');
+        }
+        else {
+            $this->iniFile->removeValue('enableAllModules', 'installation');
+        }
+
+        if ($this->disableInstallers !== null) {
+            $this->iniFile->setValue('disableInstallers', $this->disableInstallers, 'installation');
+        }
+        else {
+            $this->iniFile->removeValue('disableInstallers', 'installation');
         }
 
         if ($this->iniLocalFile) {

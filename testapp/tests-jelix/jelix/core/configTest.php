@@ -16,8 +16,6 @@ class fakeConfig {
     public $_externalModulesPathList = array();
     public $pluginsPath = '';
     public $modulesPath = '';
-    public $disableInstallers = false;
-    public $enableAllModules = false;
 }
 
 

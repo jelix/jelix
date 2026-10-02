@@ -11,6 +11,7 @@
  */
 
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Config\FrameworkRuntimeConfig;
 use Jelix\Core\Infos\FrameworkInfos;
 
 /**
@@ -34,6 +35,7 @@ use Jelix\Core\Infos\FrameworkInfos;
  * @method static string popCurrentModule()
  * @method static string getCurrentModule()
  * @method static FrameworkInfos getFrameworkInfo()
+ * @method static FrameworkRuntimeConfig getFrameworkConfig()
  * @method static \Jelix\Core\Services services()
  * @method static reloadServices()
  * @method static void declareLocalesDir($basePath)

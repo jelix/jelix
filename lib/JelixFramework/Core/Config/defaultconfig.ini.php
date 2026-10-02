@@ -43,14 +43,6 @@ forceHTTPSPort=
 chmodFile=0664
 chmodDir=0775
 
-; ---  don't set the following options to on, except if you know what you do
-
-; disable all installers and the installer.ini.php
-; useful only if you manage the installation of modules by hands (not recommanded)
-disableInstallers=off
-; if set to on, all modules are enabled (not recommanded)
-enableAllModules=off
-
 [modules]
 ; filled by the configuration compiler. All values predefined in this
 ; section are ignored.

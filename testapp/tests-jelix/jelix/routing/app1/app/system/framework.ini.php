@@ -8,3 +8,7 @@ type=classic
 
 [module:aaa]
 enabled=on
+
+[installation]
+disableInstallers = on
+;enableAllModules = on

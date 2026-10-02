@@ -1,7 +1,5 @@
 ;---
 
-disableInstallers = on
-;enableAllModules = on
 
 [urlengine]
 enableParser = on
@@ -14,4 +12,3 @@ checkHttpsOnParsing = on
 jelixWWWPath = "jelix/"
 jqueryPath="jelix/jquery/"
 significantFile = "urls.xml"
-

@@ -114,6 +114,17 @@ class Jelix19
             }
         }
 
+        if (!$localMode) {
+            $enableAllModules = $configIni->getValue('enableAllModules');
+            if ($enableAllModules !== null) {
+                $frameworkIni->setValue('enableAllModules', $enableAllModules, 'installation');
+            }
+            $disableInstallers = $configIni->getValue('disableInstallers');
+            if ($disableInstallers !== null) {
+                $frameworkIni->setValue('disableInstallers', $enableAllModules, 'installation');
+            }
+        }
+
         $localFrameworkIni->save();
         $frameworkIni->save();
 

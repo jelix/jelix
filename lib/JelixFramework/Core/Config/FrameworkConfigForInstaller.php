@@ -10,25 +10,28 @@
 
 namespace Jelix\Core\Config;
 
-class FrameworkConfigForInstaller extends FrameworkConfig
+use Jelix\Core\Infos\ModuleInfos;
+
+class FrameworkConfigForInstaller extends FrameworkRuntimeConfig
 {
     public function __construct(
-        $moduleStatuses,
-        $enabledModules,
+
+        protected array $moduleStatuses,
+        /** @var ModuleInfos[] $enabledModules */
+        protected array $enabledModules,
+        protected array $allModulePathsList,
         $enabledModulePathsList,
         $enabledPluginPathsList,
         $tplpluginPathsListByType,
         $pluginPathsListByType,
-        protected array $allModulePathsList,
-
+        $allPathsToCheck
     ) {
         parent::__construct(
-            $moduleStatuses,
-            $enabledModules,
             $enabledModulePathsList,
             $enabledPluginPathsList,
             $tplpluginPathsListByType,
-            $pluginPathsListByType
+            $pluginPathsListByType,
+            $allPathsToCheck
         );
     }
 
@@ -37,4 +40,13 @@ class FrameworkConfigForInstaller extends FrameworkConfig
         return $this->allModulePathsList;
     }
 
+    public function getModuleStatus($moduleName) : ?array
+    {
+        return $this->modules[$moduleName] ?? null;
+    }
+
+    public function getModuleInfos($moduleName) : ?ModuleInfos
+    {
+        return $this->enabledModules[$moduleName] ?? null;
+    }
 }

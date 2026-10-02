@@ -52,18 +52,15 @@ class FrameworkConfigCompiler
         protected \jAppInstance $app,
         protected FrameworkInfos $frameworkInfo,
         protected string $installerIniPath,
-        protected bool $enableAllModules = false,
-        protected bool $disabledInstallers = false,
-        protected bool $checkCacheFiletime = true
     )
     {
 
     }
 
 
-    public function compile($installationMode = false) : FrameworkConfig|FrameworkConfigForInstaller
+    public function compile($installationMode = false) : FrameworkRuntimeConfig|FrameworkConfigForInstaller
     {
-        if ($this->disabledInstallers) {
+        if ($this->frameworkInfo->isInstallersDisabled()) {
             $installation = array();
         } elseif (file_exists($this->installerIniPath)) {
             $installation = parse_ini_file($this->installerIniPath, true, INI_SCANNER_TYPED);
@@ -80,12 +77,8 @@ class FrameworkConfigCompiler
         }
 
         // @deprecated
-        if ($this->checkCacheFiletime) {
-            // _allBasePath is used to check if the config cache should be rebuilt, by comparing the file mtime value to the current time
-            $this->allBasePath = $this->app->getDeclaredModulesDir();
-        } else {
-            $this->allBasePath = array();
-        }
+        // allBasePath is used to check if the config cache should be rebuilt, by comparing the file mtime value to the current time
+        $this->allBasePath = $this->app->getDeclaredModulesDir();
 
         $this->enabledPluginPathsList = array_map(function ($path) {
             return rtrim($path, '/\\').DIRECTORY_SEPARATOR;
@@ -107,9 +100,9 @@ class FrameworkConfigCompiler
                 continue;
             }
 
-            $mod = $modules[$moduleInfo->name] = $this->_readModuleInfo($moduleInfo, ($declaredModules[$moduleName] ?? null), $installationMode, $path, $installation);
             if ($mod['enabled']) {
                 $enabledModules[$moduleName] = $moduleInfo;
+            $mod = $modules[$moduleName] = $this->_readModuleInfo($moduleName, ($declaredModules[$moduleName] ?? null), $installationMode, $path, $installation);
             }
         }
         $this->_loadPluginsPathList();
@@ -118,22 +111,22 @@ class FrameworkConfigCompiler
             $fmkConfig = new FrameworkConfigForInstaller(
                 $modules,
                 $enabledModules,
+                $this->allModulesPathList,
                 $this->enabledModulesPathList,
                 $this->enabledPluginPathsList,
                 $this->tplpluginPathsListByType,
                 $this->pluginPathsListByType,
-                $this->allModulesPathList,
+                $this->allBasePath
             );
 
         }
         else {
-            $fmkConfig = new FrameworkConfig(
-                $modules,
-                $enabledModules,
+            $fmkConfig = new FrameworkRuntimeConfig(
                 $this->enabledModulesPathList,
                 $this->enabledPluginPathsList,
                 $this->tplpluginPathsListByType,
                 $this->pluginPathsListByType,
+                $this->allBasePath
             );
         }
 
@@ -151,20 +144,19 @@ class FrameworkConfigCompiler
      * @param mixed $installation
      *
      */
-    protected function _readModuleInfo(ModuleInfos $moduleInfos, ?ModuleStatusDeclaration $moduleStatusDecl, $installationMode, $path, &$installation)
+    protected function _readModuleInfo($moduleName, ?ModuleStatusDeclaration $moduleStatusDecl, $installationMode, $path, &$installation)
     {
-        $f = $moduleInfos->name;
-        $isInstalled = $installation['modules'][$f . '.installed'] ?? 0;
-        if ($this->disabledInstallers) {
+        $isInstalled = $installation['modules'][$moduleName . '.installed'] ?? 0;
+        if ($this->frameworkInfo->isInstallersDisabled()) {
             $isInstalled = 1;
         }
 
         $moduleEnabled = false;
-        if ($f == 'jelix') {
+        if ($moduleName == 'jelix') {
             $moduleEnabled = true; // the jelix module should always be enabled
         } else {
-            if ($this->enableAllModules) {
-                if ($this->disabledInstallers
+            if ($this->frameworkInfo->isAllModulesEnabled()) {
+                if ($this->frameworkInfo->isInstallersDisabled()
                     || $isInstalled
                     || $installationMode) {
                     $moduleEnabled = true;
@@ -187,13 +179,11 @@ class FrameworkConfigCompiler
         );
 
         if ($moduleEnabled || $installationMode) {
-            $module['dbprofile'] = $installation['modules'][$f . '.dbprofile'] ?? 'default';
+            $module['dbprofile'] = $installation['modules'][$moduleName . '.dbprofile'] ?? 'default';
         }
 
         if ($installationMode) {
-            // pour instance ModuleStatus (dans jInstallerEntrypoint, dans createComponentModule, )
-            $module['version'] = ((string)$installation['modules'][$f . '.version'] ?? '');
-            // pour instance ModuleStatus (dans jInstallerEntrypoint, dans createComponentModule, )
+            $module['version'] = ((string)$installation['modules'][$moduleName . '.version'] ?? '');
             $module['installed'] = $isInstalled;
 
             if ($moduleStatusDecl) {
@@ -205,11 +195,11 @@ class FrameworkConfigCompiler
                 }
             }
 
-            $this->allModulesPathList[$f] = $path;
+            $this->allModulesPathList[$moduleName] = $path;
         }
 
         if ($moduleEnabled) {
-            $this->enabledModulesPathList[$f] = $path;
+            $this->enabledModulesPathList[$moduleName] = $path;
             $p = $path.'plugins'.DIRECTORY_SEPARATOR;
             if (file_exists($p)
                 && is_dir($p)
@@ -282,7 +272,7 @@ class FrameworkConfigCompiler
                     if ($f[0] != '.' && is_dir($p . $f)) {
                         if ($subdir = opendir($p . $f)) {
                             // @deprecated
-                            if ($k != 0 && $this->checkCacheFiletime) {
+                            if ($k != 0) {
                                 $this->allBasePath[] = $p . $f . '/';
                             }
                             while (($subf = readdir($subdir)) !== false) {

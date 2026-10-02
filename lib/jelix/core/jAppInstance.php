@@ -7,6 +7,7 @@
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Core\Config\FrameworkRuntimeConfig;
 use Jelix\Core\Infos\FrameworkInfos;
 use Jelix\Core\Config;
 
@@ -76,6 +77,11 @@ class jAppInstance
      * @var FrameworkInfos
      */
     protected $_framework;
+
+    /**
+     * @var FrameworkRuntimeConfig
+     */
+    protected $frameworkRuntimeConfig;
 
     /**
      * initialize the application paths.
@@ -186,15 +192,18 @@ class jAppInstance
             $this->coord = clone $this->coord;
         }
 
-        if ($this->_framework) {
-            $this->_framework = clone $this->_framework;
+        if ($this->frameworkRuntimeConfig) {
+            $this->frameworkRuntimeConfig = clone $this->frameworkRuntimeConfig;
         }
     }
 
-    public function setConfig($config)
+    public function setConfig($config, ?FrameworkRuntimeConfig $runtimeConfig = null)
     {
         $this->unregisterAutoload();
         $this->config = $config;
+        if ($runtimeConfig) {
+            $this->frameworkRuntimeConfig = $runtimeConfig;
+        }
         $this->registerAutoload();
         $this->reloadServices();
     }
@@ -214,6 +223,12 @@ class jAppInstance
         }
         return $this->_framework;
     }
+
+    public function getFrameworkConfig() : FrameworkRuntimeConfig
+    {
+        return $this->frameworkRuntimeConfig;
+    }
+
 
     /**
      * Sometimes, the application.init.php may not be into the appPath, this method allows to indicate
@@ -391,9 +406,6 @@ class jAppInstance
                 $this,
                 $frameworkInfo,
                 jApp::varConfigPath('installer.ini.php'),
-                $config->enableAllModules,
-                $config->disableInstallers,
-                $config->compilation['checkCacheFiletime']
             );
 
             $frameworkConfig = $compiler->compile(true);
@@ -423,9 +435,6 @@ class jAppInstance
                 $this,
                 $frameworkInfo,
                 jApp::varConfigPath('installer.ini.php'),
-                $config->enableAllModules,
-                $config->disableInstallers,
-                $config->compilation['checkCacheFiletime']
             );
 
             $frameworkConfig = $compiler->compile(true);
@@ -571,8 +580,6 @@ class jAppInstance
     {
         $this->_services = new \Jelix\Core\Services();
     }
-
-
 
     /**
      * Declare a directory containing some locales.
