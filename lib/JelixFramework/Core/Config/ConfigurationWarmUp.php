@@ -50,7 +50,7 @@ class ConfigurationWarmUp implements WarmUpLauncherInterface
         {
             $staticConfigFile = $this->app->varLibPath.AppConfig::getStaticBuildFilename($ep->getConfigFile());
 
-            $compiler = new Compiler($ep->getConfigFile());
+            $compiler = new Compiler($this->app, $ep->getConfigFile());
             $config = $compiler->readStaticConfiguration(false);
 
             // if bytecode cache is enabled, it's better to store configuration

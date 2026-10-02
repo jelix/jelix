@@ -34,6 +34,7 @@ use Jelix\Core\Infos\FrameworkInfos;
  * @method static void pushCurrentModule($module)
  * @method static string popCurrentModule()
  * @method static string getCurrentModule()
+ * @method static string mainConfigFile()
  * @method static FrameworkInfos getFrameworkInfo()
  * @method static FrameworkRuntimeConfig getFrameworkConfig()
  * @method static \Jelix\Core\Services services()
@@ -73,7 +74,6 @@ class jApp
         } else {
             self::$_currentApp = new jAppInstance($appPath, $wwwPath, $varPath, $logPath, $configPath, $scriptPath);
         }
-        self::$_mainConfigFile = null;
     }
 
     /**
@@ -130,7 +130,7 @@ class jApp
 
     public static function appSystemPath($file = '')
     {
-        return self::$_currentApp->appPath.'app/system/'.$file;
+        return self::$_currentApp->appSystemPath.$file;
     }
 
     public static function varPath($file = '')
@@ -265,30 +265,6 @@ class jApp
         self::$_currentApp->config->enableErrorHandler = $enableErrorHandler;
     }
 
-    protected static $_mainConfigFile;
-
-    /**
-     * Main config file path.
-     */
-    public static function mainConfigFile()
-    {
-        if (self::$_mainConfigFile) {
-            return self::$_mainConfigFile;
-        }
-
-        $configFileName = self::$_currentApp->appPath.'app/system/mainconfig.ini.php';
-        if (!file_exists($configFileName)) {
-            if (jServer::isCLI() && strpos($_SERVER['SCRIPT_FILENAME'], 'installer.php') !== false) {
-                throw new \Exception("Don't find the app/system/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
-            }
-
-            throw new \Exception("Don't find the app/system/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
-        }
-        self::$_mainConfigFile = $configFileName;
-
-        return $configFileName;
-    }
-
     /**
      * @return jCoordinator
      */
@@ -328,7 +304,6 @@ class jApp
         self::$_currentApp = null;
         self::$_currentApp = array_pop(self::$contextBackup);
         self::$_currentApp->onRestoringAsContext();
-        self::$_mainConfigFile = null;
     }
 
     /**

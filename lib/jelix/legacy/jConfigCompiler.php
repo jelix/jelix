@@ -59,8 +59,8 @@ class jConfigCompiler
      */
     public static function read($configFile, $allModuleInfo = false, $isCli = false, $pseudoScriptName = '')
     {
-        $compiler = new Compiler($configFile, $pseudoScriptName);
 
+        $compiler = new Compiler(jApp::app(), $configFile, $pseudoScriptName);
         if ($isCli) {
             $config = $compiler->readForCli($allModuleInfo);
         }

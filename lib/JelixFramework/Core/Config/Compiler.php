@@ -13,6 +13,7 @@
 namespace Jelix\Core\Config;
 
 use jApp as App;
+use jAppInstance as AppInstance;
 use Jelix\Core\Infos\AppInfos;
 use Jelix\IniFile\Util as IniFileMgr;
 use jServer as Server;
@@ -31,6 +32,8 @@ class Compiler
     protected $configFileName = '';
 
     protected $pseudoScriptName = '';
+
+    protected AppInstance $appInstance;
 
     /**
      * @var \StdClass
@@ -52,10 +55,11 @@ class Compiler
      * @param string $pseudoScriptName the name of the entry point, relative to the base path,
      *                                 corresponding to the readed configuration. It should start with a leading /.
      */
-    public function __construct($configFile = '', $pseudoScriptName = '')
+    public function __construct(AppInstance $appInstance, $configFile = '', $pseudoScriptName = '')
     {
         $this->pseudoScriptName = $pseudoScriptName;
         $this->configFileName = $configFile;
+        $this->appInstance = $appInstance;
     }
 
     /**
@@ -76,15 +80,14 @@ class Compiler
      */
     protected function readStaticConfigFiles($configFile)
     {
-        $appSystemPath = App::appSystemPath();
-        $varConfigPath = App::varConfigPath();
+        $appSystemPath = $this->appInstance->appSystemPath;
+        $varConfigPath = $this->appInstance->configPath;
 
         // this is the defaultconfig file of JELIX itself
         $config = \jFile::mergeIniFile(__DIR__ . '/defaultconfig.ini.php');
 
         // read the main configuration of the app
-        $mcf = App::mainConfigFile();
-        \jFile::mergeIniFile($mcf, $config);
+        \jFile::mergeIniFile($this->appInstance->mainConfigFile(), $config);
         $this->commonConfig = clone $config;
 
         if (!file_exists($appSystemPath.$configFile) && !file_exists($varConfigPath.$configFile)) {
@@ -164,7 +167,7 @@ class Compiler
      */
     public function readLiveConfiguration(object $config, $isCli)
     {
-        $varConfigPath = App::varConfigPath();
+        $varConfigPath = $this->appInstance->configPath;
         if (file_exists($varConfigPath.'liveconfig.ini.php')) {
             IniFileMgr::readAndMergeObject($varConfigPath.'liveconfig.ini.php', $config);
         }
@@ -277,15 +280,15 @@ class Compiler
     {
         if ($conf != '1' && strlen($conf) > 1) {
             // the configuration value is a filename
-            $confFile = App::varConfigPath($conf);
+            $confFile = $this->appInstance->configPath.$conf;
             if (!file_exists($confFile)) {
-                $confFile = App::appSystemPath($conf);
+                $confFile = $this->appInstance->appSystemPath.$conf;
                 if (!file_exists($confFile)) {
                     throw new Exception("Error in the configuration. A plugin configuration file doesn't exist -- Configuration file for the coord plugin {$name} doesn't exist: '{$confFile}'", 8);
                 }
             }
             // let's get relative path to the app
-            $conf = \Jelix\FileUtilities\Path::shortestPath(App::appPath(), $confFile);
+            $conf = \Jelix\FileUtilities\Path::shortestPath($this->appInstance->appPath, $confFile);
         }
 
         return $conf;
@@ -379,7 +382,7 @@ class Compiler
         if ($isCli) {
             $lastslash = strrpos($urlconf['urlScript'], DIRECTORY_SEPARATOR);
             if ($lastslash === false) {
-                $urlconf['urlScriptPath'] = ($pseudoScriptName ? App::appPath('/scripts/') : getcwd() . '/');
+                $urlconf['urlScriptPath'] = ($pseudoScriptName ? $this->appInstance->appPath.'/scripts/' : getcwd() . '/');
                 $urlconf['urlScriptName'] = $urlconf['urlScript'];
             } else {
                 $urlconf['urlScriptPath'] = getcwd() . '/' . substr($urlconf['urlScript'], 0, $lastslash) . '/';
@@ -451,17 +454,17 @@ class Compiler
             if (isset($_SERVER['DOCUMENT_ROOT'])) {
                 $urlconf['documentRoot'] = $_SERVER['DOCUMENT_ROOT'];
             } else {
-                $urlconf['documentRoot'] = App::wwwPath();
+                $urlconf['documentRoot'] = $this->appInstance->wwwPath;
             }
 
             if ($localBasePath != '/') {
                 // if wwwPath ends with the base path, we remove the base path from the wwwPath to have
                 // the document root
-                $posBP = strpos(App::wwwPath(), $localBasePath);
+                $posBP = strpos($this->appInstance->wwwPath, $localBasePath);
                 if ($posBP !== false) {
-                    $lenWP = strlen(App::wwwPath()) - strlen($localBasePath);
+                    $lenWP = strlen($this->appInstance->wwwPath) - strlen($localBasePath);
                     if ($posBP == $lenWP) {
-                        $urlconf['documentRoot'] = substr(App::wwwPath(), 0, $lenWP);
+                        $urlconf['documentRoot'] = substr($this->appInstance->wwwPath, 0, $lenWP);
                     }
                 }
             }

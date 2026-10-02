@@ -45,7 +45,7 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         $this->fServer = $server;
         $this->fServer->setHttpRequest($url);
 
-        $compiler = new Compiler('index/config.ini.php', $scriptPath);
+        $compiler = new Compiler(jApp::app(), 'index/config.ini.php', $scriptPath);
         $config = $compiler->read(true);
         if ($scriptNameServerVariable) {
             $config->urlengine['scriptNameServerVariable'] = $scriptNameServerVariable;

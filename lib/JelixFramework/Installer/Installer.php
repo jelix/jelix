@@ -647,8 +647,8 @@ class Installer
             $fullConfig->save();
 
             // we re-load configuration file for each module because
-            // previous module installer could have modify it.
-            $compiler = new Compiler($entryPoint->getConfigFileName(), $entryPoint->getScriptName());
+            // previous module installer could have modifying it.
+            $compiler = new Compiler(\jApp::app(), $entryPoint->getConfigFileName(), $entryPoint->getScriptName());
             $entryPoint->setConfigObj($entryPoint->isCliScript() ?
                 $compiler->readForCli(true) : $compiler->read(true)
             );

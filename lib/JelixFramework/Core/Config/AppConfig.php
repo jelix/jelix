@@ -122,7 +122,7 @@ class AppConfig
             $config = \Jelix\IniFile\Util::read($staticConfigFile, true);
         }
 
-        $compiler = new Compiler($configFile);
+        $compiler = new Compiler(App::app(), $configFile);
 
         $config = $compiler->readLiveConfiguration($config, Server::isCLI());
         \jFile::createDir(App::tempPath(), $config->chmodDir);
@@ -164,8 +164,8 @@ class AppConfig
         $staticConfigFile = App::varLibPath(self::getStaticBuildFilename($configFile));
 
         if (!file_exists($staticConfigFile)) {
-            $compiler = new Compiler($configFile);
-            $config = $compiler->readStaticConfiguration();
+            $compiler = new Compiler(App::app(), $configFile);
+            $config = $compiler->readStaticConfiguration($fmkConfig);
         }
         else {
             if (BYTECODE_CACHE_EXISTS) {
@@ -190,7 +190,7 @@ class AppConfig
      */
     public static function loadWithoutCache($configFile, $scriptName = '')
     {
-        $compiler = new Compiler($configFile, $scriptName);
+        $compiler = new Compiler(App::app(), $configFile, $scriptName);
         return $compiler->read(false);
     }
 
@@ -208,7 +208,7 @@ class AppConfig
      */
     public static function loadForCli($configFile, $scriptName = '')
     {
-        $compiler = new Compiler($configFile, $scriptName);
+        $compiler = new Compiler(App::app(), $configFile, $scriptName);
         return $compiler->readForCli(true);
     }
 

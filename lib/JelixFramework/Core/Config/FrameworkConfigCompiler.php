@@ -100,9 +100,9 @@ class FrameworkConfigCompiler
                 continue;
             }
 
-            if ($mod['enabled']) {
-                $enabledModules[$moduleName] = $moduleInfo;
             $mod = $modules[$moduleName] = $this->_readModuleInfo($moduleName, ($declaredModules[$moduleName] ?? null), $installationMode, $path, $installation);
+            if ($mod['enabled'] && $installationMode) {
+                $enabledModules[$moduleName] = ModuleInfos::load($path);
             }
         }
         $this->_loadPluginsPathList();

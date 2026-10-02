@@ -22,6 +22,8 @@ class jAppInstance
 
     public $appPath = '';
 
+    public $appSystemPath = '';
+
     public $varPath = '';
 
     public $logPath = '';
@@ -131,6 +133,7 @@ class jAppInstance
         $scriptPath = null
     ) {
         $this->appPath = $appPath;
+        $this->appSystemPath = $appPath.'app/system/';
         $this->wwwPath = (is_null($wwwPath) ? $appPath.'www/' : $wwwPath);
         $this->varPath = (is_null($varPath) ? $appPath.'var/' : $varPath);
         $this->logPath = (is_null($logPath) ? $this->varPath.'log/' : $logPath);
@@ -139,6 +142,7 @@ class jAppInstance
         $this->applicationInitFile = $appPath.'application.init.php';
         $this->varLibPath = $this->varPath.'lib/';
         $this->_framework = null;
+        $this->mainConfigFile = '';
     }
 
     public function __destruct()
@@ -161,6 +165,31 @@ class jAppInstance
         if (!is_writable($this->logPath)) {
             throw new Exception('Application log directory is not writable -- (' . $this->logPath . ')', 4);
         }
+    }
+
+
+    protected $mainConfigFile;
+
+    /**
+     * Main config file path.
+     */
+    public function mainConfigFile()
+    {
+        if ($this->mainConfigFile) {
+            return $this->mainConfigFile;
+        }
+
+        $configFileName = $this->appPath.'app/system/mainconfig.ini.php';
+        if (!file_exists($configFileName)) {
+            if (jServer::isCLI() && strpos($_SERVER['SCRIPT_FILENAME'], 'installer.php') !== false) {
+                throw new \Exception("Don't find the app/system/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
+            }
+
+            throw new \Exception("Don't find the app/system/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
+        }
+        $this->_mainConfigFile = $configFileName;
+
+        return $configFileName;
     }
 
     protected function unregisterAutoload()

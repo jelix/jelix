@@ -115,7 +115,7 @@ class EntryPoint
         $this->appEpConfigIni = new IniModifier($appSystemPath, ';<'.'?php die(\'\');?'.'>');
         $this->localEpConfigIni = new IniModifier($varConfigPath, ';<'.'?php die(\'\');?'.'>');
 
-        $compiler = new Compiler($configFile, $this->scriptName);
+        $compiler = new Compiler(\jApp::app(), $configFile, $this->scriptName);
         if ($this->_isCliScript) {
             $this->config = $compiler->readForCli(true);
         }
