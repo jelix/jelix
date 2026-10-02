@@ -331,15 +331,11 @@ class Compiler
             $plugin->atStart($config);
         }
 
+        // deprecated loop
         foreach ($modules as $moduleName  => $module) {
             foreach ($plugins as $plugin) {
-                if ($plugin instanceof \Jelix\Core\Config\CompilerPluginInterface2) {
-                    $plugin->onModule2($config, $module);
-                }
-                else {
-                    $moduleXml = \simplexml_load_file($module->getFilePath());
-                    $plugin->onModule($config, $moduleName, $module->getItemPath(), $moduleXml);
-                }
+                $moduleXml = \simplexml_load_file($module->getFilePath());
+                $plugin->onModule($config, $moduleName, $module->getItemPath(), $moduleXml);
             }
         }
 

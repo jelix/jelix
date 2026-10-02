@@ -41,7 +41,7 @@ interface CompilerPluginInterface
      * @param string    $modulePath the path to the module directory
      * @param \SimpleXMLElement $moduleXml  the xml object representing the content of module.xml of the module
      *
-     * @deprecated implement CompilerPluginInterface2::onmodule2() instead
+     * @deprecated will be removed, prefere to use a warmup component
      */
     public function onModule($config, $moduleName, $modulePath, $moduleXml);
 
