@@ -2,12 +2,14 @@
 /**
  * @author      Laurent Jouanneau
  * @contributor Christophe Thiriot
- * @copyright   2006-2025 Laurent Jouanneau
+ * @copyright   2006-2026 Laurent Jouanneau
  * @link        https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 namespace Jelix\UnitTests;
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Config\FrameworkConfigCompiler;
+use Jelix\Core\Infos\FrameworkInfos;
 use PHPUnit\Framework\TestCase;
 
 require_once (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
@@ -51,8 +53,13 @@ abstract class UnitTestCase extends TestCase {
      */
     protected static function initJelixConfig($config = 'index/config.ini.php', $entryPoint = 'index.php')
     {
-        $config = AppConfig::loadForCli($config, $entryPoint);
-        \jApp::setConfig($config);
+
+        $frameworkInfo = FrameworkInfos::load();
+        $fmkCompiler = new FrameworkConfigCompiler(\jApp::app(), $frameworkInfo, \jApp::varConfigPath('installer.ini.php'));
+        $fmkConfig = $fmkCompiler->compile();
+
+        $config = AppConfig::loadForCli($config, $fmkConfig, $entryPoint);
+        \jApp::setConfig($config, $fmkConfig);
         \jApp::setCoord(null);
     }
 
@@ -74,7 +81,11 @@ abstract class UnitTestCase extends TestCase {
         self::$fakeServer = new \Jelix\FakeServerConf\ApacheMod(\jApp::wwwPath(), '/'.$entryPoint);
         self::$fakeServer->setHttpRequest($url);
 
-        $config = AppConfig::loadWithoutCache($config, '/'.$entryPoint);
+        $frameworkInfo = FrameworkInfos::load();
+        $fmkCompiler = new FrameworkConfigCompiler(\jApp::app(), $frameworkInfo, \jApp::varConfigPath('installer.ini.php'));
+        $fmkConfig = $fmkCompiler->compile();
+
+        $config = AppConfig::loadWithoutCache($config, $fmkConfig, '/'.$entryPoint);
         $coord = new CoordinatorForTest($config, false);
         \jApp::setCoord($coord);
         $request = new \jClassicRequest();

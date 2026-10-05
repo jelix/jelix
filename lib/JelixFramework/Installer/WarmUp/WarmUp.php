@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2023-2025 Laurent Jouanneau
+ * @copyright   2023-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -12,6 +12,7 @@ namespace Jelix\Installer\WarmUp;
 
 use \jAppInstance as AppInstance;
 use Jelix\Core\Config\ConfigurationWarmUp;
+use Jelix\Core\Infos\FrameworkInfos;
 use Jelix\DaoUtils\DaoWarmup;
 use Jelix\Event\EventWarmup;
 use Jelix\FileUtilities\Directory;
@@ -39,7 +40,7 @@ class WarmUp
     /**
      * @param AppInstance $app
      */
-    public function __construct(AppInstance $app)
+    public function __construct(AppInstance $app, FrameworkInfos $frameworkInfos)
     {
         $this->app = $app;
 
@@ -48,10 +49,10 @@ class WarmUp
             Directory::create($buildPath);
         }
 
-        $this->warmUpLaunchers[] = new ConfigurationWarmUp($app);
+        $this->warmUpLaunchers[] = new ConfigurationWarmUp($app, $frameworkInfos);
         $this->warmUpLaunchers[] = new LocaleWarmUp($app);
         $this->warmUpLaunchers[] = new EventWarmup($app);
-        $this->warmUpLaunchers[] = new UrlMapWarmup($app);
+        $this->warmUpLaunchers[] = new UrlMapWarmup($app, $frameworkInfos);
         $this->warmUpLaunchers[] = new FormsWarmup($app);
         $this->warmUpLaunchers[] = new TemplateWarmup($app);
         $this->warmUpLaunchers[] = new DaoWarmup($app);

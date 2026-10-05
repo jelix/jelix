@@ -43,10 +43,6 @@ forceHTTPSPort=
 chmodFile=0664
 chmodDir=0775
 
-[modules]
-; filled by the configuration compiler. All values predefined in this
-; section are ignored.
-
 [coordplugins]
 
 [tplplugins]

@@ -4,7 +4,7 @@
  * @subpackage  installer
  *
  * @author      Laurent Jouanneau
- * @copyright   2008-2016 Laurent Jouanneau
+ * @copyright   2008-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -413,11 +413,7 @@ class jInstallerModule implements jIInstallerComponent
         $tools = $this->dbTool();
 
         if ($module) {
-            $conf = $this->entryPoint->getConfigObj()->_modulesPathList;
-            if (!isset($conf[$module])) {
-                throw new Exception('execSQLScript : invalid module name');
-            }
-            $path = $conf[$module];
+            $path = $this->entryPoint->getEnabledModulePath($module);
         } else {
             $path = $this->path;
         }

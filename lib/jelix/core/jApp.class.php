@@ -2,11 +2,13 @@
 
 /**
  * @author     Laurent Jouanneau
+ *
  * @contributor  Olivier Demah
  *
  * @copyright  2011-2026 Laurent Jouanneau, 2012 Olivier Demah
  *
  * @see       http://jelix.org
+ *
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -15,32 +17,32 @@ use Jelix\Core\Config\FrameworkRuntimeConfig;
 use Jelix\Core\Infos\FrameworkInfos;
 
 /**
- * @method static void setConfig($config)
- * @method static void declareModulesDir($basePath, $modules = null)
- * @method static string[] getDeclaredModulesDir()
- * @method static array[] getDeclaredModulesDirAndModules()
- * @method static void declareModule($modulePath)
- * @method static void clearModulesPluginsPath()
- * @method static void declarePluginsDir($basePath)
- * @method static string[] getDeclaredModulePaths()
- * @method static string[] getEnabledModulesPaths()
- * @method static string[] getAllModulesPath()
- * @method static string[] getAllPluginsPath()
- * @method static string[] getDeclaredPluginPaths()
- * @method static null|object loadPlugin($name, $type, $suffix, $classname, $args = null)
- * @method static bool includePlugin($name, $type, $suffix, $classname)
- * @method static bool isModuleEnabled($moduleName, $includingExternal = false)
- * @method static string getModulePath($module, $includingExternal = false)
- * @method static void pushCurrentModule($module)
- * @method static string popCurrentModule()
- * @method static string getCurrentModule()
- * @method static string mainConfigFile()
- * @method static FrameworkInfos getFrameworkInfo()
+ * @method static void                   setConfig($config, ?FrameworkRuntimeConfig $runtimeConfig = null)
+ * @method static void                   declareModulesDir($basePath, $modules = null)
+ * @method static string[]               getDeclaredModulesDir()
+ * @method static array[]                getDeclaredModulesDirAndModules()
+ * @method static void                   declareModule($modulePath)
+ * @method static void                   clearModulesPluginsPath()
+ * @method static void                   declarePluginsDir($basePath)
+ * @method static string[]               getDeclaredModulePaths()
+ * @method static string[]               getEnabledModulesPaths()
+ * @method static string[]               getAllModulesPath()
+ * @method static string[]               getAllPluginsPath()
+ * @method static string[]               getDeclaredPluginPaths()
+ * @method static null|object            loadPlugin($name, $type, $suffix, $classname, $args = null)
+ * @method static bool                   includePlugin($name, $type, $suffix, $classname)
+ * @method static bool                   isModuleEnabled($moduleName, $includingExternal = false)
+ * @method static string                 getModulePath($module, $includingExternal = false)
+ * @method static void                   pushCurrentModule($module)
+ * @method static string                 popCurrentModule()
+ * @method static string                 getCurrentModule()
+ * @method static string                 mainConfigFile()
+ * @method static FrameworkInfos         getFrameworkInfo()
  * @method static FrameworkRuntimeConfig getFrameworkConfig()
- * @method static \Jelix\Core\Services services()
- * @method static reloadServices()
- * @method static void declareLocalesDir($basePath)
- * @method static string[] getDeclaredLocalesDir()
+ * @method static \Jelix\Core\Services   services()
+ * @method        static                 reloadServices()
+ * @method static void                   declareLocalesDir($basePath)
+ * @method static string[]               getDeclaredLocalesDir()
  */
 class jApp
 {
@@ -187,7 +189,7 @@ class jApp
 
     public static function tempPath($file = '')
     {
-        return (self::$_currentApp->tempBasePath).(self::$_currentApp->env).$file;
+        return self::$_currentApp->tempBasePath.self::$_currentApp->env.$file;
     }
 
     public static function tempBasePath()
@@ -203,7 +205,7 @@ class jApp
     public static function setEnv($env)
     {
         if (self::$_currentApp == null) {
-            throw new \Exception('jApp not initialized');
+            throw new Exception('jApp not initialized');
         }
         if (substr($env, -1) != '/') {
             $env .= '/';
@@ -255,12 +257,15 @@ class jApp
 
         self::$_currentApp->checkEnvironment();
 
+        // load framework config
+        $fmkConfig = FrameworkRuntimeConfig::loadForRuntime(self::$_currentApp->varLibPath);
+
         // load application configuration
         if (is_object($configFile)) {
-            trigger_error("calling jApp::loadConfig() with object is deprecated", E_USER_DEPRECATED);
-            self::setConfig($configFile);
+            trigger_error('calling jApp::loadConfig() with object is deprecated', E_USER_DEPRECATED);
+            self::$_currentApp->setConfig($configFile, $fmkConfig);
         } else {
-            self::setConfig(AppConfig::load($configFile));
+            self::$_currentApp->setConfig(AppConfig::load($configFile), $fmkConfig);
         }
         self::$_currentApp->config->enableErrorHandler = $enableErrorHandler;
     }
@@ -316,7 +321,7 @@ class jApp
     public static function __callStatic($name, $arguments)
     {
         if (self::$_currentApp == null) {
-            throw new \Exception('jApp not initialized');
+            throw new Exception('jApp not initialized');
         }
 
         return call_user_func_array(array(self::$_currentApp, $name), $arguments);

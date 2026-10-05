@@ -9,6 +9,8 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\Config\FrameworkConfigCompiler;
+use Jelix\Core\Config\FrameworkConfigForInstaller;
 use Jelix\FileUtilities\Directory;
 use Jelix\IniFile\IniModifier;
 use Jelix\IniFile\IniModifierArray;
@@ -274,7 +276,6 @@ class GlobalSetup
         foreach ($entryPoints as $entrypoint) {
 
             // ignore entry point which have the same config file of an other one
-            // FIXME: what about installer.ini ?
             if (isset($configFileList[$entrypoint->getConfigFile()])) {
                 continue;
             }
@@ -313,7 +314,7 @@ class GlobalSetup
     protected function readModuleInfos()
     {
         // now let's read all module properties
-        $modulesList = $this->mainEntryPoint->getModulesList();
+        $modulesList = $this->getFrameworkConfig()->getAllModulePathsList();
 
         foreach ($modulesList as $name => $path) {
             $compModule = $this->createComponentModule($name, $path);
@@ -383,14 +384,27 @@ class GlobalSetup
                 continue;
             }
 
-            $modulesInfos[$moduleName.'.installed'] = 1;
-            $modulesInfos[$moduleName.'.version'] = (string) $this->installerIni->getValue($moduleName.'.version', 'modules');
-            $modulesInfos[$moduleName.'.enabled'] = false;
+            $moduleParameters = array(
+                'enabled' => false,
+                'installed' => 1,
+                'version' => (string) $this->installerIni->getValue($moduleName.'.version', 'modules')
+            );
+            if (isset($modulesInfos[$moduleName.'.dbprofile'])) {
+                $moduleParameters['dbprofile'] = $modulesInfos[$moduleName.'.dbprofile'];
+            }
+
+            if (isset($modulesInfos[$moduleName.'.installparam'])) {
+                $moduleParameters['installparam'] = $modulesInfos[$moduleName.'.installparam'];
+            }
+
+            if (isset($modulesInfos[$moduleName.'.skipinstaller'])) {
+                $moduleParameters['skipinstaller'] = $modulesInfos[$moduleName.'.skipinstaller'];
+            }
 
             $moduleStatus = new ModuleStatus(
                 $moduleName,
                 $modulePath,
-                $modulesInfos,
+                $moduleParameters,
                 true
             );
 
@@ -418,18 +432,18 @@ class GlobalSetup
      */
     protected function createComponentModule($name, $path)
     {
-        $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
+        $fmkConfig = $this->getFrameworkConfig();
+        $moduleStatus = $fmkConfig->getModuleStatus($name);
 
         $moduleDecl = $this->frameworkInfos->getModule($name);
         if (!$moduleDecl) {
             // module not installed yet
-            $isNativeModule = !$this->forLocalConfiguration;
+            $scope = $this->forLocalConfiguration ? ModuleStatus::CONFIG_SCOPE_LOCAL : ModuleStatus::CONFIG_SCOPE_APP;
         }
         else {
-            $isNativeModule =  $moduleDecl->isNative;
+            $scope = $moduleDecl->isNative ? ModuleStatus::CONFIG_SCOPE_APP : ModuleStatus::CONFIG_SCOPE_LOCAL;
         }
-
-        $moduleStatus = new ModuleStatus($name, $path, $moduleSetupList, $isNativeModule);
+        $moduleStatus->configurationScope = $scope;
 
         return new ModuleInstallerLauncher($moduleStatus, $this);
     }
@@ -513,6 +527,24 @@ class GlobalSetup
     public function getFrameworkInfos()
     {
         return $this->frameworkInfos;
+    }
+
+    protected $frameworkConfig = null;
+
+    public function getFrameworkConfig($newInstance = false) : FrameworkConfigForInstaller
+    {
+        if ($this->frameworkConfig === null || $newInstance || $this->installerIni->isModified()) {
+            $this->installerIni->save();
+            $compiler = new FrameworkConfigCompiler(
+                \jApp::app(),
+                $this->frameworkInfos,
+                $this->installerIni->getFileName(),
+            );
+
+            $this->frameworkConfig = $compiler->compile(true);
+        }
+
+        return $this->frameworkConfig;
     }
 
     /**

@@ -92,7 +92,7 @@ class jConfig
 
                 // we check all directories to see if it has been modified
                 if ($config->compilation['checkCacheFiletime']) {
-                    foreach ($config->_allBasePath as $path) {
+                    foreach (jApp::getFrameworkConfig()->getPathsToCheck() as $path) {
                         if (!file_exists($path) || filemtime($path) > $t) {
                             self::$fromCache = false;
 

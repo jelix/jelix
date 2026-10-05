@@ -4,11 +4,13 @@
  * @subpackage  installer
  *
  * @author      Laurent Jouanneau
- * @copyright   2009-2023 Laurent Jouanneau
+ * @copyright   2009-2026 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
+use Jelix\Installer\GlobalSetup;
 
 /**
  * container for entry points properties.
@@ -87,6 +89,11 @@ class jInstallerEntryPoint
     public $type;
 
     /**
+     * @var GlobalSetup
+     */
+    protected $globalSetup;
+
+    /**
      * Creates a jInstallerEntryPoint object from a new
      * \Jelix\Installer\EntryPoint object.
      *
@@ -104,6 +111,7 @@ class jInstallerEntryPoint
         $this->file = $entryPoint->getFileName();
         $this->config = $entryPoint->getConfigObj();
         $this->setConfiguration($entryPoint, $globalSetup);
+        $this->globalSetup = $globalSetup;
     }
 
     public function setConfiguration(
@@ -144,12 +152,12 @@ class jInstallerEntryPoint
     }
 
     /**
-     * @return array the list of modules and their path, as stored in the
+     * @return array the list of modules (enabled or not) and their path, as stored in the
      *               compiled configuration file
      */
     public function getModulesList()
     {
-        return $this->config->_allModulesPathList;
+        return $this->globalSetup->getFrameworkConfig()->getAllModulePathsList();
     }
 
     /**
@@ -160,26 +168,12 @@ class jInstallerEntryPoint
      */
     public function getModule($moduleName)
     {
-        $enabledLocally = $this->localConfigIni->getMaster()->getOverrider()->getValue($moduleName.'.enabled', 'modules');
-        $enabledGlobally = $this->localConfigIni->getMaster()->getMaster()->getValue($moduleName.'.enabled', 'modules');
+        return $this->globalSetup->getModuleComponent($moduleName)->getModuleStatus();
+    }
 
-        if ($enabledLocally === null && $enabledGlobally === null) {
-            // module not installed yet
-            $isNativeModule = false;
-        }
-        else if ($enabledLocally) {
-            $isNativeModule = false;
-        }
-        else {
-            $isNativeModule = ($enabledGlobally === true);
-        }
-
-        return new \Jelix\Installer\ModuleStatus(
-            $moduleName,
-            $this->config->_allModulesPathList[$moduleName],
-            $this->config->modules,
-            $isNativeModule
-        );
+    public function getEnabledModulePath($moduleName)
+    {
+        return $this->globalSetup->getFrameworkConfig()->getModulePath($moduleName);
     }
 
     /**

@@ -143,6 +143,7 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
     protected function _getPlugin($type, $name)
     {
         $config = jApp::config();
+        $fmkConfig = jApp::getFrameworkConfig();
 
         $checker = function ($list, $outputType) use ($type, $name) {
             foreach ($list as $path) {
@@ -155,15 +156,17 @@ class jTplCompiler extends \Jelix\Castor\CompilerCore implements jISimpleCompile
             return null;
         };
 
-        if (isset($config->{'_tplpluginsPathList_'.$this->outputType})) {
-            $plugin = $checker($config->{'_tplpluginsPathList_'.$this->outputType}, $this->outputType);
+        $tplList = $fmkConfig->getTemplatePluginsDirectoryPathsByFormat($this->outputType);
+        if ($tplList) {
+            $plugin = $checker($tplList, $this->outputType);
             if ($plugin !== null) {
                 return $plugin;
             }
         }
 
-        if (isset($config->_tplpluginsPathList_common)) {
-            $plugin = $checker($config->_tplpluginsPathList_common, 'common');
+        $tplList = $fmkConfig->getTemplatePluginsDirectoryPathsByFormat('common');
+        if ($tplList) {
+            $plugin = $checker($tplList, 'common');
             if ($plugin !== null) {
                 return $plugin;
             }

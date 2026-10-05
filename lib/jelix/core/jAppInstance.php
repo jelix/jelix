@@ -1,18 +1,21 @@
 <?php
+
 /**
  * @author     Laurent Jouanneau
  * @copyright  2015-2026 Laurent Jouanneau
  *
  * @see        https://jelix.org
+ *
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
+use Jelix\Core\Config;
 use Jelix\Core\Config\FrameworkRuntimeConfig;
 use Jelix\Core\Infos\FrameworkInfos;
-use Jelix\Core\Config;
+use Jelix\Core\Services;
 
 /**
- * Store some application parameter for the current application
+ * Store some application parameter for the current application.
  *
  * @internal
  */
@@ -71,7 +74,7 @@ class jAppInstance
     public $applicationInitFile = '';
 
     /**
-     * @var \Jelix\Core\Services
+     * @var Services
      */
     protected $_services;
 
@@ -159,14 +162,13 @@ class jAppInstance
         }
 
         if (!is_writable($this->tempBasePath)) {
-            throw new Exception('Application temp base directory is not writable -- (' . $this->tempBasePath . ')', 4);
+            throw new Exception('Application temp base directory is not writable -- ('.$this->tempBasePath.')', 4);
         }
 
         if (!is_writable($this->logPath)) {
-            throw new Exception('Application log directory is not writable -- (' . $this->logPath . ')', 4);
+            throw new Exception('Application log directory is not writable -- ('.$this->logPath.')', 4);
         }
     }
-
 
     protected $mainConfigFile;
 
@@ -182,12 +184,12 @@ class jAppInstance
         $configFileName = $this->appPath.'app/system/mainconfig.ini.php';
         if (!file_exists($configFileName)) {
             if (jServer::isCLI() && strpos($_SERVER['SCRIPT_FILENAME'], 'installer.php') !== false) {
-                throw new \Exception("Don't find the app/system/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
+                throw new Exception("Don't find the app/system/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
             }
 
-            throw new \Exception("Don't find the app/system/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
+            throw new Exception("Don't find the app/system/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
         }
-        $this->_mainConfigFile = $configFileName;
+        $this->mainConfigFile = $configFileName;
 
         return $configFileName;
     }
@@ -242,29 +244,16 @@ class jAppInstance
         $this->registerAutoload();
     }
 
-    /**
-     * @return FrameworkInfos
-     */
-    public function getFrameworkInfo()
-    {
-        if ($this->_framework === null) {
-            $this->_framework = FrameworkInfos::load();
-        }
-        return $this->_framework;
-    }
-
-    public function getFrameworkConfig() : FrameworkRuntimeConfig
+    public function getFrameworkConfig(): FrameworkRuntimeConfig
     {
         return $this->frameworkRuntimeConfig;
     }
-
 
     /**
      * Sometimes, the application.init.php may not be into the appPath, this method allows to indicate
      * the path to the application.init.php.
      *
      * @param string $path the full path to the application.init.php
-     * @return void
      */
     public function setApplicationInitFile($path)
     {
@@ -288,7 +277,7 @@ class jAppInstance
                     array('0', ''),
                     file_get_contents($this->appPath.'VERSION')
                 ));
-            } else if ($this->config && $this->config->appVersion) {
+            } elseif ($this->config && $this->config->appVersion) {
                 $this->_version = $this->config->appVersion;
             } else {
                 $this->_version = '0';
@@ -329,7 +318,7 @@ class jAppInstance
     }
 
     /**
-     * @return string[] list of path where to find modules.
+     * @return string[] list of path where to find modules
      */
     public function getDeclaredModulesDir()
     {
@@ -337,7 +326,7 @@ class jAppInstance
     }
 
     /**
-     * @return array list of path (keys) where to find modules, and modules names (values).
+     * @return array list of path (keys) where to find modules, and modules names (values)
      */
     public function getDeclaredModulesDirAndModules()
     {
@@ -349,8 +338,7 @@ class jAppInstance
      *
      * This method must be called before loading the configuration with `jApp::loadConfig()`
      *
-     * @param array|string $path       the path of the module directory
-     * @param mixed        $modulePath
+     * @param mixed $modulePath
      */
     public function declareModule($modulePath)
     {
@@ -368,12 +356,10 @@ class jAppInstance
         }
     }
 
-
     public function getDeclaredModulePaths()
     {
         return $this->_modulesPath;
     }
-
 
     public function clearModulesPluginsPath()
     {
@@ -418,7 +404,7 @@ class jAppInstance
      */
     public function getEnabledModulesPaths()
     {
-        return $this->config->_modulesPathList;
+        return $this->frameworkRuntimeConfig->getEnabledModulePathsList();
     }
 
     /**
@@ -440,6 +426,7 @@ class jAppInstance
             $frameworkConfig = $compiler->compile(true);
             $this->_allModulesPath = $frameworkConfig->getAllModulePathsList();
         }
+
         return $this->_allModulesPath;
     }
 
@@ -453,6 +440,7 @@ class jAppInstance
      * in enabled modules.
      *
      * @return string[]
+     *
      * @deprecated internal use only, it will disappear in the next version
      */
     public function getAllPluginsPath()
@@ -467,7 +455,7 @@ class jAppInstance
             );
 
             $frameworkConfig = $compiler->compile(true);
-            $this->_allPluginsPath = $frameworkConfig->getEnabledPluginPathsList();
+            $this->_allPluginsPath = $frameworkConfig->getEnabledPluginsDirectoryPathsList();
         }
 
         return $this->_allPluginsPath;
@@ -509,17 +497,12 @@ class jAppInstance
     public function includePlugin($name, $type, $suffix, $classname)
     {
         if (!class_exists($classname, false)) {
-            $optname = '_pluginsPathList_'.$type;
-            if (!isset($this->config->{$optname})) {
-                return false;
-            }
-            $opt = &$this->config->{$optname};
-            if (!isset($opt[$name])
-                || !file_exists($opt[$name].$name.$suffix)) {
+            $path = $this->frameworkRuntimeConfig->getPluginPathByNameAndType($name, $type);
+            if ($path === false || !file_exists($path.$name.$suffix)) {
                 return false;
             }
 
-            require_once $opt[$name].$name.$suffix;
+            require_once $path.$name.$suffix;
         }
 
         return true;
@@ -535,11 +518,11 @@ class jAppInstance
      */
     public function isModuleEnabled($moduleName, $includingExternal = false)
     {
-        if (!$this->config) {
+        if (!$this->frameworkRuntimeConfig) {
             throw new Exception('Configuration is not loaded');
         }
 
-        return isset($this->config->_modulesPathList[$moduleName]);
+        return $this->frameworkRuntimeConfig->isModuleEnabled($moduleName);
     }
 
     /**
@@ -552,15 +535,11 @@ class jAppInstance
      */
     public function getModulePath($module, $includingExternal = false)
     {
-        if (!$this->config) {
+        if (!$this->frameworkRuntimeConfig) {
             throw new Exception('Configuration is not loaded');
         }
 
-        if (!isset($this->config->_modulesPathList[$module])) {
-            throw new Exception('getModulePath : invalid module name');
-        }
-
-        return $this->config->_modulesPathList[$module];
+        return $this->frameworkRuntimeConfig->getModulePath($module);
     }
 
     /**
@@ -594,7 +573,8 @@ class jAppInstance
     }
 
     /**
-     * @return \Jelix\Core\Services
+     * @return Services
+     *
      * @experimental
      */
     public function services()
@@ -607,7 +587,7 @@ class jAppInstance
      */
     public function reloadServices()
     {
-        $this->_services = new \Jelix\Core\Services();
+        $this->_services = new Services();
     }
 
     /**
@@ -618,7 +598,7 @@ class jAppInstance
      *
      * This method must be called before loading the configuration with `jApp::loadConfig()`
      *
-     * @param array|string  $dirPath the directory path containing locales that can be used
+     * @param array|string $dirPath the directory path containing locales that can be used
      */
     public function declareLocalesDir($dirPath)
     {

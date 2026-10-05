@@ -197,9 +197,9 @@ class Configurator
         $this->notice('configuration.start');
 
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
-        \jApp::setConfig($entryPoint->getConfigObj());
+        \jApp::setConfig($entryPoint->getConfigObj(), $this->globalSetup->getFrameworkConfig());
 
-        if ($entryPoint->getConfigObj()->disableInstallers) {
+        if ($this->globalSetup->getFrameworkInfos()->isInstallersDisabled()) {
             $this->notice('install.installers.disabled');
         }
 
@@ -267,9 +267,9 @@ class Configurator
 
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getMainEntryPoint();
-        \jApp::setConfig($entryPoint->getConfigObj());
+        \jApp::setConfig($entryPoint->getConfigObj(), $this->globalSetup->getFrameworkConfig());
 
-        if ($entryPoint->getConfigObj()->disableInstallers) {
+        if ($this->globalSetup->getFrameworkInfos()->isInstallersDisabled()) {
             $this->notice('install.installers.disabled');
         }
 
@@ -383,7 +383,7 @@ class Configurator
     {
         $result = true;
         $componentsToInstall = array();
-        $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
+        $installersDisabled = $this->globalSetup->getFrameworkInfos()->isInstallersDisabled();
 
         $preconfigHelpers = new PreConfigurationHelpers($this->globalSetup);
 
@@ -638,9 +638,9 @@ class Configurator
 
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
-        \jApp::setConfig($entryPoint->getConfigObj());
+        \jApp::setConfig($entryPoint->getConfigObj(), $this->globalSetup->getFrameworkConfig());
 
-        if ($entryPoint->getConfigObj()->disableInstallers) {
+        if ($this->globalSetup->getFrameworkInfos()->isInstallersDisabled()) {
             $this->notice('install.installers.disabled');
         }
 
@@ -684,7 +684,7 @@ class Configurator
     {
         $result = true;
         $componentsToInstall = array();
-        $installersDisabled = $entryPoint->getConfigObj()->disableInstallers;
+        $installersDisabled = $this->globalSetup->getFrameworkInfos()->isInstallersDisabled();
         $preconfigHelpers = new PreConfigurationHelpers($this->globalSetup);
 
         foreach ($moduleschain as $resolverItem) {
@@ -842,13 +842,15 @@ class Configurator
                 $epConfig->save();
             }
 
+            $fmkConfig = $this->globalSetup->getFrameworkConfig(true);
+
             // we re-load configuration file for each module because
             // previous module configurator could have modify it.
             $compiler = new Compiler(App::app(), $entryPoint->getConfigFileName(), $entryPoint->getScriptName());
             $entryPoint->setConfigObj($entryPoint->isCliScript() ?
-                $compiler->readForCli(true) : $compiler->read(true)
+                $compiler->readForCli($fmkConfig) : $compiler->read($fmkConfig)
             );
-            \jApp::setConfig($entryPoint->getConfigObj());
+            \jApp::setConfig($entryPoint->getConfigObj(), $fmkConfig);
         }
         $this->globalSetup->getUrlModifier()->save();
         $this->globalSetup->getLocalUrlModifier()->save();

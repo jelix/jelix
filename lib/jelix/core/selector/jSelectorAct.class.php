@@ -71,9 +71,10 @@ class jSelectorAct extends jSelectorActFast
 
     protected function _createPath()
     {
-        $conf = jApp::config();
-        if (isset($conf->_modulesPathList[$this->module])) {
-            $p = $conf->_modulesPathList[$this->module];
+        $modules = \jApp::getEnabledModulesPaths();
+
+        if (isset($modules[$this->module])) {
+            $p = $modules[$this->module];
         } else {
             throw new \Jelix\Core\Selector\Exception('jelix~errors.selector.module.unknown', $this->toString());
         }

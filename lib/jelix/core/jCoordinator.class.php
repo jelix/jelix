@@ -4,6 +4,7 @@
  * @subpackage   core
  *
  * @author       Laurent Jouanneau
+ *
  * @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin, Flav, Gaëtan MARROT
  *
  * @copyright    2005-2013 laurent Jouanneau
@@ -12,8 +13,12 @@
  * @copyright    2008-2010 Dominique Papin, 2012 Flav, 2013 Gaëtan MARROT
  *
  * @see         http://www.jelix.org
+ *
  * @licence      GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
+
+use Jelix\Routing\UrlMapping\MapperConfig;
+use Jelix\Routing\UrlMapping\UrlActionMapper;
 
 /**
  * the main class of the jelix core.
@@ -85,17 +90,15 @@ class jCoordinator
     protected $errorMessage;
 
     /**
-     * @var \Jelix\Routing\UrlMapping\UrlActionMapper
+     * @var UrlActionMapper
      */
     protected $urlActionMapper;
 
     /**
-     * @param object|string $config             filename of the ini file to configure the framework, or the config object itself
-     *                                          this parameter is optional if jApp::loadConfig has been already called
-     * @param bool          $enableErrorHandler enable the error handler of jelix.
-     *                                          keep it to true, unless you have something to debug
-     *                                          and really have to use the default handler or an other handler
-     * @param mixed         $configFile
+     * @param bool  $enableErrorHandler enable the error handler of jelix.
+     *                                  keep it to true, unless you have something to debug
+     *                                  and really have to use the default handler or an other handler
+     * @param mixed $configFile
      */
     public function __construct($configFile = '', $enableErrorHandler = true)
     {
@@ -103,8 +106,8 @@ class jCoordinator
             jApp::loadConfig($configFile, $enableErrorHandler);
         }
 
-        $mapperConfig = new \Jelix\Routing\UrlMapping\MapperConfig(jApp::config()->urlengine);
-        $this->urlActionMapper = new \Jelix\Routing\UrlMapping\UrlActionMapper($mapperConfig);
+        $mapperConfig = new MapperConfig(jApp::config()->urlengine);
+        $this->urlActionMapper = new UrlActionMapper($mapperConfig);
         $this->_loadPlugins();
     }
 
@@ -131,8 +134,9 @@ class jCoordinator
 
             if (preg_match('/(.+)CoordPlugin$/', $className, $m)) {
                 $name2 = $m[1];
+                $path = jApp::getFrameworkConfig()->getPluginPathByNameAndType($name2, 'coord');
 
-                include_once $config->_pluginsPathList_coord[$name2].$name2.'.coord.php';
+                include_once $path.$name2.'.coord.php';
             }
 
             // if the plugin is registered as a replacement of an other plugin
@@ -149,7 +153,7 @@ class jCoordinator
         return $this->urlActionMapper;
     }
 
-    public function setUrlActionMapper(Jelix\Routing\UrlMapping\UrlActionMapper $urlActionMapper)
+    public function setUrlActionMapper(UrlActionMapper $urlActionMapper)
     {
         $this->urlActionMapper = $urlActionMapper;
     }
@@ -191,10 +195,10 @@ class jCoordinator
         list($this->moduleName, $this->actionName) = $request->getModuleAction();
         jApp::pushCurrentModule($this->moduleName);
 
-        $this->action =
-        $this->originalAction = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
+        $this->action
+        = $this->originalAction = new jSelectorActFast($this->request->type, $this->moduleName, $this->actionName);
 
-        if (!$config->modules[$this->moduleName.'.enabled']) {
+        if (!jApp::getFrameworkConfig()->isModuleEnabled($this->moduleName)) {
             throw new jException('jelix~errors.module.untrusted', $this->moduleName);
         }
     }
@@ -291,9 +295,9 @@ class jCoordinator
      *
      * @param jSelectorAct $selector
      *
-     * @throws jException
-     *
      * @return jController the controller corresponding to the selector
+     *
+     * @throws jException
      */
     protected function getController($selector)
     {
@@ -355,7 +359,7 @@ class jCoordinator
         if (!$this->request->isAjax() && $htmlOk) {
             try {
                 $response = $this->request->getResponse('htmlerror');
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $response = null;
             }
             if ($response && $response instanceof jResponseHtml) {
@@ -499,9 +503,9 @@ class jCoordinator
      * @param string $pluginName the name of the plugin
      * @param bool   $required   says if the plugin is required or not. If true, will generate an exception if the plugin is not registered.
      *
-     * @throws jException
-     *
      * @return jICoordPlugin
+     *
+     * @throws jException
      */
     public function getPlugin($pluginName, $required = true)
     {
@@ -544,16 +548,16 @@ class jCoordinator
      *
      * @param string $pluginName
      *
-     * @throws Exception when the configuration filename is not found
-     *
      * @return array the configuration. May be empty if the plugin is unknown
+     *
+     * @throws Exception when the configuration filename is not found
      */
     public static function getPluginConf($pluginName)
     {
         $config = jApp::config();
         if (!isset($config->coordplugins[$pluginName])) {
             foreach ($config->coordplugins as $key => $value) {
-                if (preg_match('/(.+)\\.name$/', $key, $m) && $value == $pluginName) {
+                if (preg_match('/(.+)\.name$/', $key, $m) && $value == $pluginName) {
                     return self::getPluginConf($m[1]);
                 }
             }

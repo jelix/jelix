@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2018 Laurent Jouanneau
+ * @copyright   2008-2026 Laurent Jouanneau
  *
  * @see        http://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -117,7 +117,7 @@ class DatabaseHelpers
         $tools = $this->dbTool();
 
         if ($module) {
-            $conf = $this->globalSetup->getMainEntryPoint()->getConfigObj()->_modulesPathList;
+            $conf = $this->globalSetup->getFrameworkConfig()->getEnabledModulePathsList();
             if (!isset($conf[$module])) {
                 throw new \Exception('execSQLScript : invalid module name');
             }
@@ -176,11 +176,7 @@ class DatabaseHelpers
     public function insertDaoData($relativeSourcePath, $option, $module = null)
     {
         if ($module) {
-            $conf = $this->globalSetup->getMainEntryPoint()->getModulesList();
-            if (!isset($conf[$module])) {
-                throw new \Exception('insertDaoData : invalid module name');
-            }
-            $path = $conf[$module];
+            $path = $this->globalSetup->getFrameworkConfig()->getModulePath($module);
         } else {
             $path = $this->globalSetup->getCurrentModulePath();
         }

@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2009-2025 Laurent Jouanneau
+ * @copyright   2009-2026 Laurent Jouanneau
  *
  * @see         https://jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -115,12 +115,13 @@ class EntryPoint
         $this->appEpConfigIni = new IniModifier($appSystemPath, ';<'.'?php die(\'\');?'.'>');
         $this->localEpConfigIni = new IniModifier($varConfigPath, ';<'.'?php die(\'\');?'.'>');
 
+        $fmkConfig = $this->globalSetup->getFrameworkConfig();
         $compiler = new Compiler(\jApp::app(), $configFile, $this->scriptName);
         if ($this->_isCliScript) {
-            $this->config = $compiler->readForCli(true);
+            $this->config = $compiler->readForCli($fmkConfig);
         }
         else {
-            $this->config = $compiler->read(true);
+            $this->config = $compiler->read($fmkConfig);
         }
     }
 
@@ -171,7 +172,13 @@ class EntryPoint
      */
     public function getModulesList()
     {
-        return $this->config->_allModulesPathList;
+        return $this->globalSetup->getFrameworkConfig()->getAllModulePathsList();
+    }
+
+
+    public function getEnabledModulePath($moduleName)
+    {
+        return $this->globalSetup->getFrameworkConfig()->getModulePath($moduleName);
     }
 
     /**

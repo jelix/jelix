@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2025 Laurent Jouanneau
+ * @copyright   2008-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -20,6 +20,7 @@ require_once JELIX_LIB_PATH.'installer/ghostInstallReporter.class.php';
 
 
 use Jelix\Core\Config\Compiler;
+use Jelix\Core\Config\FrameworkConfigCompiler;
 use Jelix\Core\Profiles;
 use Jelix\Dependencies\Item;
 use Jelix\Dependencies\ItemException;
@@ -125,7 +126,7 @@ class Installer
         $this->globalSetup = $globalSetup;
 
         $this->mainEntryPoint = $globalSetup->getMainEntryPoint();
-        $this->warmUp = new WarmUp(\jApp::app());
+        $this->warmUp = new WarmUp(\jApp::app(), $globalSetup->getFrameworkInfos());
     }
 
     public static function setModuleAsInstalled($moduleName, $initialVersion, $versionDate)
@@ -190,9 +191,9 @@ class Installer
     protected function _installModules($modulesChain)
     {
         $this->notice('install.start');
-        \jApp::setConfig($this->mainEntryPoint->getConfigObj());
+        \jApp::setConfig($this->mainEntryPoint->getConfigObj(), $this->globalSetup->getFrameworkConfig());
 
-        if ($this->mainEntryPoint->getConfigObj()->disableInstallers) {
+        if ($this->globalSetup->getFrameworkInfos()->isInstallersDisabled()) {
             $this->notice('install.installers.disabled');
         }
 
@@ -208,6 +209,15 @@ class Installer
 
             return false;
         }
+
+        // compile framework config for runtime
+        $compiler = new FrameworkConfigCompiler(
+            \jApp::app(),
+            $this->globalSetup->getFrameworkInfos(),
+            $this->globalSetup->getInstallerIni()->getFileName(),
+        );
+        $fmkConfig = $compiler->compile();
+        $fmkConfig->saveForRuntime(\jApp::varLibPath());
 
         $this->globalSetup->setReadWriteConfigMode(true);
 
@@ -309,7 +319,7 @@ class Installer
         // put available installers into $componentsToInstall for
         // the next step
         $componentsToInstall = array();
-        $installersDisabled = $this->mainEntryPoint->getConfigObj()->disableInstallers;
+        $installersDisabled = $this->globalSetup->getFrameworkInfos()->isInstallersDisabled();
 
         $databaseHelpers = new Module\API\DatabaseHelpers($this->globalSetup);
         $helpers = new Module\API\PreInstallHelpers($this->globalSetup, $databaseHelpers);
@@ -404,6 +414,7 @@ class Installer
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
                 $this->globalSetup->setCurrentProcessedModule($component->getName());
+                $warmUpStep =  WarmUpLauncherInterface::STEP_MODULE_INSTALL;
 
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
@@ -443,7 +454,6 @@ class Installer
                     );
                     $this->ok('install.module.installed', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
-                    $this->warmUp->launch([$component->getName() => $component->getPath()], WarmUpLauncherInterface::STEP_MODULE_INSTALL);
 
                 } elseif ($action == Resolver::ACTION_UPGRADE) {
                     $lastversion = '';
@@ -516,7 +526,6 @@ class Installer
                         array($component->getName(), $component->getSourceVersion())
                     );
                     $installedModules[] = array($installer, $component, $action);
-                    $this->warmUp->launch([$component->getName() => $component->getPath()], WarmUpLauncherInterface::STEP_MODULE_INSTALL);
 
                 } elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
@@ -536,12 +545,13 @@ class Installer
                     $this->ok('install.module.uninstalled', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
 
-                    $this->warmUp->launch([$component->getName() => $component->getPath()], WarmUpLauncherInterface::STEP_MODULE_UNINSTALL);
+                    $warmUpStep = WarmUpLauncherInterface::STEP_MODULE_UNINSTALL;
                 }
 
                 if ($saveConfigIni) {
                     $this->saveConfigurationFiles($this->mainEntryPoint);
                 }
+                $this->warmUp->launch([$component->getName() => $component->getPath()], $warmUpStep);
             }
         } catch (Exception $e) {
             $result = false;
@@ -646,13 +656,15 @@ class Installer
         if ($fullConfig->isModified()) {
             $fullConfig->save();
 
+            $fmkConfig = $this->globalSetup->getFrameworkConfig(true);
+
             // we re-load configuration file for each module because
             // previous module installer could have modifying it.
             $compiler = new Compiler(\jApp::app(), $entryPoint->getConfigFileName(), $entryPoint->getScriptName());
             $entryPoint->setConfigObj($entryPoint->isCliScript() ?
-                $compiler->readForCli(true) : $compiler->read(true)
+                $compiler->readForCli($fmkConfig) : $compiler->read($fmkConfig)
             );
-            \jApp::setConfig($entryPoint->getConfigObj());
+            \jApp::setConfig($entryPoint->getConfigObj(), $fmkConfig);
         }
 
         foreach($this->globalSetup->getEntryPointsList() as $ep) {

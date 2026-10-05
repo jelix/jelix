@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2016-2025 Laurent Jouanneau
+ * @copyright   2016-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     MIT
@@ -10,6 +10,8 @@
 namespace Jelix\DevHelper;
 
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Config\FrameworkConfigCompiler;
+use Jelix\Core\Config\FrameworkConfigForInstaller;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -120,6 +122,17 @@ abstract class AbstractCommandForApp extends AbstractCommand
         return substr($ep, 0, $p);
     }
 
+    protected function getFrameworkConfig() : FrameworkConfigForInstaller
+    {
+        $compiler = new FrameworkConfigCompiler(
+            \jApp::app(),
+            $this->getFrameworkInfos(),
+            \jApp::varConfigPath('installer.ini.php'),
+        );
+
+        return $compiler->compile(true);
+    }
+
     protected function loadAppConfig($epId)
     {
         $entrypoint = $this->getFrameworkInfos()->getEntryPointInfo($epId);
@@ -127,9 +140,10 @@ abstract class AbstractCommandForApp extends AbstractCommand
             throw new \Exception($this->getName().": Entry point {$epId} is unknown");
         }
 
+        $fmkConfig = $this->getFrameworkConfig();
         $configFile = $entrypoint->getConfigFile();
 
-        \jApp::setConfig(AppConfig::loadForCli($configFile, $entrypoint->getFile()));
+        \jApp::setConfig(AppConfig::loadForCli($configFile, $fmkConfig, $entrypoint->getFile()), $fmkConfig);
         \jFile::createDir(\jApp::tempPath(), \jApp::config()->chmodDir);
     }
 
@@ -142,16 +156,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
      */
     protected function getModulePath($module)
     {
-        $config = \jApp::config();
-        if (!$config) {
-            $this->loadAppConfig($this->selectedEntryPointId);
-            $config = \jApp::config();
-        }
-        if (!isset($config->_modulesPathList[$module])) {
-            throw new \Exception($this->getName().": The module {$module} doesn't exist");
-        }
-
-        return $config->_modulesPathList[$module];
+        return $this->getFrameworkConfig()->getModulePath($module);
     }
 
     protected function getFrameworkInfos()
