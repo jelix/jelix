@@ -3,7 +3,7 @@
  * @package     jelix
  *
  * @author      Laurent Jouanneau
- * @copyright   2025 Laurent Jouanneau
+ * @copyright   2025-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -59,13 +59,15 @@ class Jelix19
         }
 
         // migration of values of the 'modules' section to framework.ini.php and localframework.ini.php
+        $mainConfigIni = new IniModifier(App::appSystemPath('mainconfig.ini.php'));
         $localConfigIni = new IniModifier(App::varConfigPath('localconfig.ini.php'));
         $frameworkIni = new IniModifier(App::appSystemPath('framework.ini.php'));
         $localFrameworkIni = new IniModifier(App::varConfigPath('localframework.ini.php'));
 
+        $this->moveModulesStatusToFrameworkIni($mainConfigIni, $frameworkIni, $localFrameworkIni, true);
         $this->moveModulesStatusToFrameworkIni($localConfigIni, $frameworkIni, $localFrameworkIni, true);
 
-        $this->reporter->message('Migration of local configuration to Jelix 1.7.0 is done', 'notice');
+        $this->reporter->message('Migration of local configuration to Jelix 1.9.0 is done', 'notice');
     }
 
 

@@ -3,7 +3,7 @@
  * @package     jelix
  *
  * @author      Laurent Jouanneau
- * @copyright   2019-2023 Laurent Jouanneau
+ * @copyright   2019-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -605,12 +605,12 @@ class Jelix17
 
         $devPath = \jApp::appPath('dev.php');
         if (!file_exists($devPath)) {
-            copy(LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
+            copy(LIB_PATH.'JelixFramework/DevHelper/templates/dev.php.tpl', $devPath);
             $this->reporter->message('create dev.php to launch module commands', 'notice');
         } else {
             $content = file_get_contents($devPath);
             if (strpos($content, 'JelixCommands::launch') === false) {
-                copy(LIB_PATH.'jelix-scripts/templates/dev.php.tpl', $devPath);
+                copy(LIB_PATH.'JelixFramework/DevHelper/templates/dev.php.tpl', $devPath);
                 $this->reporter->message('Update dev.php to launch developer commands', 'notice');
             }
         }
