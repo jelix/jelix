@@ -5,6 +5,7 @@ $finder = PhpCsFixer\Finder::create()
           //->notPath('src/Symfony/Component/Translation/Tests/fixtures/resources.php')
           ->in(array(
                 __DIR__.'/lib/jelix/',
+                __DIR__.'/lib/JelixFramework/',
                 __DIR__.'/lib/jelix-admin-modules/',
                 __DIR__.'/lib/jelix-modules/',
                 __DIR__.'/lib/jelix-plugins/',
@@ -12,8 +13,9 @@ $finder = PhpCsFixer\Finder::create()
           ))
         ;
 
-return PhpCsFixer\Config::create()
-          //->setCacheFile(__DIR__.'/.php_cs.cache')
+$config = new PhpCsFixer\Config();
+return $config
+          ->setCacheFile(__DIR__.'/.php-cs-fixer.cache')
           ->setRules([
             '@PSR2' => true,
             '@Symfony' => true,
@@ -56,4 +58,3 @@ return PhpCsFixer\Config::create()
           ])
           ->setFinder($finder)
         ;
-
