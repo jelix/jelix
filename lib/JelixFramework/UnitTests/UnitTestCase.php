@@ -56,7 +56,7 @@ abstract class UnitTestCase extends TestCase {
 
         $frameworkInfo = FrameworkInfos::load();
         $fmkCompiler = new FrameworkConfigCompiler(\jApp::app(), $frameworkInfo, \jApp::varConfigPath('installer.ini.php'));
-        $fmkConfig = $fmkCompiler->compile();
+        $fmkConfig = $fmkCompiler->compileForRuntime();
 
         $config = AppConfig::loadForCli($config, $fmkConfig, $entryPoint);
         \jApp::setConfig($config, $fmkConfig);
@@ -83,7 +83,7 @@ abstract class UnitTestCase extends TestCase {
 
         $frameworkInfo = FrameworkInfos::load();
         $fmkCompiler = new FrameworkConfigCompiler(\jApp::app(), $frameworkInfo, \jApp::varConfigPath('installer.ini.php'));
-        $fmkConfig = $fmkCompiler->compile();
+        $fmkConfig = $fmkCompiler->compileForRuntime();
 
         $config = AppConfig::loadWithoutCache($config, $fmkConfig, '/'.$entryPoint);
         $coord = new CoordinatorForTest($config, false);

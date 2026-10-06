@@ -16,6 +16,11 @@ use Jelix\Core\Infos\ModuleInfos;
 use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\Installer\ModuleStatus;
 
+/**
+ * Handles compilation of the framework configuration based on module and plugin
+ * paths, whether those are enabled or not. This component generates runtime
+ * configuration or installer-specific configuration for the framework.
+ */
 class FrameworkConfigCompiler
 {
     /**
@@ -54,24 +59,39 @@ class FrameworkConfigCompiler
         protected string $installerIniPath,
     ) {}
 
-    public function compile($installationMode = false): FrameworkConfigForInstaller|FrameworkRuntimeConfig
+    /**
+     * @param bool $forInstaller
+     * @return array
+     * @throws Exception
+     */
+    protected function readInstallerFile($forInstaller)
     {
         if ($this->frameworkInfo->isInstallersDisabled()) {
-            $installation = array();
+            $installation = array('modules' => array());
         } elseif (file_exists($this->installerIniPath)) {
             $installation = parse_ini_file($this->installerIniPath, true, INI_SCANNER_TYPED);
-        } else {
-            if ($installationMode) {
-                $installation = array();
-            } else {
-                throw new Exception("The application is not installed -- installer.ini.php doesn't exist!\n", 9);
+            if (!is_array($installation)) {
+                throw new Exception("The installer status file is not valid", 9);
             }
+
+            if (!isset($installation['modules'])) {
+                $installation['modules'] = array();
+            }
+        } elseif ($forInstaller) {
+            $installation = array('modules' => array());
+        } else {
+            throw new Exception("The application is not installed -- installer.ini.php doesn't exist!\n", 9);
         }
 
-        if (!isset($installation['modules'])) {
-            $installation['modules'] = array();
-        }
+        return $installation;
+    }
 
+    /**
+     * @param bool $forInstaller
+     * @throws Exception
+     */
+    protected function compileLists($forInstaller, &$installationData)
+    {
         // @deprecated
         // allBasePath is used to check if the config cache should be rebuilt, by comparing the file mtime value to the current time
         $this->allBasePath = $this->app->getDeclaredModulesDir();
@@ -95,45 +115,65 @@ class FrameworkConfigCompiler
                 continue;
             }
 
-            if ($installationMode) {
-                $modules[$moduleName] = $this->_readModuleInfo($moduleName, $declaredModules[$moduleName] ?? null, true, $path, $installation);
+            if ($forInstaller) {
+                $modules[$moduleName] = $this->_readModuleInfo($moduleName, $declaredModules[$moduleName] ?? null, true, $path, $installationData);
                 if ($modules[$moduleName]->isEnabled) {
                     $enabledModules[$moduleName] = ModuleInfos::load($path);
                 }
             } else {
-                $this->_readModuleInfo($moduleName, $declaredModules[$moduleName] ?? null, false, $path, $installation);
+                $this->_readModuleInfo($moduleName, $declaredModules[$moduleName] ?? null, false, $path, $installationData);
             }
         }
-        $this->_loadPluginsPathList();
+        $this->loadPluginsPathList();
+        return [$modules, $enabledModules];
+    }
 
-        if ($installationMode) {
-            $fmkConfig = new FrameworkConfigForInstaller(
-                $modules,
-                $enabledModules,
-                $this->allModulesPathList,
-                $this->enabledModulesPathList,
-                $this->enabledPluginsDirectoryPathsList,
-                $this->tplPluginsDirectoryPathsListByType,
-                $this->pluginPathsListByType,
-                $this->allBasePath
-            );
+    public function compileForRuntime(): FrameworkRuntimeConfig
+    {
+        $installationData = $this->readInstallerFile(false);
+        $this->compileLists(false, $installationData);
 
-        } else {
-            $fmkConfig = new FrameworkRuntimeConfig(
-                $this->enabledModulesPathList,
-                $this->enabledPluginsDirectoryPathsList,
-                $this->tplPluginsDirectoryPathsListByType,
-                $this->pluginPathsListByType,
-                $this->allBasePath
-            );
-        }
+        $fmkConfig = new FrameworkRuntimeConfig(
+            $this->enabledModulesPathList,
+            $this->enabledPluginsDirectoryPathsList,
+            $this->tplPluginsDirectoryPathsListByType,
+            $this->pluginPathsListByType,
+            $this->allBasePath
+        );
 
+        $this->clearLists();
+
+        return $fmkConfig;
+    }
+
+    public function compileForInstaller(): FrameworkConfigForInstaller
+    {
+        $installationData = $this->readInstallerFile(true);
+        list($modules, $enabledModules) = $this->compileLists(true, $installationData);
+
+        $fmkConfig = new FrameworkConfigForInstaller(
+            $modules,
+            $enabledModules,
+            $this->allModulesPathList,
+            $this->enabledModulesPathList,
+            $this->enabledPluginsDirectoryPathsList,
+            $this->tplPluginsDirectoryPathsListByType,
+            $this->pluginPathsListByType,
+            $this->allBasePath
+        );
+
+        $this->clearLists();
+
+        return $fmkConfig;
+    }
+
+    protected function clearLists()
+    {
         $this->enabledModulesPathList = array();
         $this->allModulesPathList = array();
         $this->tplPluginsDirectoryPathsListByType = array();
         $this->pluginPathsListByType = array();
-
-        return $fmkConfig;
+        $this->allBasePath = array();
     }
 
     /**
@@ -270,7 +310,7 @@ class FrameworkConfigCompiler
     /**
      * Analyse plugin paths.
      */
-    protected function _loadPluginsPathList()
+    protected function loadPluginsPathList()
     {
         foreach ($this->enabledPluginsDirectoryPathsList as $k => $p) {
             if ($handle = opendir($p)) {

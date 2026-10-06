@@ -130,7 +130,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
             \jApp::varConfigPath('installer.ini.php'),
         );
 
-        return $compiler->compile(true);
+        return $compiler->compileForInstaller();
     }
 
     protected function loadAppConfig($epId)

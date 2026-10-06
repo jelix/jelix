@@ -216,7 +216,7 @@ class Installer
             $this->globalSetup->getFrameworkInfos(),
             $this->globalSetup->getInstallerIni()->getFileName(),
         );
-        $fmkConfig = $compiler->compile();
+        $fmkConfig = $compiler->compileForRuntime();
         $fmkConfig->saveForRuntime(\jApp::varLibPath());
 
         $this->globalSetup->setReadWriteConfigMode(true);

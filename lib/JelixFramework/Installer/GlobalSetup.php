@@ -541,7 +541,7 @@ class GlobalSetup
                 $this->installerIni->getFileName(),
             );
 
-            $this->frameworkConfig = $compiler->compile(true);
+            $this->frameworkConfig = $compiler->compileForInstaller();
         }
 
         return $this->frameworkConfig;

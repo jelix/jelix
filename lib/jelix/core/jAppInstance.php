@@ -423,7 +423,7 @@ class jAppInstance
                 jApp::varConfigPath('installer.ini.php'),
             );
 
-            $frameworkConfig = $compiler->compile(true);
+            $frameworkConfig = $compiler->compileForInstaller();
             $this->_allModulesPath = $frameworkConfig->getAllModulePathsList();
         }
 
@@ -454,7 +454,7 @@ class jAppInstance
                 jApp::varConfigPath('installer.ini.php'),
             );
 
-            $frameworkConfig = $compiler->compile(true);
+            $frameworkConfig = $compiler->compileForInstaller();
             $this->_allPluginsPath = $frameworkConfig->getEnabledPluginsDirectoryPathsList();
         }
 
