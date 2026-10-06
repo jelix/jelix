@@ -421,7 +421,7 @@ class Installer
                         if ($installer instanceof \jInstallerModule) {
                             $installer->install();
                         } else {
-                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $databaseHelpers->useDbProfile($component->getDbProfile() ?: $installer->getDefaultDbProfile());
                             $installer->install($helpers);
                         }
                         $saveConfigIni = true;
@@ -463,7 +463,7 @@ class Installer
                             $upgrader->install();
                             $moduleName = $upgrader->name;
                         } else {
-                            $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $databaseHelpers->useDbProfile($component->getDbProfile() ?: $upgrader->getDefaultDbProfile());
                             $upgrader->install($helpers);
                             $moduleName = $upgrader->getModuleName();
                         }
@@ -532,7 +532,7 @@ class Installer
                         if ($installer instanceof \jInstallerModule) {
                             $installer->uninstall();
                         } else {
-                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $databaseHelpers->useDbProfile($component->getDbProfile() ?: $installer->getDefaultDbProfile());
                             $installer->uninstall($helpers);
                         }
                         $saveConfigIni = true;
@@ -595,7 +595,7 @@ class Installer
                             $installer->postInstall();
                             $this->declareLegacyNewEntryPoint($installer);
                         } else {
-                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $databaseHelpers->useDbProfile($component->getDbProfile() ?: $installer->getDefaultDbProfile());
                             $installer->postInstall($helpers);
                         }
                         $component->installFinished();
@@ -607,7 +607,7 @@ class Installer
                             $upgrader->postInstall();
                             $this->declareLegacyNewEntryPoint($upgrader);
                         } else {
-                            $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $databaseHelpers->useDbProfile($component->getDbProfile() ?: $upgrader->getDefaultDbProfile());
                             $upgrader->postInstall($helpers);
                         }
                         $component->upgradeFinished($upgrader);
@@ -618,7 +618,7 @@ class Installer
                         if ($installer instanceof \jInstallerModule) {
                             $installer->postUninstall();
                         } else {
-                            $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                            $databaseHelpers->useDbProfile($component->getDbProfile() ?: $installer->getDefaultDbProfile());
                             $installer->postUninstall($helpers);
                         }
                         $component->uninstallFinished();
