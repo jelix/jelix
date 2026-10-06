@@ -15,6 +15,8 @@ use Jelix\IniFile\IniModifier;
 
 /**
  * Allow to read and modify framework.ini.php and localframework.ini.php files.
+ *
+ * See  ../Config/framework.ini.php to know the structure of the ini file.
  */
 class FrameworkInfos
 {

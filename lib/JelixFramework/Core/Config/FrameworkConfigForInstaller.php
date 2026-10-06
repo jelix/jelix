@@ -55,7 +55,7 @@ class FrameworkConfigForInstaller extends FrameworkRuntimeConfig
      *
      * @return array<string,string> keys are module names, values are paths
      */
-    public function getAllModulePathsList(): array
+    public function getAllModulesPathsList(): array
     {
         return $this->allModulePathsList;
     }
@@ -68,5 +68,18 @@ class FrameworkConfigForInstaller extends FrameworkRuntimeConfig
     public function getModuleInfos($moduleName): ?ModuleInfos
     {
         return $this->enabledModules[$moduleName] ?? null;
+    }
+
+    public function saveForRuntime($directory)
+    {
+        // we don't want to save ModuleStatus and ModuleInfos objects
+        $fmkConfig = new FrameworkRuntimeConfig(
+            $this->enabledModulePathsList,
+            $this->enabledPluginsDirectoryPathsList,
+            $this->tplPluginsDirectoryPathsList,
+            $this->pluginPathsListByType,
+            $this->allPathsToCheck,
+        );
+        $fmkConfig->saveForRuntime($directory);
     }
 }

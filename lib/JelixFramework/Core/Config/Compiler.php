@@ -289,7 +289,7 @@ class Compiler
      */
     protected function runConfigCompilerPlugins($config, FrameworkRuntimeConfig $fmkConfig)
     {
-        $pluginsPaths = $fmkConfig->getPluginPathsListByType('configcompiler');
+        $pluginsPaths = $fmkConfig->getPluginsPathsListByType('configcompiler');
 
         if (!$pluginsPaths) {
             return;
@@ -299,7 +299,7 @@ class Compiler
         // but we then have to break the interface CompilerPluginInterface. We will break it
         // in Jelix 2. Until then, we will pass the list as the old _modulesPathList property
         // @deprecated
-        $config->_modulesPathList = $fmkConfig->getEnabledModulePathsList();
+        $config->_modulesPathList = $fmkConfig->getEnabledModulesPathsList();
 
         // load plugins
         $plugins = array();
@@ -332,7 +332,7 @@ class Compiler
         }
 
         // deprecated loop
-        foreach ($fmkConfig->getEnabledModulePathsList() as $moduleName => $modulePath) {
+        foreach ($fmkConfig->getEnabledModulesPathsList() as $moduleName => $modulePath) {
             $moduleXml = \simplexml_load_file($modulePath.'/module.xml');
             foreach ($plugins as $plugin) {
                 $plugin->onModule($config, $moduleName, $modulePath, $moduleXml);

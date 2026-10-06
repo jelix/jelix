@@ -26,7 +26,7 @@ class FrameworkConfigCompiler
     /**
      * @var string[] all module paths, even those are not used by the application
      */
-    protected $allModulePaths;
+    protected $allModulesPaths;
 
     /**
      * @var string[] all paths of directories containing plugins, including those which are into enabled modules
@@ -36,12 +36,12 @@ class FrameworkConfigCompiler
     /**
      * @var string[] list of path to modules, declared into framework.ini or with jApp::declareModule()
      */
-    protected $declaredModulePathsList;
+    protected $declaredModulesPathsList;
 
     /**
      * @var string[] final list of path of all modules (enabled or not). keys are module names.
      */
-    protected $allModulesPathList = array();
+    protected $allModulesPathsList = array();
 
     /**
      * @var string[] final list of paths of modules that are enabled
@@ -61,7 +61,9 @@ class FrameworkConfigCompiler
 
     /**
      * @param bool $forInstaller
+     *
      * @return array
+     *
      * @throws Exception
      */
     protected function readInstallerFile($forInstaller)
@@ -71,7 +73,7 @@ class FrameworkConfigCompiler
         } elseif (file_exists($this->installerIniPath)) {
             $installation = parse_ini_file($this->installerIniPath, true, INI_SCANNER_TYPED);
             if (!is_array($installation)) {
-                throw new Exception("The installer status file is not valid", 9);
+                throw new Exception('The installer status file is not valid', 9);
             }
 
             if (!isset($installation['modules'])) {
@@ -87,7 +89,9 @@ class FrameworkConfigCompiler
     }
 
     /**
-     * @param bool $forInstaller
+     * @param bool  $forInstaller
+     * @param mixed $installationData
+     *
      * @throws Exception
      */
     protected function compileLists($forInstaller, &$installationData)
@@ -107,9 +111,9 @@ class FrameworkConfigCompiler
 
         $modules = array();
         $enabledModules = array();
-        $this->loadAllModulePaths();
+        $this->loadAllModulesPaths();
         $declaredModules = $this->frameworkInfo->getModules();
-        foreach ($this->allModulePaths as $moduleName => $path) {
+        foreach ($this->allModulesPaths as $moduleName => $path) {
 
             if (!file_exists($path.'/module.xml')) {
                 continue;
@@ -124,8 +128,9 @@ class FrameworkConfigCompiler
                 $this->_readModuleInfo($moduleName, $declaredModules[$moduleName] ?? null, false, $path, $installationData);
             }
         }
-        $this->loadPluginsPathList();
-        return [$modules, $enabledModules];
+        $this->loadPluginsPathsList();
+
+        return array($modules, $enabledModules);
     }
 
     public function compileForRuntime(): FrameworkRuntimeConfig
@@ -154,7 +159,7 @@ class FrameworkConfigCompiler
         $fmkConfig = new FrameworkConfigForInstaller(
             $modules,
             $enabledModules,
-            $this->allModulesPathList,
+            $this->allModulesPathsList,
             $this->enabledModulesPathList,
             $this->enabledPluginsDirectoryPathsList,
             $this->tplPluginsDirectoryPathsListByType,
@@ -170,10 +175,13 @@ class FrameworkConfigCompiler
     protected function clearLists()
     {
         $this->enabledModulesPathList = array();
-        $this->allModulesPathList = array();
+        $this->enabledPluginsDirectoryPathsList = array();
+        $this->declaredModulesPathsList = array();
+        $this->allModulesPathsList = array();
         $this->tplPluginsDirectoryPathsListByType = array();
         $this->pluginPathsListByType = array();
         $this->allBasePath = array();
+        $this->allModulesPaths = array();
     }
 
     /**
@@ -249,7 +257,7 @@ class FrameworkConfigCompiler
             }
         }
 
-        $this->allModulesPathList[$moduleName] = $path;
+        $this->allModulesPathsList[$moduleName] = $path;
 
         return new ModuleStatus(
             $moduleName,
@@ -262,13 +270,13 @@ class FrameworkConfigCompiler
     /**
      * Load all module paths, even those are not used by the application.
      */
-    protected function loadAllModulePaths()
+    protected function loadAllModulesPaths()
     {
-        $this->allModulePaths = array();
-        $this->allModulePaths['jelix'] = realpath(__DIR__.'/../../../jelix/core-modules/jelix/').DIRECTORY_SEPARATOR;
+        $this->allModulesPaths = array();
+        $this->allModulesPaths['jelix'] = realpath(__DIR__.'/../../../jelix/core-modules/jelix/').DIRECTORY_SEPARATOR;
 
         // retrieve module paths declared with jApp::declareModule()
-        $this->declaredModulePathsList = $this->app->getDeclaredModulePaths();
+        $this->declaredModulesPathsList = $this->app->getDeclaredModulePaths();
 
         // retrieve module paths declared directly into framework.ini
         foreach ($this->frameworkInfo->getModulesDeclaredPaths() as $module => $path) {
@@ -279,12 +287,12 @@ class FrameworkConfigCompiler
             if (!is_dir($p)) {
                 throw new \Exception('Error in the configuration file -- The module path, '.$path.', given in the configuration, is not a directory', 10);
             }
-            $this->declaredModulePathsList[] = rtrim($p, '/');
+            $this->declaredModulesPathsList[] = rtrim($p, '/');
         }
 
         // Adds all of these modules into the result
-        foreach ($this->declaredModulePathsList as $modulePath) {
-            $this->allModulePaths[basename($modulePath)] = $modulePath.DIRECTORY_SEPARATOR;
+        foreach ($this->declaredModulesPathsList as $modulePath) {
+            $this->allModulesPaths[basename($modulePath)] = $modulePath.DIRECTORY_SEPARATOR;
         }
 
         // Adds all module paths declared with jApp::declareModulesDir()
@@ -292,13 +300,13 @@ class FrameworkConfigCompiler
             $path = $basePath.DIRECTORY_SEPARATOR;
             if (is_array($names)) {
                 foreach ($names as $name) {
-                    $this->allModulePaths[$name] = $path.$name.DIRECTORY_SEPARATOR;
+                    $this->allModulesPaths[$name] = $path.$name.DIRECTORY_SEPARATOR;
                 }
             } elseif ($names == '*' || $names === null) {
                 if ($handle = opendir($path)) {
                     while (($name = readdir($handle)) !== false) {
                         if ($name[0] != '.' && is_dir($path.$name)) {
-                            $this->allModulePaths[$name] = $path.$name.DIRECTORY_SEPARATOR;
+                            $this->allModulesPaths[$name] = $path.$name.DIRECTORY_SEPARATOR;
                         }
                     }
                     closedir($handle);
@@ -310,7 +318,7 @@ class FrameworkConfigCompiler
     /**
      * Analyse plugin paths.
      */
-    protected function loadPluginsPathList()
+    protected function loadPluginsPathsList()
     {
         foreach ($this->enabledPluginsDirectoryPathsList as $k => $p) {
             if ($handle = opendir($p)) {

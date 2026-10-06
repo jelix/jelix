@@ -1,9 +1,11 @@
 <?php
+
 /**
  * @author      Laurent Jouanneau
  * @copyright   2009-2026 Laurent Jouanneau
  *
  * @see         https://jelix.org
+ *
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -11,6 +13,7 @@ namespace Jelix\Installer;
 
 use Jelix\Core\Config\Compiler;
 use Jelix\IniFile\IniModifier;
+use Jelix\IniFile\IniModifierArray;
 use Jelix\IniFile\IniModifierReadOnly;
 
 /**
@@ -36,14 +39,14 @@ class EntryPoint
     /**
      * application entry point configuration.
      *
-     * * @var \Jelix\IniFile\IniModifier
+     * * @var IniModifier
      */
     protected $appEpConfigIni;
 
     /**
      * local entry point configuration.
      *
-     * @var \Jelix\IniFile\IniModifier
+     * @var IniModifier
      */
     protected $localEpConfigIni;
 
@@ -88,6 +91,7 @@ class EntryPoint
      *                           to the app/system directory
      * @param string $file       the filename of the entry point
      * @param string $type       type of the entry point ('classic', 'cli', 'xmlrpc'....)
+     * @param mixed  $isLocalEp
      */
     public function __construct(
         GlobalSetup $globalSetup,
@@ -107,20 +111,19 @@ class EntryPoint
         $appSystemPath = \jApp::appSystemPath($configFile);
         $varConfigPath = \jApp::varConfigPath($configFile);
 
-        if ( !$isLocalEp && !file_exists($appSystemPath)) {
+        if (!$isLocalEp && !file_exists($appSystemPath)) {
             \jFile::createDir(dirname($appSystemPath));
-            file_put_contents($appSystemPath, ';<' . '?php die(\'\');?' . '>');
+            file_put_contents($appSystemPath, ';<?php die(\'\');?>');
         }
 
-        $this->appEpConfigIni = new IniModifier($appSystemPath, ';<'.'?php die(\'\');?'.'>');
-        $this->localEpConfigIni = new IniModifier($varConfigPath, ';<'.'?php die(\'\');?'.'>');
+        $this->appEpConfigIni = new IniModifier($appSystemPath, ';<?php die(\'\');?>');
+        $this->localEpConfigIni = new IniModifier($varConfigPath, ';<?php die(\'\');?>');
 
         $fmkConfig = $this->globalSetup->getFrameworkConfig();
         $compiler = new Compiler(\jApp::app(), $configFile, $this->scriptName);
         if ($this->_isCliScript) {
             $this->config = $compiler->readForCli($fmkConfig);
-        }
-        else {
+        } else {
             $this->config = $compiler->read($fmkConfig);
         }
     }
@@ -151,6 +154,7 @@ class EntryPoint
 
     /**
      * @return bool
+     *
      * @deprecated since 1.9
      */
     public function isCliScript()
@@ -168,17 +172,21 @@ class EntryPoint
 
     /**
      * @return string[] the list of all available modules (installed or not)
-     *                       and their path, as stored in the compiled configuration file
+     *                  and their path, as stored in the compiled configuration file
      */
     public function getModulesList()
     {
-        return $this->globalSetup->getFrameworkConfig()->getAllModulePathsList();
+        return $this->globalSetup->getFrameworkConfig()->getAllModulesPathsList();
     }
-
 
     public function getEnabledModulePath($moduleName)
     {
         return $this->globalSetup->getFrameworkConfig()->getModulePath($moduleName);
+    }
+
+    public function isModuleEnabled($moduleName)
+    {
+        return $this->globalSetup->getFrameworkConfig()->isModuleEnabled($moduleName);
     }
 
     /**
@@ -198,16 +206,15 @@ class EntryPoint
      * - 'local': localconfig.ini
      * - 'localentrypoint': var/config/<ep>/config.ini
      *
-     * @return \Jelix\IniFile\IniModifierArray list of ini content of the
-     *                                         configuration
+     * @return IniModifierArray list of ini content of the
+     *                          configuration
      */
     public function getConfigIni()
     {
 
         if (!$this->globalSetup->isReadWriteConfigMode() || $this->isLocalEp) {
             $appCf = new IniModifierReadOnly($this->appEpConfigIni);
-        }
-        else {
+        } else {
             $appCf = $this->appEpConfigIni;
         }
 
@@ -280,9 +287,9 @@ class EntryPoint
      *
      * @param string $pluginName
      *
-     * @throws \Exception when the configuration filename is not found
-     *
      * @return null|array null if plugin is unknown, else array($iniModifier, $section)
+     *
+     * @throws \Exception when the configuration filename is not found
      */
     public function getCoordPluginConfig($pluginName)
     {

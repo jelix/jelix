@@ -45,6 +45,8 @@ class FrameworkRuntimeConfig
     /**
      * Give the path of the given module. The module must be enabled.
      *
+     * @param mixed $moduleName
+     *
      * @throws Exception
      */
     public function getModulePath($moduleName): string
@@ -64,7 +66,7 @@ class FrameworkRuntimeConfig
     /**
      * @return array list of enabled modules paths. Keys are module names
      */
-    public function getEnabledModulePathsList(): array
+    public function getEnabledModulesPathsList(): array
     {
         return $this->enabledModulePathsList;
     }
@@ -91,7 +93,7 @@ class FrameworkRuntimeConfig
         return $this->pluginPathsListByType[$type][$name];
     }
 
-    public function getPluginPathsListByType(string $type): array
+    public function getPluginsPathsListByType(string $type): array
     {
         if (!isset($this->pluginPathsListByType[$type])) {
             return array();
@@ -127,7 +129,7 @@ class FrameworkRuntimeConfig
     public static function loadForRuntime($directory)
     {
         if (!file_exists($directory.'/framework.config.php')) {
-            throw new Exception('Application not installer, framework.config.php not found');
+            throw new Exception('Application not installed, framework.config.php not found');
         }
         return include $directory.'/framework.config.php';
     }

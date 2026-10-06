@@ -404,7 +404,7 @@ class jAppInstance
      */
     public function getEnabledModulesPaths()
     {
-        return $this->frameworkRuntimeConfig->getEnabledModulePathsList();
+        return $this->frameworkRuntimeConfig->getEnabledModulesPathsList();
     }
 
     /**
@@ -424,7 +424,7 @@ class jAppInstance
             );
 
             $frameworkConfig = $compiler->compileForInstaller();
-            $this->_allModulesPath = $frameworkConfig->getAllModulePathsList();
+            $this->_allModulesPath = $frameworkConfig->getAllModulesPathsList();
         }
 
         return $this->_allModulesPath;

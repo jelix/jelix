@@ -262,7 +262,7 @@ class jApp
 
         // load application configuration
         if (is_object($configFile)) {
-            trigger_error('calling jApp::loadConfig() with object is deprecated', E_USER_DEPRECATED);
+            // trigger_error('calling jApp::loadConfig() with object is deprecated', E_USER_DEPRECATED);
             self::$_currentApp->setConfig($configFile, $fmkConfig);
         } else {
             self::$_currentApp->setConfig(AppConfig::load($configFile), $fmkConfig);

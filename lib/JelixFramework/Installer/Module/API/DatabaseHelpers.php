@@ -1,9 +1,11 @@
 <?php
+
 /**
  * @author      Laurent Jouanneau
  * @copyright   2008-2026 Laurent Jouanneau
  *
  * @see        http://jelix.org
+ *
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -11,6 +13,7 @@ namespace Jelix\Installer\Module\API;
 
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Schema\SqlToolsInterface;
+use Jelix\Installer\GlobalSetup;
 
 /**
  * Trait for installer/configurator classes.
@@ -32,11 +35,11 @@ class DatabaseHelpers
     /**
      * global setup.
      *
-     * @var \Jelix\Installer\GlobalSetup
+     * @var GlobalSetup
      */
     protected $globalSetup;
 
-    public function __construct(\Jelix\Installer\GlobalSetup $setup)
+    public function __construct(GlobalSetup $setup)
     {
         $this->globalSetup = $setup;
     }
@@ -63,7 +66,7 @@ class DatabaseHelpers
     }
 
     /**
-     * @return SqlToolsInterface|\jDbTools the tool class of jDb
+     * @return \jDbTools|SqlToolsInterface the tool class of jDb
      */
     public function dbTool()
     {
@@ -117,7 +120,7 @@ class DatabaseHelpers
         $tools = $this->dbTool();
 
         if ($module) {
-            $conf = $this->globalSetup->getFrameworkConfig()->getEnabledModulePathsList();
+            $conf = $this->globalSetup->getFrameworkConfig()->getEnabledModulesPathsList();
             if (!isset($conf[$module])) {
                 throw new \Exception('execSQLScript : invalid module name');
             }
@@ -153,9 +156,6 @@ class DatabaseHelpers
         }
     }
 
-    /**
-     * @param $selectorStr
-     */
     public function createTableFromDao($selectorStr)
     {
         $daoMapper = new \jDaoDbMapper($this->dbProfile);
@@ -169,9 +169,9 @@ class DatabaseHelpers
      * @param int        $option             one of jDbTools::IBD_* const
      * @param null|mixed $module
      *
-     * @throws \Exception
-     *
      * @return int number of records inserted/updated
+     *
+     * @throws \Exception
      */
     public function insertDaoData($relativeSourcePath, $option, $module = null)
     {

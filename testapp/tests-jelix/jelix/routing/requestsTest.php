@@ -11,6 +11,8 @@
 
 use Jelix\Core\Config\Compiler;
 use jApp as App;
+use Jelix\Core\Config\FrameworkConfigCompiler;
+use Jelix\Core\Infos\FrameworkInfos;
 use Jelix\Installer\WarmUp\WarmUpLauncherInterface;
 
 
@@ -45,15 +47,20 @@ class requestsTest extends \Jelix\UnitTests\UnitTestCase {
         $this->fServer = $server;
         $this->fServer->setHttpRequest($url);
 
+        $frameworkInfo = FrameworkInfos::load();
+        $fmkCompiler = new FrameworkConfigCompiler(\jApp::app(), $frameworkInfo, \jApp::varConfigPath('installer.ini.php'));
+        $fmkConfig = $fmkCompiler->compileForInstaller();
+
         $compiler = new Compiler(jApp::app(), 'index/config.ini.php', $scriptPath);
-        $config = $compiler->read(true);
+        $config = $compiler->read($fmkConfig);
         if ($scriptNameServerVariable) {
             $config->urlengine['scriptNameServerVariable'] = $scriptNameServerVariable;
         }
 
-        App::setConfig($config);
+        App::setConfig($config, $fmkConfig);
 
-        $warmUp = new Jelix\Installer\WarmUp\WarmUp(App::app());
+        $fmkConfig->saveForRuntime(\jApp::varLibPath());
+        $warmUp = new Jelix\Installer\WarmUp\WarmUp(App::app(), $frameworkInfo);
         $warmUp->launch(App::getEnabledModulesPaths(), WarmUpLauncherInterface::STEP_ALL);
 
         $coord = new \Jelix\UnitTests\CoordinatorForTest($config, false);
