@@ -96,6 +96,8 @@ class jFormsControlImageUpload extends jFormsControlUpload2
             else {
                 $this->error = jForms::ERRDATA_INVALID_FILE_TYPE;
                 unlink($filePath);
+
+                return null;
             }
         }
 
