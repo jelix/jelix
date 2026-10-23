@@ -4,6 +4,12 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.28
+------
+
+- fix(jforms) image upload: when mime type check fail, error was ignored
+- remove unused `jFormsControlUpload2::verifyMimeType()` method. It was added by mistake.
+
 1.8.27
 ------
 
