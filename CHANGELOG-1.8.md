@@ -4,6 +4,15 @@ Changes into Jelix 1.8
 Next
 ----
 
+
+fix(ldap) some security issue into the ldap driver
+
+- escape the login in user search filters (LDAP injection with `*`, `)(`...)
+- escape the login in the DN of new users
+- reject ambiguous logins: when several entries match the filter for a same base DN, there are all ignored.
+- refuse to bind with an empty DN (unauthenticated bind)
+
+
 1.8.28
 ------
 

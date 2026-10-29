@@ -115,7 +115,7 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
             throw new jException('jelix~auth.ldap.object.user.unknown');
         }
 
-        if (!($user->login != '')) {
+        if (!$this->isValidLogin($user->login)) {
             throw new jException('jelix~auth.ldap.user.login.unset');
         }
 
@@ -126,7 +126,13 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
             return false;
         }
 
-        $result = ldap_add($connect, $this->_buildUserDn($user->login), $entries);
+        $dn = $this->_buildUserDn($user->login);
+        if ($dn) {
+            $result = ldap_add($connect, $dn, $entries);
+        }
+        else {
+            $result = false;
+        }
         ldap_close($connect);
 
         return $result;
@@ -134,11 +140,23 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
 
     public function removeUser($login)
     {
+        $login = trim($login, " ");
+        if (!$this->isValidLogin($login)) {
+            throw new Exception('ldap: bad login parameter');
+        }
+
         $connect = $this->_bindLdapUser();
         if ($connect === false) {
             return false;
         }
-        $result = ldap_delete($connect, $this->_buildUserDn($login));
+
+        $dn = $this->_buildUserDn($login);
+        if ($dn) {
+            $result = ldap_delete($connect, $dn);
+        }
+        else {
+            $result = false;
+        }
         ldap_close($connect);
 
         return $result;
@@ -150,8 +168,9 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
             throw new jException('jelix~auth.ldap.object.user.unknown');
         }
 
-        if (!($user->login != '')) {
-            throw new jException('jelix~auth.ldap.user.login.unset');
+        $login = trim($user->login, " ");
+        if (!$this->isValidLogin($login)) {
+            throw new Exception('ldap: bad login parameter');
         }
 
         $entries = $this->getAttributesLDAP($user, true);
@@ -160,7 +179,13 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
         if ($connect === false) {
             return false;
         }
-        $result = ldap_modify($connect, $this->_buildUserDn($user->login), $entries);
+        $dn = $this->_buildUserDn($user->login);
+        if ($dn) {
+            $result = ldap_modify($connect, $dn, $entries);
+        }
+        else {
+            $result = false;
+        }
         ldap_close($connect);
 
         return $result;
@@ -168,25 +193,28 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
 
     public function getUser($login)
     {
+        $login = trim($login, " ");
+        if (!$this->isValidLogin($login)) {
+            throw new Exception('ldap: bad login parameter');
+        }
+
         $connect = $this->_bindLdapUser();
         if ($connect === false) {
             return false;
         }
 
-        if (($search = ldap_search($connect, $this->_params['searchBaseDN'], $this->_params['uidProperty'].'='.$login, $this->_params['searchAttributes']))) {
-            if (($entry = ldap_first_entry($connect, $search))) {
-                $attributes = ldap_get_attributes($connect, $entry);
-                if ($attributes['count'] > 0) {
-                    $user = new jAuthUserLDAP();
-                    $this->setAttributesLDAP($user, $attributes);
-                    $user->login = $login;
-                    $user->password = '';
-                    ldap_close($connect);
+        $entry = $this->searchLdapUser($connect, $login);
 
-                    return $user;
-                }
+        if ($entry) {
+            $user = $this->loadLdapAttributes($connect, $entry);
+            if ($user) {
+                $user->login = $login;
+                ldap_close($connect);
+
+                return $user;
             }
         }
+
         ldap_close($connect);
 
         return false;
@@ -194,6 +222,11 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
 
     public function createUserObject($login, $password)
     {
+        $login = trim($login, " ");
+        if (!$this->isValidLogin($login)) {
+            throw new Exception('ldap: bad login parameter');
+        }
+
         $user = new jAuthUserLDAP();
 
         $user->login = $login;
@@ -213,16 +246,15 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
         if ($connect === false) {
             return $users;
         }
-        $filter = ($pattern != '' && $pattern != '%') ? '(&'.$this->_params['searchFilter']."({$this->_params['uidProperty']}={$pattern}))" : $this->_params['searchFilter'];
+        $filter = ($pattern != '' && $pattern != '%') ?
+            '(&'.$this->_params['searchFilter']."({$this->_params['uidProperty']}={$pattern}))" :
+            $this->_params['searchFilter'];
 
         if (($search = ldap_search($connect, $this->_params['searchBaseDN'], $filter, $this->_params['searchAttributes']))) {
             $entry = ldap_first_entry($connect, $search);
             while ($entry) {
-                $attributes = ldap_get_attributes($connect, $entry);
-                if ($attributes['count'] > 0) {
-                    $user = new jAuthUserLDAP();
-                    $this->setAttributesLDAP($user, $attributes);
-                    $user->password = '';
+                $user = $this->loadLdapAttributes($connect, $entry);
+                if ($user) {
                     $users[] = $user;
                 }
                 $entry = ldap_next_entry($connect, $entry);
@@ -239,47 +271,73 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
 
     public function changePassword($login, $newpassword)
     {
-        $entries = array();
-        $entries['userPassword'] = $this->cryptPassword($newpassword);
-
+        $login = trim($login, " ");
+        if (!$this->isValidLogin($login)) {
+            throw new Exception('ldap: bad login parameter');
+        }
         $connect = $this->_bindLdapUser();
         if ($connect === false) {
             return false;
         }
-        $result = ldap_mod_replace($connect, $this->_buildUserDn($login), $entries);
+
+        // see if the user exists into the ldap directory
+        $ldapEntry = $this->searchLdapUser($connect, $login);
+        if ($ldapEntry === false) {
+            return false;
+        }
+
+        $dn = $this->getEntryDn($connect, $ldapEntry, $login);
+
+        $result = @ldap_modify($connect, $dn, array(
+            "userPassword" => $this->cryptPassword($newpassword)
+        ));
+
         ldap_close($connect);
 
-        return $result;
+        if ($result === false) {
+            throw new Exception('ldap: error when trying to change password of user "'.$login.'"');
+        }
+
+        return true;
     }
 
     public function verifyPassword($login, $password)
     {
+        $login = trim($login, " ");
+        if (!$this->isValidLogin($login)) {
+            throw new Exception('ldap: bad login parameter');
+        }
+
         $connect = $this->_getLinkId();
 
         if ($connect) {
+
+
+            $dn = $this->_buildUserDn($login);
+            if (!$dn) {
+                return false;
+            }
+
             //authenticate user
-            $bind = @ldap_bind($connect, $this->_buildUserDn($login), $this->cryptPassword($password));
+            $bind = @ldap_bind($connect, $dn, $this->cryptPassword($password));
 
             if ($bind) {
                 //get connected user infos
                 if ($this->_params['ldapUser'] == '') {
-                    $bind = ldap_bind($connect);
+                    $bindAdmin = ldap_bind($connect);
                 } else {
-                    $bind = ldap_bind($connect, $this->_params['ldapUser'], $this->_params['ldapPassword']);
+                    $bindAdmin = ldap_bind($connect, $this->_params['ldapUser'], $this->_params['ldapPassword']);
                 }
-                if ($bind) {
-                    if (($search = ldap_search($connect, $this->_params['searchBaseDN'], $this->_params['uidProperty'].'='.$login, $this->_params['searchAttributes']))) {
-                        if (($entry = ldap_first_entry($connect, $search))) {
-                            $attributes = ldap_get_attributes($connect, $entry);
-                            if ($attributes['count'] > 0) {
-                                $user = new jAuthUserLDAP();
-                                $this->setAttributesLDAP($user, $attributes);
-                                $user->login = $login;
-                                $user->password = '';
-                                ldap_close($connect);
+                if ($bindAdmin) {
+                    $entry = $this->searchLdapUser($connect, $login);
 
-                                return $user;
-                            }
+                    if ($entry) {
+                        $user = $this->loadLdapAttributes($connect, $entry);
+                        if ($user) {
+                            $user->login = $login;
+                            ldap_close($connect);
+
+                            return $user;
                         }
                     }
                 }
@@ -357,7 +415,7 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
     protected function _buildUserDn($login)
     {
         if ($login) {
-            return $this->_params['uidProperty'].'='.$login.','.$this->_params['searchBaseDN'];
+            return $this->_params['uidProperty'].'='.ldap_escape((string)$login, '', LDAP_ESCAPE_DN).','.$this->_params['searchBaseDN'];
         }
 
         return '';
@@ -405,5 +463,93 @@ class ldapAuthDriver extends jAuthDriverBase implements jIAuthDriver
         }
 
         return $connect;
+    }
+
+    /**
+     * Check that the login does not contain characters we don't want
+     *
+     * Logins with spaces at the beginning or at the end are refused, as
+     * many ldap servers ignore these spaces during comparison: the user could
+     * be recognized with a login that is different from the one stored into the
+     * directory.
+     *
+     * @param string $login
+     * @return bool
+     */
+    protected function isValidLogin($login)
+    {
+        if ($login === '' || trim($login) !== $login) {
+            return false;
+        }
+        // control characters (NUL, line feed...) are not allowed
+        return !preg_match('/[\x00-\x1F\x7F]/', $login);
+    }
+
+
+    /**
+     * Search an LDAP user
+     *
+     * @param \LDAP\Connection $connect
+     * @param string $login
+     * @return false|\LDAP\ResultEntry False if the user is not found, else the result entry
+     * @throws Exception when the search fails, or when several users match the login
+     */
+    protected function searchLdapUser($connect, $login)
+    {
+        $search = ldap_search(
+            $connect,
+            $this->_params['searchBaseDN'],
+            $this->_params['uidProperty'].'='.ldap_escape($login, '', LDAP_ESCAPE_FILTER),
+            $this->_params['searchAttributes']
+        );
+
+        if ($search === false) {
+            return false;
+        }
+
+        $count = ldap_count_entries($connect, $search);
+        if ($count > 1) {
+            // several entries match the login, ignore all;
+            return false;
+        }
+
+        if ($count == 1) {
+            return ldap_first_entry($connect, $search);
+        }
+        return false;
+    }
+
+    /**
+     * @param \LDAP\Connection $connect
+     * @param \LDAP\ResultEntry $entry
+     * @param string $login
+     * @return string
+     * @throws Exception
+     */
+    protected function getEntryDn($connect, $entry, $login)
+    {
+        $dn = @ldap_get_dn($connect, $entry);
+        if ($dn === false || $dn === '') {
+            throw new Exception('ldap: cannot retrieve the DN of the user "'.$login.'"');
+        }
+        return $dn;
+    }
+
+
+    protected function loadLdapAttributes($connect, $entry)
+    {
+        $attributes = ldap_get_attributes($connect, $entry);
+        if ($attributes === false) {
+            return false;
+        }
+
+        if ($attributes['count'] > 0) {
+            $user = new jAuthUserLDAP();
+            $this->setAttributesLDAP($user, $attributes);
+            $user->password = '';
+            return $user;
+        }
+
+        return false;
     }
 }
