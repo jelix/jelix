@@ -12,6 +12,12 @@ fix(ldap) some security issue into the ldap driver
 - reject ambiguous logins: when several entries match the filter for a same base DN, there are all ignored.
 - refuse to bind with an empty DN (unauthenticated bind)
 
+fix(jacl2) the acl2 plugin didn't check every right indicated into plugin parameters of a controller
+
+- Rights indicated into `jacl2.rights.and` or `jacl2.rights.or` on a method were not check when `jacl2.right` was set on `*`.
+- Right set with `jacl2.right` on `*` was not check when a right indicated into `jacl2.right` was set also on a method.
+  Although developers believed that it was always checked (the documentation was not very clear about it). 
+
 
 1.8.28
 ------
