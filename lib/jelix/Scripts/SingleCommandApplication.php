@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018-2024 Laurent Jouanneau
+ * @copyright   2018-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     MIT
@@ -14,6 +14,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
 
 class SingleCommandApplication extends Application
 {
@@ -25,7 +26,7 @@ class SingleCommandApplication extends Application
         $this->setDefaultCommand($command->getName(), true);
     }
 
-    public function getDefinition()
+    public function getDefinition(): InputDefinition
     {
         $inputDefinition = parent::getDefinition();
 

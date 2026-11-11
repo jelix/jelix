@@ -4,19 +4,17 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix(ldap) some security issue into the ldap driver
+  - escape the login in user search filters (LDAP injection with `*`, `)(`...)
+  - escape the login in the DN of new users
+  - reject ambiguous logins: when several entries match the filter for a same base DN, there are all ignored.
+  - refuse to bind with an empty DN (unauthenticated bind)
+- fix(jacl2) the acl2 plugin didn't check every right indicated into plugin parameters of a controller
+  - Rights indicated into `jacl2.rights.and` or `jacl2.rights.or` on a method were not check when `jacl2.right` was set on `*`.
+  - Right set with `jacl2.right` on `*` was not check when a right indicated into `jacl2.right` was set also on a method.
+    Although developers believed that it was always checked (the documentation was not very clear about it). 
+- Use symfony/console 6 on PHP 8 platforms to fix some PHP 8.5 compatibility issues
 
-fix(ldap) some security issue into the ldap driver
-
-- escape the login in user search filters (LDAP injection with `*`, `)(`...)
-- escape the login in the DN of new users
-- reject ambiguous logins: when several entries match the filter for a same base DN, there are all ignored.
-- refuse to bind with an empty DN (unauthenticated bind)
-
-fix(jacl2) the acl2 plugin didn't check every right indicated into plugin parameters of a controller
-
-- Rights indicated into `jacl2.rights.and` or `jacl2.rights.or` on a method were not check when `jacl2.right` was set on `*`.
-- Right set with `jacl2.right` on `*` was not check when a right indicated into `jacl2.right` was set also on a method.
-  Although developers believed that it was always checked (the documentation was not very clear about it). 
 
 
 1.8.28
