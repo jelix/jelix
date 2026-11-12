@@ -47,7 +47,7 @@ class ReCaptchaValidator implements CaptchaValidatorInterface
         }
 
         $recaptcha = new \ReCaptcha\ReCaptcha($config['secret']);
-        $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+        $resp = $recaptcha->verify($_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR'] ?? null);
         if ($resp->isSuccess()) {
             return null;
         }
