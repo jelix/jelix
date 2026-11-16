@@ -393,4 +393,5 @@ class jFormsControlUpload2 extends jFormsControl
     {
         return 'upload2';
     }
+
 }
