@@ -14,7 +14,7 @@ Next
   - Right set with `jacl2.right` on `*` was not check when a right indicated into `jacl2.right` was set also on a method.
     Although developers believed that it was always checked (the documentation was not very clear about it). 
 - Use symfony/console 6 on PHP 8 platforms to fix some PHP 8.5 compatibility issues
-
+- Update jQuery to 3.7.1 
 
 
 1.8.28
