@@ -1,9 +1,9 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2024-2025 Laurent Jouanneau
+ * @copyright   2024-2026 Laurent Jouanneau
  *
- * @see         https://www.jelix.org
+ * @see        https://www.jelix.org
  * @licence     MIT
  */
 
@@ -12,8 +12,8 @@ namespace Jelix\DevHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Application;
 
 class DevApplication extends Application
 {

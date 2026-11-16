@@ -3,7 +3,7 @@
  * @author       Laurent Jouanneau
  * @contributor  Thibault Piront (nuKs), Julien Issler, Dominique Papin, Flav, Gaëtan MARROT
  *
- * @copyright    2005-2015 laurent Jouanneau
+ * @copyright    2005-2026 laurent Jouanneau
  * @copyright    2007 Thibault Piront
  * @copyright    2008 Julien Issler
  * @copyright    2008-2010 Dominique Papin, 2012 Flav, 2013 Gaëtan MARROT
@@ -243,10 +243,13 @@ class Router
                 $pluginparams = array();
                 if (isset($ctrl->pluginParams['*'])) {
                     $pluginparams = $ctrl->pluginParams['*'];
+                    $pluginparams['__all'] = $ctrl->pluginParams['*'];
                 }
 
                 if (isset($ctrl->pluginParams[$this->action->method])) {
-                    $pluginparams = array_merge($pluginparams, $ctrl->pluginParams[$this->action->method]);
+                    $methodPluginParams = $ctrl->pluginParams[$this->action->method];
+                    $pluginparams = array_merge($pluginparams, $methodPluginParams);
+                    $pluginparams['__method'] = $methodPluginParams;
                 }
 
                 foreach ($this->plugins as $name => $obj) {

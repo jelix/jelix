@@ -394,4 +394,5 @@ class Upload2Control extends AbstractControl
     {
         return 'upload2';
     }
+
 }

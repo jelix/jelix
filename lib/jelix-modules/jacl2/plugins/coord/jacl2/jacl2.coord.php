@@ -4,7 +4,7 @@
  * @subpackage  jacl2_plugin
  *
  * @author     Laurent Jouanneau
- * @copyright  2008 Laurent Jouanneau
+ * @copyright  2008-2026 Laurent Jouanneau
  * @licence  http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  *
  * @since 1.1
@@ -33,26 +33,16 @@ class jAcl2CoordPlugin implements jICoordPlugin
         $selector = null;
         $aclok = true;
 
-        if (isset($params['jacl2.right'])) {
-            $aclok = jAcl2::check($params['jacl2.right']);
-        } elseif (isset($params['jacl2.rights.and'])) {
-            $aclok = true;
-            foreach ($params['jacl2.rights.and'] as $right) {
-                if (!jAcl2::check($right)) {
-                    $aclok = false;
+        // We want to check rights indicated into the '*', and those indicated for the controller method.
+        // because the developer may want to indicate rights to check for all methods in addition of specific rights for
+        // the method, to avoid to repeat rights in parameters. So, since Jelix 1.8.29, we don't use the
+        // list of parameters resulting from the merged parameters list of '*' and of the method.
+        if (isset($params['__all'])) {
+            $aclok = $this->checkAcl($params['__all']);
+        }
 
-                    break;
-                }
-            }
-        } elseif (isset($params['jacl2.rights.or'])) {
-            $aclok = false;
-            foreach ($params['jacl2.rights.or'] as $right) {
-                if (jAcl2::check($right)) {
-                    $aclok = true;
-
-                    break;
-                }
-            }
+        if ($aclok && isset($params['__method'])) {
+            $aclok = $this->checkAcl($params['__method']);
         }
 
         if (!$aclok) {
@@ -64,6 +54,38 @@ class jAcl2CoordPlugin implements jICoordPlugin
         }
 
         return $selector;
+    }
+
+    protected function checkAcl(&$params)
+    {
+        $aclok = true;
+
+        if (isset($params['jacl2.right'])) {
+            $aclok = jAcl2::check($params['jacl2.right']);
+        }
+
+        if ($aclok && isset($params['jacl2.rights.and'])) {
+            foreach ($params['jacl2.rights.and'] as $right) {
+                if (!jAcl2::check($right)) {
+                    $aclok = false;
+
+                    break;
+                }
+            }
+        }
+
+        if ($aclok && isset($params['jacl2.rights.or'])) {
+            $aclok = false;
+            foreach ($params['jacl2.rights.or'] as $right) {
+                if (jAcl2::check($right)) {
+                    $aclok = true;
+
+                    break;
+                }
+            }
+        }
+
+        return $aclok;
     }
 
     public function beforeOutput()
