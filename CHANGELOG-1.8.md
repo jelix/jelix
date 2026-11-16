@@ -4,6 +4,9 @@ Changes into Jelix 1.8
 Next
 ----
 
+1.8.29
+------
+
 - fix(ldap) some security issue into the ldap driver
   - escape the login in user search filters (LDAP injection with `*`, `)(`...)
   - escape the login in the DN of new users
