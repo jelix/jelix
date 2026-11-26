@@ -4,6 +4,9 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix(webassets) bad support of revision parameters on module assets.
+
+
 1.8.29
 ------
 
