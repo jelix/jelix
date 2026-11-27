@@ -32,7 +32,7 @@ if [[ ! -d /etc/ldap/slapd.d || "$SLAPD_FORCE_RECONFIGURE" == "true" ]]; then
     SLAPD_ORGANIZATION="${SLAPD_ORGANIZATION:-${SLAPD_DOMAIN}}"
 
     mkdir -p /etc/ldap
-    cp -r /etc/ldap.dist/* /etc/ldap
+    cp -r /etc/ldap.dist/* /etc/ldap/
 
     cat <<-EOF | debconf-set-selections
         slapd slapd/no_configuration boolean false
@@ -42,11 +42,11 @@ if [[ ! -d /etc/ldap/slapd.d || "$SLAPD_FORCE_RECONFIGURE" == "true" ]]; then
         slapd slapd/domain string $SLAPD_DOMAIN
         slapd slapd/backend select HDB
         slapd slapd/allow_ldap_v2 boolean false
-        slapd slapd/purge_database boolean false
-        slapd slapd/move_old_database boolean true
+        slapd slapd/purge_database boolean true
+        slapd slapd/move_old_database boolean false
 EOF
 
-    dpkg-reconfigure -f noninteractive slapd >/dev/null 2>&1
+    dpkg-reconfigure -f noninteractive slapd 2>&1
 
     dc_string=""
 
@@ -55,11 +55,6 @@ EOF
     for dc_part in "${dc_parts[@]}"; do
         dc_string="$dc_string,dc=$dc_part"
     done
-
-    base_string="BASE ${dc_string:1}"
-
-    echo $base_string > /etc/ldap/ldap.conf
-    echo "TLS_CACERT	/etc/ssl/certs/ca-certificates.crt" >> /etc/ldap/ldap.conf
 
     if [[ -n "$SLAPD_CONFIG_PASSWORD" ]]; then
         password_hash=`slappasswd -s "${SLAPD_CONFIG_PASSWORD}"`
@@ -75,25 +70,23 @@ EOF
 
     if [ -d /customcerts ]; then
       if [[ -n "$SLAPD_TLS_KEY_FILENAME" ]]; then
-          cp -a /customcerts/$SLAPD_TLS_KEY_FILENAME /etc/ssl/private/ldap.key
-          cp -a /customcerts/$SLAPD_TLS_CRT_FILENAME /etc/ssl/certs/ldap.crt
-          cp -a /customcerts/$SLAPD_TLS_CA_CRT_FILENAME /etc/ssl/certs/ldap_CA.crt
-          chown root:ssl-cert /etc/ssl/private/ldap.key
-          chown root:ssl-cert /etc/ssl/certs/ldap_CA.crt
-          chown root:ssl-cert /etc/ssl/certs/ldap.crt
-          chmod 0444 /etc/ssl/certs/ldap_CA.crt
-          chmod 0444 /etc/ssl/certs/ldap.crt
-          chmod 0440 /etc/ssl/private/ldap.key
-
-          #if [ ! -f /etc/ssl/ldap_dhparam.pem ]; then
-          #  openssl dhparam  -out /etc/ssl/ldap_dhparam.pem 2048
-          #fi
-
-          sed -i "s/^TLS_CACERT.*/TLS_CACERT \/etc\/ssl\/certs\/ldap_CA.crt/g" /etc/ldap/ldap.conf
+          cp -a /customcerts/$SLAPD_TLS_KEY_FILENAME /etc/ldap/sasl2/privkey.key
+          cp -a /customcerts/$SLAPD_TLS_CRT_FILENAME /etc/ldap/sasl2/cert.pem
+          cp -a /customcerts/$SLAPD_TLS_CA_CRT_FILENAME /etc/ldap/sasl2/ca.pem
+          chown root:openldap /etc/ldap/sasl2/privkey.key
+          chown root:openldap /etc/ldap/sasl2/cert.pem
+          chown root:openldap /etc/ldap/sasl2/ca.pem
+          chmod 0644 /etc/ldap/sasl2/cert.pem
+          chmod 0644 /etc/ldap/sasl2/ca.pem
+          chmod 0640 /etc/ldap/sasl2/privkey.key
 
           slapcat -n0 -F /etc/ldap/slapd.d -l /tmp/config.ldif
-          sed -i "s/\(cn: config\)/\1\nolcTLSCACertificateFile: \/etc\/ssl\/certs\/ldap_CA.crt\nolcTLSCertificateFile: \/etc\/ssl\/certs\/ldap.crt\nolcTLSCertificateKeyFile: \/etc\/ssl\/private\/ldap.key\nolcTLSVerifyClient: never/g" /tmp/config.ldif
-          #sed -i "s/\(cn: config\)/\1\nolcTLSCACertificateFile: \/etc\/ssl\/certs\/ldap_CA.crt\nolcTLSCertificateFile: \/etc\/ssl\/certs\/ldap.crt\nolcTLSCertificateKeyFile: \/etc\/ssl\/private\/ldap.key\nolcTLSDHParamFile: \/etc\/ssl\/ldap_dhparam.pem\nolcTLSVerifyClient: never/g" /tmp/config.ldif
+
+          if [[ -n "$SLAPD_TLS_VERIFY_CLIENT" ]]; then
+              sed -i "s/\(cn: config\)/\1\nolcTLSCACertificateFile: \/etc\/ldap\/sasl2\/ca.pem\nolcTLSCertificateFile: \/etc\/ldap\/sasl2\/cert.pem\nolcTLSCertificateKeyFile: \/etc\/ldap\/sasl2\/privkey.key\nolcTLSVerifyClient: ${SLAPD_TLS_VERIFY_CLIENT}/g" /tmp/config.ldif
+          else
+              sed -i "s/\(cn: config\)/\1\nolcTLSCACertificateFile: \/etc\/ldap\/sasl2\/ca.pem\nolcTLSCertificateFile: \/etc\/ldap\/sasl2\/cert.pem\nolcTLSCertificateKeyFile: \/etc\/ldap\/sasl2\/privkey.key\nolcTLSVerifyClient: never/g" /tmp/config.ldif
+          fi
 
           rm -rf /etc/ldap/slapd.d/*
           slapadd -n0 -F /etc/ldap/slapd.d -l /tmp/config.ldif

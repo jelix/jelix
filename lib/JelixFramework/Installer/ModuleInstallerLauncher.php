@@ -177,6 +177,9 @@ class ModuleInstallerLauncher
         return $this->moduleStatus->configurationScope == ModuleStatus::CONFIG_SCOPE_LOCAL;
     }
 
+    /**
+     * @return string the database profile to use as indicated into the application configuration (modules section)
+     */
     public function getDbProfile()
     {
         return $this->moduleStatus->dbProfile;

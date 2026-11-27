@@ -222,7 +222,7 @@ abstract class UnitTestCase extends TestCase {
                 return true;
             case 'int':
             case 'integer':
-                $this->assertTrue(is_integer($value), $name.': not an integer ('.$value.') '.$errormessage);
+                $this->assertTrue(is_int($value), $name.': not an integer ('.$value.') '.$errormessage);
                 if (isset($xml['value'])) {
                     $this->assertEquals(intval((string)$xml['value']),$value, $name.': bad value. '.$errormessage);
                 }

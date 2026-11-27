@@ -96,7 +96,7 @@ function resetMysql() {
     MYSQLTABLES="labels1_test labels_test myconfig product_tags_test product_test products towns testkvdb"
     for TABLE in $MYSQLTABLES
     do
-        mysql -h mysql -u $login -p$pass  --skip-ssl-verify-server-cert -e "drop table if exists $TABLE;" testapp;
+        mysql -h mysql -u $login -p$pass --skip-ssl-verify-server-cert -e "drop table if exists $TABLE;" testapp;
     done
 
 }

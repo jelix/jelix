@@ -192,8 +192,17 @@ class WebAssetsSelection
 
             case 'm': // resource file stored in a module
                 list($module, $src) = explode(':', $resource, 2);
-
-                $url = \jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => $src));
+                if (strpos($src, '?') !== false) {
+                    list($src, $query) = explode('?', $src, 2);
+                    $params = [];
+                    parse_str($query, $params);
+                    $params['targetmodule'] = $module;
+                    $params['file'] = $src;
+                    $url = \jUrl::get('jelix~www:getfile', $params);
+                }
+                else {
+                    $url = \jUrl::get('jelix~www:getfile', array('targetmodule' => $module, 'file' => $src));
+                }
 
                 break;
 
