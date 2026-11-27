@@ -210,15 +210,6 @@ class Installer
             return false;
         }
 
-        // compile framework config for runtime
-        $compiler = new FrameworkConfigCompiler(
-            \jApp::app(),
-            $this->globalSetup->getFrameworkInfos(),
-            $this->globalSetup->getInstallerIni()->getFileName(),
-        );
-        $fmkConfig = $compiler->compileForRuntime();
-        $fmkConfig->saveForRuntime(\jApp::varLibPath());
-
         $this->globalSetup->setReadWriteConfigMode(true);
 
         // reload configuration into legacyInstallerEntryPoint, to remove write lock
@@ -239,6 +230,15 @@ class Installer
         } else {
             $this->ok('install.end');
         }
+
+        // compile framework config for runtime
+        $compiler = new FrameworkConfigCompiler(
+            \jApp::app(),
+            $this->globalSetup->getFrameworkInfos(),
+            $this->globalSetup->getInstallerIni()->getFileName(),
+        );
+        $fmkConfig = $compiler->compileForRuntime();
+        $fmkConfig->saveForRuntime(\jApp::varLibPath());
 
         return $result;
     }

@@ -135,8 +135,12 @@ class jCoordinator
             if (preg_match('/(.+)CoordPlugin$/', $className, $m)) {
                 $name2 = $m[1];
                 $path = jApp::getFrameworkConfig()->getPluginPathByNameAndType($name2, 'coord');
-
-                include_once $path.$name2.'.coord.php';
+                if ($path !== false) {
+                    include_once $path.$name2.'.coord.php';
+                }
+                else {
+                    throw new \Exception('Plugin for jCoordinator '.$name.' not found');
+                }
             }
 
             // if the plugin is registered as a replacement of an other plugin
