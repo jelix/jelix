@@ -565,6 +565,8 @@ class jDaoGenerator
                         $result .= substr($expression, $len);
                     }
                     $expression = $result;
+                } else {
+                    $expression = str_replace("'", "\\'", $expression);
                 }
                 $sqlSet .= ', '.$this->_encloseName($updatefields[$propname]->fieldName).'= '.$expression;
             } else {
