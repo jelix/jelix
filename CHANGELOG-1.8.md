@@ -5,7 +5,7 @@ Next
 ----
 
 - fix(webassets) bad support of revision parameters on module assets.
-
+- fix usage of deprecated functions with PHP 8.6
 
 1.8.29
 ------

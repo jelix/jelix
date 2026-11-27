@@ -57,7 +57,7 @@ class jdbtoolsTest extends \Jelix\UnitTests\UnitTestCaseDb {
         // some test to detect if the behavior of PHP change
         $this->assertFalse(is_numeric("65,650.98"));
         $this->assertFalse(is_float("65,650.98"));
-        $this->assertFalse(is_integer("65,650.98"));
+        $this->assertFalse(is_int("65,650.98"));
         $this->assertEquals('65', floatval("65,650.98"));
     }
 

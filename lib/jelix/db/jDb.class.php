@@ -207,7 +207,7 @@ class jDb
             // we don't use floatval nor sprintf because of rounding errors (12.56 becomes 12.56000000000000049738)
             return var_export($value, true);
         }
-        if (is_integer($value)) {
+        if (is_int($value)) {
             return sprintf('%d', $value);
         }
         // this is probably a string, so we expect that it contains a numerical value

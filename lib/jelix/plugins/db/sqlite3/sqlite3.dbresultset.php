@@ -192,7 +192,7 @@ class sqlite3DbResultSet extends jDbResultSet
         }
         if (is_array($parameters)) {
             foreach ($parameters as $name => $val) {
-                $type = is_integer($val) ? SQLITE3_INTEGER : SQLITE3_TEXT;
+                $type = is_int($val) ? SQLITE3_INTEGER : SQLITE3_TEXT;
                 $this->_stmt->bindValue($name, $val, $type);
             }
         }

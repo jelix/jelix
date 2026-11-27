@@ -106,7 +106,7 @@ class mysqliDbResultSet extends jDbResultSet
      */
     protected function addParamType($parameter, $dataType)
     {
-        if (is_integer($dataType)) {
+        if (is_int($dataType)) {
             $types = array(
                 PDO::PARAM_INT => 'i',
                 PDO::PARAM_STR => 's',
