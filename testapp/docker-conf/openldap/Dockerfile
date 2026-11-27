@@ -3,7 +3,7 @@
 #
 # from https://github.com/dinkel/docker-openldap
 # -----------------
-FROM debian:bullseye
+FROM debian:trixie
 MAINTAINER Jelix
 
 # properly setup debian sources
