@@ -569,7 +569,7 @@ class Installer
                             $upgrader->postInstall();
                             $this->declareLegacyNewEntryPoint($upgrader);
                         } else {
-                            $databaseHelpers->useDbProfile($component->getDbProfile() ?: $installer->getDefaultDbProfile());
+                            $databaseHelpers->useDbProfile($component->getDbProfile() ?: $upgrader->getDefaultDbProfile());
                             $upgrader->postInstall($helpers);
                         }
                         $component->upgradeFinished($upgrader);
