@@ -4,7 +4,7 @@
  * @subpackage jelix-module
  *
  * @author      Laurent Jouanneau
- * @copyright   2018-2019 Laurent Jouanneau
+ * @copyright   2018-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -97,6 +97,7 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
 
     protected function migrateLocal(Jelix\Installer\Module\API\LocalConfigurationHelpers $helpers)
     {
+        $fmkConfig = $helpers->getFrameworkConfig();
         $ini = $helpers->getProfilesIni();
         foreach ($helpers->getEntryPointsList() as $entryPoint) {
             $this->migrateConfig($entryPoint->getConfigIni()['localentrypoint'], true);
@@ -105,14 +106,14 @@ class jelixModuleConfigurator extends \Jelix\Installer\Module\Configurator
                 if (strpos($section, 'jkvdb:') === 0) {
                     $driver = $ini->getValue('driver', $section);
                     if ($driver == 'redis'
-                        && isset($entryPoint->getConfigObj()->_pluginsPathList_kvdb['redis_php'])
+                        && $fmkConfig->getPluginPathByNameAndType('redis_php', 'kvdb')
                     ) {
                         $ini->setValue('driver', 'redis_php', $section);
                     }
                 } elseif (strpos($section, 'jcache:') === 0) {
                     $driver = $ini->getValue('driver', $section);
                     if ($driver == 'redis'
-                        && isset($entryPoint->getConfigObj()->_pluginsPathList_cache['redis_php'])
+                        && $fmkConfig->getPluginPathByNameAndType('redis_php', 'cache')
                     ) {
                         $ini->setValue('driver', 'redis_php', $section);
                     }

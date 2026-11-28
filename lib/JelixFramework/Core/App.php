@@ -2,39 +2,48 @@
 /**
  * @author     Laurent Jouanneau
  *
+ * @contributor  Olivier Demah
+ *
  * @copyright  2011-2026 Laurent Jouanneau, 2012 Olivier Demah
  *
  * @see       http://jelix.org
+ *
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
 namespace Jelix\Core;
 
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Config\FrameworkRuntimeConfig;
 use Jelix\Core\Infos\FrameworkInfos;
 
 /**
- * @method static void setConfig($config)
- * @method static void declareModulesDir($basePath, $modules = null)
- * @method static string[] getDeclaredModulesDir()
- * @method static void declareModule($modulePath)
- * @method static void clearModulesPluginsPath()
- * @method static void declarePluginsDir($basePath)
- * @method static string[] getEnabledModulesPaths()
- * @method static string[] getAllModulesPath()
- * @method static string[] getAllPluginsPath()
- * @method static null|object loadPlugin($name, $type, $suffix, $classname, $args = null)
- * @method static bool includePlugin($name, $type, $suffix, $classname)
- * @method static bool isModuleEnabled($moduleName)
- * @method static string getModulePath($module)
- * @method static void pushCurrentModule($module)
- * @method static string popCurrentModule()
- * @method static string getCurrentModule()
- * @method static FrameworkInfos getFrameworkInfo()
- * @method static \Jelix\Core\Services services()
- * @method static reloadServices()
- * @method static void declareLocalesDir($basePath)
- * @method static string[] getDeclaredLocalesDir()
+ * @method static void                   setConfig($config, ?FrameworkRuntimeConfig $runtimeConfig = null)
+ * @method static void                   declareModulesDir($basePath, $modules = null)
+ * @method static string[]               getDeclaredModulesDir()
+ * @method static array[]                getDeclaredModulesDirAndModules()
+ * @method static void                   declareModule($modulePath)
+ * @method static void                   clearModulesPluginsPath()
+ * @method static void                   declarePluginsDir($basePath)
+ * @method static string[]               getDeclaredModulePaths()
+ * @method static string[]               getEnabledModulesPaths()
+ * @method static string[]               getAllModulesPath()
+ * @method static string[]               getAllPluginsPath()
+ * @method static string[]               getDeclaredPluginPaths()
+ * @method static null|object            loadPlugin($name, $type, $suffix, $classname, $args = null)
+ * @method static bool                   includePlugin($name, $type, $suffix, $classname)
+ * @method static bool                   isModuleEnabled($moduleName)
+ * @method static string                 getModulePath($module)
+ * @method static void                   pushCurrentModule($module)
+ * @method static string                 popCurrentModule()
+ * @method static string                 getCurrentModule()
+ * @method static string                 mainConfigFile()
+ * @method static FrameworkInfos         getFrameworkInfo()
+ * @method static FrameworkRuntimeConfig getFrameworkConfig()
+ * @method static \Jelix\Core\Services   services()
+ * @method        static                 reloadServices()
+ * @method static void                   declareLocalesDir($basePath)
+ * @method static string[]               getDeclaredLocalesDir()
  */
 class App
 {
@@ -68,12 +77,11 @@ class App
         } else {
             self::$_currentApp = new AppInstance($appPath, $wwwPath, $varPath, $logPath, $configPath);
         }
-        self::$_mainConfigFile = null;
     }
 
     /**
      * return the version of the application containing into a VERSION file
-     * or from `jApp::config()->appVersion` (project.xml or jelix-app.json).
+     * or from `App::config()->appVersion` (project.xml or jelix-app.json).
      * It doesn't read the version from composer.json.
      *
      * @return string
@@ -94,7 +102,7 @@ class App
     }
 
     /**
-     * @return jAppInstance
+     * @return AppInstance
      */
     public static function app()
     {
@@ -113,7 +121,7 @@ class App
 
     public static function appSystemPath($file = '')
     {
-        return self::$_currentApp->appPath.'app/system/'.$file;
+        return self::$_currentApp->appSystemPath.$file;
     }
 
     public static function varPath($file = '')
@@ -143,7 +151,7 @@ class App
 
     public static function tempPath($file = '')
     {
-        return (self::$_currentApp->tempBasePath).(self::$_currentApp->env).$file;
+        return self::$_currentApp->tempBasePath.self::$_currentApp->env.$file;
     }
 
     public static function tempBasePath()
@@ -198,7 +206,7 @@ class App
      *
      * Call it after initPaths
      *
-     * @param object|string $configFile         name of the ini file to configure the framework or a configuration object
+     * @param object|string $configFile         name of the ini file to configure the framework or a configuration object (deprecated, only filename will be supported in the future)
      * @param bool          $enableErrorHandler enable the error handler of jelix.
      *                                          keep it to true, unless you have something to debug
      *                                          and really have to use the default handler or an other handler
@@ -208,36 +216,20 @@ class App
         if ($enableErrorHandler) {
             \jBasicErrorHandler::register();
         }
+
+        self::$_currentApp->checkEnvironment();
+
+        // load framework config
+        $fmkConfig = FrameworkRuntimeConfig::loadForRuntime(self::$_currentApp->varLibPath);
+
+        // load application configuration
         if (is_object($configFile)) {
-            self::setConfig($configFile);
+            // trigger_error('calling App::loadConfig() with object is deprecated', E_USER_DEPRECATED);
+            self::$_currentApp->setConfig($configFile, $fmkConfig);
         } else {
-            self::setConfig(AppConfig::load($configFile));
+            self::$_currentApp->setConfig(AppConfig::load($configFile), $fmkConfig);
         }
         self::$_currentApp->config->enableErrorHandler = $enableErrorHandler;
-    }
-
-    protected static $_mainConfigFile;
-
-    /**
-     * Main config file path.
-     */
-    public static function mainConfigFile()
-    {
-        if (self::$_mainConfigFile) {
-            return self::$_mainConfigFile;
-        }
-
-        $configFileName = self::$_currentApp->appPath.'app/system/mainconfig.ini.php';
-        if (!file_exists($configFileName)) {
-            if (Server::isCLI() && strpos($_SERVER['SCRIPT_FILENAME'], 'installer.php') !== false) {
-                throw new \Exception("Don't find the app/system/mainconfig.ini.php file. You must change your installer.php script. See migration documentation.");
-            }
-
-            throw new \Exception("Don't find the app/system/mainconfig.ini.php file. Low-level upgrade is needed. Launch the installer.");
-        }
-        self::$_mainConfigFile = $configFileName;
-
-        return $configFileName;
     }
 
     /**
@@ -279,7 +271,6 @@ class App
         self::$_currentApp = null;
         self::$_currentApp = array_pop(self::$contextBackup);
         self::$_currentApp->onRestoringAsContext();
-        self::$_mainConfigFile = null;
     }
 
     /**

@@ -70,6 +70,11 @@ class jApp
         return \Jelix\Core\App::varConfigPath($file);
     }
 
+    public static function varLibPath($file = '')
+    {
+        return \Jelix\Core\App::varLibPath($file);
+    }
+
     public static function wwwPath($file = '')
     {
         return \Jelix\Core\App::wwwPath($file);

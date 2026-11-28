@@ -14,28 +14,28 @@ class configureAllResolverTest extends \Jelix\UnitTests\UnitTestCase
     {
         $modInfosJelix = ModuleInfos::load(__DIR__.'/../../../vendor/jelix/jelix-essential/jelix-legacy/core-modules/jelix');
         $modStatusJelix = new ModuleStatus('jelix', '/', [
-            'jelix.installed' => true,
-            'jelix.enabled' => true,
-            'jelix.version' => $modInfosJelix->version,
-            'jelix.dbprofile' => '',
+            'installed' => true,
+            'enabled' => true,
+            'version' => $modInfosJelix->version,
+            'dbprofile' => '',
         ], true);
         $modStatusTestinstall1 = new ModuleStatus('testinstall1', '/', [
-            'testinstall1.installed' => false,
-            'testinstall1.enabled' => false,
-            'testinstall1.version' => '1.0',
-            'testinstall1.dbprofile' => '',
+            'installed' => false,
+            'enabled' => false,
+            'version' => '1.0',
+            'dbprofile' => '',
         ], true);
         $modStatusTestinstall2 = new ModuleStatus('testinstall2', '/', [
-            'testinstall2.installed' => false,
-            'testinstall2.enabled' => false,
-            'testinstall2.version' => '2.0',
-            'testinstall2.dbprofile' => '',
+            'installed' => false,
+            'enabled' => false,
+            'version' => '2.0',
+            'dbprofile' => '',
         ], true);
         $modStatusTestinstall3 = new ModuleStatus('testinstall3', '/', [
-            'testinstall3.installed' => false,
-            'testinstall3.enabled' => false,
-            'testinstall3.version' => '3.0',
-            'testinstall3.dbprofile' => '',
+            'installed' => false,
+            'enabled' => false,
+            'version' => '3.0',
+            'dbprofile' => '',
         ], true);
 
         $modInfosTestinstall1 = ModuleInfos::load(__DIR__.'/../../../modules/testinstall1');

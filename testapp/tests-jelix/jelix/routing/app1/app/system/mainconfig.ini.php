@@ -1,7 +1,5 @@
 ;---
 
-disableInstallers = on
-;enableAllModules = on
 
 [urlengine]
 multiview = off

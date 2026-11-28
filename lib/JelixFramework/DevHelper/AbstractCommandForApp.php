@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2016-2025 Laurent Jouanneau
+ * @copyright   2016-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     MIT
@@ -11,6 +11,8 @@ namespace Jelix\DevHelper;
 
 use Jelix\Core\App;
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Config\FrameworkConfigCompiler;
+use Jelix\Core\Config\FrameworkConfigForInstaller;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -122,6 +124,17 @@ abstract class AbstractCommandForApp extends AbstractCommand
         return substr($ep, 0, $p);
     }
 
+    protected function getFrameworkConfig() : FrameworkConfigForInstaller
+    {
+        $compiler = new FrameworkConfigCompiler(
+            App::app(),
+            $this->getFrameworkInfos(),
+            App::varConfigPath('installer.ini.php'),
+        );
+
+        return $compiler->compileForInstaller();
+    }
+
     protected function loadAppConfig($epId)
     {
         $entrypoint = $this->getFrameworkInfos()->getEntryPointInfo($epId);
@@ -129,9 +142,10 @@ abstract class AbstractCommandForApp extends AbstractCommand
             throw new \Exception($this->getName().": Entry point {$epId} is unknown");
         }
 
+        $fmkConfig = $this->getFrameworkConfig();
         $configFile = $entrypoint->getConfigFile();
 
-        App::setConfig(AppConfig::loadForCli($configFile, $entrypoint->getFile()));
+        App::setConfig(AppConfig::loadForCli($configFile, $fmkConfig, $entrypoint->getFile()), $fmkConfig);
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);
     }
 
@@ -144,17 +158,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
      */
     protected function getModulePath($module)
     {
-        $config = App::config();
-        if (!$config) {
-            $this->loadAppConfig($this->selectedEntryPointId);
-            $config = App::config();
-        }
-
-        if (!isset($config->_modulesPathList[$module])) {
-            throw new \Exception($this->getName().": The module {$module} doesn't exist");
-        }
-
-        return $config->_modulesPathList[$module];
+        return $this->getFrameworkConfig()->getModulePath($module);
     }
 
     protected function getFrameworkInfos()
@@ -224,7 +228,7 @@ abstract class AbstractCommandForApp extends AbstractCommand
             } elseif (file_exists(\Jelix\Core\App::appPath('application.init.php'))) {
                 // we modify the application.init.php directly
                 $content = file_get_contents(\Jelix\Core\App::appPath('application.init.php'));
-                $content .= "\njApp::declareModulesDir(__DIR__.'/".$path."');\n";
+                $content .= "\n\\Jelix\\Core\\App::declareModulesDir(__DIR__.'/".$path."');\n";
                 file_put_contents(\Jelix\Core\App::appPath('application.init.php'), $content);
                 if ($this->verbose()) {
                     $this->output->writeln('<notice>The given modules dir has been added into your application.init.php.</notice>');

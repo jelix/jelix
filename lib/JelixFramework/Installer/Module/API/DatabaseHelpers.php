@@ -1,9 +1,11 @@
 <?php
+
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2025 Laurent Jouanneau
+ * @copyright   2008-2026 Laurent Jouanneau
  *
  * @see        http://jelix.org
+ *
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -13,6 +15,7 @@ use Jelix\Dao\DbMapper;
 use Jelix\DaoUtils\DaoContext;
 use Jelix\Database\AbstractConnection;
 use Jelix\Database\Schema\SqlToolsInterface;
+use Jelix\Installer\GlobalSetup;
 
 /**
  * Trait for installer/configurator classes.
@@ -34,11 +37,11 @@ class DatabaseHelpers
     /**
      * global setup.
      *
-     * @var \Jelix\Installer\GlobalSetup
+     * @var GlobalSetup
      */
     protected $globalSetup;
 
-    public function __construct(\Jelix\Installer\GlobalSetup $setup)
+    public function __construct(GlobalSetup $setup)
     {
         $this->globalSetup = $setup;
     }
@@ -119,7 +122,7 @@ class DatabaseHelpers
         $tools = $this->dbTool();
 
         if ($module) {
-            $conf = $this->globalSetup->getMainEntryPoint()->getConfigObj()->_modulesPathList;
+            $conf = $this->globalSetup->getFrameworkConfig()->getEnabledModulesPathsList();
             if (!isset($conf[$module])) {
                 throw new \Exception('execSQLScript : invalid module name');
             }
@@ -155,9 +158,6 @@ class DatabaseHelpers
         }
     }
 
-    /**
-     * @param $selectorStr
-     */
     public function createTableFromDao($selectorStr)
     {
         $cnt = $this->dbConnection();
@@ -173,18 +173,14 @@ class DatabaseHelpers
      * @param int        $option             one of SqlToolsInterface::IBD_* const
      * @param null|mixed $module
      *
-     * @throws \Exception
-     *
      * @return int number of records inserted/updated
+     *
+     * @throws \Exception
      */
     public function insertDaoData($relativeSourcePath, $option, $module = null)
     {
         if ($module) {
-            $conf = $this->globalSetup->getMainEntryPoint()->getModulesList();
-            if (!isset($conf[$module])) {
-                throw new \Exception('insertDaoData : invalid module name');
-            }
-            $path = $conf[$module];
+            $path = $this->globalSetup->getFrameworkConfig()->getModulePath($module);
         } else {
             $path = $this->globalSetup->getCurrentModulePath();
         }

@@ -9,6 +9,7 @@
 
 namespace Jelix\Scripts;
 
+use Jelix\Core\App;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -57,7 +58,7 @@ class InstallerCommand extends Command
             $output->writeln('<error>Content of the temp directory cannot be removed because of this error:</error>');
             $output->writeln('<error>'.$e->getMessage().'</error>');
             $code = $e->getCode();
-            $output->writeln('<comment>You MUST delete files into '.\jApp::tempBasePath().'</comment>');
+            $output->writeln('<comment>You MUST delete files into '.App::tempBasePath().'</comment>');
             if ($code == 4 || $code == 5) {
                 $output->writeln('Fix rights on directories, then run:');
                 $output->writeln('   php console.php app:cleartemp');

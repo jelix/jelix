@@ -1,19 +1,22 @@
 <?php
+
 /**
  * @author    Laurent Jouanneau
- * @copyright 2024-2025 Laurent Jouanneau
+ * @copyright 2024-2026 Laurent Jouanneau
  *
  * @see       https://www.jelix.org
+ *
  * @licence   GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
 namespace Jelix\Core\Config;
 
 use Jelix\Core\AppInstance;
+use Jelix\Core\Infos\FrameworkInfos;
+use Jelix\IniFile\Util as IniFileMgr;
 use Jelix\Installer\WarmUp\FilePlace;
 use Jelix\Installer\WarmUp\FilePlaceEnum;
 use Jelix\Installer\WarmUp\WarmUpLauncherInterface;
-use Jelix\IniFile\Util as IniFileMgr;
 
 /**
  * Launch the compilation of configuration file to generate
@@ -22,15 +25,10 @@ use Jelix\IniFile\Util as IniFileMgr;
  */
 class ConfigurationWarmUp implements WarmUpLauncherInterface
 {
-    /**
-     * @var AppInstance
-     */
-    protected $app;
-
-    public function __construct(AppInstance $app)
-    {
-        $this->app = $app;
-    }
+    public function __construct(
+        protected AppInstance $app,
+        protected FrameworkInfos $frameworkInfos
+    ) {}
 
     public function getLaunchSteps()
     {
@@ -38,20 +36,17 @@ class ConfigurationWarmUp implements WarmUpLauncherInterface
     }
 
     /**
-     * Generates the static configuration file
-     *
-     * @return void
+     * Generates the static configuration file.
      */
     public function launch(array $modulesList, int $step): void
     {
         \jFile::createDir($this->app->varLibPath.'config/');
-        
-        foreach($this->app->getFrameworkInfo()->getEntryPoints() as $ep)
-        {
-            $staticConfigFile = $this->app->varLibPath.AppConfig::getStaticBuildFilename($ep->getConfigFile());
-            $compiler = new Compiler($ep->getConfigFile());
 
-            $config = $compiler->readStaticConfiguration(false);
+        foreach ($this->frameworkInfos->getEntryPoints() as $ep) {
+            $staticConfigFile = $this->app->varLibPath.AppConfig::getStaticBuildFilename($ep->getConfigFile());
+
+            $compiler = new Compiler($this->app, $ep->getConfigFile());
+            $config = $compiler->readStaticConfiguration($this->app->getFrameworkConfig());
 
             // if bytecode cache is enabled, it's better to store configuration
             // as PHP code, reading performance are much better than reading
@@ -71,24 +66,24 @@ class ConfigurationWarmUp implements WarmUpLauncherInterface
         }
     }
 
-
-    public function doesItSupportFile(FilePlace $file) : bool
+    public function doesItSupportFile(FilePlace $file): bool
     {
         if ($file->place != FilePlaceEnum::App && $file->place != FilePlaceEnum::Var) {
             return false;
         }
-        if ( ($file->place == FilePlaceEnum::App && str_starts_with($file->subPath, 'system/'))
+        if (($file->place == FilePlaceEnum::App && str_starts_with($file->subPath, 'system/'))
             || ($file->place == FilePlaceEnum::Var && str_starts_with($file->subPath, 'config/'))) {
             return str_ends_with($file->filePath, '.ini.php');
         }
+
         return false;
     }
 
-    public function launchOnFile(FilePlace $file) : void
+    public function launchOnFile(FilePlace $file): void
     {
         // XXX we could improve performance, by compiling only the static
         // file corresponding to an entrypoint, when the file is the config file
         // of an entrypoint
-        $this->launch([], 0);
+        $this->launch(array(), 0);
     }
 }

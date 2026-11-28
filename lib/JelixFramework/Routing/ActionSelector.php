@@ -100,9 +100,10 @@ class ActionSelector extends FastActionSelector
 
     protected function _createPath()
     {
-        $conf = App::config();
-        if (isset($conf->_modulesPathList[$this->module])) {
-            $p = $conf->_modulesPathList[$this->module];
+        $modules = App::getEnabledModulesPaths();
+
+        if (isset($modules[$this->module])) {
+            $p = $modules[$this->module];
         } else {
             throw new Exception('jelix~errors.selector.module.unknown', $this->toString());
         }

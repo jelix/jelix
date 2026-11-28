@@ -3,7 +3,7 @@
  * @author      Laurent Jouanneau
  * @contributor Julien Issler
  *
- * @copyright   2008-2025 Laurent Jouanneau
+ * @copyright   2008-2026 Laurent Jouanneau
  * @copyright   2015 Julien Issler
  *
  * @see        http://jelix.org
@@ -102,7 +102,8 @@ class InitAdmin extends \Jelix\DevHelper\AbstractCommandForApp
             }
         }
 
-        App::setConfig(AppConfig::loadForCli($ep->getConfigFile(), $ep->getFile()));
+        $fmkConfig = $this->getFrameworkConfig();
+        App::setConfig(AppConfig::loadForCli($ep->getConfigFile(), $fmkConfig, $ep->getFile()), $fmkConfig);
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);
 
         $installConfig = new \Jelix\IniFile\IniModifier(App::varConfigPath('installer.ini.php'));

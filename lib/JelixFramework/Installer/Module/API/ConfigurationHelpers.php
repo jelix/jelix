@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018-2023 Laurent Jouanneau
+ * @copyright   2018-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -9,6 +9,7 @@
 
 namespace Jelix\Installer\Module\API;
 
+use Jelix\Core\Config\FrameworkConfigForInstaller;
 use Jelix\Installer\Module\InteractiveConfigurator;
 use Jelix\Core\App;
 
@@ -65,6 +66,11 @@ class ConfigurationHelpers extends PreConfigurationHelpers
         return array_map(function ($ep) use ($globalSetup, $flc) {
             return new \Jelix\Installer\EntryPointConfigurator($ep, $globalSetup, $flc);
         }, $list);
+    }
+
+    public function getFrameworkConfig() : FrameworkConfigForInstaller
+    {
+        return $this->globalSetup->getFrameworkConfig();
     }
 
     /**

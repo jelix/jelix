@@ -4,6 +4,11 @@ Changes into Jelix 1.8
 Next
 ----
 
+- fix(webassets) bad support of revision parameters on module assets.
+- fix usage of deprecated functions with PHP 8.6
+- fix installer: `.dbprofile` into the module configuration was not taken account when the module installer
+  defined a default db profile
+
 1.8.29
 ------
 

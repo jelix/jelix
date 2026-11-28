@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2008-2025 Laurent Jouanneau
+ * @copyright   2008-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -10,6 +10,7 @@
 namespace Jelix\Installer;
 
 use Jelix\Core\Config\Compiler;
+use Jelix\Core\Config\FrameworkConfigCompiler;
 use Jelix\Core\Profiles;
 use Jelix\Dependencies\Item;
 use Jelix\Dependencies\ItemException;
@@ -117,7 +118,7 @@ class Installer
 
         $this->mainEntryPoint = $globalSetup->getMainEntryPoint();
 
-        $this->warmUp = new WarmUp(App::app());
+        $this->warmUp = new WarmUp(App::app(), $globalSetup->getFrameworkInfos());
     }
 
     public static function setModuleAsInstalled($moduleName, $initialVersion, $versionDate)
@@ -165,7 +166,7 @@ class Installer
         }
 
         $result = $this->_installModules($modulesChains);
-
+        $this->globalSetup->getInstallerIni()->save();
 
         $this->endMessage();
 
@@ -182,7 +183,7 @@ class Installer
     protected function _installModules($modulesChain)
     {
         $this->notice('install.start');
-        App::setConfig($this->mainEntryPoint->getConfigObj());
+        App::setConfig($this->mainEntryPoint->getConfigObj(), $this->globalSetup->getFrameworkConfig());
 
         $this->enabledModules = array_map(function($module) {
             return $module->getPath();
@@ -211,6 +212,15 @@ class Installer
         } else {
             $this->ok('install.end');
         }
+
+        // compile framework config for runtime
+        $compiler = new FrameworkConfigCompiler(
+            App::app(),
+            $this->globalSetup->getFrameworkInfos(),
+            $this->globalSetup->getInstallerIni()->getFileName(),
+        );
+        $fmkConfig = $compiler->compileForRuntime();
+        $fmkConfig->saveForRuntime(App::varLibPath());
 
         return $result;
     }
@@ -361,10 +371,11 @@ class Installer
                 list($installer, $component, $action) = $item;
                 $saveConfigIni = false;
                 $this->globalSetup->setCurrentProcessedModule($component->getName());
+                $warmUpStep =  WarmUpLauncherInterface::STEP_MODULE_INSTALL;
 
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
-                        $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $databaseHelpers->useDbProfile($component->getDbProfile() ?: $installer->getDefaultDbProfile());
                         $installer->install($helpers);
                         $saveConfigIni = true;
                     }
@@ -396,13 +407,12 @@ class Installer
                     );
                     $this->ok('install.module.installed', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
-                    $this->warmUp->launch([$component->getName() => $component->getPath()], WarmUpLauncherInterface::STEP_MODULE_INSTALL);
 
                 } elseif ($action == Resolver::ACTION_UPGRADE) {
                     $lastversion = '';
                     /** @var \Jelix\Installer\Module\Installer $upgrader */
                     foreach ($installer as $upgrader) {
-                        $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $databaseHelpers->useDbProfile($component->getDbProfile() ?: $upgrader->getDefaultDbProfile());
                         $upgrader->install($helpers);
                         $saveConfigIni = true;
 
@@ -463,11 +473,10 @@ class Installer
                         array($component->getName(), $component->getSourceVersion())
                     );
                     $installedModules[] = array($installer, $component, $action);
-                    $this->warmUp->launch([$component->getName() => $component->getPath()], WarmUpLauncherInterface::STEP_MODULE_INSTALL);
 
                 } elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
-                        $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $databaseHelpers->useDbProfile($component->getDbProfile() ?: $installer->getDefaultDbProfile());
                         $installer->uninstall($helpers);
                         $saveConfigIni = true;
                     }
@@ -479,12 +488,13 @@ class Installer
                     $this->ok('install.module.uninstalled', $component->getName());
                     $installedModules[] = array($installer, $component, $action);
 
-                    $this->warmUp->launch([$component->getName() => $component->getPath()], WarmUpLauncherInterface::STEP_MODULE_UNINSTALL);
+                    $warmUpStep = WarmUpLauncherInterface::STEP_MODULE_UNINSTALL;
                 }
 
                 if ($saveConfigIni) {
                     $this->saveConfigurationFiles($this->mainEntryPoint);
                 }
+                $this->warmUp->launch([$component->getName() => $component->getPath()], $warmUpStep);
             }
         } catch (Exception $e) {
             $result = false;
@@ -524,21 +534,21 @@ class Installer
 
                 if ($action == Resolver::ACTION_INSTALL) {
                     if ($installer) {
-                        $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $databaseHelpers->useDbProfile($component->getDbProfile() ?: $installer->getDefaultDbProfile());
                         $installer->postInstall($helpers);
                         $component->installFinished();
                         $saveConfigIni = true;
                     }
                 } elseif ($action == Resolver::ACTION_UPGRADE) {
                     foreach ($installer as $upgrader) {
-                        $databaseHelpers->useDbProfile($upgrader->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $databaseHelpers->useDbProfile($component->getDbProfile() ?: $upgrader->getDefaultDbProfile());
                         $upgrader->postInstall($helpers);
                         $component->upgradeFinished($upgrader);
                         $saveConfigIni = true;
                     }
                 } elseif ($action == Resolver::ACTION_REMOVE) {
                     if ($installer) {
-                        $databaseHelpers->useDbProfile($installer->getDefaultDbProfile() ?: $component->getDbProfile());
+                        $databaseHelpers->useDbProfile($component->getDbProfile() ?: $installer->getDefaultDbProfile());
                         $installer->postUninstall($helpers);
                         $component->uninstallFinished();
                         $saveConfigIni = true;
@@ -575,13 +585,14 @@ class Installer
         if ($fullConfig->isModified()) {
             $fullConfig->save();
 
+            $fmkConfig = $this->globalSetup->getFrameworkConfig(true);
+
             // we re-load configuration file for each module because
-            // previous module installer could have modify it.
-            $compiler = new Compiler($entryPoint->getConfigFileName(), $entryPoint->getScriptName());
-            $entryPoint->setConfigObj($entryPoint->isCliScript() ?
-                $compiler->readForCli(true) : $compiler->read(true)
+            // previous module installer could have modifying it.
+            $compiler = new Compiler(App::app(), $entryPoint->getConfigFileName(), $entryPoint->getScriptName());
+            $entryPoint->setConfigObj($compiler->read($fmkConfig)
             );
-            App::setConfig($entryPoint->getConfigObj());
+            App::setConfig($entryPoint->getConfigObj(), $fmkConfig);
         }
 
         foreach($this->globalSetup->getEntryPointsList() as $ep) {

@@ -1,9 +1,11 @@
 <?php
+
 /**
  * @author     Laurent Jouanneau
  * @copyright  2014-2026 Laurent Jouanneau
  *
  * @see       http://jelix.org
+ *
  * @licence    http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public Licence, see LICENCE file
  */
 
@@ -12,8 +14,9 @@ namespace Jelix\Core\Infos;
 use Jelix\IniFile\IniModifier;
 
 /**
- * Allow to read and modify framework.ini.php and localframework.ini.php files
+ * Allow to read and modify framework.ini.php and localframework.ini.php files.
  *
+ * See  ../Config/framework.ini.php to know the structure of the ini file.
  */
 class FrameworkInfos
 {
@@ -42,7 +45,6 @@ class FrameworkInfos
      */
     protected $defaultEntryPoint = '';
 
-
     /**
      * @var ModuleStatusDeclaration[]
      */
@@ -62,15 +64,15 @@ class FrameworkInfos
      * FrameworkInfos constructor.
      *
      * @param string $frameworkFile      the path to the framework.ini.php file
-     * @param string $localFrameworkFile      the path to the localframework.ini.php file
+     * @param string $localFrameworkFile the path to the localframework.ini.php file
      */
     public function __construct($frameworkFile, $localFrameworkFile = '')
     {
-        $this->iniFile = new IniModifier($frameworkFile, ';<'.'?php die(\'\');?'.'>');
+        $this->iniFile = new IniModifier($frameworkFile, ';<?php die(\'\');?>');
         $this->readIniFile($this->iniFile);
 
         if ($localFrameworkFile != '') {
-            $this->iniLocalFile = new IniModifier($localFrameworkFile, ';<'.'?php die(\'\');?'.'>');
+            $this->iniLocalFile = new IniModifier($localFrameworkFile, ';<?php die(\'\');?>');
             $this->readIniFile($this->iniLocalFile, true);
         }
 
@@ -88,17 +90,22 @@ class FrameworkInfos
     {
         foreach ($iniFile->getSectionList() as $section) {
 
-            if (preg_match('/^module\\:(.*)$/', $section, $m)) {
+            if (preg_match('/^module\:(.*)$/', $section, $m)) {
                 $name = $m[1];
                 $values = $iniFile->getValues($section);
                 if ($values) {
                     $module = new ModuleStatusDeclaration($name, $values, !$isLocal);
                     $this->addModule($module);
                 }
+
                 continue;
             }
 
-            if (!preg_match('/^entrypoint\\:(.*)$/', $section, $m)) {
+            if ($section == 'installation') {
+                continue;
+            }
+
+            if (!preg_match('/^entrypoint\:(.*)$/', $section, $m)) {
                 continue;
             }
             $name = $m[1];
@@ -187,6 +194,7 @@ class FrameworkInfos
 
         $this->localEntrypoints[$fileName] = new EntryPoint($fileName, $configFileName, $type);
         $this->localEntrypoints[$fileName]->setAsLocal();
+
         return $this->localEntrypoints[$fileName];
     }
 
@@ -221,8 +229,7 @@ class FrameworkInfos
     {
         if ($module->isNative) {
             $this->modules[$module->name] = $module;
-        }
-        else {
+        } else {
             if (!$this->iniLocalFile) {
                 throw new \UnexpectedValueException('no local framework ini file has been given to FrameworkInfos.Cannot declare modules installed locally.');
             }
@@ -239,8 +246,7 @@ class FrameworkInfos
         if ($module->isNative) {
             $this->modules[$module->name] = $module;
             unset($this->localModules[$module->name]);
-        }
-        else {
+        } else {
             if (!$this->iniLocalFile) {
                 throw new \UnexpectedValueException('no local framework ini file has been given to FrameworkInfos.Cannot declare modules installed locally.');
             }
@@ -249,8 +255,7 @@ class FrameworkInfos
         $path = $module->path;
         if ($path != '') {
             $this->allDeclaredModulePaths[$module->name] = $path;
-        }
-        else {
+        } else {
             unset($this->allDeclaredModulePaths[$module->name]);
         }
     }
@@ -286,7 +291,8 @@ class FrameworkInfos
                 $nativeModule->isEnabled
             );
         }
-        return null;
+
+        return $nativeModule;
     }
 
     public function removeModule($name)
@@ -300,17 +306,54 @@ class FrameworkInfos
     }
 
     /**
+     * Give all modules declared into framework.ini.php and localframework.ini.php.
+     *
      * @return ModuleStatusDeclaration[]
      */
     public function getModules()
     {
-        return array_merge($this->modules, $this->localModules);
+        $modules = $this->modules;
+
+        foreach ($this->localModules as $name => $localModule) {
+            if (isset($modules[$name])) {
+                $combinedValues = array_merge(
+                    $modules[$name]->getValuesForIni(),
+                    $localModule->getValuesForIni()
+                );
+                $modules[$name] = new ModuleStatusDeclaration(
+                    $name,
+                    $combinedValues,
+                    // the module is considered as native if it is enabled
+                    // into the framework.ini.php.
+                    $modules[$name]->isEnabled
+                );
+            } else {
+                $modules[$name] = $localModule;
+            }
+        }
+
+        return $modules;
+    }
+
+    public function getModulesPaths()
+    {
+        $modules = array_map(function (ModuleStatusDeclaration $mod) {
+            return $mod->path;
+        }, $this->modules);
+
+        foreach ($this->localModules as $name => $localModule) {
+            $modules[$name] = $localModule->path;
+        }
+
+        return $modules;
     }
 
     /**
-     * @return array list of module having a specific path. keys are module names, values are paths
+     * list of module having a specific path declared into framework.ini.
+     *
+     * @return array . keys are module names, values are paths
      */
-    public function getSpecifiedModulePaths()
+    public function getModulesDeclaredPaths()
     {
         return $this->allDeclaredModulePaths;
     }
@@ -334,6 +377,10 @@ class FrameworkInfos
             $this->updateModuleSection($this->iniFile, $module);
         }
 
+        // remove deprecated configuration parameters
+        $this->iniFile->removeValue('enableAllModules', 'installation');
+        $this->iniFile->removeValue('disableInstallers', 'installation');
+
         if ($this->iniLocalFile) {
             foreach ($this->localEntrypoints as $item) {
                 $this->updateEntrypointSection($this->iniLocalFile, $item);
@@ -347,11 +394,6 @@ class FrameworkInfos
 
     }
 
-    /**
-     * @param IniModifier $ini
-     * @param EntryPoint $ep
-     * @return void
-     */
     protected function updateEntrypointSection(IniModifier $ini, EntryPoint $ep)
     {
         $sectionName = 'entrypoint:'.$ep->getFile();
@@ -372,19 +414,17 @@ class FrameworkInfos
         // if the section is already there, we should not do a setValues, else
         // the file will be marked as "modified" and will be rewritten.
         // we don't want that for framework.ini.php if we are in a local mode.
-        if (!$previous ||
-            $defaultChanged ||
-            $values['config'] != $previous['config'] ||
-            $values['type'] != $previous['type'])
-        {
+        if (!$previous
+            || $defaultChanged
+            || $values['config'] != $previous['config']
+            || $values['type'] != $previous['type']) {
             $ini->setValues($values, $sectionName);
         }
     }
 
-
     protected function updateModuleSection(IniModifier $ini, ModuleStatusDeclaration $module)
     {
-        $sectionName = 'module:' . $module->name;
+        $sectionName = 'module:'.$module->name;
         $values = $module->getValuesForIni();
         $previous = $ini->getValues($sectionName);
 
@@ -394,13 +434,12 @@ class FrameworkInfos
         $newValues = $values;
         sort($newValues);
         sort($previous);
-        if (!$previous ||
-            $newValues != $previous
-        ){
+        if (!$previous
+            || $newValues != $previous
+        ) {
             $ini->setValues($values, $sectionName);
         }
     }
-
 
     /**
      * create a new FrameworkInfos object.

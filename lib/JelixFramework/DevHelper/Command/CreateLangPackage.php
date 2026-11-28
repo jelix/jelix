@@ -3,7 +3,7 @@
  * @author      Florian Lonqueu-Brochard
  * @contributor Laurent Jouanneau
  *
- * @copyright   2011 Florian Lonqueu-Brochard, 2011-2023 Laurent Jouanneau
+ * @copyright   2011 Florian Lonqueu-Brochard, 2011-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU General Public Licence see LICENCE file or http://www.gnu.org/licenses/gpl.html
@@ -55,7 +55,7 @@ class CreateLangPackage extends \Jelix\DevHelper\AbstractCommandForApp
         }
         $lang = $input->getArgument('lang');
 
-        foreach ($config->_modulesPathList as $module => $dir) {
+        foreach ($this->getFrameworkConfig()->getEnabledModulePathsList() as $module => $dir) {
             $source_dir = $dir.'locales/'.$model_lang.'/';
             if (!file_exists($source_dir)) {
                 continue;

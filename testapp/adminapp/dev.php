@@ -1,11 +1,12 @@
 <?php
 /**
- * @package  jelix
- * @author   Laurent Jouanneau
- * @contributor
- * @copyright 2011-2018 Laurent Jouanneau
- * @link     http://jelix.org
- * @licence  http://www.gnu.org/licenses/gpl.html GNU General Public Licence, see LICENCE file
+ * Script executing commands for application developers
+ *
+ * These are commands to help to develop an application
+ * based on the Jelix framework.
+ *
+ * If you are not a developer, see the console.php scripts
+ * for user commands.
  */
 use Jelix\DevHelper\JelixCommands;
 
@@ -15,7 +16,10 @@ require (__DIR__.'/application.init.php');
 
 $application = JelixCommands::setup();
 
-// here you can add commands to $application
-
+if (file_exists(App::appPath('app/devcommands.php'))) {
+    // devcommands is supposed to add commands to $application
+    include(App::appPath('app/devcommands.php'));
+}
 
 exit(JelixCommands::launch($application));
+

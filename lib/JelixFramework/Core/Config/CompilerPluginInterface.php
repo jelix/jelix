@@ -33,8 +33,12 @@ interface CompilerPluginInterface
     /**
      * called for each activated modules.
      *
-     * @param object                        $config the configuration object
-     * @param \Jelix\Core\Infos\ModuleInfos $module the module data
+     * @param object    $config     the configuration object
+     * @param string    $moduleName the module name
+     * @param string    $modulePath the path to the module directory
+     * @param \SimpleXMLElement $moduleXml  the xml object representing the content of module.xml of the module
+     *
+     * @deprecated will be removed, prefere to use a warmup component
      */
     public function onModule($config, \Jelix\Core\Infos\ModuleInfos $module);
 

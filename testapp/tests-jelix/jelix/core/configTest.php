@@ -1,23 +1,74 @@
 <?php
 
-class fakeConfigCompiler extends \Jelix\Core\Config\Compiler {
+use Jelix\Core\App;
+use Jelix\Core\Config\FrameworkConfigCompiler;
+use Jelix\Core\Infos\FrameworkInfos;
+use Jelix\Core\Infos\ModuleStatusDeclaration;
+use Jelix\IniFile\IniModifier;
 
-    function test_read_module_info($config, $allModuleInfo, $path, &$installation) {
-        $this->_readModuleInfo($config, $allModuleInfo, $path, $installation);
+class fakeConfigCompiler extends FrameworkConfigCompiler {
+
+    protected $installationData;
+
+    public function __construct($installationData, $frameworkIniContent = '')
+    {
+
+        $this->installationData = $installationData;
+        if ($frameworkIniContent !== '') {
+            $fmkInfo = new testFrameworkInfosWithString($frameworkIniContent);
+        }
+        else {
+            $fmkInfo = FrameworkInfos::load();
+        }
+        parent::__construct(App::app(), $fmkInfo, '');
+
+    }
+
+    protected function readInstallerFile($forInstaller)
+    {
+        return $this->installationData;
+    }
+
+    function test_read_module_info($moduleName, ?ModuleStatusDeclaration $moduleStatusDecl, $installationMode, $path, &$installation) {
+        return $this->_readModuleInfo($moduleName, $moduleStatusDecl, $installationMode, $path, $installation);
+    }
+
+    function getAllModulesPathsList() {
+        return $this->allModulesPathsList;
+    }
+
+    function getEnabledModulesPathsList() {
+        return $this->enabledModulesPathList;
     }
 }
 
 class fakeConfig {
-    public $modules = array();
-    public $_allModulesPathList = array();
-    public $_modulesPathList = array();
-    public $_externalModulesPathList = array();
-    public $pluginsPath = '';
-    public $modulesPath = '';
-    public $disableInstallers = false;
-    public $enableAllModules = false;
+
 }
 
+class testFrameworkInfosWithString extends FrameworkInfos {
+
+    public function __construct($frameworkFileContent, $localFrameworkFileContent = '')
+    {
+        $this->iniFile = new IniModifier(jApp::tempPath('framework.test.ini.php'), $frameworkFileContent);
+        $this->readIniFile($this->iniFile);
+
+        if ($localFrameworkFileContent != '') {
+            $this->iniLocalFile = new IniModifier(jApp::tempPath('localframework.test.ini.php'), $localFrameworkFileContent);
+            $this->readIniFile($this->iniLocalFile, true);
+        }
+
+        if (!$this->defaultEntryPoint && count($this->entrypoints)) {
+            $ep = $this->getEntryPointInfo('index');
+            if (!$ep) {
+                $epid = array_keys($this->entrypoints)[0];
+                $ep = $this->getEntryPointInfo($epid);
+            }
+            $this->defaultEntryPoint = $ep->getId();
+        }
+    }
+
+}
 
 class configTest extends \Jelix\UnitTests\UnitTestCase {
 
@@ -43,181 +94,91 @@ class configTest extends \Jelix\UnitTests\UnitTestCase {
     }
 
 
-    /**
-     */
-    function testReadModuleInfoUnknowPath() {
-        $config = new fakeConfig();
-        $modulePath = '/foo/bar';
-        $installation = array('modules'=>array());
-        $compiler = new fakeConfigCompiler();
-        $this->expectException(\Exception::class);
-        $compiler->test_read_module_info($config, false, $modulePath, $installation);
-        $this->assertEquals(0, count(array_keys($config->modules)));
-        $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(0, count(array_keys($installation['modules'])));
-    }
-
-    /**
-     */
-    function testReadModuleInfoNotAModule() {
-        $config = new fakeConfig();
-        $modulePath = __DIR__;
-        $installation = array('modules'=>array());
-        $compiler = new fakeConfigCompiler();
-        $this->expectException(\Exception::class);
-        $compiler->test_read_module_info($config, false, $modulePath, $installation);
-        $this->assertEquals(0, count(array_keys($config->modules)));
-        $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(0, count(array_keys($installation['modules'])));
-    }
-
-    function testReadModuleInfoOldModuleNotActivated() {
-        $config = new fakeConfig();
-        $modulePath = realpath(__DIR__.'/app/modules/simple');
-        $installation = array('modules'=>array());
-        $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation);
-        $this->assertEquals(array(
-                                'simple.enabled' => false,
-                                ), $config->modules);
-        $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(array('simple.installed' => 0), $installation['modules']);
-    }
-
-    function testReadModuleInfoOldModuleActivatedNotInstalled() {
-        $config = new fakeConfig();
-        $config->modules = array('simple.enabled'=>1);
-        $modulePath = realpath(__DIR__.'/app/modules/simple');
-        $installation = array('modules'=>array());
-        $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation);
-        $this->assertEquals(array('simple.installed' => 0), $installation['modules']);
-        $this->assertEquals(array(
-                                'simple.enabled' => false,
-                                ), $config->modules);
-        $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-    }
-
-    function testReadModuleInfoOldModuleActivatedInstalled() {
-        $config = new fakeConfig();
-        $config->modules = array('simple.enabled'=>1);
-        $modulePath = realpath(__DIR__.'/app/modules/simple').'/';
-        $installation = array('modules'=>array('simple.installed'=>1));
-        $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation);
-        $this->assertEquals(array('simple.installed' => 1), $installation['modules']);
-        $this->assertEquals(array(
-                                'simple.enabled' => true,
-                                'simple.dbprofile' => 'default'
-                                ), $config->modules);
-        $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-
-        // with all modules info
-        $config = new fakeConfig();
-        $config->modules = array('simple.enabled'=>1);
-        $installation = array('modules'=>array('simple.installed'=>1));
-        $compiler->test_read_module_info($config, true, $modulePath, $installation);
-        $this->assertEquals(array('simple.installed' => 1,
-                                    'simple.version' => '',
-                                    'simple.dataversion' => ''
-                                  ), $installation['modules']);
-        $this->assertEquals(array(
-                                'simple.enabled' => true,
-                                'simple.dbprofile' => 'default',
-                                'simple.version' => '',
-                                'simple.dataversion' => '',
-                                'simple.installed' => 1,
-                                'simple.installparam' => Array (
-                                    'foo' => 'bar'
-                                )
-                                ), $config->modules);
-        $this->assertEquals(array('simple'=>$modulePath), $config->_allModulesPathList);
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-
-    }
-
-    function testReadModuleInfoNewModuleNotActivated()
+    function testReadModuleInfoOldModuleNotActivated()
     {
-        $config = new fakeConfig();
-        $modulePath = realpath(__DIR__.'/app/modules/package').'/';
         $installation = array('modules'=>array());
-        $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation);
-        $this->assertEquals(array(
-                                'thepackage.enabled' => false
-                                ), $config->modules);
-        $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(array('thepackage.installed' => 0), $installation['modules']);
+        $compiler = new fakeConfigCompiler($installation,
+        "
+[module:simple]
+enabled=on
+"
+        );
+        $fmkConfig = $compiler->compileForRuntime();
+
+        // no data into installer, so not installed, so disable the module
+        $this->assertFalse($fmkConfig->isModuleEnabled('simple'));
+
+        $fmkConfig = $compiler->compileForInstaller();
+        // For the installation, the module is enabled, so it can be installed
+        $this->assertTrue($fmkConfig->isModuleEnabled('simple'));
+        $this->assertEquals(array('jelix', 'package', 'complex', 'simple'), array_keys($fmkConfig->getAllModulesPathsList()));
+        $this->assertEquals(['jelix', 'simple'], array_keys($fmkConfig->getEnabledModulesPathsList()));
     }
 
-    function testReadModuleInfoNewModuleActivatedNotInstalled() {
-        $config = new fakeConfig();
-        $config->modules = array('thepackage.enabled'=>1);
-        $modulePath = realpath(__DIR__.'/app/modules/package').'/';
+    function testReadModuleInfoOldModuleActivatedNotInstalled()
+    {
         $installation = array('modules'=>array());
-        $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation);
-        $this->assertEquals(array('thepackage.installed' => 0), $installation['modules']);
-        $this->assertEquals(array(
-                                'thepackage.enabled' => false
-                                ), $config->modules);
-        $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
+        $compiler = new fakeConfigCompiler($installation,
+            "
+[module:simple]
+enabled=on
+");
+        $fmkConfig = $compiler->compileForRuntime();
+
+        // no data into installer, so not installed, so disable the module
+        $this->assertFalse($fmkConfig->isModuleEnabled('simple'));
+
+        $fmkConfig = $compiler->compileForInstaller();
+
+        // For the installation, the module is enabled, so it can be installed
+        $this->assertTrue($fmkConfig->isModuleEnabled('simple'));
+        $this->assertEquals(array('jelix', 'package', 'complex', 'simple'), array_keys($fmkConfig->getAllModulesPathsList()));
+        $this->assertEquals(['jelix', 'simple'], array_keys($fmkConfig->getEnabledModulesPathsList()));
+
+    }
+
+    function testReadModuleInfoOldModuleActivatedInstalled()
+    {
+        $installation = array('modules'=>array('simple.installed'=>1));
+        $compiler = new fakeConfigCompiler($installation,
+            "
+[module:simple]
+enabled=on
+");
+        $fmkConfig = $compiler->compileForRuntime();
+
+        $this->assertTrue($fmkConfig->isModuleEnabled('simple'));
+
+        $fmkConfig = $compiler->compileForInstaller();
+        $this->assertTrue($fmkConfig->isModuleEnabled('simple'));
+        $this->assertEquals(array('jelix', 'package', 'complex', 'simple'), array_keys($fmkConfig->getAllModulesPathsList()));
+        $this->assertEquals(['jelix', 'simple'], array_keys($fmkConfig->getEnabledModulesPathsList()));
+    }
+
+    function testReadModuleInfoNewModuleActivatedNotInstalled()
+    {
+        $installation = array('modules'=>array());
+        $compiler = new fakeConfigCompiler($installation,
+            "
+[module:package]
+enabled=on
+"
+        );
+        $fmkConfig = $compiler->compileForRuntime();
+        $this->assertFalse($fmkConfig->isModuleEnabled('package'));
     }
 
     function testReadModuleInfoNewModuleActivatedInstalled() {
 
-        // in the framework.ini, thepackage is disabled. Let's enable it for
-        // this test.
-        $module = new \Jelix\Core\Infos\ModuleStatusDeclaration(
-            'thepackage',
-            array(
-                'enabled' => true
-            ),
-            true
+        $installation = array('modules'=>array('package.installed'=>1));
+        $compiler = new fakeConfigCompiler($installation,
+            "
+[module:package]
+enabled=on
+"
         );
-        $fmk =  \Jelix\Core\App::getFrameworkInfo();
-        $fmk->updateModule($module);
-
-        $config = new fakeConfig();
-        $config->modules = array('thepackage.enabled'=>1);
-        $modulePath = realpath(__DIR__.'/app/modules/package').'/';
-        $installation = array('modules'=>array('thepackage.installed'=>1));
-        $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, false, $modulePath, $installation);
-        $this->assertEquals(array('thepackage.installed' => 1), $installation['modules']);
-        $this->assertEquals(array(
-                                'thepackage.enabled' => 1,
-                                'thepackage.dbprofile' => 'default',
-                                ), $config->modules);
-        $this->assertEquals(0, count(array_keys($config->_allModulesPathList)));
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-
-        // with all modules info
-        $config = new fakeConfig();
-        $config->modules = array('thepackage.enabled'=>1);
-        $installation = array('modules'=>array('thepackage.installed'=>1));
-        $compiler = new fakeConfigCompiler();
-        $compiler->test_read_module_info($config, true, $modulePath, $installation);
-        $this->assertEquals(array('thepackage.installed' => 1,
-                                'thepackage.version' => '',
-                                'thepackage.dataversion' => ''
-                                ), $installation['modules']);
-        $this->assertEquals(array(
-                                'thepackage.enabled' => 1,
-                                'thepackage.dbprofile' => 'default',
-                                'thepackage.version' => '',
-                                'thepackage.dataversion' => '',
-                                'thepackage.installed' => 1
-                                ), $config->modules);
-        $this->assertEquals(0, count(array_keys($config->_externalModulesPathList)));
-        $this->assertEquals(array('thepackage'=>$modulePath), $config->_allModulesPathList);
+        $fmkConfig = $compiler->compileForRuntime();
+        $this->assertTrue($fmkConfig->isModuleEnabled('package'));
 
     }
 }

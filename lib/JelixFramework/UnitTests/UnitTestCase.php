@@ -2,12 +2,15 @@
 /**
  * @author      Laurent Jouanneau
  * @contributor Christophe Thiriot
- * @copyright   2006-2025 Laurent Jouanneau
+ * @copyright   2006-2026 Laurent Jouanneau
  * @link        https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 namespace Jelix\UnitTests;
+use Jelix\Core\App;
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Config\FrameworkConfigCompiler;
+use Jelix\Core\Infos\FrameworkInfos;
 use PHPUnit\Framework\TestCase;
 
 require_once (JELIX_LIB_CORE_PATH.'request/jClassicRequest.class.php');
@@ -51,9 +54,14 @@ abstract class UnitTestCase extends TestCase {
      */
     protected static function initJelixConfig($config = 'index/config.ini.php', $entryPoint = 'index.php')
     {
-        $config = AppConfig::loadForCli($config, $entryPoint);
-        \jApp::setConfig($config);
-        \jApp::setCoord(null);
+
+        $frameworkInfo = FrameworkInfos::load();
+        $fmkCompiler = new FrameworkConfigCompiler(App::app(), $frameworkInfo, App::varConfigPath('installer.ini.php'));
+        $fmkConfig = $fmkCompiler->compileForRuntime();
+
+        $config = AppConfig::loadForCli($config, $fmkConfig, $entryPoint);
+        App::setConfig($config, $fmkConfig);
+        App::setRouter(null);
     }
 
     /**
@@ -64,19 +72,23 @@ abstract class UnitTestCase extends TestCase {
     /**
      * initialize a full jelix environment with a coordinator, a request object etc.
      *
-     * it initializes a coordinator, a classic request object. It sets \jApp::coord(),
+     * it initializes a coordinator, a classic request object. It sets App::router(),
      * @param string $url the full requested URL (with http://, the domaine name etc.)
      * @param string $config the configuration file to use, as if you were inside an entry point
      * @param string $entryPoint the entrypoint name as indicated into project.xml
      */
     protected static function initClassicRequest($url, $config = 'index/config.ini.php', $entryPoint = 'index.php')
     {
-        self::$fakeServer = new \Jelix\FakeServerConf\ApacheMod(\jApp::wwwPath(), '/'.$entryPoint);
+        self::$fakeServer = new \Jelix\FakeServerConf\ApacheMod(App::wwwPath(), '/'.$entryPoint);
         self::$fakeServer->setHttpRequest($url);
 
-        $config = AppConfig::loadWithoutCache($config, '/'.$entryPoint);
+        $frameworkInfo = FrameworkInfos::load();
+        $fmkCompiler = new FrameworkConfigCompiler(App::app(), $frameworkInfo, App::varConfigPath('installer.ini.php'));
+        $fmkConfig = $fmkCompiler->compileForRuntime();
+
+        $config = AppConfig::loadWithoutCache($config, $fmkConfig, '/'.$entryPoint);
         $coord = new CoordinatorForTest($config, false);
-        \jApp::setCoord($coord);
+        App::setRouter($coord);
         $request = new \jClassicRequest();
         $coord->testSetRequest($request);
     }
@@ -211,7 +223,7 @@ abstract class UnitTestCase extends TestCase {
                 return true;
             case 'int':
             case 'integer':
-                $this->assertTrue(is_integer($value), $name.': not an integer ('.$value.') '.$errormessage);
+                $this->assertTrue(is_int($value), $name.': not an integer ('.$value.') '.$errormessage);
                 if (isset($xml['value'])) {
                     $this->assertEquals(intval((string)$xml['value']),$value, $name.': bad value. '.$errormessage);
                 }

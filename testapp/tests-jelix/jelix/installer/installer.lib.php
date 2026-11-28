@@ -10,6 +10,11 @@
 * @since 1.2
 */
 
+use Jelix\Core\App;
+use Jelix\Core\Infos\ModuleStatusDeclaration;
+use Jelix\Installer\ModuleInstallerLauncher;
+use Jelix\Installer\ModuleStatus;
+
 class testInstallerAppInfos extends \Jelix\Core\Infos\AppInfos {
 
     function save() {
@@ -82,23 +87,12 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
         ) {
             $this->configContent[$epName.'/config.ini.php'] = array(
                 'dbProfils'=>"default",
-                'modules'=>array(
-                ),
                 'urlengine'=>array(
                     'urlScript'=>"/$epName.php",
                     'urlScriptPath'=>"/",
                     'urlScriptName'=>"$epName.php",
                     'urlScriptId'=>"$epName",
                     'urlScriptIdenc'=>"$epName"
-                ),
-                '_allModulesPathList'=>array(
-                ),
-                '_allBasePath'=>array(
-                    0=>"/app/lib/jelix-modules/",
-                    1=>"/app/testapp/modules/",
-                    2=>"/app/lib/jelix-plugins/cache/",
-                ),
-                '_modulesPathList'=>array(
                 ),
             );
         }
@@ -114,7 +108,6 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
             $urlXmlFileName,
             $urlLocalXmlFileName
         );
-
     }
 
     function setInstallerIni($installerIni) {
@@ -127,16 +120,26 @@ class testInstallerGlobalSetup extends \Jelix\Installer\GlobalSetup {
             (object) $this->configContent[$configFile]);
     }
 
-    protected function createComponentModule($name, $path) {
-        $moduleSetupList = $this->mainEntryPoint->getConfigObj()->modules;
-        $enabledGlobally = $this->mainConfigIni->getValue($name.'.enabled', 'modules');
-        $moduleInfos = new \Jelix\Installer\ModuleStatus($name, $path, $moduleSetupList, $enabledGlobally);
+    protected function createComponentModule($name, $path)
+    {
+        $fmkConfig = $this->getFrameworkConfig();
+        $moduleStatus = $fmkConfig->getModuleStatus($name);
 
-        if (in_array($name, array('jelix','jacl2db','jauth','jauthdb','jsoap'))) {
-            return new \Jelix\Installer\ModuleInstallerLauncher($moduleInfos, $this);
+        $moduleDecl = $this->frameworkInfos->getModule($name);
+        if (!$moduleDecl) {
+            // module not installed yet
+            $scope = $this->forLocalConfiguration() ? ModuleStatus::CONFIG_SCOPE_LOCAL : ModuleStatus::CONFIG_SCOPE_APP;
         }
         else {
-            return new testInstallerComponentModule($moduleInfos, $this);
+            $scope = $moduleDecl->isNative ? ModuleStatus::CONFIG_SCOPE_APP : ModuleStatus::CONFIG_SCOPE_LOCAL;
+        }
+        $moduleStatus->configurationScope = $scope;
+
+        if (in_array($name, array('jelix','jacl2db','jacldb','jauth','jauthdb','jsoap'))) {
+            return new ModuleInstallerLauncher($moduleStatus, $this);
+        }
+        else {
+            return new testInstallerComponentModule($moduleStatus, $this);
         }
     }
 }
@@ -157,13 +160,13 @@ class testInstallerEntryPoint extends \Jelix\Installer\EntryPoint {
         $this->globalSetup = $globalSetup;
         $this->isLocalEp = $isLocalEp;
 
-        $appSystemPath = \Jelix\Core\App::appSystemPath($configFile);
+        $appSystemPath = App::appSystemPath($configFile);
+        $varConfigPath = App::varConfigPath($configFile);
+
         if (!file_exists($appSystemPath)) {
             \jFile::createDir(dirname($appSystemPath));
             file_put_contents($appSystemPath, ';<' . '?php die(\'\');?' . '>');
         }
-
-        $varConfigPath = \Jelix\Core\App::varConfigPath($configFile);
 
         $this->appEpConfigIni = new testInstallerIniFileModifier($appSystemPath);
         $this->localEpConfigIni = new testInstallerIniFileModifier($varConfigPath);
@@ -225,8 +228,8 @@ class testInstallerIniFileModifier extends \Jelix\IniFile\IniModifier {
 class testInstaller extends \Jelix\Installer\Installer {
     protected function createInstallerIni()
     {
-        file_put_contents(jApp::tempPath('dummyInstaller.ini'), '');
-        return new \Jelix\IniFile\IniModifier(jApp::tempPath('dummyInstaller.ini'));
+        file_put_contents(App::tempPath('dummyInstaller.ini'), '');
+        return new \Jelix\IniFile\IniModifier(App::tempPath('dummyInstaller.ini'));
     }
 
 }
@@ -243,38 +246,37 @@ class testInstallerMain extends \Jelix\Installer\Installer {
 
         $this->messages = new \Jelix\Installer\Checker\Messages('en');
 
-        copy (jApp::appSystemPath('urls.xml'), jApp::tempPath('installer_urls.xml'));
+        copy (jApp::appSystemPath('urls.xml'), App::tempPath('installer_urls.xml'));
         $this->globalSetup = new testInstallerGlobalSetup(null,
-            jApp::varConfigPath('localframework.ini.php.dist')
+            App::varConfigPath('localframework.ini.php.dist')
             , null, null,
-            jApp::tempPath('installer_urls.xml'));
+            App::tempPath('installer_urls.xml'));
 
         $nativeModules = array('jelix', 'jacl2db','jauth','jauthdb','jsoap');
 
-        $config = jApp::config();
-        foreach ($this->globalSetup->configContent as $ep=>$conf) {
-            
-            foreach($nativeModules as $module) {
-                $this->globalSetup->configContent[$ep]['modules'][$module.'.enabled'] = ($module == 'jelix');
-                $this->globalSetup->configContent[$ep]['modules'][$module.'.dbprofile'] = 'default';
-                $this->globalSetup->configContent[$ep]['modules'][$module.'.installed'] = 0;
-                $this->globalSetup->configContent[$ep]['modules'][$module.'.version'] = jFramework::version();
-                $this->globalSetup->configContent[$ep]['_modulesPathList'][$module] = $config->_modulesPathList[$module];
-                $this->globalSetup->configContent[$ep]['_allModulesPathList'][$module] = $config->_modulesPathList[$module];
-            }
-        }
+        foreach($nativeModules as $moduleName) {
 
+            $module = new ModuleStatusDeclaration($moduleName, array(
+                'enabled' => ($moduleName == 'jelix'),
+                'dbprofile' => 'default',
+                'installed' => 0,
+                'version' => jFramework::version(),
+            ), true);
+            $this->globalSetup->getFrameworkInfos()->addModule($module);
+        }
+        $this->globalSetup->getFrameworkConfig(true);
     }
 
     function testAddModule($name, $moduleXML, $enabled = false, $installed = 0, $version = '1.0', $dbprofile='default') {
         $this->moduleXMLDesc[$name] = $moduleXML;
-        foreach($this->globalSetup->configContent as $ep=>$conf) {
-            $this->globalSetup->configContent[$ep]['_allModulesPathList'][$name] = "/app/test/modules/$name/";
-            $this->globalSetup->configContent[$ep]['_modulesPathList'][$name] = "/app/test/modules/$name/";
-            $this->globalSetup->configContent[$ep]['modules'][$name.'.enabled'] = $enabled;
-            $this->globalSetup->configContent[$ep]['modules'][$name.'.dbprofile'] = $dbprofile;
-            $this->globalSetup->configContent[$ep]['modules'][$name.'.installed'] = $installed;
-            $this->globalSetup->configContent[$ep]['modules'][$name.'.version'] = $version;
-        }   
+
+        $module = new ModuleStatusDeclaration($name, array(
+            'enabled' => $enabled,
+            'dbprofile' => $dbprofile,
+            'installed' => $installed,
+            'version' => $version,
+        ), true);
+        $this->globalSetup->getFrameworkInfos()->addModule($module);
+        $this->globalSetup->getFrameworkConfig(true);
     }
 }

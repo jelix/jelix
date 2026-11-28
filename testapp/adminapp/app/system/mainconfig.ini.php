@@ -3,7 +3,7 @@
 ;this file doesn't list all possible properties. See lib/jelix/core/defaultconfig.ini.php for that
 
 locale=en_US
-availableLocales=en_US,fr_FR
+availableLocales="en_US,fr_FR"
 
 ; see http://www.php.net/manual/en/timezones.php for supported values
 timeZone="Europe/Paris"
@@ -17,23 +17,8 @@ domainName=
 [autolocale]
 enableUrlDetection=on
 urlParamNameLanguage=lang
-useDefaultLanguageBrowser = off
+useDefaultLanguageBrowser=off
 
-[modules]
-jauthdb.installparam=defaultuser
-jacl2db.installparam=defaultuser
-
-jelix.enabled=on
-jelix.installparam="wwwfiles=vhost"
-
-jsoap.enabled=off
-jauth.enabled=on
-master_admin.enabled=on
-jauthdb.enabled=on
-jauthdb_admin.enabled=on
-jacl2.enabled=on
-jacl2db.enabled=on
-jacl2db_admin.enabled=on
 [coordplugins]
 ;name = file_ini_name or var:file_ini_name or 1
 autolocale=1
@@ -186,10 +171,10 @@ name=admin
 
 [webassets_common]
 master_admin.css[]="$jelix/design/master_admin.css"
-jacl2_admin.require = jquery_ui
+jacl2_admin.require=jquery_ui
 jacl2_admin.css[]="$jelix/design/jacl2.css"
 jacl2_admin.js[]="$jelix/js/jacl2db_admin.js"
 
-jauthdb_admin.require = jquery_ui
+jauthdb_admin.require=jquery_ui
 ;jauthdb_admin.css[]="$jelix/design/jauthdb_admin.css"
 jauthdb_admin.js[]="$jelix/js/authdb_admin.js"

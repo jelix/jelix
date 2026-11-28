@@ -3,7 +3,7 @@
  * @package     jelix
  *
  * @author      Laurent Jouanneau
- * @copyright   2019-2023 Laurent Jouanneau
+ * @copyright   2019-2026 Laurent Jouanneau
  *
  * @see        http://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -15,7 +15,6 @@ use Jelix\Core\App;
 use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\Core\Config\AppConfig;
 use Jelix\IniFile\IniModifier;
-use Jelix\Installer\ModuleStatus;
 
 /**
  * Migration from Jelix 1.6 to 1.7/1.8
@@ -607,12 +606,12 @@ class Jelix17
 
         $devPath = App::appPath('dev.php');
         if (!file_exists($devPath)) {
-            copy(LIB_PATH.'Jelix/DevHelper/templates/dev.php.tpl', $devPath);
+            copy(LIB_PATH.'JelixFramework/DevHelper/templates/dev.php.tpl', $devPath);
             $this->reporter->message('create dev.php to launch module commands', 'notice');
         } else {
             $content = file_get_contents($devPath);
             if (strpos($content, 'JelixCommands::launch') === false) {
-                copy(LIB_PATH.'Jelix/DevHelper/templates/dev.php.tpl', $devPath);
+                copy(LIB_PATH.'JelixFramework/DevHelper/templates/dev.php.tpl', $devPath);
                 $this->reporter->message('Update dev.php to launch developer commands', 'notice');
             }
         }
@@ -646,13 +645,13 @@ class Jelix17
     protected function migrate173(IniModifier $mainConfigIni)
     {
         $this->migrateConfig173($mainConfigIni);
-        $frameworkIni = new IniModifier(\jApp::appSystemPath('framework.ini.php'));
+        $frameworkIni = new IniModifier(App::appSystemPath('framework.ini.php'));
         foreach ($frameworkIni->getSectionList() as $section) {
             if (!preg_match('/^entrypoint\\:(.*)$/', $section, $m)) {
                 continue;
             }
             $configValue = $frameworkIni->getValue('config', $section);
-            $configFile = \jApp::appSystemPath($configValue);
+            $configFile = App::appSystemPath($configValue);
             if (file_exists($configFile)) {
                 $ini = new IniModifier($configFile);
                 $this->migrateConfig173($ini);

@@ -3,7 +3,7 @@
  * @package     jelix
  *
  * @author      Laurent Jouanneau
- * @copyright   2025 Laurent Jouanneau
+ * @copyright   2025-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -11,7 +11,6 @@
 
 namespace Jelix\Installer\Migrator;
 
-use \jApp as App;
 use Jelix\Core\Config\AppConfig;
 use Jelix\IniFile\IniModifier;
 
@@ -52,20 +51,22 @@ class Jelix19
     {
         $this->reporter->message('Start migration to Jelix 1.9.0', 'notice');
         // create the var/lib/ directory
-        if (!file_exists(\jApp::varLibPath())) {
+        if (!file_exists(\Jelix\Core\App::varLibPath())) {
             $this->reporter->message('Create new directory var/lib/', 'notice');
-            \Jelix\FileUtilities\Directory::create(\jApp::varLibPath());
-            file_put_contents(\jApp::varLibPath('.dummy'), '');
+            \Jelix\FileUtilities\Directory::create(App::varLibPath());
+            file_put_contents(App::varLibPath('.dummy'), '');
         }
 
         // migration of values of the 'modules' section to framework.ini.php and localframework.ini.php
+        $mainConfigIni = new IniModifier(App::appSystemPath('mainconfig.ini.php'));
         $localConfigIni = new IniModifier(App::varConfigPath('localconfig.ini.php'));
         $frameworkIni = new IniModifier(App::appSystemPath('framework.ini.php'));
         $localFrameworkIni = new IniModifier(App::varConfigPath('localframework.ini.php'));
 
+        $this->moveModulesStatusToFrameworkIni($mainConfigIni, $frameworkIni, $localFrameworkIni, true);
         $this->moveModulesStatusToFrameworkIni($localConfigIni, $frameworkIni, $localFrameworkIni, true);
 
-        $this->reporter->message('Migration of local configuration to Jelix 1.7.0 is done', 'notice');
+        $this->reporter->message('Migration of local configuration to Jelix 1.9.0 is done', 'notice');
     }
 
 

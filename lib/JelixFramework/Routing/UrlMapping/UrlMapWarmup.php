@@ -1,7 +1,7 @@
 <?php
 /**
  * @author     Laurent Jouanneau
- * @copyright  2024-2025 Laurent Jouanneau
+ * @copyright  2024-2026 Laurent Jouanneau
  *
  * @see        https://www.jelix.org
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
@@ -11,6 +11,7 @@ namespace Jelix\Routing\UrlMapping;
 
 use Jelix\Core\AppInstance;
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Infos\FrameworkInfos;
 use Jelix\Installer\WarmUp\FilePlace;
 use Jelix\Installer\WarmUp\FilePlaceEnum;
 use Jelix\Installer\WarmUp\WarmUpLauncherInterface;
@@ -20,14 +21,11 @@ use Jelix\Installer\WarmUp\WarmUpLauncherInterface;
  */
 class UrlMapWarmup implements WarmUpLauncherInterface
 {
-    /**
-     * @var AppInstance
-     */
-    protected $app;
-
-    public function __construct(AppInstance $app)
+    public function __construct(
+        protected AppInstance $app,
+        protected FrameworkInfos $frameworkInfos
+    )
     {
-        $this->app = $app;
     }
 
     public function getLaunchSteps()
@@ -42,9 +40,10 @@ class UrlMapWarmup implements WarmUpLauncherInterface
         $urlsLocalFiles = [];
 
         // an entrypoint may redefine the significantFile or localSignificantFile parameter
-        foreach($this->app->getFrameworkInfo()->getEntryPoints() as $ep)
+        // so we recompile the files
+        foreach($this->frameworkInfos->getEntryPoints() as $ep)
         {
-            $config = AppConfig::loadStaticConfiguration($ep->getConfigFile());
+            $config = AppConfig::loadStaticConfiguration($ep->getConfigFile(), $this->app->getFrameworkConfig());
             $mapperConfig = new MapperConfig($config->urlengine);
 
             if (isset($urlsFiles[$mapperConfig->mapFile])

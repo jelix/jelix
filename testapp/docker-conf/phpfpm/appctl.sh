@@ -91,12 +91,12 @@ function resetMysql() {
     local login="$2"
     local pass="$3"
     local prefix="$4"
-    mysql -h mysql -u $login -p$pass -e "drop table if exists ${prefix}jacl2_group;drop table if exists ${prefix}jacl2_rights;drop table if exists ${prefix}jacl2_subject;drop table if exists ${prefix}jacl2_subject_group;drop table if exists ${prefix}jlx_cache;drop table if exists ${prefix}jlx_user;drop table if exists ${prefix}jsessions;drop table if exists ${prefix}jacl2_user_group;drop table if exists ${prefix}jauthremembertoken;" $base;
+    mysql -h mysql -u $login -p$pass --skip-ssl-verify-server-cert -e "drop table if exists ${prefix}jacl2_group;drop table if exists ${prefix}jacl2_rights;drop table if exists ${prefix}jacl2_subject;drop table if exists ${prefix}jacl2_subject_group;drop table if exists ${prefix}jlx_cache;drop table if exists ${prefix}jlx_user;drop table if exists ${prefix}jsessions;drop table if exists ${prefix}jacl2_user_group;drop table if exists ${prefix}jauthremembertoken;" $base;
 
     MYSQLTABLES="labels1_test labels_test myconfig product_tags_test product_test products towns testkvdb"
     for TABLE in $MYSQLTABLES
     do
-        mysql -h mysql -u $login -p$pass  -e "drop table if exists $TABLE;" testapp;
+        mysql -h mysql -u $login -p$pass --skip-ssl-verify-server-cert -e "drop table if exists $TABLE;" testapp;
     done
 
 }
@@ -221,4 +221,3 @@ case $COMMAND in
         exit 2
         ;;
 esac
-

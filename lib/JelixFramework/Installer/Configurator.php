@@ -9,6 +9,7 @@
 
 namespace Jelix\Installer;
 
+use Jelix\Core\Infos\FrameworkInfos;
 use Jelix\Core\Infos\ModuleStatusDeclaration;
 use Jelix\Core\Config\Compiler;
 use Jelix\Core\Profiles;
@@ -135,12 +136,11 @@ class Configurator
         $this->moduleParameters[$moduleName] = $parameters;
     }
 
-    public static function setModuleAsConfigured($moduleName, IniModifierInterface $configIni)
+    public static function setModuleAsConfigured($moduleName, FrameworkInfos $frameworkInfos, IniModifierInterface $configIni)
     {
         $module = new ModuleStatusDeclaration($moduleName, ['enabled' => true], true);
-        $framework = App::getFrameworkInfo();
-        $framework->addModule($module);
-        $framework->save();
+        $frameworkInfos->addModule($module);
+        $frameworkInfos->save();
     }
 
     /**
@@ -198,7 +198,7 @@ class Configurator
         $this->notice('configuration.start');
 
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
-        App::setConfig($entryPoint->getConfigObj());
+        App::setConfig($entryPoint->getConfigObj(), $this->globalSetup->getFrameworkConfig());
 
         $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig ?: false);
         $this->globalSetup->setReadWriteConfigMode(false);
@@ -264,7 +264,7 @@ class Configurator
 
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getMainEntryPoint();
-        App::setConfig($entryPoint->getConfigObj());
+        App::setConfig($entryPoint->getConfigObj(), $this->globalSetup->getFrameworkConfig());
 
         $forLocalConfig = true;
         $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
@@ -333,11 +333,6 @@ class Configurator
                 break;
 
             case ItemException::ERROR_INSTALLED_ITEM_IN_CONFLICT:
-                $this->error('module.forbidden', array($item->getName(), $e->getRelatedData()->getName()));
-
-                break;
-
-            case ItemException::ERROR_ITEM_TO_INSTALL_IN_CONFLICT:
                 $this->error('module.forbidden', array($item->getName(), $e->getRelatedData()->getName()));
 
                 break;
@@ -626,7 +621,7 @@ class Configurator
 
         $this->notice('configuration.start');
         $entryPoint = $this->globalSetup->getEntryPointById($dedicatedEntryPointId);
-        App::setConfig($entryPoint->getConfigObj());
+        App::setConfig($entryPoint->getConfigObj(), $this->globalSetup->getFrameworkConfig());
 
         $this->globalSetup->setCurrentConfiguratorStatus($forLocalConfig);
         $this->globalSetup->setReadWriteConfigMode(false);
@@ -821,13 +816,15 @@ class Configurator
                 $epConfig->save();
             }
 
+            $fmkConfig = $this->globalSetup->getFrameworkConfig(true);
+
             // we re-load configuration file for each module because
             // previous module configurator could have modify it.
-            $compiler = new Compiler($entryPoint->getConfigFileName(), $entryPoint->getScriptName());
+            $compiler = new Compiler(App::app(), $entryPoint->getConfigFileName(), $entryPoint->getScriptName());
             $entryPoint->setConfigObj($entryPoint->isCliScript() ?
-                $compiler->readForCli(true) : $compiler->read(true)
+                $compiler->readForCli($fmkConfig) : $compiler->read($fmkConfig)
             );
-            App::setConfig($entryPoint->getConfigObj());
+            App::setConfig($entryPoint->getConfigObj(), $fmkConfig);
         }
         $this->globalSetup->getUrlModifier()->save();
         $this->globalSetup->getLocalUrlModifier()->save();

@@ -179,10 +179,10 @@ class upgraderValidityTest extends \Jelix\UnitTests\UnitTestCase
     {
 
         $moduleConfigInfo = array(
-            'test.enabled'=>true,
-            'test.installed'=>true,
-            'test.version'=> '',
-            'test.dbprofile'=> '',
+            'enabled'=>true,
+            'installed'=>true,
+            'version'=> '',
+            'dbprofile'=> '',
         );
 
         $path = jApp::appPath().'modules/test/';

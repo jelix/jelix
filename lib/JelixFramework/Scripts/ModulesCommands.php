@@ -1,7 +1,7 @@
 <?php
 /**
  * @author      Laurent Jouanneau
- * @copyright   2018-2025 Laurent Jouanneau
+ * @copyright   2018-2026 Laurent Jouanneau
  *
  * @see         https://www.jelix.org
  * @licence     MIT
@@ -10,10 +10,10 @@
 namespace Jelix\Scripts;
 
 use Jelix\Core\Config\AppConfig;
+use Jelix\Core\Config\FrameworkRuntimeConfig;
 use Jelix\Routing\Router;
 use Symfony\Component\Console\Application;
 use Jelix\Core\App;
-use Jelix\Core\Config\Compiler;
 
 /**
  * Launch commands from modules.
@@ -33,10 +33,12 @@ class ModulesCommands
         $fmkInfos = \Jelix\Core\Infos\FrameworkInfos::load();
         $ep = $fmkInfos->getDefaultEntryPointInfo();
 
-        $config = AppConfig::loadForCli($ep->getConfigFile(), 'console.php');
-        App::setConfig($config);
-        App::setRouter(new Router());
+        // load framework config
+        $fmkConfig = FrameworkRuntimeConfig::loadForRuntime(App::varLibPath());
 
+        $config = AppConfig::loadForCli($ep->getConfigFile(), $fmkConfig, 'console.php');
+        App::setConfig($config, $fmkConfig);
+        App::setRouter(new Router());
         \jFile::createDir(App::tempPath(), App::config()->chmodDir);
 
         // ----- init the Application object
@@ -44,7 +46,7 @@ class ModulesCommands
         $application = new Application($projectInfos->name.' commands');
 
         // try to read a commands.php file from each modules
-        foreach (App::getEnabledModulesPaths() as $module => $path) {
+        foreach ($fmkConfig->getEnabledModulePathsList() as $module => $path) {
             if (file_exists($path.'commands.php')) {
                 require $path.'commands.php';
             }

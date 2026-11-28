@@ -1,10 +1,12 @@
 <?php
+
 /**
  * @author     Laurent Jouanneau
- * @copyright  2005-2022 Laurent Jouanneau
+ * @copyright  2005-2026 Laurent Jouanneau
  *   Idea of this class was picked from the Copix project (CopixInclude, Copix 2.3dev20050901, http://www.copix.org)
  *
  * @see       http://www.jelix.org
+ *
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html
  */
 
@@ -22,6 +24,7 @@ use Jelix\Core\Selector;
  *
  * @author     Laurent Jouanneau
  * @copyright  2001-2014 Laurent Jouanneau
+ *
  * @licence    GNU Lesser General Public Licence see LICENCE file or http://www.gnu.org/licenses/lgpl.html .
  */
 class Includer
@@ -37,17 +40,14 @@ class Includer
     /**
      * This is a static class, so private constructor.
      */
-    private function __construct()
-    {
-    }
+    private function __construct() {}
 
     /**
      * includes cache of the correspondant file selector
      * check the cache, compile if needed, and include the cache.
      *
-     * @param Selector\SelectorInterface $aSelectorId      the selector corresponding to the file
-     * @param mixed                      $aSelector
-     * @param mixed                      $forceReloadCache
+     * @param mixed $aSelector
+     * @param mixed $forceReloadCache
      *
      * @throws \jException
      */
@@ -96,14 +96,15 @@ class Includer
     /**
      * include a cache file which is the results of the compilation of multiple file stored in multiple modules.
      *
-     * @param array $aType
-     *                     = array(
-     *                     'compilator class name',
-     *                     'relative path of the compilator class file to lib/jelix/',
-     *                     'foo.xml', // file name to compile (in each modules)
-     *                     'foo.php',  //cache filename
-     *                     );
-     * @param mixed $forceReloadCache force to reload the cache file
+     * @param array      $aType
+     *                                     = array(
+     *                                     'compilator class name',
+     *                                     'relative path of the compilator class file to lib/jelix/',
+     *                                     'foo.xml', // file name to compile (in each modules)
+     *                                     'foo.php',  //cache filename
+     *                                     );
+     * @param mixed      $forceReloadCache force to reload the cache file
+     * @param null|mixed $config
      *
      * @return mixed the value returned by the cache file (returned value of the 'require')
      *               or null the compilation has not been done or the cache file already included
@@ -122,7 +123,7 @@ class Includer
 
         if (!$mustCompile && $config->compilation['checkCacheFiletime']) {
             $compiledate = filemtime($cachefile);
-            foreach ($config->_modulesPathList as $module => $path) {
+            foreach (App::getEnabledModulesPaths() as $module => $path) {
                 $sourcefile = $path.$aType[2];
                 if (is_readable($sourcefile)) {
                     if (filemtime($sourcefile) > $compiledate) {
@@ -141,7 +142,7 @@ class Includer
             }
             $compiler = new $aType[0]();
             $compileok = true;
-            foreach ($config->_modulesPathList as $module => $path) {
+            foreach (App::getEnabledModulesPaths() as $module => $path) {
                 $compileok = $compiler->compileItem($path.$aType[2], $module);
                 if (!$compileok) {
                     break;
